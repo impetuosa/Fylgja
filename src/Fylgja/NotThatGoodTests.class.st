@@ -27,18 +27,23 @@ NotThatGoodTests >> modelStubClass [
 NotThatGoodTests >> setUp [
 
 	super setUp.
-	
+
 	fylgja := FylgjaModel new
 		          mooseModel: MooseModelRoot root entities first;
 		          yourself.
-		
-	angular := MOAngularLoader new workingDirectory: '/Users/sbragagn/git/northwind-angular' asFileReference ; load.
-	angular name:#angular. 
-		
-	java := MOJavaMooseBasedLoader new workingDirectory:'/Users/sbragagn/git/jnorthwind/jnorthwind' ; mooseModel: MooseModelRoot root entities second; load . 
-	angular name:#java. 
+
+	angular := MOAngularLoader new
+		           workingDirectory:
+			           '/Users/sbragagn/git/northwind-angular' asFileReference;
+		           loadNamed: #angular.
+
+	java := MOJavaMooseBasedLoader new
+		        workingDirectory:
+			        '/Users/sbragagn/git/jnorthwind/jnorthwind';
+		        mooseModel: MooseModelRoot root entities second;
+		        loadNamed: #java.
 	fylgja
-		addDestination: angular ;
+		addDestination: angular;
 		addDestination: java
 ]
 
@@ -71,7 +76,6 @@ NotThatGoodTests >> testTranslateLogErrorBuildAndInstall [
 		into: destination;
 		build;
 		install.
-	
 	
 	self assert: fylgja translators isNotEmpty. 
 	

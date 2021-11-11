@@ -10,6 +10,15 @@ Class {
 	#category : #'Fylgja-Model'
 }
 
+{ #category : #public }
+FylgjaMapSpace >> get: anAlcixFunction [
+
+	^ entries at: anAlcixFunction ifAbsent: [ 
+		  NotFound signal:
+			  'Cannotfind a suitable mapping entity for '
+			  , anAlcixFunction asString ]
+]
+
 { #category : #'as yet unclassified' }
 FylgjaMapSpace >> initialize [ 
 	 super initialize.
@@ -18,8 +27,18 @@ FylgjaMapSpace >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMapSpace >> mapspaceFor: aMOAnchor [ 
-	self shouldBeImplemented.
+FylgjaMapSpace >> mapspaceFor: aMOAnchor [
+
+	^ aMOAnchor names
+		  inject: self
+		  into: [ :space :entry | 
+		  space mapspaceForName: entry ifAbsent: [ ^ space ] ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMapSpace >> mapspaceForName: aString ifAbsent: aFullBlockClosure [
+
+	^ entries at: aString ifAbsent: [ aFullBlockClosure value ]
 ]
 
 { #category : #accessing }

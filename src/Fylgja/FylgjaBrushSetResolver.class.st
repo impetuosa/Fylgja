@@ -30,7 +30,7 @@ FylgjaBrushSetResolver >> subject: aMOJavaClass [
 ]
 
 { #category : #visiting }
-FylgjaBrushSetResolver >> visitMOJavaClass: aMOJavaClass [
+FylgjaBrushSetResolver >> visitMOClass: aMOJavaClass [
 
 	brushes
 		add: MOAttributeBrush instance;
