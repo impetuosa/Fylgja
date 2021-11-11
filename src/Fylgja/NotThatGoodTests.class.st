@@ -32,14 +32,13 @@ NotThatGoodTests >> setUp [
 		          mooseModel: MooseModelRoot root entities first;
 		          yourself.
 		
-	angular := MOAngularScheme onPath:
-		           '/Users/sbragagn/git/northwind-angular' asFileReference.
+	angular := MOAngularLoader new workingDirectory: '/Users/sbragagn/git/northwind-angular' asFileReference ; load.
+	angular name:#angular. 
 		
-	java := MOJavaProject onMooseModel:
-		        MooseModelRoot root entities second.
-	
+	java := MOJavaMooseBasedLoader new workingDirectory:'/Users/sbragagn/git/jnorthwind/jnorthwind' ; mooseModel: MooseModelRoot root entities second; load . 
+	angular name:#java. 
 	fylgja
-		addDestination: angular defaultProject ;
+		addDestination: angular ;
 		addDestination: java
 ]
 

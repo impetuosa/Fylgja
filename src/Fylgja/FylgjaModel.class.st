@@ -12,7 +12,8 @@ Class {
 
 { #category : #adding }
 FylgjaModel >> addDestination: aMOJavaProject [
-	mapspace registerSpace: aMOJavaProject name.
+
+	self mapspace registerSpace: aMOJavaProject name.
 	^ self destinations add: aMOJavaProject.
 	
 ]
@@ -44,6 +45,12 @@ FylgjaModel >> installTranslation: aTranslator from: anAlcixFunction to: aMOJava
 		(FylgjaTranslatingCouple new
 			 provenance: anAlcixFunction;
 			 destinationContainer: aMOJavaClass).
+]
+
+{ #category : #accessing }
+FylgjaModel >> mapspace [
+
+	^ mapspace ifNil: [ mapspace := FylgjaMapSpace new ]
 ]
 
 { #category : #accessing }
