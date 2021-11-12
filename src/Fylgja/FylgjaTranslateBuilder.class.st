@@ -21,8 +21,8 @@ FylgjaTranslateBuilder >> build [
 		                   chooseBetween: possibleBrushes.
 
 
-	reader := (FylgjaReaderResolver newFor: translate) reader.
-	writer := (FylgjaWriterResolver newFor: into) writer.
+	reader := (FylgjaResolver readerOn: fylgja for: translate) resolve.
+	writer := (FylgjaResolver writerOn: fylgja for: into) resolve.
 
 
 	self assert: possibleBrushes size = 1.
@@ -44,7 +44,7 @@ FylgjaTranslateBuilder >> fylgja: aFylgjaModel [
 FylgjaTranslateBuilder >> install [
 	
 	
-	fylgja installTranslation: translator from: translate to: into. 
+	fylgja installProducer: translator from: translate to: into. 
 ]
 
 { #category : #generated }

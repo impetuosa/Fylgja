@@ -59,6 +59,43 @@ NotThatGoodTests >> testLogErrorToClassNoMappingExists [
 
 { #category : #initialization }
 NotThatGoodTests >> testMapToRewriteRule [
+
+	| debug destination |
+	debug := self logErrorFunction . 
+	destination := self modelStubClass.
+
+	self assert: destination methods isEmpty.
+
+	FylgjaTranslateBuilder new
+		fylgja: fylgja;
+		translate: debug;
+		into: destination;
+		build;
+		install.
+	
+	fylgja getOrProduce: debug for: destination
+	
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> testMapToRewriteRuleText [
+
+	| debug destination result |
+	debug := self logErrorFunction.
+	destination := self modelStubClass.
+
+	self assert: destination methods isEmpty.
+
+	FylgjaTranslateBuilder new
+		fylgja: fylgja;
+		translate: debug;
+		into: destination;
+		build;
+		install.
+
+	result := fylgja getOrProduce: debug for: destination.
+	self halt.
+	result sourceCode inspect
 ]
 
 { #category : #initialization }

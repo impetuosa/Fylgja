@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaWriterResolver,
-	#superclass : #Object,
+	#superclass : #FylgjaResolver,
 	#category : #'Fylgja-Test'
 }
 
@@ -10,6 +10,6 @@ FylgjaWriterResolver class >> newFor: aMOJavaClass [
 ]
 
 { #category : #accessing }
-FylgjaWriterResolver >> writer [
+FylgjaWriterResolver >> resolve [
 	^ MOJavaModelWriter new . 
 ]

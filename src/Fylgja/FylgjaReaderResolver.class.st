@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaReaderResolver,
-	#superclass : #Object,
+	#superclass : #FylgjaResolver,
 	#category : #'Fylgja-Test'
 }
 
@@ -10,6 +10,11 @@ FylgjaReaderResolver class >> newFor: anAlcixFunction [
 ]
 
 { #category : #options }
-FylgjaReaderResolver >> reader [
-	^ FylgjaReader new 
+FylgjaReaderResolver >> resolve [
+
+	^ MOAlceModelReader new
+		  mapper: (FylgjaReadMapper new
+				   fylgja: fylgja;
+				   yourself);
+		  yourself
 ]
