@@ -83,6 +83,11 @@ FylgjaModel >> origin [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaModel >> producers [
+	^ mapspace allProducers
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaModel >> selectDestinationModelFor: aMOClass [
 
 	^ destinations detect: [ :d | d entities includes: aMOClass ]

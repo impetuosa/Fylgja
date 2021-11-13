@@ -8,6 +8,12 @@ Class {
 	#category : #'Fylgja-ReadersWriters'
 }
 
+{ #category : #visiting }
+FylgjaMissingType >> acceptVisitor: aMOTypescriptCodeGenerator [
+
+	aMOTypescriptCodeGenerator visitTypeReference: self
+]
+
 { #category : #'instance creation' }
 FylgjaMissingType >> for: anAlcixParameter [ 
 	self shouldBeImplemented.

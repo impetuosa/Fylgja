@@ -11,6 +11,13 @@ Class {
 	#category : #'Fylgja-Model'
 }
 
+{ #category : #'as yet unclassified' }
+FylgjaMapSpace >> allProducers [
+
+	^ producers values
+	  , (self subspaces flatCollect: [ :f | f allProducers ])
+]
+
 { #category : #public }
 FylgjaMapSpace >> get: anAlcixFunction [
 
@@ -100,6 +107,12 @@ FylgjaMapSpace >> registerSpace: aName [
 		         yourself.
 	mappings at: aName put: entry.
 	^ entry
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMapSpace >> subspaces [
+
+	^ mappings values
 ]
 
 { #category : #'as yet unclassified' }

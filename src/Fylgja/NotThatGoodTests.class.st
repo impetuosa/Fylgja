@@ -80,7 +80,36 @@ NotThatGoodTests >> testMapToRewriteRule [
 { #category : #initialization }
 NotThatGoodTests >> testMapToRewriteRuleText [
 
-	| debug destination result |
+	| debug destination result parser hadError |
+	debug := self logErrorFunction.
+	destination := self modelStubClass.
+	hadError := false.
+	self assert: destination methods isEmpty.
+
+	FylgjaTranslateBuilder new
+		fylgja: fylgja;
+		translate: debug;
+		into: destination;
+		build;
+		install.
+
+	result := fylgja getOrProduce: debug for: destination.
+
+	parser := TypeScriptParser
+		          createParserOnStream: destination produceCode readStream
+		          startingAt: TypeScriptParser defaultStartingState.
+	[ parser parse ]
+		on: SmaCCParserError
+		do: [ :e | 
+			hadError := true.
+			self assert: parser currentToken value = '>' ].
+	self assert: hadError
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> testTranslateLogErrorBuildAndInstall [
+
+	| debug destination |
 	debug := self logErrorFunction.
 	destination := self modelStubClass.
 
@@ -93,27 +122,5 @@ NotThatGoodTests >> testMapToRewriteRuleText [
 		build;
 		install.
 
-	result := fylgja getOrProduce: debug for: destination.
-	self halt.
-	result sourceCode inspect
-]
-
-{ #category : #initialization }
-NotThatGoodTests >> testTranslateLogErrorBuildAndInstall [
-
-	| debug destination |
-	debug := self logErrorFunction . 
-	destination := self modelStubClass.
-
-	self assert: destination methods isEmpty.
-
-	FylgjaTranslateBuilder new
-		fylgja: fylgja;
-		translate: debug;
-		into: destination;
-		build;
-		install.
-	
-	self assert: fylgja translators isNotEmpty. 
-	
+	self assert: fylgja producers isNotEmpty
 ]
