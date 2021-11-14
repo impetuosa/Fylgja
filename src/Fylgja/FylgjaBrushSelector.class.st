@@ -30,6 +30,12 @@ FylgjaBrushSelector >> subject: anAlcixFunction [
 ]
 
 { #category : #visiting }
+FylgjaBrushSelector >> visitClass: anAlcixClass [
+
+	brushes := brushes select: [ :a | a writesClass ]
+]
+
+{ #category : #visiting }
 FylgjaBrushSelector >> visitFunction: anAlcixFunction [
 
 	brushes := brushes select: [ :a | a writesInvocableBehaviour ]

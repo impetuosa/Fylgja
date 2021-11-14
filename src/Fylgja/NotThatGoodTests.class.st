@@ -10,10 +10,24 @@ Class {
 }
 
 { #category : #initialization }
+NotThatGoodTests >> errorHandlingClass [
+
+	^ fylgja origin detect: [ :a | 
+		  (a isKindOf: AlcixClass) and: [ a name = 'ErrorHandling' ] ]
+]
+
+{ #category : #initialization }
 NotThatGoodTests >> logErrorFunction [
 
 	^ fylgja origin detect: [ :a | 
-		  (a isKindOf: AlcixInvocable) and: [ a name = 'LogError' ] ]
+		  (a isKindOf: AlcixInvocable) and: [ 
+			  a name = 'LogError' and: [ a userType isNotNil ] ] ]
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> modelPackage [
+
+	^ java packages detect: [ :p | p name = 'Model' ]
 ]
 
 { #category : #initialization }
@@ -78,6 +92,25 @@ NotThatGoodTests >> testMapToRewriteRule [
 ]
 
 { #category : #initialization }
+NotThatGoodTests >> testMapToRewriteRuleErrorHandling [
+
+	| debug destination |
+	debug := self errorHandlingClass.
+	destination := self modelPackage.
+
+
+	FylgjaTranslateBuilder new
+		fylgja: fylgja;
+		translate: debug;
+		into: destination;
+		build;
+		install.
+	
+	fylgja getOrProduce: debug for: destination
+	
+]
+
+{ #category : #initialization }
 NotThatGoodTests >> testMapToRewriteRuleText [
 
 	| debug destination result parser hadError |
@@ -98,11 +131,14 @@ NotThatGoodTests >> testMapToRewriteRuleText [
 	parser := TypeScriptParser
 		          createParserOnStream: destination produceCode readStream
 		          startingAt: TypeScriptParser defaultStartingState.
+		
+		
 	[ parser parse ]
 		on: SmaCCParserError
 		do: [ :e | 
 			hadError := true.
 			self assert: parser currentToken value = '>' ].
+	
 	self assert: hadError
 ]
 

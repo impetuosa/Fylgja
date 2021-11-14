@@ -19,7 +19,7 @@ FylgjaBrushSetResolver class >> newFor: aMOJavaClass [
 { #category : #navigating }
 FylgjaBrushSetResolver >> resolve [
 	brushes := Set new.
-	subject accept: self.
+	subject acceptVisitor: self.
 	^ brushes 
 ]
 
@@ -30,10 +30,22 @@ FylgjaBrushSetResolver >> subject: aMOJavaClass [
 ]
 
 { #category : #visiting }
-FylgjaBrushSetResolver >> visitMOClass: aMOJavaClass [
+FylgjaBrushSetResolver >> visitClass: aMOJavaClass [
 
 	brushes
 		add: MOAttributeBrush instance;
 		add: MOMethodBrush instance;
-		add: MOAnnotationBrush instance 
+		add: MOAnnotateBrush instance 
+]
+
+{ #category : #visiting }
+FylgjaBrushSetResolver >> visitPackage: aMOPackage [
+
+	brushes
+		add: MOEnumBrush instance;
+		add: MOStructBrush instance;
+		add: MOClassBrush instance;
+		add: MOModuleBrush instance;
+		add: MOAnnotationBrush instance;
+		add: MOInterfaceBrush instance
 ]
