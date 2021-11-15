@@ -40,6 +40,14 @@ FylgjaMissingOperator >> operator: aString [
 	operator := aString
 ]
 
+{ #category : #visiting }
+FylgjaMissingOperator >> printOn: aStream [
+
+	aStream
+		nextPutAll: 'missing operator ';
+		nextPutAll: operator
+]
+
 { #category : #accessing }
 FylgjaMissingOperator >> right [
 	^ right

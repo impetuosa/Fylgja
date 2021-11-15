@@ -31,6 +31,14 @@ FylgjaMissingType >> name [
 	^ referenceTo name
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaMissingType >> printOn: aStream [
+
+	aStream
+		nextPutAll: 'Missing Type: ';
+		nextPutAll: referenceTo name
+]
+
 { #category : #accessing }
 FylgjaMissingType >> referenceTo: anAlcixPrimitiveType [ 
 	referenceTo := anAlcixPrimitiveType 

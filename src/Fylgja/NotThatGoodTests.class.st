@@ -10,6 +10,18 @@ Class {
 }
 
 { #category : #initialization }
+NotThatGoodTests >> angularClassStudent [
+
+	^ ((angular packages detect: [ :p | p name = 'app' ]) types detect: [ : a | a isKindOf: MOAngularClass  ]) classRepresentation
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> angularPackage [
+
+	^ angular packages detect: [ :p | p name = 'app' ]
+]
+
+{ #category : #initialization }
 NotThatGoodTests >> errorHandlingClass [
 
 	^ fylgja origin detect: [ :a | 
@@ -87,7 +99,7 @@ NotThatGoodTests >> testMapToRewriteRule [
 		build;
 		install.
 	
-	fylgja getOrProduce: debug for: destination
+	 self should: [fylgja getOrProduce: debug for: destination] raise: FylgjaMapWarning 
 	
 ]
 
@@ -105,9 +117,10 @@ NotThatGoodTests >> testMapToRewriteRuleErrorHandling [
 		into: destination;
 		build;
 		install.
-	
-	fylgja getOrProduce: debug for: destination
-	
+
+	self
+		should: [ fylgja getOrProduce: debug for: destination ]
+		raise: FylgjaMapWarning
 ]
 
 { #category : #initialization }
@@ -131,9 +144,9 @@ NotThatGoodTests >> testMapToRewriteRuleErrorHandlingText [
 ]
 
 { #category : #initialization }
-NotThatGoodTests >> testMapToRewriteRuleText [
+NotThatGoodTests >> testMapToRewriteRuleTextJavaErrorExpected [
 
-	| debug destination result parser hadError |
+	| debug destination result parser hadError code |
 	debug := self logErrorFunction.
 	destination := self modelStubClass.
 	hadError := false.
@@ -146,19 +159,144 @@ NotThatGoodTests >> testMapToRewriteRuleText [
 		build;
 		install.
 
-	result := fylgja getOrProduce: debug for: destination.
+	result :=[ fylgja getOrProduce: debug for: destination.] on: FylgjaMapWarning do: [  :e | e resume  ].
+	
+	code :=  destination produceCode .
+	
+	parser := JavaParser
+		          createParserOnStream: code readStream
+		          startingAt: JavaParser defaultStartingState.
+	
+	[ parser parse ]
+		on: SmaCCParserError
+		do: [ :e | 
+			hadError := true.
+			self assert: parser currentToken value = '""' ].
+
+	self assert: hadError
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> testMapToRewriteRuleTextJavaRunsAfterModifyingOperator [
+
+	| debug destination result parser  code |
+	debug := self logErrorFunction.
+	destination := self modelStubClass.
+
+	self assert: destination methods isEmpty.
+
+	FylgjaTranslateBuilder new
+		fylgja: fylgja;
+		translate: debug;
+		into: destination;
+		build;
+		install.
+
+	result :=[ fylgja getOrProduce: debug for: destination.] on: FylgjaMapWarning do: [  :e | e resume  ].
+	
+	code :=  destination produceCode .
+	code := code copyReplaceAll: '<>' with: '!='.
+	parser := JavaParser
+		          createParserOnStream: code readStream
+		          startingAt: JavaParser defaultStartingState.
+	
+	self assert: (parser parse isKindOf: JavaProgramFileNode).
+
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> testMapToRewriteRuleTextTSRunsAfterModifyingOperator [
+
+	| debug destination result parser  code |
+	debug := self logErrorFunction.
+	destination := self angularClassStudent.
+
+	self assert: destination methods isEmpty.
+
+	FylgjaTranslateBuilder new
+		fylgja: fylgja;
+		translate: debug;
+		into: destination;
+		build;
+		install.
+
+	result :=[ fylgja getOrProduce: debug for: destination.] on: FylgjaMapWarning do: [  :e | e resume  ].
+	
+	code :=  destination produceCode .
+	code := code copyReplaceAll: '<>' with: '!='.
+	parser := TypeScriptParser 
+		          createParserOnStream: code readStream
+		          startingAt: JavaParser defaultStartingState.
+	
+	self assert: (parser parse isKindOf: JSModuleNode).
+
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> testMapToRewriteRuleTextTypeScript [
+
+	| debug destination result parser hadError |
+	debug := self logErrorFunction.
+	destination := self angularClassStudent.
+	hadError := false.
+	self assert: destination methods isEmpty.
+
+	FylgjaTranslateBuilder new
+		fylgja: fylgja;
+		translate: debug;
+		into: destination;
+		build;
+		install.
+
+	result := [ fylgja getOrProduce: debug for: destination ]
+		          on: FylgjaMapWarning
+		          do: [ :e | e resume ].
+
 
 	parser := TypeScriptParser
 		          createParserOnStream: destination produceCode readStream
-		          startingAt: TypeScriptParser defaultStartingState.
-		
-		
+		          startingAt: JavaParser defaultStartingState.
+
+
 	[ parser parse ]
 		on: SmaCCParserError
 		do: [ :e | 
 			hadError := true.
 			self assert: parser currentToken value = '>' ].
+
+	self assert: hadError
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> testMapToRewriteRuleTextTypeScriptErrorExpected [
+
+	| debug destination result parser hadError |
+	debug := self logErrorFunction.
+	destination := self angularClassStudent.
+	hadError := false.
+	self assert: destination methods isEmpty.
+
+	FylgjaTranslateBuilder new
+		fylgja: fylgja;
+		translate: debug;
+		into: destination;
+		build;
+		install.
+
+	result :=[ fylgja getOrProduce: debug for: destination.] on: FylgjaMapWarning do: [  :e | e resume  ].
 	
+	
+	parser := TypeScriptParser
+		          createParserOnStream: destination produceCode readStream
+		          startingAt: JavaParser defaultStartingState.
+
+
+	[ parser parse ]
+		on: SmaCCParserError
+		do: [ :e | 
+			hadError := true.
+			self assert: parser currentToken value = '>' ].
+
 	self assert: hadError
 ]
 

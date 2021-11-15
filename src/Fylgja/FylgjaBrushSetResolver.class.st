@@ -81,6 +81,13 @@ FylgjaBrushSetResolver >> register: aBrushBuilder [
 	brushes add: aBrushBuilder
 ]
 
+{ #category : #visiting }
+FylgjaBrushSetResolver >> registerDefaultClassBrushes: aMOClass [
+
+	self register: (self attribute: aMOClass language).
+	self register: (self method: aMOClass language)
+]
+
 { #category : #navigating }
 FylgjaBrushSetResolver >> resolve [
 
@@ -104,16 +111,20 @@ FylgjaBrushSetResolver >> variable: aLanguage [
 { #category : #visiting }
 FylgjaBrushSetResolver >> visitJavaClass: aMOClass [
 
-	self register: (self attribute: aMOClass language).
-	self register: (self method: aMOClass language).
+	self registerDefaultClassBrushes: aMOClass. 
 	self register: (self annotate: aMOClass language)
 ]
 
 { #category : #visiting }
 FylgjaBrushSetResolver >> visitJavaPackage: aMOPackage [
-
 	self register: (self enum: aMOPackage language).
 	self register: (self class: aMOPackage language).
 	self register: (self annotation: aMOPackage language).
 	self register: (self interface: aMOPackage language)
+]
+
+{ #category : #visiting }
+FylgjaBrushSetResolver >> visitTypescriptClass: aMOClass [
+
+	self registerDefaultClassBrushes: aMOClass
 ]
