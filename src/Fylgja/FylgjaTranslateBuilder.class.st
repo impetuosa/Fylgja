@@ -19,17 +19,20 @@ FylgjaTranslateBuilder >> build [
 	possibleBrushes := (FylgjaBrushSetResolver newFor: into) resolve.
 	possibleBrushes := (FylgjaBrushSelector newFor: translate) 
 		                   chooseBetween: possibleBrushes.
-
+	self assert: possibleBrushes size = 1.
+	possibleBrushes := (FylgjaBrushSpecializer newFor: translate) 
+		                   specialize: possibleBrushes anyOne.
 
 	reader := (FylgjaResolver readerOn: fylgja for: translate) resolve.
 	writer := (FylgjaResolver writerOn: fylgja for: into) resolve.
 
 
-	self assert: possibleBrushes size = 1.
+
+
 	translator := FylgjaTranslator new
 		              reader: reader;
 		              writer: writer;
-		              brush: possibleBrushes anyOne;
+		              brush: possibleBrushes;
 		              yourself.
 	^ translator
 ]

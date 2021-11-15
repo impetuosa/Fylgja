@@ -27,7 +27,8 @@ FylgjaMissingVariable >> referenceTo: aString [
 
 { #category : #'as yet unclassified' }
 FylgjaMissingVariable >> relatedContext: aVBArgumentNode [ 
-	relatedContext := aVBArgumentNode 
+	relatedContext := aVBArgumentNode.
+	(aVBArgumentNode isKindOf: AlcixInvocation ) ifTrue: [ self halt  ]
 ]
 
 { #category : #accessing }

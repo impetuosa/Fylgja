@@ -18,9 +18,10 @@ FylgjaBrushSelector class >> newFor: anAlcixFunction [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaBrushSelector >> chooseBetween: aCollection [ 
-	brushes := aCollection. 
-	subject accept: self.
+FylgjaBrushSelector >> chooseBetween: aCollection [
+
+	brushes := aCollection.
+	subject acceptLanguageVisitor: self.
 	^ brushes
 ]
 
@@ -31,12 +32,25 @@ FylgjaBrushSelector >> subject: anAlcixFunction [
 
 { #category : #visiting }
 FylgjaBrushSelector >> visitClass: anAlcixClass [
-
 	brushes := brushes select: [ :a | a writesClass ]
 ]
 
 { #category : #visiting }
 FylgjaBrushSelector >> visitFunction: anAlcixFunction [
-
+	" default behaviour "
 	brushes := brushes select: [ :a | a writesInvocableBehaviour ]
+]
+
+{ #category : #visiting }
+FylgjaBrushSelector >> visitMicrosoftAccessClass: anAlcixClass [ 
+	brushes := brushes select: [ :a | a writesClass ]
+]
+
+{ #category : #visiting }
+FylgjaBrushSelector >> visitMicrosoftAccessFunction: anAlcixFunction [
+
+	" narrowdown the brushes to those that can response to a function "
+
+	self visitFunction: anAlcixFunction.
+	
 ]

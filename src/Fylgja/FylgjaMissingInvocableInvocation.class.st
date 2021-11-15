@@ -35,6 +35,11 @@ FylgjaMissingInvocableInvocation >> fullSelector [
 ]
 
 { #category : #accessing }
+FylgjaMissingInvocableInvocation >> printOn: aStream [ 
+	aStream nextPutAll: 'Invocation to missing invocable ', self fullSelector 
+]
+
+{ #category : #accessing }
 FylgjaMissingInvocableInvocation >> referenceTo: anAlcixAttributeAccessor [ 
 	referenceTo := anAlcixAttributeAccessor
 ]

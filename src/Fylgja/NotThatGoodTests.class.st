@@ -111,6 +111,26 @@ NotThatGoodTests >> testMapToRewriteRuleErrorHandling [
 ]
 
 { #category : #initialization }
+NotThatGoodTests >> testMapToRewriteRuleErrorHandlingText [
+
+	| debug destination |
+	debug := self errorHandlingClass.
+	destination := self modelPackage.
+
+
+	FylgjaTranslateBuilder new
+		fylgja: fylgja;
+		translate: debug;
+		into: destination;
+		build;
+		install.
+
+	fylgja getOrProduce: debug for: destination.
+
+	destination types last produceCode inspect
+]
+
+{ #category : #initialization }
 NotThatGoodTests >> testMapToRewriteRuleText [
 
 	| debug destination result parser hadError |

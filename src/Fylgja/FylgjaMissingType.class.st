@@ -19,6 +19,12 @@ FylgjaMissingType >> for: anAlcixParameter [
 	self shouldBeImplemented.
 ]
 
+{ #category : #testing }
+FylgjaMissingType >> isVoid [
+
+	^ referenceTo name asLowercase = #void
+]
+
 { #category : #'as yet unclassified' }
 FylgjaMissingType >> name [
 
