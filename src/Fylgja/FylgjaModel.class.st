@@ -2,25 +2,18 @@ Class {
 	#name : #FylgjaModel,
 	#superclass : #Object,
 	#instVars : [
-		'mooseModel',
-		'destinations',
-		'mapspace'
+		'mapspace',
+		'models'
 	],
 	#category : #'Fylgja-Model'
 }
 
 { #category : #adding }
-FylgjaModel >> addDestination: aMOJavaProject [
+FylgjaModel >> addModel: aMOJavaProject [
 
 	self mapspace registerSpace: aMOJavaProject name.
-	^ self destinations add: aMOJavaProject.
+	^ self models add: aMOJavaProject.
 	
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaModel >> destinations [
-
-	^ destinations ifNil: [ destinations := Set new ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -72,14 +65,10 @@ FylgjaModel >> mapspace [
 	^ mapspace ifNil: [ mapspace := FylgjaMapSpace new ]
 ]
 
-{ #category : #accessing }
-FylgjaModel >> mooseModel: anAlcixModel [ 
-	mooseModel := anAlcixModel 
-]
+{ #category : #'as yet unclassified' }
+FylgjaModel >> models [ 
 
-{ #category : #accessing }
-FylgjaModel >> origin [
-	^ mooseModel 
+	^ models ifNil: [ models := Set new ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -90,7 +79,7 @@ FylgjaModel >> producers [
 { #category : #'as yet unclassified' }
 FylgjaModel >> selectDestinationModelFor: aMOClass [
 
-	^ destinations detect: [ :d | d entities includes: aMOClass ]
+	^ models detect: [ :d | d entities includes: aMOClass ]
 ]
 
 { #category : #'as yet unclassified' }

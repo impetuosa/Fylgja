@@ -18,7 +18,7 @@ FylgjaReadMapper >> destinationContext: aMOClass [
 
 { #category : #'as yet unclassified' }
 FylgjaReadMapper >> destinationModel: aMOModel [ 
-	model := aMOModel 
+	model := aMOModel.
 ]
 
 { #category : #'as yet unclassified' }
@@ -106,7 +106,7 @@ FylgjaReadMapper >> getReference: anAlcixPrimitiveType from: anAlcixParameter [
 		  getOrProduce: anAlcixPrimitiveType
 		  for: destinationContext
 		  ifNotProducerAvailable: [ 
-			  errorRef := model instantiate: FylgjaMissingType.
+			  errorRef := model instantiate: FylgjaMissingTypeTypeReference.
 			  errorRef
 				  referenceTo: anAlcixPrimitiveType;
 				  relatedTypedEntity: anAlcixParameter;
@@ -143,4 +143,10 @@ FylgjaReadMapper >> hackieMissingVariableReference: aString for: aVBArgumentNode
 		destinationContext: destinationContext.
 	self errors add: errorRef.
 	^ errorRef
+]
+
+{ #category : #testing }
+FylgjaReadMapper >> hasErrors [
+
+	^ errors isEmptyOrNil not
 ]

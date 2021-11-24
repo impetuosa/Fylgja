@@ -1,5 +1,5 @@
 Class {
-	#name : #FylgjaMissingType,
+	#name : #FylgjaMissingTypeTypeReference,
 	#superclass : #FylgjaMappingErrorNode,
 	#instVars : [
 		'referenceTo',
@@ -9,30 +9,30 @@ Class {
 }
 
 { #category : #visiting }
-FylgjaMissingType >> acceptVisitor: aMOTypescriptCodeGenerator [
+FylgjaMissingTypeTypeReference >> acceptVisitor: aMOTypescriptCodeGenerator [
 
 	aMOTypescriptCodeGenerator visitTypeReference: self
 ]
 
 { #category : #'instance creation' }
-FylgjaMissingType >> for: anAlcixParameter [ 
+FylgjaMissingTypeTypeReference >> for: anAlcixParameter [ 
 	self shouldBeImplemented.
 ]
 
 { #category : #testing }
-FylgjaMissingType >> isVoid [
+FylgjaMissingTypeTypeReference >> isVoid [
 
 	^ referenceTo name asLowercase = #void
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMissingType >> name [
+FylgjaMissingTypeTypeReference >> name [
 
 	^ referenceTo name
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMissingType >> printOn: aStream [
+FylgjaMissingTypeTypeReference >> printOn: aStream [
 
 	aStream
 		nextPutAll: 'Missing Type: ';
@@ -40,12 +40,12 @@ FylgjaMissingType >> printOn: aStream [
 ]
 
 { #category : #accessing }
-FylgjaMissingType >> referenceTo: anAlcixPrimitiveType [ 
+FylgjaMissingTypeTypeReference >> referenceTo: anAlcixPrimitiveType [ 
 	referenceTo := anAlcixPrimitiveType 
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMissingType >> relatedTypedEntity: anAlcixParameter [
+FylgjaMissingTypeTypeReference >> relatedTypedEntity: anAlcixParameter [
 
 	relatedTypedEntity := anAlcixParameter
 ]

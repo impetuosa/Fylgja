@@ -11,5 +11,10 @@ FylgjaWriterResolver class >> newFor: aMOJavaClass [
 
 { #category : #accessing }
 FylgjaWriterResolver >> resolve [
-	^ MOJavaModelWriter new . 
+
+	entity language isMicrosoftAccess ifTrue: [ 
+		^ MOMicrosoftAccessModelWriter new ].
+	entity language isJava ifTrue: [ ^ MOJavaModelWriter new ].
+	entity language isTypescript ifTrue: [ ^ MOTypescriptModelWriter new ].
+	self error: ' Language not supported '
 ]

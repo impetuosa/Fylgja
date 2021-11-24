@@ -32,7 +32,7 @@ FylgjaBrushSetResolver >> annotation: aLanguage [
 FylgjaBrushSetResolver >> attribute: aLanguage [
 
 	^ (MOBrushBuilder brushClass: MOVariableBrush language: aLanguage)
-		  map: MOAnnotate to: (self annotate: aLanguage);
+		  map: MOAnnotationInstance to: (self annotate: aLanguage);
 		  yourself
 ]
 
@@ -40,7 +40,7 @@ FylgjaBrushSetResolver >> attribute: aLanguage [
 FylgjaBrushSetResolver >> class: aLanguage [
 
 	^ (MOBrushBuilder brushClass: MOClassBrush  language: aLanguage)
-		  map: MOAnnotate to: (self annotate: aLanguage);
+		  map: MOAnnotationInstance to: (self annotate: aLanguage);
 		  map: MOVariable to: (self attribute: aLanguage);
 		  map: MOInvocable to: (self method: aLanguage);
 		  yourself
@@ -50,9 +50,17 @@ FylgjaBrushSetResolver >> class: aLanguage [
 FylgjaBrushSetResolver >> enum: aLanguage [
 
 	^ (MOBrushBuilder brushClass: MOEnumBrush language: aLanguage)
-		  map: MOAnnotate to: (self annotate: aLanguage);
+		  map: MOAnnotationInstance to: (self annotate: aLanguage);
 		  map: MOVariable to: (self attribute: aLanguage);
 		  map: MOInvocable to: (self method: aLanguage);
+		  yourself
+]
+
+{ #category : #visiting }
+FylgjaBrushSetResolver >> functionOrProcedure: aLanguage [
+
+	^ (MOBrushBuilder brushClass: MOFunctionOrProcedureBrush language: aLanguage)
+		  map: MOVariable to: (self variable: aLanguage);
 		  yourself
 ]
 
@@ -60,7 +68,7 @@ FylgjaBrushSetResolver >> enum: aLanguage [
 FylgjaBrushSetResolver >> interface: aLanguage [
 
 	^ (MOBrushBuilder brushClass: MOInterfaceBrush language: aLanguage)
-		  map: MOAnnotate to: (self annotate: aLanguage);
+		  map: MOAnnotationInstance to: (self annotate: aLanguage);
 		  map: MOVariable to: (self attribute: aLanguage);
 		  map: MOInvocable to: (self method: aLanguage);
 		  yourself
@@ -70,7 +78,7 @@ FylgjaBrushSetResolver >> interface: aLanguage [
 FylgjaBrushSetResolver >> method: aLanguage [
 
 	^ (MOBrushBuilder brushClass: MOMethodBrush language: aLanguage)
-		  map: MOAnnotate to: (self annotate: aLanguage);
+		  map: MOAnnotationInstance to: (self annotate: aLanguage);
 		  map: MOVariable to: (self variable: aLanguage);
 		  yourself
 ]
@@ -121,6 +129,13 @@ FylgjaBrushSetResolver >> visitJavaPackage: aMOPackage [
 	self register: (self class: aMOPackage language).
 	self register: (self annotation: aMOPackage language).
 	self register: (self interface: aMOPackage language)
+]
+
+{ #category : #visiting }
+FylgjaBrushSetResolver >> visitMicrosoftAccessClass: anAlcixClass [
+
+	self register: (self attribute: anAlcixClass language).
+	self register: (self functionOrProcedure: anAlcixClass language)
 ]
 
 { #category : #visiting }

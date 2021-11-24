@@ -35,6 +35,17 @@ FylgjaBrushSpecializer >> subject: anAlcixFunction [
 ]
 
 { #category : #visiting }
+FylgjaBrushSpecializer >> visitJavaMethod: aMOMethod [ 
+	^ builder
+		  mapping: MOErrorPolicy
+		  to: MOErrorGoToPolicy 
+		  with: MOOnErrorTryCatchToGoToTransform;
+		  mapping: MOReturnPolicy
+		  to: MOReturnAssignmentPolicy 
+		  with: MOReturnExpressionToAssignReturnTransform.
+]
+
+{ #category : #visiting }
 FylgjaBrushSpecializer >> visitMicrosoftAccessClass: anAlcixClass [ 
 	" nothing to do "
 ]

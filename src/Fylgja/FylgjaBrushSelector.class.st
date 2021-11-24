@@ -37,8 +37,20 @@ FylgjaBrushSelector >> visitClass: anAlcixClass [
 
 { #category : #visiting }
 FylgjaBrushSelector >> visitFunction: anAlcixFunction [
+	self visitInvocable: anAlcixFunction 
+]
+
+{ #category : #visiting }
+FylgjaBrushSelector >> visitInvocable: aMOMethod [
+
 	" default behaviour "
+
 	brushes := brushes select: [ :a | a writesInvocableBehaviour ]
+]
+
+{ #category : #visiting }
+FylgjaBrushSelector >> visitJavaMethod: aMOMethod [ 
+	self visitInvocable: aMOMethod
 ]
 
 { #category : #visiting }

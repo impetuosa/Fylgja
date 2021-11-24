@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'fylgja',
 		'angular',
-		'java'
+		'java',
+		'northwind'
 	],
 	#category : #'Fylgja-Test'
 }
@@ -22,16 +23,40 @@ NotThatGoodTests >> angularPackage [
 ]
 
 { #category : #initialization }
+NotThatGoodTests >> configClassConfigPackage [
+
+	^ self configPackage types detect: [ :t | t name = 'Config' ]
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> configDataSource [ 
+	java entities 
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> configPackage [
+
+	^ java packages detect: [ :p | p name = 'config' ]
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> dataSourceConfigClassConfigPackage [
+
+	^ self configClassConfigPackage methods detect: [ :i | 
+		  i selector = 'dataSource' ]
+]
+
+{ #category : #initialization }
 NotThatGoodTests >> errorHandlingClass [
 
-	^ fylgja origin detect: [ :a | 
+	^ northwind detect: [ :a | 
 		  (a isKindOf: AlcixClass) and: [ a name = 'ErrorHandling' ] ]
 ]
 
 { #category : #initialization }
 NotThatGoodTests >> logErrorFunction [
 
-	^ fylgja origin detect: [ :a | 
+	^ northwind detect: [ :a | 
 		  (a isKindOf: AlcixInvocable) and: [ 
 			  a name = 'LogError' and: [ a userType isNotNil ] ] ]
 ]
@@ -54,10 +79,9 @@ NotThatGoodTests >> setUp [
 
 	super setUp.
 
-	fylgja := FylgjaModel new
-		          mooseModel: MooseModelRoot root entities first;
-		          yourself.
+	fylgja := FylgjaModel new.
 
+	northwind := MooseModelRoot root entities first.
 	angular := MOAngularLoader new
 		           workingDirectory:
 			           '/Users/sbragagn/git/northwind-angular' asFileReference;
@@ -68,9 +92,21 @@ NotThatGoodTests >> setUp [
 			        '/Users/sbragagn/git/jnorthwind/jnorthwind';
 		        mooseModel: MooseModelRoot root entities second;
 		        loadNamed: #java.
+ 
 	fylgja
-		addDestination: angular;
-		addDestination: java
+		addModel: northwind;
+		addModel: angular;
+		addModel: java
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> testDataSourceToErrorHandling [
+
+	| debug destination |
+	debug := self dataSourceConfigClassConfigPackage.
+	destination := self errorHandlingClass.
+
+	self should: [ fylgja get: debug for: destination ] raise: NotFound
 ]
 
 { #category : #initialization }
@@ -141,6 +177,36 @@ NotThatGoodTests >> testMapToRewriteRuleErrorHandlingText [
 	fylgja getOrProduce: debug for: destination.
 
 	destination types last produceCode inspect
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> testMapToRewriteRuleTextAccessDatasourceErrorExpected [
+
+	| debug destination result parser hadError code |
+	debug := self dataSourceConfigClassConfigPackage.
+	destination := self errorHandlingClass.
+	hadError := false.
+
+	FylgjaTranslateBuilder new
+		fylgja: fylgja;
+		translate: debug;
+		into: destination;
+		build;
+		install.
+
+	result := [ fylgja getOrProduce: debug for: destination ]
+		          on: FylgjaMapWarning
+		          do: [ :e | e resume ].
+
+	code := result parent produceCode.
+
+	parser := VBParser
+		          createParserOnStream: code readStream
+		          startingAt: JavaParser defaultStartingState.
+	code inspect.
+	parser parse inspect.
+
+	self deny: hadError
 ]
 
 { #category : #initialization }
