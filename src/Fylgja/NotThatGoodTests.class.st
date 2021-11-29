@@ -87,7 +87,7 @@ NotThatGoodTests >> setUp [
 			           '/Users/sbragagn/git/northwind-angular' asFileReference;
 		           loadNamed: #angular.
 
-	java := MOJavaMooseBasedLoader new
+	java := MOJavaMavenProjectLoader new
 		        workingDirectory:
 			        '/Users/sbragagn/git/jnorthwind/jnorthwind';
 		        mooseModel: MooseModelRoot root entities second;
