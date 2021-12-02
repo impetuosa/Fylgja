@@ -216,6 +216,34 @@ NotThatGoodTests >> testProduceVariableIntoMethodByCopyNodeTransformDefaultNoPro
 ]
 
 { #category : #initialization }
+NotThatGoodTests >> testRespondsToPatternConditionMatchesTheCase [
+
+	| variable destinationContext |
+	variable := self logErrorFunctionVariable.
+	destinationContext := self dataSourceConfigClassConfigPackage.
+
+	self assert:
+		(fylgja
+			 lookupRulesForMapping: variable
+			 toContext: destinationContext) isEmpty.
+
+	FylgjaRuleInstaller new
+		context: destinationContext;
+		matchesPattern: (FylgjaPatternBuilder new
+				 parse: ' dim $ as String '
+				 parser: VBParser
+				 reader: MOAlceModelReader;
+				 build);
+		copy;
+		installInto: fylgja.
+
+	self assert:
+		(fylgja
+			 lookupRulesForMapping: variable
+			 toContext: destinationContext) size = 1
+]
+
+{ #category : #initialization }
 NotThatGoodTests >> testTypeConditionMatchesTheCase [
 
 	| variable destinationContext |
