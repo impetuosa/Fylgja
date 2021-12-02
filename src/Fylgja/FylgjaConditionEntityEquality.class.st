@@ -2,13 +2,18 @@ Class {
 	#name : #FylgjaConditionEntityEquality,
 	#superclass : #FylgjaCondition,
 	#instVars : [
-		'entitiy'
+		'entity'
 	],
 	#category : #'Fylgja-Rule-Conditions'
 }
 
-{ #category : #testing }
-FylgjaConditionEntityEquality >> matches: anEntity [
+{ #category : #accessing }
+FylgjaConditionEntityEquality >> entity: anAlcixLocalVariable [ 
+	entity := anAlcixLocalVariable
+]
 
-	^ entitiy = anEntity
+{ #category : #testing }
+FylgjaConditionEntityEquality >> matches: anEntity context: context [
+
+	^ entity = anEntity
 ]

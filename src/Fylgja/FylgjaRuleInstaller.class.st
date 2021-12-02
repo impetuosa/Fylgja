@@ -14,6 +14,12 @@ FylgjaRuleInstaller >> all [
 	self condition: FylgjaConditionAll new
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> anyEntity [
+
+	self condition: FylgjaConditionAll new
+]
+
 { #category : #accessing }
 FylgjaRuleInstaller >> build [
 	^ (operation isMap
@@ -31,12 +37,59 @@ FylgjaRuleInstaller >> condition: aCondition [
 ]
 
 { #category : #accessing }
+FylgjaRuleInstaller >> context: aMOMethod [ 
+	context := aMOMethod
+]
+
+{ #category : #accessing }
+FylgjaRuleInstaller >> copy [
+
+	self operation: FylgjaTranslateCopy new
+]
+
+{ #category : #accessing }
 FylgjaRuleInstaller >> installInto: aFylgja [
-	self halt .
+
+	| rule space |
+	space := aFylgja mapspace
+		         ensureNamespace: context
+		         model: (aFylgja selectDestinationModelFor: context).
+	rule := self build.
+	self isMap
+		ifTrue: [ space installMappingRule: rule ]
+		ifFalse: [ space installProducingRule: rule ]
+]
+
+{ #category : #testing }
+FylgjaRuleInstaller >> isMap [
+
+	^ operation isMap
 ]
 
 { #category : #accessing }
 FylgjaRuleInstaller >> operation: anOperation [
 
 	operation := anOperation
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> whenEntityIs: anAlcixLocalVariable [
+
+	self condition: (FylgjaConditionEntityEquality new
+			 entity: anAlcixLocalVariable;
+			 yourself)
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> whenEntityIsIdenticalTo: anAlcixLocalVariable [
+
+	self condition: (FylgjaConditionEntityIdentity new
+			 entity: anAlcixLocalVariable;
+			 yourself)
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> whenType: aClass [
+
+	self condition: (FylgjaConditionTypeIs new type: aClass)
 ]

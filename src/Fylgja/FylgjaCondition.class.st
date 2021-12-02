@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #testing }
-FylgjaCondition >> matches: anEntity [
+FylgjaCondition >> matches: anAlcixLocalVariable context: aMOMethod [
 
 	self subclassResponsibility
 ]

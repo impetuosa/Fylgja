@@ -8,6 +8,7 @@ Class {
 }
 
 { #category : #testing }
-FylgjaConditionBlock >> matches: anEntity [
- 	^ block value: anEntity 
+FylgjaConditionBlock >> matches: anEntity context: aContext [
+
+	^ block cull: anEntity cull: aContext
 ]

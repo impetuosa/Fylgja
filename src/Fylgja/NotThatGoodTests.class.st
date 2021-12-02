@@ -108,7 +108,7 @@ NotThatGoodTests >> testAllConditionMatchesTheCase [
 
 	self assert:
 		(fylgja
-			 lookupRulesForMapping: variable
+			 lookupRulesForProducing: variable
 			 toContext: destinationContext) isEmpty.
 			
 	FylgjaRuleInstaller new
@@ -119,7 +119,7 @@ NotThatGoodTests >> testAllConditionMatchesTheCase [
 
 	self assert:
 		(fylgja
-			 lookupRulesForMapping: variable
+			 lookupRulesForProducing: variable
 			 toContext: destinationContext) size = 1
 ]
 
@@ -140,9 +140,8 @@ NotThatGoodTests >> testEntityEqualsConditionMatchesTheCase [
 	variable := self logErrorFunctionVariable.
 	destinationContext := self dataSourceConfigClassConfigPackage.
 
-	self assert:
-		(fylgja
-			 lookupRulesForMapping: variable
+	self assert: (fylgja
+			 lookupRulesForProducing: variable
 			 toContext: destinationContext) isEmpty.
 
 	FylgjaRuleInstaller new
@@ -151,9 +150,8 @@ NotThatGoodTests >> testEntityEqualsConditionMatchesTheCase [
 		copy;
 		installInto: fylgja.
 
-	self assert:
-		(fylgja
-			 lookupRulesForMapping: variable
+	self assert: (fylgja
+			 lookupRulesForProducing: variable
 			 toContext: destinationContext) size = 1
 ]
 
@@ -164,9 +162,8 @@ NotThatGoodTests >> testEntityIdenticalConditionMatchesTheCase [
 	variable := self logErrorFunctionVariable.
 	destinationContext := self dataSourceConfigClassConfigPackage.
 
-	self assert:
-		(fylgja
-			 lookupRulesForMapping: variable
+	self assert: (fylgja
+			 lookupRulesForProducing: variable
 			 toContext: destinationContext) isEmpty.
 
 	FylgjaRuleInstaller new
@@ -175,9 +172,8 @@ NotThatGoodTests >> testEntityIdenticalConditionMatchesTheCase [
 		copy;
 		installInto: fylgja.
 
-	self assert:
-		(fylgja
-			 lookupRulesForMapping: variable
+	self assert: (fylgja
+			 lookupRulesForProducing: variable
 			 toContext: destinationContext) size = 1
 ]
 
@@ -224,7 +220,7 @@ NotThatGoodTests >> testRespondsToPatternConditionMatchesTheCase [
 
 	self assert:
 		(fylgja
-			 lookupRulesForMapping: variable
+			 lookupRulesForProducing: variable
 			 toContext: destinationContext) isEmpty.
 
 	FylgjaRuleInstaller new
@@ -239,7 +235,7 @@ NotThatGoodTests >> testRespondsToPatternConditionMatchesTheCase [
 
 	self assert:
 		(fylgja
-			 lookupRulesForMapping: variable
+			 lookupRulesForProducing: variable
 			 toContext: destinationContext) size = 1
 ]
 
@@ -252,7 +248,7 @@ NotThatGoodTests >> testTypeConditionMatchesTheCase [
 
 	self assert:
 		(fylgja
-			 lookupRulesForMapping: variable
+			 lookupRulesForProducing: variable
 			 toContext: destinationContext) isEmpty.
 
 	FylgjaRuleInstaller new
@@ -263,6 +259,6 @@ NotThatGoodTests >> testTypeConditionMatchesTheCase [
 
 	self assert:
 		(fylgja
-			 lookupRulesForMapping: variable
+			 lookupRulesForProducing: variable
 			 toContext: destinationContext) size = 1
 ]

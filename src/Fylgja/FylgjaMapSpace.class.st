@@ -11,6 +11,21 @@ Class {
 	#category : #'Fylgja-Model'
 }
 
+{ #category : #'public-entity-creation' }
+FylgjaMapSpace >> ensureNamespace: aMOMethod [
+
+	^ aMOMethod anchor names inject: self into: [ :space :entry | 
+		  space
+			  mapspaceForName: entry
+			  ifAbsent: [ space registerSpace: entry ] ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMapSpace >> ensureNamespace: aMOMethod model: aMOModel [
+
+	^ (self modelMapspace: aMOModel) ensureNamespace: aMOMethod
+]
+
 { #category : #public }
 FylgjaMapSpace >> get: anAlcixFunction [
 
@@ -42,6 +57,12 @@ FylgjaMapSpace >> initialize [
 	subspaces := Dictionary new.
 	producingRules := OrderedCollection new.
 	mappingRules := OrderedCollection new.
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMapSpace >> installProducingRule: aFylgjaProductionRule [
+
+	producingRules add: aFylgjaProductionRule
 ]
 
 { #category : #'as yet unclassified' }
@@ -93,7 +114,7 @@ FylgjaMapSpace >> lookupRulesForProducing: anAlcixFunction toContext: aMOClass [
 FylgjaMapSpace >> lookupRulesForProducing: anAlcixFunction toContext: aMOClass model: aMOModel [
 
 	^ ((self modelMapspace: aMOModel) mapspaceForAnchor: aMOClass anchor)
-		  lookupRulesForMapping: anAlcixFunction
+		  lookupRulesForProducing: anAlcixFunction
 		  toContext: aMOClass
 ]
 
