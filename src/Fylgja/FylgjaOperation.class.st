@@ -1,5 +1,10 @@
 Class {
 	#name : #FylgjaOperation,
 	#superclass : #Object,
-	#category : #'Fylgja-Rules'
+	#category : #'Fylgja-Rule-Operations'
 }
+
+{ #category : #testing }
+FylgjaOperation >> isMap [ 
+	^ false. 
+]

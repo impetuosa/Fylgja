@@ -3,20 +3,13 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'parent',
-		'friends',
 		'name',
-		'mappings',
-		'producers'
+		'mappingRules',
+		'subspaces',
+		'producingRules'
 	],
 	#category : #'Fylgja-Model'
 }
-
-{ #category : #'as yet unclassified' }
-FylgjaMapSpace >> allProducers [
-
-	^ producers values
-	  , (self subspaces flatCollect: [ :f | f allProducers ])
-]
 
 { #category : #public }
 FylgjaMapSpace >> get: anAlcixFunction [
@@ -30,7 +23,7 @@ FylgjaMapSpace >> get: anAlcixFunction [
 { #category : #'as yet unclassified' }
 FylgjaMapSpace >> get: anAlcixFunction ifAbsent: aFullBlockClosure [
 
-	^ mappings at: anAlcixFunction ifAbsent: [ aFullBlockClosure value ]
+	^ subspaces at: anAlcixFunction ifAbsent: [ aFullBlockClosure value ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -43,21 +36,69 @@ FylgjaMapSpace >> getOrCreateMapspaceFor: aMOAnchor [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMapSpace >> initialize [ 
-	 super initialize.
-	mappings := Dictionary new. 
-	producers := Dictionary new.
-	friends := Set new. 
+FylgjaMapSpace >> initialize [
+
+	super initialize.
+	subspaces := Dictionary new.
+	producingRules := OrderedCollection new.
+	mappingRules := OrderedCollection new.
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMapSpace >> installProducer: aFylgjaTranslator from: anAlcixFunction [
+FylgjaMapSpace >> lookupRulesFor: anAlcixFunction toContext: aMOClass [
 
-	producers at: anAlcixFunction put: aFylgjaTranslator
+	^ (mappingRules select: [ :mr | 
+		   mr matches: anAlcixFunction context: aMOClass ])
+	  , (producingRules select: [ :mr | 
+			   mr matches: anAlcixFunction context: aMOClass ]) , (parent
+		   ifNil: [ {  } ]
+		   ifNotNil: [ 
+		   parent lookupRulesFor: anAlcixFunction toContext: aMOClass ])
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMapSpace >> mapspaceFor: aMOAnchor [
+FylgjaMapSpace >> lookupRulesForMapping: anAlcixFunction [ 
+	self shouldBeImplemented.
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMapSpace >> lookupRulesForMapping: anAlcixFunction toContext: aMOClass [
+
+	^ (mappingRules select: [ :mr | 
+		   mr matches: anAlcixFunction context: aMOClass ]) , (parent
+		   ifNil: [ {  } ]
+		   ifNotNil: [ 
+		   parent lookupRulesForMapping: anAlcixFunction toContext: aMOClass ])
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMapSpace >> lookupRulesForMapping: anAlcixFunction toContext: aMOClass model: aMOModel [
+
+	^ ((self modelMapspace: aMOModel) mapspaceForAnchor: aMOClass anchor)
+		  lookupRulesForMapping: anAlcixFunction
+		  toContext: aMOClass
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMapSpace >> lookupRulesForProducing: anAlcixFunction toContext: aMOClass [
+
+	^ (producingRules select: [ :mr | 
+		   mr matches: anAlcixFunction context: aMOClass ]) , (parent
+		   ifNil: [ {  } ]
+		   ifNotNil: [ 
+		   parent lookupRulesForProducing: anAlcixFunction toContext: aMOClass ])
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMapSpace >> lookupRulesForProducing: anAlcixFunction toContext: aMOClass model: aMOModel [
+
+	^ ((self modelMapspace: aMOModel) mapspaceForAnchor: aMOClass anchor)
+		  lookupRulesForMapping: anAlcixFunction
+		  toContext: aMOClass
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMapSpace >> mapspaceForAnchor: aMOAnchor [
 
 	^ aMOAnchor names
 		  inject: self
@@ -68,7 +109,16 @@ FylgjaMapSpace >> mapspaceFor: aMOAnchor [
 { #category : #'as yet unclassified' }
 FylgjaMapSpace >> mapspaceForName: aString ifAbsent: aFullBlockClosure [
 
-	^ mappings at: aString ifAbsent: [ aFullBlockClosure value ]
+	^ subspaces at: aString ifAbsent: [ aFullBlockClosure value ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMapSpace >> modelMapspace: aMOModel [
+
+	^ self
+		  mapspaceForName: aMOModel name
+		  ifAbsent: [ 
+		  self error: 'The context model is not part of the mapping space' ]
 ]
 
 { #category : #accessing }
@@ -83,39 +133,20 @@ FylgjaMapSpace >> parent: aFylgjaMapSpace [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMapSpace >> producerFor: anAlcixFunction [
-
-	^ producers at: anAlcixFunction ifAbsent: [ 
-		  NotFound signal:
-			  'No code producer has been found for given element ' ]
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaMapSpace >> producerFor: anAlcixFunction ifNone: aBlock [
-
-	^ producers at: anAlcixFunction ifAbsent: [ aBlock value ]
-]
-
-{ #category : #'as yet unclassified' }
 FylgjaMapSpace >> registerSpace: aName [
 
 	| entry |
-	mappings at: aName ifPresent: [ self halt ].
+	subspaces at: aName ifPresent: [ self halt ].
 	entry := self class new
 		         name: aName;
 		         parent: self;
 		         yourself.
-	mappings at: aName put: entry.
+	subspaces at: aName put: entry.
 	^ entry
 ]
 
 { #category : #'as yet unclassified' }
 FylgjaMapSpace >> subspaces [
 
-	^ mappings values
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaMapSpace >> translatorFor: anAlcixFunction [ 
-	^ producers at: anAlcixFunction 
+	^ subspaces values
 ]

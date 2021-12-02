@@ -1,5 +1,11 @@
 Class {
 	#name : #FylgjaMap,
 	#superclass : #FylgjaOperation,
-	#category : #'Fylgja-Rules'
+	#category : #'Fylgja-Rule-Operations'
 }
+
+{ #category : #testing }
+FylgjaMap >> isMap [
+
+	^ true
+]

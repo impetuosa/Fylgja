@@ -1,5 +1,5 @@
 Class {
 	#name : #FylgjaDelegate,
 	#superclass : #FylgjaOperation,
-	#category : #'Fylgja-Rules'
+	#category : #'Fylgja-Rule-Operations'
 }

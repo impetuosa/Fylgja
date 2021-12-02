@@ -19,27 +19,12 @@ FylgjaModel >> addModel: aMOJavaProject [
 { #category : #'as yet unclassified' }
 FylgjaModel >> get: anAlcixFunction for: aMOJavaClass [
 
-	^ (self selectMappingContextFor: aMOJavaClass) get: anAlcixFunction
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaModel >> getOrProduce: anAlcixFunction for: aMOJavaClass [
-
-	^ (self selectMappingContextFor: aMOJavaClass)
-		  get: anAlcixFunction
-		  ifAbsent: [ self tryProduce: anAlcixFunction for: aMOJavaClass ]
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaModel >> getOrProduce: anElement for: aMOClass ifNotProducerAvailable: aFullBlockClosure [
-
-	^ (self selectMappingContextFor: aMOClass)
-		  get: anElement
-		  ifAbsent: [ 
-			  self
-				  tryProduce: anElement
-				  for: aMOClass
-				  ifNotProducerAvailable: aFullBlockClosure ]
+	| rules |
+	rules := self
+		         lookupRulesForMapping: anAlcixFunction
+		         toContext: aMOJavaClass.
+	rules ifEmpty: [ NotFound signal: 'No mapping rule found ' ].
+	^ rules first applyTo: anAlcixFunction context: aMOJavaClass
 ]
 
 { #category : #accessing }
@@ -59,6 +44,24 @@ FylgjaModel >> installProducer: aTranslator from: anAlcixFunction to: aMOJavaCla
 	
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaModel >> lookupRulesForMapping: anAlcixFunction toContext: aMOClass [
+
+	^ mapspace
+		  lookupRulesForMapping: anAlcixFunction
+		  toContext: aMOClass
+		  model: (self selectDestinationModelFor: aMOClass)
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaModel >> lookupRulesForProducing: anAlcixFunction toContext: aMOClass [
+
+	^ mapspace
+		  lookupRulesForProducing: anAlcixFunction
+		  toContext: aMOClass
+		  model: (self selectDestinationModelFor: aMOClass)
+]
+
 { #category : #accessing }
 FylgjaModel >> mapspace [
 
@@ -72,6 +75,17 @@ FylgjaModel >> models [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaModel >> produce: anAlcixFunction into: aMOJavaClass [
+
+	| rules |
+	rules := self
+		         lookupRulesForProducing: anAlcixFunction
+		         toContext: aMOJavaClass.
+	rules ifEmpty: [ NotFound signal: 'No producing rule found ' ].
+	^ rules first applyTo: anAlcixFunction context: aMOJavaClass
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaModel >> producers [
 	^ mapspace allProducers
 ]
@@ -79,39 +93,5 @@ FylgjaModel >> producers [
 { #category : #'as yet unclassified' }
 FylgjaModel >> selectDestinationModelFor: aMOClass [
 
-	^( models detect: [ :d | d entities includes: aMOClass ]) derivative 
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaModel >> selectMappingContextFor: aMOJavaClass [
-
-	^ mapspace mapspaceFor: aMOJavaClass anchor
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaModel >> selectMappingContextForInstalling: aMOClass [
-
-	^ mapspace getOrCreateMapspaceFor: aMOClass anchor
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaModel >> tryProduce: anAlcixFunction for: aMOClass [
-
-	^ self
-		  tryProduce: anAlcixFunction
-		  for: aMOClass
-		  ifNotProducerAvailable: [ 
-			  NotFound signal:
-				  'No code producer has been found for given element ' ]
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaModel >> tryProduce: anAlcixFunction for: aMOClass ifNotProducerAvailable: aBlock [
-
-	^ ((self selectMappingContextFor: aMOClass)
-		   producerFor: anAlcixFunction
-		   ifNone: [ aBlock value ])
-		  produce: anAlcixFunction
-		  into: aMOClass
-		  destination: (self selectDestinationModelFor: aMOClass)
+	^ models detect: [ :d | d entities includes: aMOClass ]
 ]

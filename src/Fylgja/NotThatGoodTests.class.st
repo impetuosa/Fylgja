@@ -59,7 +59,7 @@ NotThatGoodTests >> logErrorFunction [
 { #category : #initialization }
 NotThatGoodTests >> logErrorFunctionVariable [
 
-	^ self logErrorFunction variables first
+	^ self logErrorFunction localVariables second
 ]
 
 { #category : #initialization }
@@ -88,10 +88,7 @@ NotThatGoodTests >> setUp [
 	fylgja := FylgjaModel new.
 
 	northwind := MooseModelRoot root entities first.
-	angular := MOAngularLoader new
-		           workingDirectory:
-			           '/Users/sbragagn/git/northwind-angular' asFileReference;
-		           loadNamed: #angular.
+	angular := MOAngularLoader northwind.
 
 	java := MOJavaMavenProjectLoader northwind.
 
@@ -103,33 +100,27 @@ NotThatGoodTests >> setUp [
 ]
 
 { #category : #initialization }
-NotThatGoodTests >> testAddAccessVariableToJavaMethod [
+NotThatGoodTests >> testAllConditionMatchesTheCase [
 
-	| destination result parser hadError code variable |
+	| variable destinationContext |
 	variable := self logErrorFunctionVariable.
-	destination := self dataSourceConfigClassConfigPackage.
-	hadError := false.
+	destinationContext := self dataSourceConfigClassConfigPackage.
 
-	FylgjaTranslateBuilder new
-		fylgja: fylgja;
-		translate: variable;
-		into: destination;
-		build;
-		install.
+	self assert:
+		(fylgja
+			 lookupRulesForMapping: variable
+			 toContext: destinationContext) isEmpty.
+			
+	FylgjaRuleInstaller new
+		context: destinationContext;
+		anyEntity;
+		copy;
+		installInto: fylgja.
 
-	result := [ fylgja getOrProduce: variable for: destination ]
-		          on: FylgjaMapWarning
-		          do: [ :e | e resume ].
-
-	code := result parent produceCode.
-
-	parser := VBParser
-		          createParserOnStream: code readStream
-		          startingAt: JavaParser defaultStartingState.
-	code inspect.
-	parser parse inspect.
-
-	self deny: hadError
+	self assert:
+		(fylgja
+			 lookupRulesForMapping: variable
+			 toContext: destinationContext) size = 1
 ]
 
 { #category : #initialization }
@@ -143,6 +134,54 @@ NotThatGoodTests >> testDataSourceToErrorHandling [
 ]
 
 { #category : #initialization }
+NotThatGoodTests >> testEntityEqualsConditionMatchesTheCase [
+
+	| variable destinationContext |
+	variable := self logErrorFunctionVariable.
+	destinationContext := self dataSourceConfigClassConfigPackage.
+
+	self assert:
+		(fylgja
+			 lookupRulesForMapping: variable
+			 toContext: destinationContext) isEmpty.
+
+	FylgjaRuleInstaller new
+		context: destinationContext;
+		whenEntityIs: variable;
+		copy;
+		installInto: fylgja.
+
+	self assert:
+		(fylgja
+			 lookupRulesForMapping: variable
+			 toContext: destinationContext) size = 1
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> testEntityIdenticalConditionMatchesTheCase [
+
+	| variable destinationContext |
+	variable := self logErrorFunctionVariable.
+	destinationContext := self dataSourceConfigClassConfigPackage.
+
+	self assert:
+		(fylgja
+			 lookupRulesForMapping: variable
+			 toContext: destinationContext) isEmpty.
+
+	FylgjaRuleInstaller new
+		context: destinationContext;
+		whenEntityIsIdenticalTo: variable;
+		copy;
+		installInto: fylgja.
+
+	self assert:
+		(fylgja
+			 lookupRulesForMapping: variable
+			 toContext: destinationContext) size = 1
+]
+
+{ #category : #initialization }
 NotThatGoodTests >> testLogErrorToClassNoMappingExists [
 
 	| debug destination |
@@ -153,268 +192,49 @@ NotThatGoodTests >> testLogErrorToClassNoMappingExists [
 ]
 
 { #category : #initialization }
-NotThatGoodTests >> testMapToRewriteRule [
+NotThatGoodTests >> testProduceVariableIntoMethodByCopyNodeTransformDefault [
 
-	| debug destination |
-	debug := self logErrorFunction.
-	destination := self modelStubClass.
+	| variable destinationContext result |
+	variable := self logErrorFunctionVariable.
+	destinationContext := self dataSourceConfigClassConfigPackage.
 
-	self assert: destination methods isEmpty.
+	result := fylgja produce: variable into: destinationContext.
+	self halt
+]
 
-	FylgjaTranslateBuilder new
-		fylgja: fylgja;
-		translate: debug;
-		into: destination;
-		build;
-		install.
+{ #category : #initialization }
+NotThatGoodTests >> testProduceVariableIntoMethodByCopyNodeTransformDefaultNoProducerFails [
+
+	| variable destinationContext result |
+	variable := self logErrorFunctionVariable.
+	destinationContext := self dataSourceConfigClassConfigPackage.
 
 	self
-		should: [ fylgja getOrProduce: debug for: destination ]
-		raise: FylgjaMapWarning
+		should: [ 
+		result := fylgja produce: variable into: destinationContext ]
+		raise: NotFound
 ]
 
 { #category : #initialization }
-NotThatGoodTests >> testMapToRewriteRuleErrorHandling [
+NotThatGoodTests >> testTypeConditionMatchesTheCase [
 
-	| debug destination |
-	debug := self errorHandlingClass.
-	destination := self modelPackage.
+	| variable destinationContext |
+	variable := self logErrorFunctionVariable.
+	destinationContext := self dataSourceConfigClassConfigPackage.
 
+	self assert:
+		(fylgja
+			 lookupRulesForMapping: variable
+			 toContext: destinationContext) isEmpty.
 
-	FylgjaTranslateBuilder new
-		fylgja: fylgja;
-		translate: debug;
-		into: destination;
-		build;
-		install.
+	FylgjaRuleInstaller new
+		context: destinationContext;
+		whenType: variable class;
+		copy;
+		installInto: fylgja.
 
-	self
-		should: [ fylgja getOrProduce: debug for: destination ]
-		raise: FylgjaMapWarning
-]
-
-{ #category : #initialization }
-NotThatGoodTests >> testMapToRewriteRuleErrorHandlingText [
-
-	| debug destination |
-	debug := self errorHandlingClass.
-	destination := self modelPackage.
-
-
-	FylgjaTranslateBuilder new
-		fylgja: fylgja;
-		translate: debug;
-		into: destination;
-		build;
-		install.
-
-	fylgja getOrProduce: debug for: destination.
-
-	destination types last produceCode inspect
-]
-
-{ #category : #initialization }
-NotThatGoodTests >> testMapToRewriteRuleTextAccessDatasourceErrorExpected [
-
-	| debug destination result parser hadError code |
-	debug := self dataSourceConfigClassConfigPackage.
-	destination := self errorHandlingClass.
-	hadError := false.
-
-	FylgjaTranslateBuilder new
-		fylgja: fylgja;
-		translate: debug;
-		into: destination;
-		build;
-		install.
-
-	result := [ fylgja getOrProduce: debug for: destination ]
-		          on: FylgjaMapWarning
-		          do: [ :e | e resume ].
-
-	code := result parent produceCode.
-
-	parser := VBParser
-		          createParserOnStream: code readStream
-		          startingAt: JavaParser defaultStartingState.
-	code inspect.
-	parser parse inspect.
-
-	self deny: hadError
-]
-
-{ #category : #initialization }
-NotThatGoodTests >> testMapToRewriteRuleTextJavaErrorExpected [
-
-	| debug destination result parser hadError code |
-	debug := self logErrorFunction.
-	destination := self modelStubClass.
-	hadError := false.
-	self assert: destination methods isEmpty.
-
-	FylgjaTranslateBuilder new
-		fylgja: fylgja;
-		translate: debug;
-		into: destination;
-		build;
-		install.
-
-	result :=[ fylgja getOrProduce: debug for: destination.] on: FylgjaMapWarning do: [  :e | e resume  ].
-	
-	code :=  destination produceCode .
-	
-	parser := JavaParser
-		          createParserOnStream: code readStream
-		          startingAt: JavaParser defaultStartingState.
-	
-	[ parser parse ]
-		on: SmaCCParserError
-		do: [ :e | 
-			hadError := true.
-			self assert: parser currentToken value = '""' ].
-
-	self assert: hadError
-]
-
-{ #category : #initialization }
-NotThatGoodTests >> testMapToRewriteRuleTextJavaRunsAfterModifyingOperator [
-
-	| debug destination result parser  code |
-	debug := self logErrorFunction.
-	destination := self modelStubClass.
-
-	self assert: destination methods isEmpty.
-
-	FylgjaTranslateBuilder new
-		fylgja: fylgja;
-		translate: debug;
-		into: destination;
-		build;
-		install.
-
-	result :=[ fylgja getOrProduce: debug for: destination.] on: FylgjaMapWarning do: [  :e | e resume  ].
-	
-	code :=  destination produceCode .
-	code := code copyReplaceAll: '<>' with: '!='.
-	parser := JavaParser
-		          createParserOnStream: code readStream
-		          startingAt: JavaParser defaultStartingState.
-	
-	self assert: (parser parse isKindOf: JavaProgramFileNode).
-
-]
-
-{ #category : #initialization }
-NotThatGoodTests >> testMapToRewriteRuleTextTSRunsAfterModifyingOperator [
-
-	| debug destination result parser  code |
-	debug := self logErrorFunction.
-	destination := self angularClassStudent.
-
-	self assert: destination methods isEmpty.
-
-	FylgjaTranslateBuilder new
-		fylgja: fylgja;
-		translate: debug;
-		into: destination;
-		build;
-		install.
-
-	result :=[ fylgja getOrProduce: debug for: destination.] on: FylgjaMapWarning do: [  :e | e resume  ].
-	
-	code :=  destination produceCode .
-	code := code copyReplaceAll: '<>' with: '!='.
-	parser := TypeScriptParser 
-		          createParserOnStream: code readStream
-		          startingAt: JavaParser defaultStartingState.
-	
-	self assert: (parser parse isKindOf: JSModuleNode).
-
-]
-
-{ #category : #initialization }
-NotThatGoodTests >> testMapToRewriteRuleTextTypeScript [
-
-	| debug destination result parser hadError |
-	debug := self logErrorFunction.
-	destination := self angularClassStudent.
-	hadError := false.
-	self assert: destination methods isEmpty.
-
-	FylgjaTranslateBuilder new
-		fylgja: fylgja;
-		translate: debug;
-		into: destination;
-		build;
-		install.
-
-	result := [ fylgja getOrProduce: debug for: destination ]
-		          on: FylgjaMapWarning
-		          do: [ :e | e resume ].
-
-
-	parser := TypeScriptParser
-		          createParserOnStream: destination produceCode readStream
-		          startingAt: JavaParser defaultStartingState.
-
-
-	[ parser parse ]
-		on: SmaCCParserError
-		do: [ :e | 
-			hadError := true.
-			self assert: parser currentToken value = '>' ].
-
-	self assert: hadError
-]
-
-{ #category : #initialization }
-NotThatGoodTests >> testMapToRewriteRuleTextTypeScriptErrorExpected [
-
-	| debug destination result parser hadError |
-	debug := self logErrorFunction.
-	destination := self angularClassStudent.
-	hadError := false.
-	self assert: destination methods isEmpty.
-
-	FylgjaTranslateBuilder new
-		fylgja: fylgja;
-		translate: debug;
-		into: destination;
-		build;
-		install.
-
-	result :=[ fylgja getOrProduce: debug for: destination.] on: FylgjaMapWarning do: [  :e | e resume  ].
-	
-	
-	parser := TypeScriptParser
-		          createParserOnStream: destination produceCode readStream
-		          startingAt: JavaParser defaultStartingState.
-
-
-	[ parser parse ]
-		on: SmaCCParserError
-		do: [ :e | 
-			hadError := true.
-			self assert: parser currentToken value = '>' ].
-
-	self assert: hadError
-]
-
-{ #category : #initialization }
-NotThatGoodTests >> testTranslateLogErrorBuildAndInstall [
-
-	| debug destination |
-	debug := self logErrorFunction.
-	destination := self modelStubClass.
-
-	self assert: destination methods isEmpty.
-
-	FylgjaTranslateBuilder new
-		fylgja: fylgja;
-		translate: debug;
-		into: destination;
-		build;
-		install.
-
-	self assert: fylgja producers isNotEmpty
+	self assert:
+		(fylgja
+			 lookupRulesForMapping: variable
+			 toContext: destinationContext) size = 1
 ]
