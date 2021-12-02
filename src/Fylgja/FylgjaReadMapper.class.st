@@ -3,9 +3,10 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'fylgja',
-		'model',
+		'trace',
 		'destinationContext',
-		'errors'
+		'errors',
+		'writer'
 	],
 	#category : #'Fylgja-ReadersWriters'
 }
@@ -18,7 +19,7 @@ FylgjaReadMapper >> destinationContext: aMOClass [
 
 { #category : #'as yet unclassified' }
 FylgjaReadMapper >> destinationModel: aMOModel [ 
-	model := aMOModel.
+	writer := aMOModel writer.
 ]
 
 { #category : #'as yet unclassified' }
@@ -106,11 +107,26 @@ FylgjaReadMapper >> getReference: anAlcixPrimitiveType from: anAlcixParameter [
 		  getOrProduce: anAlcixPrimitiveType
 		  for: destinationContext
 		  ifNotProducerAvailable: [ 
-			  errorRef := model instantiate: FylgjaMissingTypeTypeReference.
+			  errorRef := model instantiate: FylgjaMissingTypeReference.
 			  errorRef
 				  referenceTo: anAlcixPrimitiveType;
 				  relatedTypedEntity: anAlcixParameter;
 				  destinationContext: destinationContext.
+			  self errors add: errorRef.
+			  errorRef ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaReadMapper >> getTypeReference: aType [
+
+	| errorRef |
+	^ fylgja
+		  getOrProduce: aType
+		  for: destinationContext
+		  ifNotProducerAvailable: [ 
+			  errorRef := writer
+				              missingTypeReferenceTo: aType
+				              withContext: destinationContext.
 			  self errors add: errorRef.
 			  errorRef ]
 ]
@@ -149,4 +165,17 @@ FylgjaReadMapper >> hackieMissingVariableReference: aString for: aVBArgumentNode
 FylgjaReadMapper >> hasErrors [
 
 	^ errors isEmptyOrNil not
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaReadMapper >> initialize [
+
+	super initialize.
+	trace := Dictionary new
+]
+
+{ #category : #visiting }
+FylgjaReadMapper >> visitPrimitiveTypeReference: aMOPrimitiveTypeReference [
+
+	^ self getTypeReference: aMOPrimitiveTypeReference
 ]

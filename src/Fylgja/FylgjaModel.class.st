@@ -79,7 +79,7 @@ FylgjaModel >> producers [
 { #category : #'as yet unclassified' }
 FylgjaModel >> selectDestinationModelFor: aMOClass [
 
-	^ models detect: [ :d | d entities includes: aMOClass ]
+	^( models detect: [ :d | d entities includes: aMOClass ]) derivative 
 ]
 
 { #category : #'as yet unclassified' }

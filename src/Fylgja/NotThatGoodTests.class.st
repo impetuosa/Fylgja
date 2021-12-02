@@ -29,11 +29,6 @@ NotThatGoodTests >> configClassConfigPackage [
 ]
 
 { #category : #initialization }
-NotThatGoodTests >> configDataSource [ 
-	java entities 
-]
-
-{ #category : #initialization }
 NotThatGoodTests >> configPackage [
 
 	^ java packages detect: [ :p | p name = 'config' ]
@@ -62,6 +57,12 @@ NotThatGoodTests >> logErrorFunction [
 ]
 
 { #category : #initialization }
+NotThatGoodTests >> logErrorFunctionVariable [
+
+	^ self logErrorFunction variables first
+]
+
+{ #category : #initialization }
 NotThatGoodTests >> modelPackage [
 
 	^ java packages detect: [ :p | p name = 'Model' ]
@@ -72,6 +73,11 @@ NotThatGoodTests >> modelStubClass [
 
 	^ (java packages detect: [ :p | p name = 'Model' ]) types detect: [ 
 		  :t | t name = 'Stub' ]
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> runCaseManaged [ 
+	^ self runCase 
 ]
 
 { #category : #initialization }
@@ -87,16 +93,43 @@ NotThatGoodTests >> setUp [
 			           '/Users/sbragagn/git/northwind-angular' asFileReference;
 		           loadNamed: #angular.
 
-	java := MOJavaMavenProjectLoader new
-		        workingDirectory:
-			        '/Users/sbragagn/git/jnorthwind/jnorthwind';
-		        mooseModel: MooseModelRoot root entities second;
-		        loadNamed: #java.
- 
+	java := MOJavaMavenProjectLoader northwind.
+
+
 	fylgja
 		addModel: northwind;
 		addModel: angular;
 		addModel: java
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> testAddAccessVariableToJavaMethod [
+
+	| destination result parser hadError code variable |
+	variable := self logErrorFunctionVariable.
+	destination := self dataSourceConfigClassConfigPackage.
+	hadError := false.
+
+	FylgjaTranslateBuilder new
+		fylgja: fylgja;
+		translate: variable;
+		into: destination;
+		build;
+		install.
+
+	result := [ fylgja getOrProduce: variable for: destination ]
+		          on: FylgjaMapWarning
+		          do: [ :e | e resume ].
+
+	code := result parent produceCode.
+
+	parser := VBParser
+		          createParserOnStream: code readStream
+		          startingAt: JavaParser defaultStartingState.
+	code inspect.
+	parser parse inspect.
+
+	self deny: hadError
 ]
 
 { #category : #initialization }
@@ -123,7 +156,7 @@ NotThatGoodTests >> testLogErrorToClassNoMappingExists [
 NotThatGoodTests >> testMapToRewriteRule [
 
 	| debug destination |
-	debug := self logErrorFunction . 
+	debug := self logErrorFunction.
 	destination := self modelStubClass.
 
 	self assert: destination methods isEmpty.
@@ -134,9 +167,10 @@ NotThatGoodTests >> testMapToRewriteRule [
 		into: destination;
 		build;
 		install.
-	
-	 self should: [fylgja getOrProduce: debug for: destination] raise: FylgjaMapWarning 
-	
+
+	self
+		should: [ fylgja getOrProduce: debug for: destination ]
+		raise: FylgjaMapWarning
 ]
 
 { #category : #initialization }

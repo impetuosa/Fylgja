@@ -7,8 +7,8 @@ Class {
 		'into',
 		'translator',
 		'possibleBrushes',
-		'reader',
-		'writer'
+		'writer',
+		'reader'
 	],
 	#category : #'Fylgja-Test'
 }
@@ -23,10 +23,10 @@ FylgjaTranslateBuilder >> build [
 	possibleBrushes := (FylgjaBrushSpecializer newFor: translate) 
 		                   specialize: possibleBrushes anyOne.
 
-	reader := (FylgjaResolver readerOn: fylgja for: translate) resolve.
+	reader := (FylgjaResolver readerOn: fylgja for: translate)
+		                resolve.
+
 	writer := (FylgjaResolver writerOn: fylgja for: into) resolve.
-
-
 
 
 	translator := FylgjaTranslator new

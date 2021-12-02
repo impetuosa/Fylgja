@@ -9,7 +9,8 @@ Class {
 }
 
 { #category : #accessing }
-FylgjaMappingErrorNode >> destinationContext: aMOClass [ 
+FylgjaMappingErrorNode >> destinationContext: aMOClass [
+
 	destinationContext := aMOClass
 ]
 

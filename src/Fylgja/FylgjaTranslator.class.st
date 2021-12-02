@@ -2,9 +2,9 @@ Class {
 	#name : #FylgjaTranslator,
 	#superclass : #Object,
 	#instVars : [
-		'reader',
 		'writer',
-		'brush'
+		'brush',
+		'reader'
 	],
 	#category : #'Fylgja-Test'
 }
@@ -15,28 +15,24 @@ FylgjaTranslator >> brush: aMOMethodBrush [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaTranslator >> produce: anAlcixFunction into: aMOClass [
-
-	writer surface: aMOClass.
-	writer brush: brush.
-	writer write: (reader read: anAlcixFunction context: aMOClass).
-	
-]
-
-{ #category : #'as yet unclassified' }
 FylgjaTranslator >> produce: anAlcixFunction into: aMOClass destination: aMOModel [
 
-	| entity |
-	writer surface: aMOClass.
+	| entity context |
+	context := aMOModel writer writeCopyOf: aMOClass.
+	entity := reader read: anAlcixFunction context: context of: aMOModel.
+
+
+
+	writer surface: context.
 	writer model: aMOModel.
 	writer brush: brush.
-	entity := reader read: anAlcixFunction context: aMOClass of: aMOModel.
-	^ writer write: entity with: reader model
+
+	^ writer write: entity
 ]
 
 { #category : #accessing }
-FylgjaTranslator >> reader: aFylgjaReader [ 
-	reader := aFylgjaReader
+FylgjaTranslator >> reader: aMOAlceModelReader [ 
+	reader := aMOAlceModelReader
 ]
 
 { #category : #accessing }
