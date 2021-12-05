@@ -22,6 +22,12 @@ NotThatGoodTests >> angularPackage [
 	^ angular packages detect: [ :p | p name = 'app' ]
 ]
 
+{ #category : #'as yet unclassified' }
+NotThatGoodTests >> blockDataSourceConfigClassConfigPackage [
+
+	^ self dataSourceConfigClassConfigPackage block
+]
+
 { #category : #initialization }
 NotThatGoodTests >> configClassConfigPackage [
 
@@ -97,6 +103,12 @@ NotThatGoodTests >> setUp [
 		addModel: northwind;
 		addModel: angular;
 		addModel: java
+]
+
+{ #category : #'as yet unclassified' }
+NotThatGoodTests >> statementDataSourceConfigClassConfigPackage [
+
+	^ self dataSourceConfigClassConfigPackage block statements first
 ]
 
 { #category : #initialization }
@@ -187,12 +199,18 @@ NotThatGoodTests >> testLogErrorToClassNoMappingExists [
 	self should: [ fylgja get: debug for: destination ] raise: NotFound
 ]
 
-{ #category : #initialization }
+{ #category : #'as yet unclassified' }
 NotThatGoodTests >> testProduceVariableIntoMethodByCopyNodeTransformDefault [
 
 	| variable destinationContext result |
 	variable := self logErrorFunctionVariable.
-	destinationContext := self dataSourceConfigClassConfigPackage.
+	destinationContext := self blockDataSourceConfigClassConfigPackage.
+
+	FylgjaRuleInstaller new
+		context: destinationContext;
+		anyEntity;
+		copy;
+		installInto: fylgja.
 
 	result := fylgja produce: variable into: destinationContext.
 	self halt

@@ -38,6 +38,15 @@ FylgjaResolver >> fylgja: anEntity [
 ]
 
 { #category : #navigating }
-FylgjaResolver >> resolve [ 
-	^ self subclassResponsibility 
+FylgjaResolver >> privateResolveArtefact [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #navigating }
+FylgjaResolver >> resolve [
+
+	^ self privateResolveArtefact
+		  model: (fylgja selectDestinationModelFor: entity);
+		  yourself
 ]

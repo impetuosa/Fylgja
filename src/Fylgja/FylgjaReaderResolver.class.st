@@ -10,25 +10,10 @@ FylgjaReaderResolver class >> newFor: anAlcixFunction [
 ]
 
 { #category : #options }
-FylgjaReaderResolver >> resolve [
+FylgjaReaderResolver >> privateResolveArtefact [
 
-	entity language isMicrosoftAccess ifTrue: [ 
-		^ MOAlceModelReader new
-			  mapper: (FylgjaReadMapper new
-					   fylgja: fylgja;
-					   yourself);
-			  yourself ].
-	entity language isJava ifTrue: [ 
-		^ MOJavaModelReader new
-			  mapper: (FylgjaReadMapper new
-					   fylgja: fylgja;
-					   yourself);
-			  yourself ].
-	entity language isTypescript ifTrue: [ 
-		^ MOTypescriptModelReader new
-			  mapper: (FylgjaReadMapper new
-					   fylgja: fylgja;
-					   yourself);
-			  yourself ].
+	entity language isMicrosoftAccess ifTrue: [ ^ MOAlceModelReader new ].
+	entity language isJava ifTrue: [ ^ MOJavaModelReader new ].
+	entity language isTypescript ifTrue: [ ^ MOTypescriptModelReader new ].
 	self error: ' Language not supported '
 ]

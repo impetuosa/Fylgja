@@ -8,3 +8,8 @@ AlcixModel >> fylgja [
 			            mooseModel: self;
 			            yourself ]
 ]
+
+{ #category : #'*Fylgja' }
+AlcixModel >> primitiveTypeNamed: aString ifAbsent: aFullBlockClosure [ 
+	^ aFullBlockClosure value
+]

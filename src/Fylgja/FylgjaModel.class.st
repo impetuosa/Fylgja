@@ -17,6 +17,14 @@ FylgjaModel >> addModel: aMOJavaProject [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaModel >> derivative [
+
+	^ FylgjaDerivativeModel new
+		  fylgja: self;
+		  yourself
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaModel >> get: anAlcixFunction for: aMOJavaClass [
 
 	| rules |
@@ -47,19 +55,46 @@ FylgjaModel >> installProducer: aTranslator from: anAlcixFunction to: aMOJavaCla
 { #category : #'as yet unclassified' }
 FylgjaModel >> lookupRulesForMapping: anAlcixFunction toContext: aMOClass [
 
-	^ mapspace
+	^ self
 		  lookupRulesForMapping: anAlcixFunction
 		  toContext: aMOClass
 		  model: (self selectDestinationModelFor: aMOClass)
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaModel >> lookupRulesForMapping: anAlcixFunction toContext: aMOClass model: aModel [ 
+
+	^ mapspace
+		  lookupRulesForMapping: anAlcixFunction
+		  toContext: aMOClass
+		  model: aModel
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaModel >> lookupRulesForProducing: anAlcixFunction toContext: aMOClass [
+
+	^ self
+		  lookupRulesForProducing: anAlcixFunction
+		  toContext: aMOClass
+		  model: (self selectDestinationModelFor: aMOClass)
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaModel >> lookupRulesForProducing: anAlcixFunction toContext: aMOClass destinationModel: destinationModel [
+
+	^ self
+		  lookupRulesForProducing: anAlcixFunction
+		  toContext: aMOClass
+		  model: destinationModel
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaModel >> lookupRulesForProducing: anAlcixFunction toContext: aMOClass model: aModel [ 
 
 	^ mapspace
 		  lookupRulesForProducing: anAlcixFunction
 		  toContext: aMOClass
-		  model: (self selectDestinationModelFor: aMOClass)
+		  model: aModel
 ]
 
 { #category : #accessing }
@@ -77,12 +112,30 @@ FylgjaModel >> models [
 { #category : #'as yet unclassified' }
 FylgjaModel >> produce: anAlcixFunction into: aMOJavaClass [
 
+	^ self
+		  produce: anAlcixFunction
+		  into: aMOJavaClass
+		  using: self derivative
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaModel >> produce: anAlcixFunction into: aMOJavaClass using: aFylgjaOrDerivativeModel [
+
 	| rules |
 	rules := self
 		         lookupRulesForProducing: anAlcixFunction
-		         toContext: aMOJavaClass.
+		         toContext: aMOJavaClass
+		         destinationModel:
+		         (aFylgjaOrDerivativeModel selectDestinationModelFor:
+			          aMOJavaClass).
+
 	rules ifEmpty: [ NotFound signal: 'No producing rule found ' ].
-	^ rules first applyTo: anAlcixFunction context: aMOJavaClass
+	rules size > 1 ifTrue: [ ^ self error: 'Rule selection colision' ].
+
+	^ rules first
+		  applyTo: anAlcixFunction
+		  context: aMOJavaClass
+		  using: aFylgjaOrDerivativeModel
 ]
 
 { #category : #'as yet unclassified' }
