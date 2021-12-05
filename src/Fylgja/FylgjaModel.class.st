@@ -112,10 +112,16 @@ FylgjaModel >> models [
 { #category : #'as yet unclassified' }
 FylgjaModel >> produce: anAlcixFunction into: aMOJavaClass [
 
-	^ self
-		  produce: anAlcixFunction
-		  into: aMOJavaClass
-		  using: self derivative
+	| result derivative |
+	derivative := self derivative.
+	result := self
+		          produce: anAlcixFunction
+		          into: aMOJavaClass
+		          using: derivative.
+	^ FylgjaDerivationResult new
+		  derivative: derivative;
+		  result: result;
+		  yourself
 ]
 
 { #category : #'as yet unclassified' }

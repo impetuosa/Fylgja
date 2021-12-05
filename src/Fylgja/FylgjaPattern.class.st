@@ -1,0 +1,85 @@
+Class {
+	#name : #FylgjaPattern,
+	#superclass : #FylgjaCondition,
+	#instVars : [
+		'node',
+		'pairs'
+	],
+	#category : #'Fylgja-Rule-Conditions'
+}
+
+{ #category : #accessing }
+FylgjaPattern >> initialize [
+
+	super initialize.
+	pairs := Dictionary new
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaPattern >> matchPattern: aPatternNode with: aNode [
+
+	| values |
+	((aPatternNode isKindOf: JinAnchor) or: [ 
+		 (aPatternNode isKindOf: MOAnchor) or: [ 
+			 aPatternNode isKindOf: MOLanguage ] ]) ifTrue: [ 
+		self pairs
+			at: { 
+					aPatternNode.
+					aNode } asSet
+			put: true.
+		^ true ].
+
+	aPatternNode species = aNode species ifFalse: [ 
+		self halt.
+		^ false ].
+	self pairs
+		at: { 
+				aPatternNode.
+				aNode } asSet
+		ifPresent: [ :v | ^ v ].
+
+
+	(aPatternNode isKindOf: MOObject) ifTrue: [ 
+		^ aPatternNode class allSlots allSatisfy: [ :s | 
+			  self matchPattern: (s read: aPatternNode) with: (s read: aNode) ] ].
+	^ self matchValue: aPatternNode with: aNode
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaPattern >> matchString: aString with: aString2 [
+
+	^ aString = '$' or: [ aString = aString2 ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaPattern >> matchValue: anUndefinedObject with: anUndefinedObject2 [
+
+	^ pairs
+		  at: { 
+				  anUndefinedObject.
+				  anUndefinedObject2 } asSet
+		  ifAbsentPut: [ 
+			  anUndefinedObject2 species = anUndefinedObject species
+				  ifTrue: [ 
+					  (anUndefinedObject2 isKindOf: String)
+						  ifTrue: [ 
+						  self matchString: anUndefinedObject with: anUndefinedObject2 ]
+						  ifFalse: [ anUndefinedObject = anUndefinedObject2 ] ]
+				  ifFalse: [ false ] ]
+]
+
+{ #category : #testing }
+FylgjaPattern >> matches: anAlcixLocalVariable context: aMOMethod [
+self halt .
+	^ self matchPattern: node with: anAlcixLocalVariable
+]
+
+{ #category : #accessing }
+FylgjaPattern >> node: aMOVariable [ 
+	node := aMOVariable
+]
+
+{ #category : #accessing }
+FylgjaPattern >> pairs [
+	^ pairs
+]

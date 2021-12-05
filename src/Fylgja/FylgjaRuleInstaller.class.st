@@ -66,6 +66,12 @@ FylgjaRuleInstaller >> isMap [
 	^ operation isMap
 ]
 
+{ #category : #testing }
+FylgjaRuleInstaller >> matchesPattern: aFylgjaPattern [
+
+	self condition: aFylgjaPattern
+]
+
 { #category : #accessing }
 FylgjaRuleInstaller >> operation: anOperation [
 

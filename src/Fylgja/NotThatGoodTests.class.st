@@ -213,7 +213,20 @@ NotThatGoodTests >> testProduceVariableIntoMethodByCopyNodeTransformDefault [
 		installInto: fylgja.
 
 	result := fylgja produce: variable into: destinationContext.
-	self halt
+	self assert: (result result isKindOf: MOBlock).
+	self assert: result result language isJava.
+	self
+		assert: result result statements size
+		equals: destinationContext statements size + 1.
+	1 to: destinationContext statements size do: [ :i | 
+		self assert: (result result statements at: i)
+			== (destinationContext statements at: i) ].
+	self assert: result result statements last name = variable name.
+	self assert: result result statements last language isJava.
+	self assert:
+		result result statements last typeReference name
+		= variable type name.
+
 ]
 
 { #category : #initialization }
@@ -232,28 +245,28 @@ NotThatGoodTests >> testProduceVariableIntoMethodByCopyNodeTransformDefaultNoPro
 { #category : #initialization }
 NotThatGoodTests >> testRespondsToPatternConditionMatchesTheCase [
 
-	| variable destinationContext |
+	| variable destinationContext moVariable |
 	variable := self logErrorFunctionVariable.
 	destinationContext := self dataSourceConfigClassConfigPackage.
+	moVariable := (fylgja derivative readerFor: variable) read: variable.
 
-	self assert:
-		(fylgja
+	self assert: (fylgja
 			 lookupRulesForProducing: variable
 			 toContext: destinationContext) isEmpty.
 
 	FylgjaRuleInstaller new
 		context: destinationContext;
 		matchesPattern: (FylgjaPatternBuilder new
-				 parse: ' dim $ as String '
-				 parser: VBParser
+				 parse: ' dim $ as String ';
+				 parser: VBParser;
 				 reader: MOAlceModelReader;
+				 model: MOModel newMicrosoftAccess;
 				 build);
 		copy;
 		installInto: fylgja.
 
-	self assert:
-		(fylgja
-			 lookupRulesForProducing: variable
+	self assert: (fylgja
+			 lookupRulesForProducing: moVariable
 			 toContext: destinationContext) size = 1
 ]
 

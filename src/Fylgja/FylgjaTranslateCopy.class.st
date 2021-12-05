@@ -5,12 +5,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaTranslateCopy >> applyTo: anAlcixLocalVariable context: aMOMethod [ 
-	self shouldBeImplemented.
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaTranslateCopy >> applyTo: anAlcixLocalVariable context: aMOMethod using: aFylgjaDerivativeModel [
+FylgjaTranslateCopy >> applyTo: anAlcixLocalVariable context: aMethod using: aFylgjaDerivativeModel [
 
 	| element |
 	element := (aFylgjaDerivativeModel readerFor: anAlcixLocalVariable) 
@@ -18,7 +13,7 @@ FylgjaTranslateCopy >> applyTo: anAlcixLocalVariable context: aMOMethod using: a
 
 	^ aFylgjaDerivativeModel
 		  writerFor: element
-		  inContextOf: aMOMethod
+		  inContextOf: aMethod
 		  do: [ :contextWriter | 
 			  contextWriter
 				  writeCopyOf: element
