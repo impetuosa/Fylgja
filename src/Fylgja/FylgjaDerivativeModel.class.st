@@ -21,11 +21,6 @@ FylgjaDerivativeModel >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> lookupRulesForProducing: aMOPrimitiveTypeReference toContext: aMOVariable [ 
-	self shouldBeImplemented.
-]
-
-{ #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> produce: anAlcixFunction into: aMOJavaClass [
 
 	^ fylgja produce: anAlcixFunction into: aMOJavaClass using: self

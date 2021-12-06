@@ -14,7 +14,7 @@ Class {
 { #category : #'public-entity-creation' }
 FylgjaMapSpace >> ensureNamespace: aMOMethod [
 
-	^ aMOMethod anchor names inject: self into: [ :space :entry | 
+	^ aMOMethod mapSpaceAnchor names inject: self into: [ :space :entry | 
 		  space
 			  mapspaceForName: entry
 			  ifAbsent: [ space registerSpace: entry ] ]
@@ -104,7 +104,7 @@ FylgjaMapSpace >> lookupRulesForMapping: anAlcixFunction toContext: aMOClass mod
 FylgjaMapSpace >> lookupRulesForProducing: anAlcixFunction toContext: aMOClass [
 
 	^ (producingRules select: [ :mr | 
-		   mr matches: anAlcixFunction context: aMOClass ]) , (parent
+		   mr matches: anAlcixFunction context: aMOClass ] thenCollect: [ : mr | self -> mr ] ) , (parent
 		   ifNil: [ {  } ]
 		   ifNotNil: [ 
 		   parent lookupRulesForProducing: anAlcixFunction toContext: aMOClass ])
@@ -151,6 +151,21 @@ FylgjaMapSpace >> name: aString [
 { #category : #accessing }
 FylgjaMapSpace >> parent: aFylgjaMapSpace [ 
 	parent := aFylgjaMapSpace
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMapSpace >> printOn: aStream [
+
+	parent
+		ifNil: [ 
+			aStream
+				nextPutAll: 'MapSpace: ';
+				nextPutAll: (name ifNil: '/root') ]
+		ifNotNil: [ 
+			parent printOn: aStream.
+			aStream
+				nextPutAll: #/;
+				nextPutAll: name ]
 ]
 
 { #category : #'as yet unclassified' }

@@ -84,22 +84,6 @@ FylgjaReadMapper >> getInvocationForNonResolvedCall: aString arguments: aCollect
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaReadMapper >> getInvocationForOperator: aString [
-
-	| errorRef |
-	^ fylgja
-		  getOrProduce: aString asSymbol
-		  for: destinationContext
-		  ifNotProducerAvailable: [ 
-			  errorRef := model instantiate: FylgjaMissingOperator.
-			  errorRef
-				  operator: aString;
-				  destinationContext: destinationContext.
-			  self errors add: errorRef.
-			  errorRef ]
-]
-
-{ #category : #'as yet unclassified' }
 FylgjaReadMapper >> getReference: anAlcixPrimitiveType from: anAlcixParameter [
 
 	| errorRef |

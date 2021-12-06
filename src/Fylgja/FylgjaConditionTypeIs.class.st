@@ -2,7 +2,7 @@ Class {
 	#name : #FylgjaConditionTypeIs,
 	#superclass : #FylgjaCondition,
 	#instVars : [
-		'type'
+		'types'
 	],
 	#category : #'Fylgja-Rule-Conditions'
 }
@@ -10,10 +10,24 @@ Class {
 { #category : #testing }
 FylgjaConditionTypeIs >> matches: anAlcixLocalVariable context: aMOMethod [
 
-	^ anAlcixLocalVariable isKindOf: AlcixVariable
+	^ types anySatisfy: [ :t | anAlcixLocalVariable isKindOf: t ]
+]
+
+{ #category : #testing }
+FylgjaConditionTypeIs >> printOn: aStream [
+
+	aStream nextPutAll:
+		('TypeIsAnyOf:({1})' format: { ('|' join: (types collect: #name)) })
 ]
 
 { #category : #accessing }
-FylgjaConditionTypeIs >> type: aClass [ 
-	type := aClass
+FylgjaConditionTypeIs >> type: aClass [
+
+	types := { aClass }
+]
+
+{ #category : #accessing }
+FylgjaConditionTypeIs >> types: aCollection [
+
+	types := aCollection
 ]

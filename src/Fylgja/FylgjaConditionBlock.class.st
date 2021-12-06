@@ -12,3 +12,8 @@ FylgjaConditionBlock >> matches: anEntity context: aContext [
 
 	^ block cull: anEntity cull: aContext
 ]
+
+{ #category : #testing }
+FylgjaConditionBlock >> printOn: aStream [ 
+	aStream nextPutAll:  'BlockEvaluatesTrue'
+]

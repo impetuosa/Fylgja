@@ -2,7 +2,8 @@ Class {
 	#name : #FylgjaRule,
 	#superclass : #Object,
 	#instVars : [
-		'condition'
+		'condition',
+		'operation'
 	],
 	#category : #'Fylgja-Rules'
 }
@@ -22,4 +23,19 @@ FylgjaRule >> condition: aFylgjaConditionAll [
 FylgjaRule >> matches: anAlcixLocalVariable context: aMOMethod [
 
 	^ condition matches: anAlcixLocalVariable context: aMOMethod
+]
+
+{ #category : #accessing }
+FylgjaRule >> printOn: aStream [
+	aStream nextPutAll: 'if '.
+	condition printOn: aStream. 
+	aStream nextPutAll: ' '.
+	aStream nextPutAll: self printingSymbol.
+	aStream nextPutAll: ' '.
+	operation printOn: aStream 
+]
+
+{ #category : #accessing }
+FylgjaRule >> printingSymbol [
+	^ self subclassResponsibility 
 ]

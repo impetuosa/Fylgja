@@ -18,7 +18,10 @@ FylgjaPatternBuilder >> build [
 
 	reader := self reader new.
 	reader model: self model.
-	^ FylgjaPattern new node: (reader read: ast)
+	^ FylgjaConditionPattern new
+		  node: (reader read: ast);
+		  patternString: self string;
+		  yourself
 ]
 
 { #category : #'as yet unclassified' }
@@ -60,7 +63,7 @@ FylgjaPatternBuilder >> parse: aString parser: aParser reader: aReader [
 	| ast |
 	ast := self getAstFrom: aString parser: aParser.
 	reader := aReader new.
-	^ FylgjaPattern new node: (reader read: ast)
+	^ FylgjaConditionPattern new node: (reader read: ast)
 ]
 
 { #category : #parsing }
@@ -71,7 +74,7 @@ FylgjaPatternBuilder >> parse: aString parser: aParser reader: aReader model: mo
 	
 	reader := aReader new.
 	reader model: model . 
-	^ FylgjaPattern new node: (reader read: ast)
+	^ FylgjaConditionPattern new node: (reader read: ast)
 ]
 
 { #category : #accessing }

@@ -1,9 +1,6 @@
 Class {
 	#name : #FylgjaProductionRule,
 	#superclass : #FylgjaRule,
-	#instVars : [
-		'operation'
-	],
 	#category : #'Fylgja-Rules'
 }
 
@@ -25,4 +22,10 @@ FylgjaProductionRule >> applyTo: anAlcixLocalVariable context: aMOMethod using: 
 { #category : #accessing }
 FylgjaProductionRule >> operation: aFylgjaTranslateCopy [ 
 	operation := aFylgjaTranslateCopy 
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaProductionRule >> printingSymbol [
+
+	^ '=>>'
 ]

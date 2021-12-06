@@ -17,3 +17,10 @@ FylgjaConditionEntityEquality >> matches: anEntity context: context [
 
 	^ entity = anEntity
 ]
+
+{ #category : #testing }
+FylgjaConditionEntityEquality >> printOn: aStream [
+
+	aStream nextPutAll: 'IsEqualsTo '.
+	entity printOn: aStream
+]

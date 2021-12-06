@@ -5,11 +5,8 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaTranslateCopy >> applyTo: anAlcixLocalVariable context: aMethod using: aFylgjaDerivativeModel [
+FylgjaTranslateCopy >> applyTo: element context: aMethod using: aFylgjaDerivativeModel [
 
-	| element |
-	element := (aFylgjaDerivativeModel readerFor: anAlcixLocalVariable) 
-		           read: anAlcixLocalVariable.
 
 	^ aFylgjaDerivativeModel
 		  writerFor: element
@@ -19,4 +16,9 @@ FylgjaTranslateCopy >> applyTo: anAlcixLocalVariable context: aMethod using: aFy
 				  writeCopyOf: element
 				  readingValues: [ :context :value | 
 					  aFylgjaDerivativeModel produce: value into: context ] ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaTranslateCopy >> printOn: aStream [
+ 	aStream nextPutAll: 'Copy'
 ]

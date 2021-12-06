@@ -200,6 +200,55 @@ NotThatGoodTests >> testLogErrorToClassNoMappingExists [
 ]
 
 { #category : #'as yet unclassified' }
+NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformDefault [
+
+	| variable destinationContext result |
+	variable := self logErrorFunction.
+	destinationContext := self configClassConfigPackage.
+
+	" By default in the system we copy"
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		copy;
+		installInto: fylgja.
+
+	" By default when going to java "
+	FylgjaRuleInstaller new
+		context: (fylgja selectDestinationModelFor: destinationContext );
+		anyEntityOfTypes: { 
+				MOFunction.
+				MOProcedure };
+		copyAsMethod;
+		installInto: fylgja.
+
+
+	result := fylgja produce: variable into: destinationContext
+]
+
+{ #category : #'as yet unclassified' }
+NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformDefaultFailsForMessageNotUnderstood [
+
+	| variable destinationContext result |
+	variable := self logErrorFunction.
+	destinationContext := self configClassConfigPackage.
+
+
+
+
+	FylgjaRuleInstaller new
+		context: destinationContext;
+		anyEntity;
+		copy;
+		installInto: fylgja.
+
+	self
+		should: [ 
+		result := fylgja produce: variable into: destinationContext ]
+		raise: MessageNotUnderstood
+]
+
+{ #category : #'as yet unclassified' }
 NotThatGoodTests >> testProduceVariableIntoMethodByCopyNodeTransformDefault [
 
 	| variable destinationContext result |

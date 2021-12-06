@@ -9,3 +9,8 @@ FylgjaConditionAll >> matches: anAlcixLocalVariable context: aMOMethod [
 
 	^ true
 ]
+
+{ #category : #testing }
+FylgjaConditionAll >> printOn: aStream [ 
+	aStream nextPutAll: 'AllwaysTrue'
+]

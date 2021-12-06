@@ -82,10 +82,16 @@ FylgjaModel >> lookupRulesForProducing: anAlcixFunction toContext: aMOClass [
 { #category : #'as yet unclassified' }
 FylgjaModel >> lookupRulesForProducing: anAlcixFunction toContext: aMOClass destinationModel: destinationModel [
 
-	^ self
-		  lookupRulesForProducing: anAlcixFunction
-		  toContext: aMOClass
-		  model: destinationModel
+	| rules |
+	rules := self
+		         lookupRulesForProducing: anAlcixFunction
+		         toContext: aMOClass
+		         model: destinationModel.
+	[ ^ rules asDictionary values ]
+		on: Error
+		do: [ 
+			self error:
+				'Rule selection collision: More than one rule applies on the same map space for the given entity! ' ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -127,19 +133,23 @@ FylgjaModel >> produce: anAlcixFunction into: aMOJavaClass [
 { #category : #'as yet unclassified' }
 FylgjaModel >> produce: anAlcixFunction into: aMOJavaClass using: aFylgjaOrDerivativeModel [
 
-	| rules |
+	| rules element |
+	element := (aFylgjaOrDerivativeModel readerFor: anAlcixFunction) 
+		           read: anAlcixFunction.
+
+
 	rules := self
-		         lookupRulesForProducing: anAlcixFunction
+		         lookupRulesForProducing: element
 		         toContext: aMOJavaClass
 		         destinationModel:
 		         (aFylgjaOrDerivativeModel selectDestinationModelFor:
 			          aMOJavaClass).
 
 	rules ifEmpty: [ NotFound signal: 'No producing rule found ' ].
-	rules size > 1 ifTrue: [ ^ self error: 'Rule selection colision' ].
+
 
 	^ rules first
-		  applyTo: anAlcixFunction
+		  applyTo: element
 		  context: aMOJavaClass
 		  using: aFylgjaOrDerivativeModel
 ]

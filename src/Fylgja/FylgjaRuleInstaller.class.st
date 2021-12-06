@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'condition',
 		'operation',
-		'context'
+		'context',
+		'installAtTopLevel'
 	],
 	#category : #'Fylgja-Rules'
 }
@@ -18,6 +19,14 @@ FylgjaRuleInstaller >> all [
 FylgjaRuleInstaller >> anyEntity [
 
 	self condition: FylgjaConditionAll new
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> anyEntityOfTypes: aCollection [
+
+	self condition: (FylgjaConditionTypeIs new
+			 types: aCollection;
+			 yourself)
 ]
 
 { #category : #accessing }
@@ -47,13 +56,28 @@ FylgjaRuleInstaller >> copy [
 	self operation: FylgjaTranslateCopy new
 ]
 
+{ #category : #copying }
+FylgjaRuleInstaller >> copyAsMethod [
+
+	self operation: FylgjaTranslateCopyAsMethod new
+]
+
+{ #category : #accessing }
+FylgjaRuleInstaller >> installAtTopLevel [
+
+	^ installAtTopLevel ifNil: [ false ]
+]
+
 { #category : #accessing }
 FylgjaRuleInstaller >> installInto: aFylgja [
 
 	| rule space |
-	space := aFylgja mapspace
-		         ensureNamespace: context
-		         model: (aFylgja selectDestinationModelFor: context).
+	space := self installAtTopLevel
+		         ifTrue: [ aFylgja mapspace ]
+		         ifFalse: [ 
+			         aFylgja mapspace
+				         ensureNamespace: context
+				         model: (self modelFor: aFylgja) ].
 	rule := self build.
 	self isMap
 		ifTrue: [ space installMappingRule: rule ]
@@ -72,10 +96,25 @@ FylgjaRuleInstaller >> matchesPattern: aFylgjaPattern [
 	self condition: aFylgjaPattern
 ]
 
+{ #category : #hooks }
+FylgjaRuleInstaller >> modelFor: aFylgjaModel [
+
+	^ (context isKindOf: MOModel)
+		  ifTrue: [ 
+			  self assert: (aFylgjaModel models includes: context).
+			  context ]
+		  ifFalse: [ aFylgjaModel selectDestinationModelFor: context ]
+]
+
 { #category : #accessing }
 FylgjaRuleInstaller >> operation: anOperation [
 
 	operation := anOperation
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> topLevel [
+	installAtTopLevel := true .
 ]
 
 { #category : #'as yet unclassified' }

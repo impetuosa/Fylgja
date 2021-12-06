@@ -18,3 +18,10 @@ FylgjaConditionEntityIdentity >> matches: anEntity context: context [
 
 	^ entity == anEntity
 ]
+
+{ #category : #accessing }
+FylgjaConditionEntityIdentity >> printOn: aStream [
+
+	aStream nextPutAll: 'IsIdenticalTo '.
+	entity printOn: aStream
+]
