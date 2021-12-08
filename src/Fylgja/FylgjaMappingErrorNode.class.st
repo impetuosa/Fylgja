@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaMappingErrorNode,
-	#superclass : #MOLanguageObject,
+	#superclass : #AnObsoleteMOLanguageObject,
 	#instVars : [
 		'destinationContext',
 		'context'

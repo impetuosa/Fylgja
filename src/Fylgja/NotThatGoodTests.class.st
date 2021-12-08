@@ -50,16 +50,16 @@ NotThatGoodTests >> dataSourceConfigClassConfigPackage [
 { #category : #initialization }
 NotThatGoodTests >> errorHandlingClass [
 
-	^ northwind detect: [ :a | 
-		  (a isKindOf: AlcixClass) and: [ a name = 'ErrorHandling' ] ]
+	^ northwind entities detect: [ :a | 
+		  (a isKindOf: JinDAMClass) and: [ a name = 'ErrorHandling' ] ]
 ]
 
 { #category : #initialization }
 NotThatGoodTests >> logErrorFunction [
 
-	^ northwind detect: [ :a | 
-		  (a isKindOf: AlcixInvocable) and: [ 
-			  a name = 'LogError' and: [ a userType isNotNil ] ] ]
+	^ northwind entities detect: [ :a | 
+		  (a isKindOf: JinDAMInvocable) and: [ 
+			  a name = 'LogError' ] ]
 ]
 
 { #category : #initialization }
@@ -92,10 +92,8 @@ NotThatGoodTests >> setUp [
 	super setUp.
 
 	fylgja := FylgjaModel new.
-
-	northwind := MooseModelRoot root entities first.
+	northwind := JinDAMModel northwind.
 	angular := MOAngularLoader northwind.
-
 	java := MOJavaMavenProjectLoader northwind.
 
 
@@ -223,7 +221,8 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformDefault [
 		installInto: fylgja.
 
 
-	result := fylgja produce: variable into: destinationContext
+	result := fylgja produce: variable into: destinationContext.
+	self halt 
 ]
 
 { #category : #'as yet unclassified' }
@@ -232,8 +231,6 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformDefaultFailsFor
 	| variable destinationContext result |
 	variable := self logErrorFunction.
 	destinationContext := self configClassConfigPackage.
-
-
 
 
 	FylgjaRuleInstaller new

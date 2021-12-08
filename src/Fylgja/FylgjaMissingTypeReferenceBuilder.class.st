@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaMissingTypeReferenceBuilder,
-	#superclass : #MOModelBuilderDelegate,
+	#superclass : #AnObsoleteMOModelBuilderDelegate,
 	#instVars : [
 		'type',
 		'destinationContext'

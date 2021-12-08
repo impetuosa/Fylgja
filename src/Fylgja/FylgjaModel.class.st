@@ -87,7 +87,9 @@ FylgjaModel >> lookupRulesForProducing: anAlcixFunction toContext: aMOClass dest
 		         lookupRulesForProducing: anAlcixFunction
 		         toContext: aMOClass
 		         model: destinationModel.
-	[ ^ rules asDictionary values ]
+	[ 
+	rules asDictionary values.
+	^ rules collect: #value ]
 		on: Error
 		do: [ 
 			self error:

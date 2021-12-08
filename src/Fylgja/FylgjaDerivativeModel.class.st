@@ -21,9 +21,9 @@ FylgjaDerivativeModel >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> produce: anAlcixFunction into: aMOJavaClass [
+FylgjaDerivativeModel >> produce: anOriginElement into: aContextDestination [
 
-	^ fylgja produce: anAlcixFunction into: aMOJavaClass using: self
+	^ fylgja produce: anOriginElement into: aContextDestination using: self
 ]
 
 { #category : #'as yet unclassified' }
