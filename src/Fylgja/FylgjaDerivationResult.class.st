@@ -9,8 +9,18 @@ Class {
 }
 
 { #category : #accessing }
+FylgjaDerivationResult >> derivative [
+	^ derivative
+]
+
+{ #category : #accessing }
 FylgjaDerivationResult >> derivative: aFylgjaDerivativeModel [ 
 	derivative := aFylgjaDerivativeModel
+]
+
+{ #category : #accessing }
+FylgjaDerivationResult >> entity [
+	self shouldBeImplemented.
 ]
 
 { #category : #accessing }

@@ -9,6 +9,11 @@ Class {
 }
 
 { #category : #accessing }
+FylgjaDerivativeModel >> derivativeModels [
+	^ derivativeModels
+]
+
+{ #category : #accessing }
 FylgjaDerivativeModel >> fylgja: aFylgjaModel [ 
 	fylgja := aFylgjaModel
 ]

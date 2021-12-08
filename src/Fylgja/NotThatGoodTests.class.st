@@ -22,6 +22,12 @@ NotThatGoodTests >> angularPackage [
 	^ angular packages detect: [ :p | p name = 'app' ]
 ]
 
+{ #category : #asserting }
+NotThatGoodTests >> assert: newClass isKindOf: aType [
+
+	self assert: (newClass isKindOf: aType)
+]
+
 { #category : #'as yet unclassified' }
 NotThatGoodTests >> blockDataSourceConfigClassConfigPackage [
 
@@ -200,9 +206,9 @@ NotThatGoodTests >> testLogErrorToClassNoMappingExists [
 { #category : #'as yet unclassified' }
 NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformDefault [
 
-	| variable destinationContext result |
-	variable := self logErrorFunction.
-	destinationContext := self configClassConfigPackage.
+	| function destinationClass result modifiedClass |
+	function := self logErrorFunction.
+	destinationClass := self configClassConfigPackage.
 
 	" By default in the system we copy"
 	FylgjaRuleInstaller new
@@ -213,7 +219,7 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformDefault [
 
 	" By default when going to java "
 	FylgjaRuleInstaller new
-		context: (fylgja selectDestinationModelFor: destinationContext );
+		context: (fylgja selectDestinationModelFor: destinationClass);
 		anyEntityOfTypes: { 
 				MOFunction.
 				MOProcedure };
@@ -221,8 +227,62 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformDefault [
 		installInto: fylgja.
 
 
-	result := fylgja produce: variable into: destinationContext.
-	self halt 
+	result := fylgja produce: function into: destinationClass.
+	self assert: result result isKindOf: MOMethod.
+	self assert: result result language isJava.
+	self assert: result result block language isJava.
+	self
+		assert: result result block statements size
+		equals: function block statements size.
+	self
+		assert: result result parameters size
+		equals: function parameters size.
+
+	" First parameter "
+	self
+		assert: result result parameters first name
+		equals: function parameters first name.
+	self
+		assert: result result parameters first typeReference name
+		equals: function parameters first typeReference name.
+	self assert: result result parameters first isKindOf: MOParameter.
+	self assert: result result parameters first language isJava.
+	self assert:
+		result result parameters first typeReference language isJava.
+
+
+	" Second parameter "
+
+	self
+		assert: result result parameters second name
+		equals: function parameters second name.
+
+	" The second parameter does not have type specification. So it becomes Variant "
+	self
+		assert: result result parameters second typeReference name
+		equals: #Variant.
+
+	" The second parameter is var-arg kind, without type specification. So it becomes Variant "
+	self
+		assert: result result parameters second
+		isKindOf: MOVariableArgumentsParameter.
+
+	self assert: result result parameters second language isJava.
+	self assert:
+		result result parameters second typeReference language isJava.
+
+
+	self assert: result result language isJava.
+	modifiedClass := result derivative derivativeModels third entities
+		                 first.
+	self assert: modifiedClass name equals: destinationClass name.
+	self
+		assert: modifiedClass attributes
+		equals: destinationClass attributes.
+	self
+		assert: modifiedClass methods allButLast
+		equals: destinationClass methods.
+	self assert: modifiedClass methods last equals: result result
 ]
 
 { #category : #'as yet unclassified' }
