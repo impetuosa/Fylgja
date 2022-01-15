@@ -1,18 +1,19 @@
 Class {
-	#name : #FylgjaMapSpace,
+	#name : #FylgjaMigrationRuleSpace,
 	#superclass : #Object,
 	#instVars : [
 		'parent',
 		'name',
 		'mappingRules',
 		'subspaces',
-		'producingRules'
+		'producingRules',
+		'delegatingRules'
 	],
 	#category : #'Fylgja-Model'
 }
 
 { #category : #'public-entity-creation' }
-FylgjaMapSpace >> ensureNamespace: aMOMethod [
+FylgjaMigrationRuleSpace >> ensureNamespace: aMOMethod [
 
 	^ aMOMethod mapSpaceAnchor names inject: self into: [ :space :entry | 
 		  space
@@ -21,13 +22,13 @@ FylgjaMapSpace >> ensureNamespace: aMOMethod [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMapSpace >> ensureNamespace: aMOMethod model: aMOModel [
+FylgjaMigrationRuleSpace >> ensureNamespace: aMOMethod model: aMOModel [
 
-	^ (self modelMapspace: aMOModel) ensureNamespace: aMOMethod
+	^ (self migrationRuleSpaceForModel: aMOModel) ensureNamespace: aMOMethod
 ]
 
 { #category : #public }
-FylgjaMapSpace >> get: anAlcixFunction [
+FylgjaMigrationRuleSpace >> get: anAlcixFunction [
 
 	^ self get: anAlcixFunction ifAbsent: [ 
 		  NotFound signal:
@@ -36,13 +37,13 @@ FylgjaMapSpace >> get: anAlcixFunction [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMapSpace >> get: anAlcixFunction ifAbsent: aFullBlockClosure [
+FylgjaMigrationRuleSpace >> get: anAlcixFunction ifAbsent: aFullBlockClosure [
 
 	^ subspaces at: anAlcixFunction ifAbsent: [ aFullBlockClosure value ]
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMapSpace >> getOrCreateMapspaceFor: aMOAnchor [
+FylgjaMigrationRuleSpace >> getOrCreateMapspaceFor: aMOAnchor [
 
 	^ aMOAnchor names inject: self into: [ :space :entry | 
 		  space
@@ -51,57 +52,68 @@ FylgjaMapSpace >> getOrCreateMapspaceFor: aMOAnchor [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMapSpace >> initialize [
+FylgjaMigrationRuleSpace >> initialize [
 
 	super initialize.
 	subspaces := Dictionary new.
 	producingRules := OrderedCollection new.
 	mappingRules := OrderedCollection new.
+	delegatingRules := OrderedCollection new.
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMapSpace >> installProducingRule: aFylgjaProductionRule [
+FylgjaMigrationRuleSpace >> installDelegatingRule: aFylgjaProductionRule [
+
+	delegatingRules add: aFylgjaProductionRule
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationRuleSpace >> installMappingRule: aFylgjaProductionRule [
+
+	mappingRules add: aFylgjaProductionRule
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationRuleSpace >> installProducingRule: aFylgjaProductionRule [
 
 	producingRules add: aFylgjaProductionRule
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMapSpace >> lookupRulesFor: anAlcixFunction toContext: aMOClass [
+FylgjaMigrationRuleSpace >> lookupRulesForDelegating: aProvenanceEntity toContext: aDestinationContext [
 
-	^ (mappingRules select: [ :mr | 
-		   mr matches: anAlcixFunction context: aMOClass ])
-	  , (producingRules select: [ :mr | 
-			   mr matches: anAlcixFunction context: aMOClass ]) , (parent
+	^ (delegatingRules select: [ :mr | 
+		   mr matches: aProvenanceEntity context: aDestinationContext ]) , (parent
 		   ifNil: [ {  } ]
 		   ifNotNil: [ 
-		   parent lookupRulesFor: anAlcixFunction toContext: aMOClass ])
+		   parent lookupRulesForDelegating: aProvenanceEntity toContext: aDestinationContext ])
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMapSpace >> lookupRulesForMapping: anAlcixFunction [ 
+FylgjaMigrationRuleSpace >> lookupRulesForMapping: anAlcixFunction [ 
 	self shouldBeImplemented.
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMapSpace >> lookupRulesForMapping: anAlcixFunction toContext: aMOClass [
+FylgjaMigrationRuleSpace >> lookupRulesForMapping: aProvenanceEntity toContext: aDestinationContext [
 
 	^ (mappingRules select: [ :mr | 
-		   mr matches: anAlcixFunction context: aMOClass ]) , (parent
+		   mr matches: aProvenanceEntity context: aDestinationContext ]) , (parent
 		   ifNil: [ {  } ]
 		   ifNotNil: [ 
-		   parent lookupRulesForMapping: anAlcixFunction toContext: aMOClass ])
+		   parent lookupRulesForMapping: aProvenanceEntity toContext: aDestinationContext ])
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMapSpace >> lookupRulesForMapping: anAlcixFunction toContext: aMOClass model: aMOModel [
+FylgjaMigrationRuleSpace >> lookupRulesForMapping: anAlcixFunction toContext: aMOClass model: aMOModel [
 
-	^ ((self modelMapspace: aMOModel) mapspaceForAnchor: aMOClass anchor)
+	^ ((self migrationRuleSpaceForModel: aMOModel) migrationRuleSpaceForAnchor: aMOClass anchor)
 		  lookupRulesForMapping: anAlcixFunction
 		  toContext: aMOClass
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMapSpace >> lookupRulesForProducing: anAlcixFunction toContext: aMOClass [
+FylgjaMigrationRuleSpace >> lookupRulesForProducing: anAlcixFunction toContext: aMOClass [
 
 	^ (producingRules select: [ :mr | 
 		   mr matches: anAlcixFunction context: aMOClass ] thenCollect: [ : mr | self -> mr ] ) , (parent
@@ -111,15 +123,21 @@ FylgjaMapSpace >> lookupRulesForProducing: anAlcixFunction toContext: aMOClass [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMapSpace >> lookupRulesForProducing: anAlcixFunction toContext: aMOClass model: aMOModel [
+FylgjaMigrationRuleSpace >> lookupRulesForProducing: anAlcixFunction toContext: aMOClass model: aMOModel [
 
-	^ ((self modelMapspace: aMOModel) mapspaceForAnchor: aMOClass anchor)
+	^ ((self migrationRuleSpaceForModel: aMOModel) migrationRuleSpaceForAnchor: aMOClass anchor)
 		  lookupRulesForProducing: anAlcixFunction
 		  toContext: aMOClass
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMapSpace >> mapspaceForAnchor: aMOAnchor [
+FylgjaMigrationRuleSpace >> mapspaceForName: aString ifAbsent: aFullBlockClosure [
+
+	^ subspaces at: aString ifAbsent: [ aFullBlockClosure value ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationRuleSpace >> migrationRuleSpaceForAnchor: aMOAnchor [
 
 	^ aMOAnchor names
 		  inject: self
@@ -128,13 +146,7 @@ FylgjaMapSpace >> mapspaceForAnchor: aMOAnchor [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMapSpace >> mapspaceForName: aString ifAbsent: aFullBlockClosure [
-
-	^ subspaces at: aString ifAbsent: [ aFullBlockClosure value ]
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaMapSpace >> modelMapspace: aMOModel [
+FylgjaMigrationRuleSpace >> migrationRuleSpaceForModel: aMOModel [
 
 	^ self
 		  mapspaceForName: aMOModel name
@@ -143,18 +155,18 @@ FylgjaMapSpace >> modelMapspace: aMOModel [
 ]
 
 { #category : #accessing }
-FylgjaMapSpace >> name: aString [
+FylgjaMigrationRuleSpace >> name: aString [
 
 	name := aString
 ]
 
 { #category : #accessing }
-FylgjaMapSpace >> parent: aFylgjaMapSpace [ 
+FylgjaMigrationRuleSpace >> parent: aFylgjaMapSpace [ 
 	parent := aFylgjaMapSpace
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMapSpace >> printOn: aStream [
+FylgjaMigrationRuleSpace >> printOn: aStream [
 
 	parent
 		ifNil: [ 
@@ -169,7 +181,7 @@ FylgjaMapSpace >> printOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMapSpace >> registerSpace: aName [
+FylgjaMigrationRuleSpace >> registerSpace: aName [
 
 	| entry |
 	subspaces at: aName ifPresent: [ self halt ].
@@ -182,7 +194,7 @@ FylgjaMapSpace >> registerSpace: aName [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMapSpace >> subspaces [
+FylgjaMigrationRuleSpace >> subspaces [
 
 	^ subspaces values
 ]

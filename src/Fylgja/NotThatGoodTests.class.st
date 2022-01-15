@@ -97,7 +97,7 @@ NotThatGoodTests >> setUp [
 
 	super setUp.
 
-	fylgja := FylgjaModel new.
+	fylgja := FylgjaMigrationEngine new.
 	northwind := JinDAMModel northwind.
 	angular := MOAngularLoader northwind.
 	java := MOJavaMavenProjectLoader northwind.
@@ -204,7 +204,7 @@ NotThatGoodTests >> testLogErrorToClassNoMappingExists [
 ]
 
 { #category : #'as yet unclassified' }
-NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformDefault [
+NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformAddRuleToMapBooleanToBool [
 
 	| function destinationClass result modifiedClass |
 	function := self logErrorFunction.
@@ -220,15 +220,26 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformDefault [
 	" By default when going to java "
 	FylgjaRuleInstaller new
 		context: (fylgja selectDestinationModelFor: destinationClass);
-		anyEntityOfTypes: { 
+		anyModelEntityOfTypes: { 
 				MOFunction.
 				MOProcedure };
 		copyAsMethod;
 		installInto: fylgja.
 
+	FylgjaRuleInstaller new
+		context: (fylgja selectDestinationModelFor: destinationClass);
+		anyTypeReferenceNamed: #Boolean;
+		copyAsTypesReferenceNamed: #bool;
+		installInto: fylgja.
+
 
 	result := fylgja produce: function into: destinationClass.
 	self assert: result result isKindOf: MOMethod.
+
+	self assert: result result returnTypeReference name equals: #bool.
+
+	self assert: result result modifiers size equals: 1.
+	self assert: result result modifiers first equals: #static.
 	self assert: result result language isJava.
 	self assert: result result block language isJava.
 	self
@@ -242,6 +253,7 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformDefault [
 	self
 		assert: result result parameters first name
 		equals: function parameters first name.
+
 	self
 		assert: result result parameters first typeReference name
 		equals: function parameters first typeReference name.
@@ -286,6 +298,192 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformDefault [
 ]
 
 { #category : #'as yet unclassified' }
+NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformAddRuleToMapVariantUsesToObjectDefault [
+
+	| function destinationClass result modifiedClass |
+	function := self logErrorFunction.
+	destinationClass := self configClassConfigPackage.
+
+	" By default in the system we copy"
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		copy;
+		installInto: fylgja.
+
+	" By default when going to java "
+	FylgjaRuleInstaller new
+		context: (fylgja selectDestinationModelFor: destinationClass);
+		anyModelEntityOfTypes: { 
+				MOFunction.
+				MOProcedure };
+		copyAsMethod;
+		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		context: (fylgja selectDestinationModelFor: destinationClass);
+		anyTypeReferenceNamed: #Variant;
+		copyAsTypesReferenceNamed: #Object;
+		installInto: fylgja.
+
+
+	result := fylgja produce: function into: destinationClass.
+	self assert: result result isKindOf: MOMethod.
+	
+	self
+		assert: result result returnTypeReference name
+		equals: function typeReference  name.
+	
+	self assert: result result modifiers size equals: 1.
+	self assert: result result modifiers first equals: #static.
+	self assert: result result language isJava.
+	self assert: result result block language isJava.
+	self
+		assert: result result block statements size
+		equals: function block statements size.
+	self
+		assert: result result parameters size
+		equals: function parameters size.
+
+	" First parameter "
+	self
+		assert: result result parameters first name
+		equals: function parameters first name.
+		
+	self
+		assert: result result parameters first typeReference name
+		equals: function parameters first typeReference name.
+	self assert: result result parameters first isKindOf: MOParameter.
+	self assert: result result parameters first language isJava.
+	self assert:
+		result result parameters first typeReference language isJava.
+
+
+	" Second parameter "
+
+	self
+		assert: result result parameters second name
+		equals: function parameters second name.
+
+	" The second parameter does not have type specification. So it becomes Variant "
+	self
+		assert: result result parameters second typeReference name
+		equals: #Object.
+
+	" The second parameter is var-arg kind, without type specification. So it becomes Variant "
+	self
+		assert: result result parameters second
+		isKindOf: MOVariableArgumentsParameter.
+
+	self assert: result result parameters second language isJava.
+	self assert:
+		result result parameters second typeReference language isJava.
+
+
+	self assert: result result language isJava.
+	modifiedClass := result derivative derivativeModels third entities
+		                 first.
+	self assert: modifiedClass name equals: destinationClass name.
+	self
+		assert: modifiedClass attributes
+		equals: destinationClass attributes.
+	self
+		assert: modifiedClass methods allButLast
+		equals: destinationClass methods.
+	self assert: modifiedClass methods last equals: result result
+]
+
+{ #category : #'as yet unclassified' }
+NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformDefault [
+
+	| function destinationClass result modifiedClass |
+	function := self logErrorFunction.
+	destinationClass := self configClassConfigPackage.
+
+	" By default in the system we copy"
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		copy;
+		installInto: fylgja.
+
+	" By default when going to java "
+	FylgjaRuleInstaller new
+		context: (fylgja selectDestinationModelFor: destinationClass);
+		anyModelEntityOfTypes: { 
+				MOFunction.
+				MOProcedure };
+		copyAsMethod;
+		installInto: fylgja.
+
+
+	result := fylgja produce: function into: destinationClass.
+	self assert: result result isKindOf: MOMethod.
+
+	self
+		assert: result result returnTypeReference name
+		equals: function typeReference name.
+
+	self assert: result result modifiers size equals: 1.
+	self assert: result result modifiers first equals: #static.
+	self assert: result result language isJava.
+	self assert: result result block language isJava.
+	result result block statements allSatisfy: [ :a | 
+		self assert: a language isJava ].
+	self
+		assert: result result block statements size
+		equals: function block statements size.
+	self
+		assert: result result parameters size
+		equals: function parameters size.
+
+	" First parameter "
+	self
+		assert: result result parameters first name
+		equals: function parameters first name.
+	self
+		assert: result result parameters first typeReference name
+		equals: function parameters first typeReference name.
+	self assert: result result parameters first isKindOf: MOParameter.
+	self assert: result result parameters first language isJava.
+	self assert:
+		result result parameters first typeReference language isJava.
+
+
+	" Second parameter "
+
+	self
+		assert: result result parameters second name
+		equals: function parameters second name.
+
+	" The second parameter does not have type specification. So it becomes Variant "
+	self
+		assert: result result parameters second typeReference name
+		equals: #Variant.
+
+	" The second parameter is var-arg kind, without type specification. So it becomes Variant "
+	self
+		assert: result result parameters second
+		isKindOf: MOVariableArgumentsParameter.
+
+	self assert: result result parameters second language isJava.
+	self assert:
+		result result parameters second typeReference language isJava.
+
+
+	self assert: result result language isJava.
+	modifiedClass := result derivative derivativeModels third entities first.
+	self assert: modifiedClass name equals: destinationClass name.
+	self
+		assert: modifiedClass attributes
+		equals: destinationClass attributes.
+	self
+		assert: modifiedClass methods allButLast
+		equals: destinationClass methods.
+	self assert: modifiedClass methods last equals: result result
+]
+
+{ #category : #'as yet unclassified' }
 NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformDefaultFailsForMessageNotUnderstood [
 
 	| variable destinationContext result |
@@ -303,6 +501,108 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformDefaultFailsFor
 		should: [ 
 		result := fylgja produce: variable into: destinationContext ]
 		raise: MessageNotUnderstood
+]
+
+{ #category : #'as yet unclassified' }
+NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformRewriteMsgBoxInvocationToSelfLogError [
+
+	| function destinationClass result modifiedClass installer |
+	function := self logErrorFunction.
+	destinationClass := self configClassConfigPackage.
+
+	" By default in the system we copy"
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		copy;
+		installInto: fylgja.
+
+	" By default when going to java "
+	FylgjaRuleInstaller new
+		context: (fylgja selectDestinationModelFor: destinationClass);
+		anyModelEntityOfTypes: { 
+				MOFunction.
+				MOProcedure };
+		copyAsMethod;
+		installInto: fylgja.
+
+	installer := FylgjaRuleInstaller new
+		             context:
+			             (fylgja selectDestinationModelFor: destinationClass);
+		             anyInvocationTo: #MsgBox;
+		             yourself.
+
+	installer rewriteInvocation
+		selector: #log;
+		receiverBlock: [ :writer | writer referenceToSelf ];
+		withArgumentCollection: [ :arguments :writer | 
+			{ (writer constantReferenceNamed: #ERROR) } , arguments ].
+
+	installer installInto: fylgja.
+
+
+	result := fylgja produce: function into: destinationClass.
+	self assert: result result isKindOf: MOMethod.
+
+	self assert: result result returnTypeReference name equals: #bool.
+
+	self assert: result result modifiers size equals: 1.
+	self assert: result result modifiers first equals: #static.
+	self assert: result result language isJava.
+	self assert: result result block language isJava.
+	self
+		assert: result result block statements size
+		equals: function block statements size.
+	self
+		assert: result result parameters size
+		equals: function parameters size.
+
+	" First parameter "
+	self
+		assert: result result parameters first name
+		equals: function parameters first name.
+
+	self
+		assert: result result parameters first typeReference name
+		equals: function parameters first typeReference name.
+	self assert: result result parameters first isKindOf: MOParameter.
+	self assert: result result parameters first language isJava.
+	self assert:
+		result result parameters first typeReference language isJava.
+
+
+	" Second parameter "
+
+	self
+		assert: result result parameters second name
+		equals: function parameters second name.
+
+	" The second parameter does not have type specification. So it becomes Variant "
+	self
+		assert: result result parameters second typeReference name
+		equals: #Variant.
+
+	" The second parameter is var-arg kind, without type specification. So it becomes Variant "
+	self
+		assert: result result parameters second
+		isKindOf: MOVariableArgumentsParameter.
+
+	self assert: result result parameters second language isJava.
+	self assert:
+		result result parameters second typeReference language isJava.
+
+
+	self assert: result result language isJava.
+	modifiedClass := result derivative derivativeModels third entities
+		                 first.
+	self assert: modifiedClass name equals: destinationClass name.
+	self
+		assert: modifiedClass attributes
+		equals: destinationClass attributes.
+	self
+		assert: modifiedClass methods allButLast
+		equals: destinationClass methods.
+	self assert: modifiedClass methods last equals: result result
 ]
 
 { #category : #'as yet unclassified' }
@@ -390,7 +690,7 @@ NotThatGoodTests >> testTypeConditionMatchesTheCase [
 
 	FylgjaRuleInstaller new
 		context: destinationContext;
-		whenType: variable class;
+		whenTypeOfModelEntityIs: variable class;
 		copy;
 		installInto: fylgja.
 

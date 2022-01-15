@@ -40,12 +40,13 @@ FylgjaTranslateCopyAsMethod >> printOn: aStream [
 { #category : #'as yet unclassified' }
 FylgjaTranslateCopyAsMethod >> produceChildren: aFunction into: aMethod using: fylgja [
 
-	aFunction parameters do: [ :p | fylgja produce: p into: aMethod ].
+	aFunction parameters do: [ :p | fylgja migrate: p into: aMethod ].
 	aMethod returnTypeReference:
 		(fylgja produce: aFunction returnTypeReference into: aMethod).
 
 	fylgja produce: aFunction block into: aMethod.
 	aMethod modifiers: aFunction modifiers.
+	aMethod modifiers add: #static. 
 	aMethod thrownTypeReferences:
 		(aFunction thrownTypeReferences collect: [ :tr | 
 			 fylgja produce: tr into: aMethod ])
@@ -71,7 +72,7 @@ FylgjaTranslateCopyAsMethod >> visitFunction: aMOFunction [
 	writer selector: aMOFunction selector.
 	writer returnTypeReference:
 		(writer typeReferenceNamed: aMOFunction returnTypeReference name).
-	writer addModifier: #static
+	
 ]
 
 { #category : #'as yet unclassified' }

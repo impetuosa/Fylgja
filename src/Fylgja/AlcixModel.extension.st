@@ -4,7 +4,7 @@ Extension { #name : #AlcixModel }
 AlcixModel >> fylgja [
 
 	^ fylgja ifNil: [ 
-		  fylgja := FylgjaModel new
+		  fylgja := FylgjaMigrationEngine new
 			            mooseModel: self;
 			            yourself ]
 ]

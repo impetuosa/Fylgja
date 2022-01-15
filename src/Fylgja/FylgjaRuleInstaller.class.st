@@ -22,10 +22,26 @@ FylgjaRuleInstaller >> anyEntity [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaRuleInstaller >> anyEntityOfTypes: aCollection [
+FylgjaRuleInstaller >> anyInvocationTo: aString [
 
-	self condition: (FylgjaConditionTypeIs new
+	self condition: (FylgjaConditionInvocationSelectorIs new
+			 selector: aString;
+			 yourself)
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> anyModelEntityOfTypes: aCollection [
+
+	self condition: (FylgjaConditionModelTypeIs new
 			 types: aCollection;
+			 yourself)
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> anyTypeReferenceNamed: aString [
+
+	self condition: (FylgjaConditionTypeReferenceIs new
+			 typeName: aString;
 			 yourself)
 ]
 
@@ -62,6 +78,14 @@ FylgjaRuleInstaller >> copyAsMethod [
 	self operation: FylgjaTranslateCopyAsMethod new
 ]
 
+{ #category : #copying }
+FylgjaRuleInstaller >> copyAsTypesReferenceNamed: aString [
+
+	^ self operation: (FylgjaTranslateCopyRenameTypeReference new
+			   name: aString;
+			   yourself)
+]
+
 { #category : #accessing }
 FylgjaRuleInstaller >> installAtTopLevel [
 
@@ -73,15 +97,24 @@ FylgjaRuleInstaller >> installInto: aFylgja [
 
 	| rule space |
 	space := self installAtTopLevel
-		         ifTrue: [ aFylgja mapspace ]
+		         ifTrue: [ aFylgja migrationRuleSpace ]
 		         ifFalse: [ 
-			         aFylgja mapspace
+			         aFylgja migrationRuleSpace
 				         ensureNamespace: context
 				         model: (self modelFor: aFylgja) ].
 	rule := self build.
 	self isMap
 		ifTrue: [ space installMappingRule: rule ]
-		ifFalse: [ space installProducingRule: rule ]
+		ifFalse: [ 
+			self isDelegate
+				ifTrue: [ space installDelegatingRule: rule ]
+				ifFalse: [ space space installProducingRule: rule ] ]
+]
+
+{ #category : #testing }
+FylgjaRuleInstaller >> isDelegate [
+
+	^ operation isDelegate
 ]
 
 { #category : #testing }
@@ -107,9 +140,21 @@ FylgjaRuleInstaller >> modelFor: aFylgjaModel [
 ]
 
 { #category : #accessing }
+FylgjaRuleInstaller >> operation [
+	^ operation
+]
+
+{ #category : #accessing }
 FylgjaRuleInstaller >> operation: anOperation [
 
 	operation := anOperation
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> rewriteInvocation [
+
+	self operation: FylgjaTranslateRewriteInvocation new.
+	^ self operation
 ]
 
 { #category : #'as yet unclassified' }
@@ -134,7 +179,7 @@ FylgjaRuleInstaller >> whenEntityIsIdenticalTo: anAlcixLocalVariable [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaRuleInstaller >> whenType: aClass [
+FylgjaRuleInstaller >> whenTypeOfModelEntityIs: aClass [
 
-	self condition: (FylgjaConditionTypeIs new type: aClass)
+	self condition: (FylgjaConditionModelTypeIs new type: aClass)
 ]

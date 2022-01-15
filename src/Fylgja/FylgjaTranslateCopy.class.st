@@ -6,8 +6,9 @@ Class {
 
 { #category : #'as yet unclassified' }
 FylgjaTranslateCopy >> applyTo: element context: aMethod using: aFylgjaDerivativeModel [
-
+	
 	element isReference ifTrue: [ 
+		self halt. 
 		^ self
 			  writeCopyOf: element
 			  withContext: aMethod
@@ -34,20 +35,6 @@ FylgjaTranslateCopy >> printOn: aStream [
 ]
 
 { #category : #writing }
-FylgjaTranslateCopy >> writeCopyOf: element using: writingEntity withContext: aContext inWriter: contextWriter using: aFylgjaDerivativeModel [
-
-	^ MOModelWriteTypeBasedResolver new
-		  resolveWriterFor: writingEntity
-		  context: aContext
-		  writingContext: contextWriter
-		  do: [ :elementWriter | 
-			  elementWriter
-				  writeCopyOf: element
-				  readingValues: [ :context :value | 
-					  aFylgjaDerivativeModel produce: value into: context ] ]
-]
-
-{ #category : #writing }
 FylgjaTranslateCopy >> writeCopyOf: element withContext: aContext inWriter: contextWriter using: aFylgjaDerivativeModel [
 
 	^ MOModelWriteTypeBasedResolver new
@@ -58,5 +45,5 @@ FylgjaTranslateCopy >> writeCopyOf: element withContext: aContext inWriter: cont
 			  elementWriter
 				  writeCopyOf: element
 				  readingValues: [ :context :value | 
-					  aFylgjaDerivativeModel produce: value into: context ] ]
+					  aFylgjaDerivativeModel migrate: value into: context ] ]
 ]

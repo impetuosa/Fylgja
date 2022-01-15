@@ -26,6 +26,20 @@ FylgjaDerivativeModel >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> map: aProvenanceReferenceEntity into: aDestinationContext [  
+	^ fylgja map: aProvenanceReferenceEntity into: aDestinationContext using: self
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> migrate: aProvenanceEntity into: aDestinationContext [
+
+	^ aProvenanceEntity isReference
+		  ifTrue: [ self map: aProvenanceEntity into: aDestinationContext ]
+		  ifFalse: [ 
+		  self produce: aProvenanceEntity into: aDestinationContext ]
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> produce: anOriginElement into: aContextDestination [
 
 	^ fylgja produce: anOriginElement into: aContextDestination using: self

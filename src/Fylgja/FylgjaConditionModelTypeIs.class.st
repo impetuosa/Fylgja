@@ -1,5 +1,5 @@
 Class {
-	#name : #FylgjaConditionTypeIs,
+	#name : #FylgjaConditionModelTypeIs,
 	#superclass : #FylgjaCondition,
 	#instVars : [
 		'types'
@@ -8,26 +8,26 @@ Class {
 }
 
 { #category : #testing }
-FylgjaConditionTypeIs >> matches: anAlcixLocalVariable context: aMOMethod [
+FylgjaConditionModelTypeIs >> matches: anAlcixLocalVariable context: aMOMethod [
 
 	^ types anySatisfy: [ :t | anAlcixLocalVariable isKindOf: t ]
 ]
 
 { #category : #testing }
-FylgjaConditionTypeIs >> printOn: aStream [
+FylgjaConditionModelTypeIs >> printOn: aStream [
 
 	aStream nextPutAll:
-		('TypeIsAnyOf:({1})' format: { ('|' join: (types collect: #name)) })
+		('ModelTypeIsAnyOf:({1})' format: { ('|' join: (types collect: #name)) })
 ]
 
 { #category : #accessing }
-FylgjaConditionTypeIs >> type: aClass [
+FylgjaConditionModelTypeIs >> type: aClass [
 
 	types := { aClass }
 ]
 
 { #category : #accessing }
-FylgjaConditionTypeIs >> types: aCollection [
+FylgjaConditionModelTypeIs >> types: aCollection [
 
 	types := aCollection
 ]
