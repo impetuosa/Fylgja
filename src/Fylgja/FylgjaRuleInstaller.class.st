@@ -108,7 +108,14 @@ FylgjaRuleInstaller >> installInto: aFylgja [
 		ifFalse: [ 
 			self isDelegate
 				ifTrue: [ space installDelegatingRule: rule ]
-				ifFalse: [ space space installProducingRule: rule ] ]
+				ifFalse: [ space installProducingRule: rule ] ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> invocationToMessageSend [
+
+	self operation: FylgjaTranslateInvocationToMessageSend new.
+	^ self operation
 ]
 
 { #category : #testing }
@@ -148,13 +155,6 @@ FylgjaRuleInstaller >> operation [
 FylgjaRuleInstaller >> operation: anOperation [
 
 	operation := anOperation
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaRuleInstaller >> rewriteInvocation [
-
-	self operation: FylgjaTranslateRewriteInvocation new.
-	^ self operation
 ]
 
 { #category : #'as yet unclassified' }

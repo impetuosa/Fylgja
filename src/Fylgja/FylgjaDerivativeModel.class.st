@@ -32,7 +32,6 @@ FylgjaDerivativeModel >> map: aProvenanceReferenceEntity into: aDestinationConte
 
 { #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> migrate: aProvenanceEntity into: aDestinationContext [
-
 	^ aProvenanceEntity isReference
 		  ifTrue: [ self map: aProvenanceEntity into: aDestinationContext ]
 		  ifFalse: [ 
@@ -40,34 +39,33 @@ FylgjaDerivativeModel >> migrate: aProvenanceEntity into: aDestinationContext [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> produce: anOriginElement into: aContextDestination [
+FylgjaDerivativeModel >> produce: aProvenanceEntity into: aContextDestination [
 
-	^ fylgja produce: anOriginElement into: aContextDestination using: self
+	^ fylgja produce: aProvenanceEntity into: aContextDestination using: self
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> readerFor: anAlcixLocalVariable [
+FylgjaDerivativeModel >> readerFor: aModelEntity [
 
-	^ (FylgjaResolver readerOn: self for: anAlcixLocalVariable) resolve
+	^ (FylgjaResolver readerOn: self for: aModelEntity) resolve
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> selectDestinationModelFor: aMOMethod [
-
+FylgjaDerivativeModel >> selectDestinationModelFor: aDestinationContext [
 	^ derivativeModels
-		  detect: [ :d | d entities includes: aMOMethod ]
+		  detect: [ :d | d entities includes: aDestinationContext ]
 		  ifNone: [ 
 			  | model |
-			  model := (fylgja selectDestinationModelFor: aMOMethod) derivative.
+			  model := (fylgja selectDestinationModelFor: aDestinationContext) derivative.
 			  derivativeModels add: model.
 			  model ]
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> writerFor: aMOVariable inContextOf: aMOBlock do: aFullBlockClosure [
+FylgjaDerivativeModel >> writerFor: aProvenanceEntity inContextOf: aDestinationContext do: anUpdatingBlock [
 
-	^ (self selectDestinationModelFor: aMOBlock) writer
-		  updaterFor: aMOBlock
-		  with: aMOVariable
-		  do: aFullBlockClosure
+	^ (self selectDestinationModelFor: aDestinationContext) writer
+		  updaterFor: aDestinationContext
+		  with: aProvenanceEntity
+		  do: anUpdatingBlock
 ]

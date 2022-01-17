@@ -428,8 +428,9 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformDefault [
 	self assert: result result modifiers first equals: #static.
 	self assert: result result language isJava.
 	self assert: result result block language isJava.
-	result result block statements allSatisfy: [ :a | 
-		self assert: a language isJava ].
+	self assert:
+		(result result block statements allSatisfy: [ :a | 
+			 a language isJava ]).
 	self
 		assert: result result block statements size
 		equals: function block statements size.
@@ -472,7 +473,8 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformDefault [
 
 
 	self assert: result result language isJava.
-	modifiedClass := result derivative derivativeModels third entities first.
+	modifiedClass := result derivative derivativeModels third entities
+		                 first.
 	self assert: modifiedClass name equals: destinationClass name.
 	self
 		assert: modifiedClass attributes
@@ -532,7 +534,7 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformRewriteMsgBoxIn
 		             anyInvocationTo: #MsgBox;
 		             yourself.
 
-	installer rewriteInvocation
+	installer invocationToMessageSend
 		selector: #log;
 		receiverBlock: [ :writer | writer referenceToSelf ];
 		withArgumentCollection: [ :arguments :writer | 
@@ -544,15 +546,13 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformRewriteMsgBoxIn
 	result := fylgja produce: function into: destinationClass.
 	self assert: result result isKindOf: MOMethod.
 
-	self assert: result result returnTypeReference name equals: #bool.
+	self assert: result result returnTypeReference name equals: #Boolean.
 
 	self assert: result result modifiers size equals: 1.
 	self assert: result result modifiers first equals: #static.
 	self assert: result result language isJava.
 	self assert: result result block language isJava.
-	self
-		assert: result result block statements size
-		equals: function block statements size.
+	
 	self
 		assert: result result parameters size
 		equals: function parameters size.
@@ -602,7 +602,11 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformRewriteMsgBoxIn
 	self
 		assert: modifiedClass methods allButLast
 		equals: destinationClass methods.
-	self assert: modifiedClass methods last equals: result result
+	self assert: modifiedClass methods last equals: result result.
+	
+self
+		assert: result result block statements size
+		equals: function block statements size.
 ]
 
 { #category : #'as yet unclassified' }

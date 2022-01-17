@@ -5,28 +5,31 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaTranslateCopy >> applyTo: element context: aMethod using: aFylgjaDerivativeModel [
-	
-	element isReference ifTrue: [ 
-		self halt. 
+FylgjaTranslateCopy >> applyTo: aProvenanceEntity context: aDestinationContext using: aFylgjaDerivativeModel [
+
+	(self isWrittenInContext: aProvenanceEntity context: aDestinationContext) ifFalse: [ 
 		^ self
-			  writeCopyOf: element
-			  withContext: aMethod
+			  writeCopyOf: aProvenanceEntity
+			  withContext: aDestinationContext
 			  inWriter:
-			  (aFylgjaDerivativeModel selectDestinationModelFor: aMethod)
+			  (aFylgjaDerivativeModel selectDestinationModelFor: aDestinationContext)
 				  writer
 			  using: aFylgjaDerivativeModel ].
 
-
 	^ aFylgjaDerivativeModel
-		  writerFor: element
-		  inContextOf: aMethod
+		  writerFor: aProvenanceEntity
+		  inContextOf: aDestinationContext
 		  do: [ :writingEntity :contextWriter | 
 			  self
 				  writeCopyOf: writingEntity
-				  withContext: aMethod
+				  withContext: aDestinationContext
 				  inWriter: contextWriter
 				  using: aFylgjaDerivativeModel ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaTranslateCopy >> isWrittenInContext: aProvenanceEntity context: aDestinationContext [
+	^ (aProvenanceEntity isTypeReference ) not
 ]
 
 { #category : #'as yet unclassified' }
@@ -35,15 +38,15 @@ FylgjaTranslateCopy >> printOn: aStream [
 ]
 
 { #category : #writing }
-FylgjaTranslateCopy >> writeCopyOf: element withContext: aContext inWriter: contextWriter using: aFylgjaDerivativeModel [
+FylgjaTranslateCopy >> writeCopyOf: aProvenanceEntity withContext: aDestinationContext inWriter: aDestinationContextWriter using: aFylgjaDerivativeModel [
 
 	^ MOModelWriteTypeBasedResolver new
-		  resolveWriterFor: element
-		  context: aContext
-		  writingContext: contextWriter
+		  resolveWriterFor: aProvenanceEntity
+		  context: aDestinationContext
+		  writingContext: aDestinationContextWriter
 		  do: [ :elementWriter | 
 			  elementWriter
-				  writeCopyOf: element
+				  writeCopyOf: aProvenanceEntity
 				  readingValues: [ :context :value | 
 					  aFylgjaDerivativeModel migrate: value into: context ] ]
 ]

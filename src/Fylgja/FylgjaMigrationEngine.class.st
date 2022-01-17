@@ -141,8 +141,14 @@ FylgjaMigrationEngine >> map: aProvenanceReferenceEntity into: aDestinationConte
 			         (aModifiedFylgjaMigrationEngine 
 				          selectDestinationModelFor: aDestinationContext).
 
-	rules ifEmpty: [ NotFound signal: 'No producing rule found ' ].
+	rules ifEmpty: [ 
 
+		^ self
+			  produce: aProvenanceReferenceEntity
+			  into: aDestinationContext
+			  using: aModifiedFylgjaMigrationEngine ].
+
+	self halt.
 	^ rules first
 		  applyTo: element
 		  context: aDestinationContext

@@ -5,7 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaTranslate >> applyTo: anAlcixLocalVariable context: aMOMethod using: aFylgjaModel [
+FylgjaTranslate >> applyTo: aProvenanceEntity context: aDestinationContext using: aFylgjaDerivativeModel [
 
-	^ self subclassResponsibility
+	self subclassResponsibility 
+]
+
+{ #category : #testing }
+FylgjaTranslate >> isDelegate [
+	^ false 
 ]

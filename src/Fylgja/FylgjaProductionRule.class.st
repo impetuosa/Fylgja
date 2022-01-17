@@ -11,11 +11,11 @@ FylgjaProductionRule >> applyTo: anAlcixLocalVariable context: aMOMethod [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaProductionRule >> applyTo: anAlcixLocalVariable context: aMOMethod using: aFylgjaModel [
+FylgjaProductionRule >> applyTo: aProvenanceEntity context: aDestinationContext using: aFylgjaModel [
 
 	^ operation
-		  applyTo: anAlcixLocalVariable
-		  context: aMOMethod
+		  applyTo: aProvenanceEntity
+		  context: aDestinationContext
 		  using: aFylgjaModel
 ]
 
