@@ -2,26 +2,30 @@ Class {
 	#name : #FylgjaTranslateCopyRenameTypeReference,
 	#superclass : #FylgjaTranslate,
 	#instVars : [
-		'name',
-		'writer'
+		'writer',
+		'name'
 	],
 	#category : #'Fylgja-Rule-Operations'
 }
 
 { #category : #'as yet unclassified' }
-FylgjaTranslateCopyRenameTypeReference >> applyTo: aMOPrimitiveTypeReference context: aMOVariableArgumentsParameter using: aFylgjaDerivativeModel [
-
+FylgjaTranslateCopyRenameTypeReference >> applyTo: aProvenanceEntity context: aDestinationContext using: aFylgjaDerivativeModel [
 	writer := (aFylgjaDerivativeModel selectDestinationModelFor:
-		           aMOVariableArgumentsParameter) writer.
-	^ aMOPrimitiveTypeReference acceptVisitor: self
+		           aDestinationContext) writer.
+	^ aProvenanceEntity acceptVisitor: self
 ]
 
 { #category : #accessing }
-FylgjaTranslateCopyRenameTypeReference >> name: aString [ 
+FylgjaTranslateCopyRenameTypeReference >> name: aName [ 
+	name := aName 
+]
+
+{ #category : #accessing }
+FylgjaTranslateCopyRenameTypeReference >> string: aString [ 
 	name := aString 
 ]
 
-{ #category : #visiting }
+{ #category : #accessing }
 FylgjaTranslateCopyRenameTypeReference >> visitPrimitiveTypeReference: aMOPrimitiveTypeReference [
 
 	^ writer primitiveTypeReferenceNamed: name

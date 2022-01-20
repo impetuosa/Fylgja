@@ -5,44 +5,67 @@ Class {
 		'condition',
 		'operation',
 		'context',
-		'installAtTopLevel'
+		'installAtTopLevel',
+		'installAtLanguageLevel'
 	],
 	#category : #'Fylgja-Rules'
 }
 
 { #category : #accessing }
 FylgjaRuleInstaller >> all [
-	self condition: FylgjaConditionAll new
+
+	^ self condition: FylgjaConditionAll new
 ]
 
 { #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> anyEntity [
 
-	self condition: FylgjaConditionAll new
+	^ self condition: FylgjaConditionAll new
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> anyInvocation [
+
+	^ self condition: (FylgjaConditionModelTypeIs new
+			   type: MOInvocation;
+			   yourself)
 ]
 
 { #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> anyInvocationTo: aString [
 
-	self condition: (FylgjaConditionInvocationSelectorIs new
-			 selector: aString;
-			 yourself)
+	^ self condition: (FylgjaConditionInvocationSelectorIs new
+			   selector: aString;
+			   yourself) increasePriority
 ]
 
 { #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> anyModelEntityOfTypes: aCollection [
 
-	self condition: (FylgjaConditionModelTypeIs new
-			 types: aCollection;
-			 yourself)
+	^ self condition: (FylgjaConditionModelTypeIsKindOf new
+			   types: aCollection;
+			   yourself)
 ]
 
 { #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> anyTypeReferenceNamed: aString [
 
-	self condition: (FylgjaConditionTypeReferenceIs new
-			 typeName: aString;
-			 yourself)
+	^ self condition: (FylgjaConditionTypeReferenceIs new
+			   typeName: aString;
+			   yourself)
+]
+
+{ #category : #accessing }
+FylgjaRuleInstaller >> atLanguageNamed: aString [ 
+	installAtLanguageLevel := aString
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> binaryOperator: aString [
+
+	^ self condition: (FylgjaConditionBinaryExpression new
+			   operator: aString;
+			   yourself)
 ]
 
 { #category : #accessing }
@@ -58,7 +81,8 @@ FylgjaRuleInstaller >> build [
 { #category : #accessing }
 FylgjaRuleInstaller >> condition: aCondition [
 
-	condition := aCondition
+	condition := aCondition.
+	^ condition
 ]
 
 { #category : #accessing }
@@ -86,6 +110,11 @@ FylgjaRuleInstaller >> copyAsTypesReferenceNamed: aString [
 			   yourself)
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> installAtLanguageLevel [
+	^ installAtLanguageLevel isNotNil
+]
+
 { #category : #accessing }
 FylgjaRuleInstaller >> installAtTopLevel [
 
@@ -99,9 +128,15 @@ FylgjaRuleInstaller >> installInto: aFylgja [
 	space := self installAtTopLevel
 		         ifTrue: [ aFylgja migrationRuleSpace ]
 		         ifFalse: [ 
-			         aFylgja migrationRuleSpace
-				         ensureNamespace: context
-				         model: (self modelFor: aFylgja) ].
+			         self installAtLanguageLevel
+				         ifTrue: [ 
+					         aFylgja migrationRuleSpace subspaces detect: [ 
+						         :languageSpaces | 
+						         languageSpaces name = installAtLanguageLevel ] ]
+				         ifFalse: [ 
+					         aFylgja migrationRuleSpace
+						         ensureNamespace: context
+						         model: (self modelFor: aFylgja) ] ].
 	rule := self build.
 	self isMap
 		ifTrue: [ space installMappingRule: rule ]
@@ -116,6 +151,12 @@ FylgjaRuleInstaller >> invocationToMessageSend [
 
 	self operation: FylgjaTranslateInvocationToMessageSend new.
 	^ self operation
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> invocationToMessageSendToSelf [
+	self invocationToMessageSend receiverBlock: [ :writer | 
+		writer referenceToSelf ]
 ]
 
 { #category : #testing }
@@ -158,6 +199,35 @@ FylgjaRuleInstaller >> operation: anOperation [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> referenceNamed: aString [
+
+	^ self condition: (FylgjaConditionReferenceNamed new
+			   name: aString;
+			   yourself)
+]
+
+{ #category : #accessing }
+FylgjaRuleInstaller >> referenceTo: aJinDAMAttribute [ 
+	self shouldBeImplemented.
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> replaceOperatorWith: aString [
+
+	^ self operation: (FylgjaCopyReplaceOperator new
+			   operator: aString;
+			   yourself)
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> replaceWithStringLiteral: aString [
+
+	^ self operation: (FylgjaTranslateReplaceWithStringLiteral new
+			   string: aString;
+			   yourself)
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> topLevel [
 	installAtTopLevel := true .
 ]
@@ -165,21 +235,21 @@ FylgjaRuleInstaller >> topLevel [
 { #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> whenEntityIs: anAlcixLocalVariable [
 
-	self condition: (FylgjaConditionEntityEquality new
-			 entity: anAlcixLocalVariable;
-			 yourself)
+	^ self condition: (FylgjaConditionEntityEquality new
+			   entity: anAlcixLocalVariable;
+			   yourself)
 ]
 
 { #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> whenEntityIsIdenticalTo: anAlcixLocalVariable [
 
-	self condition: (FylgjaConditionEntityIdentity new
-			 entity: anAlcixLocalVariable;
-			 yourself)
+	^ self condition: (FylgjaConditionEntityIdentity new
+			   entity: anAlcixLocalVariable;
+			   yourself)
 ]
 
 { #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> whenTypeOfModelEntityIs: aClass [
 
-	self condition: (FylgjaConditionModelTypeIs new type: aClass)
+	^ self condition: (FylgjaConditionModelTypeIsKindOf new type: aClass)
 ]

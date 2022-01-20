@@ -9,14 +9,19 @@ Class {
 }
 
 { #category : #accessing }
+FylgjaConditionEntityIdentity class >> priority [
+
+	^ 10
+]
+
+{ #category : #accessing }
 FylgjaConditionEntityIdentity >> entity: anAlcixLocalVariable [ 
 	entity := anAlcixLocalVariable
 ]
 
 { #category : #testing }
-FylgjaConditionEntityIdentity >> matches: anEntity context: context [
-
-	^ entity == anEntity
+FylgjaConditionEntityIdentity >> matches: aProvenanceEntity context: aDestinationContext [
+	^ entity == aProvenanceEntity
 ]
 
 { #category : #accessing }

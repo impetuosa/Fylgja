@@ -482,7 +482,21 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformDefault [
 	self
 		assert: modifiedClass methods allButLast
 		equals: destinationClass methods.
-	self assert: modifiedClass methods last equals: result result
+	self assert: modifiedClass methods last equals: result result.
+
+	self assert:
+		(result allNewEntities select: [ :a | a isKindOf: MOIfElse ]) size
+		= 2.
+	self assert:
+		((result allNewEntities select: [ :a | a isKindOf: MOIfElse ]) 
+			 allSatisfy: [ :a | a ifTrue isKindOf: MOBlock ]).
+
+	self assert:
+		((result allNewEntities select: [ :a | a isKindOf: MOIfElse ]) 
+			 allSatisfy: [ :a | a ifFalse isKindOf: MOBlock ]).
+	self assert:
+		((result allNewEntities select: [ :a | a isKindOf: MOIfElse ]) 
+			 allSatisfy: [ :a | a condition isNotNil ])
 ]
 
 { #category : #'as yet unclassified' }
@@ -610,6 +624,86 @@ self
 ]
 
 { #category : #'as yet unclassified' }
+NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformRewriteMsgBoxInvocationToSelfLogErrorGenerate [
+
+	| function destinationClass result installer vbCrlf |
+	function := self logErrorFunction.
+	destinationClass := self configClassConfigPackage.
+	vbCrlf := self vbCrlf.
+
+
+
+	" By default in the system we copy"
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		copy;
+		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		context: (fylgja selectDestinationModelFor: destinationClass);
+		binaryOperator: #&;
+		replaceOperatorWith: #+;
+		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		context: (fylgja selectDestinationModelFor: destinationClass);
+		binaryOperator: #<>;
+		replaceOperatorWith: #!=;
+		installInto: fylgja.
+
+FylgjaRuleInstaller new
+		context: (fylgja selectDestinationModelFor: destinationClass);
+		referenceNamed: 'vbCrLf';
+		replaceWithStringLiteral: '\r\n';
+		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		context: (fylgja selectDestinationModelFor: destinationClass);
+		anyTypeReferenceNamed: #Boolean;
+		copyAsTypesReferenceNamed: #bool;
+		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		context: (fylgja selectDestinationModelFor: destinationClass);
+		anyTypeReferenceNamed: #Variant;
+		copyAsTypesReferenceNamed: #Object;
+		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		atLanguageNamed: #java;
+		anyInvocation;
+		invocationToMessageSendToSelf;
+		installInto: fylgja.
+
+	" By default when going to java "
+	FylgjaRuleInstaller new
+		context: (fylgja selectDestinationModelFor: destinationClass);
+		anyModelEntityOfTypes: { 
+				MOFunction.
+				MOProcedure };
+		copyAsMethod;
+		installInto: fylgja.
+
+	installer := FylgjaRuleInstaller new
+		             context:
+			             (fylgja selectDestinationModelFor: destinationClass);
+		             anyInvocationTo: #MsgBox;
+		             yourself.
+
+	installer invocationToMessageSend
+		selector: #log;
+		receiverBlock: [ :writer | writer referenceToSelf ];
+		withArgumentCollection: [ :arguments :writer | 
+			{ (writer constantReferenceNamed: #ERROR) } , arguments ].
+	installer installInto: fylgja.
+
+	result := fylgja produce: function into: destinationClass.
+	self halt.
+	result result produceCode
+]
+
+{ #category : #'as yet unclassified' }
 NotThatGoodTests >> testProduceVariableIntoMethodByCopyNodeTransformDefault [
 
 	| variable destinationContext result |
@@ -702,4 +796,11 @@ NotThatGoodTests >> testTypeConditionMatchesTheCase [
 		(fylgja
 			 lookupRulesForProducing: variable
 			 toContext: destinationContext) size = 1
+]
+
+{ #category : #'as yet unclassified' }
+NotThatGoodTests >> vbCrlf [
+
+	^ northwind entities detect: [ :a | 
+		  (a isKindOf: JinDAMAttribute) and: [ a name = 'vbCrLf' ] ]
 ]

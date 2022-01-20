@@ -14,3 +14,17 @@ FylgjaTranslate >> applyTo: aProvenanceEntity context: aDestinationContext using
 FylgjaTranslate >> isDelegate [
 	^ false 
 ]
+
+{ #category : #writing }
+FylgjaTranslate >> writeCopyOf: aProvenanceEntity withContext: aDestinationContext inWriter: aDestinationContextWriter using: aFylgjaDerivativeModel [
+
+	^ MOModelWriteTypeBasedResolver new
+		  resolveWriterFor: aProvenanceEntity
+		  context: aDestinationContext
+		  writingContext: aDestinationContextWriter
+		  do: [ :elementWriter | 
+			  elementWriter
+				  writeCopyOf: aProvenanceEntity
+				  readingValues: [ :context :value | 
+					  aFylgjaDerivativeModel migrate: value into: context ] ]
+]

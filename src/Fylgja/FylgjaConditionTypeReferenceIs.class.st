@@ -7,11 +7,16 @@ Class {
 	#category : #'Fylgja-Rule-Conditions'
 }
 
-{ #category : #testing }
-FylgjaConditionTypeReferenceIs >> matches: aMOFunction context: aMOClass [
+{ #category : #accessing }
+FylgjaConditionTypeReferenceIs class >> priority [
+	 ^ 7
+]
 
-	^ aMOFunction isTypeReference and: [ 
-		  typeNames includes: aMOFunction name ]
+{ #category : #testing }
+FylgjaConditionTypeReferenceIs >> matches: aProvenanceEntity context: aDestinationContext [
+
+	^ aProvenanceEntity isTypeReference and: [ 
+		  typeNames includes: aProvenanceEntity name ]
 ]
 
 { #category : #testing }

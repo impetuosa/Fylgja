@@ -10,6 +10,12 @@ Class {
 }
 
 { #category : #accessing }
+FylgjaConditionPattern class >> priority [
+
+	^ 5
+]
+
+{ #category : #accessing }
 FylgjaConditionPattern >> initialize [
 
 	super initialize.
@@ -70,9 +76,9 @@ FylgjaConditionPattern >> matchValue: anUndefinedObject with: anUndefinedObject2
 ]
 
 { #category : #testing }
-FylgjaConditionPattern >> matches: anAlcixLocalVariable context: aMOMethod [
+FylgjaConditionPattern >> matches: aProvenanceEntity context: aDestinationContext [
 self halt .
-	^ self matchPattern: node with: anAlcixLocalVariable
+	^ self matchPattern: node with: aProvenanceEntity
 ]
 
 { #category : #accessing }
@@ -83,6 +89,11 @@ FylgjaConditionPattern >> node: aMOVariable [
 { #category : #accessing }
 FylgjaConditionPattern >> pairs [
 	^ pairs
+]
+
+{ #category : #accessing }
+FylgjaConditionPattern >> patternString: aString [ 
+	patternString := aString
 ]
 
 { #category : #accessing }

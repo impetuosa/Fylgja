@@ -39,3 +39,9 @@ FylgjaRule >> printOn: aStream [
 FylgjaRule >> printingSymbol [
 	^ self subclassResponsibility 
 ]
+
+{ #category : #testing }
+FylgjaRule >> priority [
+
+	^ condition priority
+]

@@ -115,19 +115,27 @@ FylgjaMigrationRuleSpace >> lookupRulesForMapping: anAlcixFunction toContext: aM
 { #category : #'as yet unclassified' }
 FylgjaMigrationRuleSpace >> lookupRulesForProducing: anAlcixFunction toContext: aMOClass [
 
-	^ (producingRules select: [ :mr | 
-		   mr matches: anAlcixFunction context: aMOClass ] thenCollect: [ : mr | self -> mr ] ) , (parent
+	| thisLevelRules max |
+	thisLevelRules := producingRules select: [ :mr | 
+		                  mr matches: anAlcixFunction context: aMOClass ].
+	thisLevelRules size > 1 ifTrue: [ 
+		max := thisLevelRules max: #priority.
+		thisLevelRules := thisLevelRules select: [ :a | a priority = max ] ].
+
+	^ (thisLevelRules collect: [ :mr | self -> mr ]) , (parent
 		   ifNil: [ {  } ]
 		   ifNotNil: [ 
-		   parent lookupRulesForProducing: anAlcixFunction toContext: aMOClass ])
+		   parent
+			   lookupRulesForProducing: anAlcixFunction
+			   toContext: aMOClass ])
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigrationRuleSpace >> lookupRulesForProducing: anAlcixFunction toContext: aMOClass model: aMOModel [
+FylgjaMigrationRuleSpace >> lookupRulesForProducing: aProvenanceEntity toContext: aDestinationContext model: aMOModel [
 
-	^ ((self migrationRuleSpaceForModel: aMOModel) migrationRuleSpaceForAnchor: aMOClass anchor)
-		  lookupRulesForProducing: anAlcixFunction
-		  toContext: aMOClass
+	^ ((self migrationRuleSpaceForModel: aMOModel) migrationRuleSpaceForAnchor: aDestinationContext anchor)
+		  lookupRulesForProducing: aProvenanceEntity
+		  toContext: aDestinationContext
 ]
 
 { #category : #'as yet unclassified' }
@@ -155,6 +163,11 @@ FylgjaMigrationRuleSpace >> migrationRuleSpaceForModel: aMOModel [
 ]
 
 { #category : #accessing }
+FylgjaMigrationRuleSpace >> name [
+	^ name
+]
+
+{ #category : #accessing }
 FylgjaMigrationRuleSpace >> name: aString [
 
 	name := aString
@@ -171,7 +184,7 @@ FylgjaMigrationRuleSpace >> printOn: aStream [
 	parent
 		ifNil: [ 
 			aStream
-				nextPutAll: 'MapSpace: ';
+				nextPutAll: 'MRS ';
 				nextPutAll: (name ifNil: '/root') ]
 		ifNotNil: [ 
 			parent printOn: aStream.

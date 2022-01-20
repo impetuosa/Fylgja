@@ -8,6 +8,13 @@ Class {
 	#category : #'Fylgja-Model'
 }
 
+{ #category : #'as yet unclassified' }
+FylgjaDerivationResult >> allNewEntities [
+
+	^ derivative allNewEntities select: [ :a | 
+		  a language = result language ]
+]
+
 { #category : #accessing }
 FylgjaDerivationResult >> derivative [
 	^ derivative

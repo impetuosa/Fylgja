@@ -15,6 +15,7 @@ FylgjaTranslateInvocationToMessageSend >> applyTo: aProvenanceEntity context: aD
 
 	| invocation ctx |
 	aFylgjaDerivativeModel
+	
 		writerFor: aProvenanceEntity
 		inContextOf: aDestinationContext
 		do: [ :writingEntity :contextWriter | 
@@ -38,6 +39,13 @@ FylgjaTranslateInvocationToMessageSend >> applyTo: aProvenanceEntity context: aD
 					 cull: contextWriter) ].
 
 	^ invocation
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaTranslateInvocationToMessageSend >> initialize [
+
+	super initialize.
+	argumentCollectionTransform := [ :arguments :argWriter | arguments ]
 ]
 
 { #category : #'as yet unclassified' }

@@ -7,10 +7,17 @@ Class {
 	#category : #'Fylgja-Rule-Conditions'
 }
 
-{ #category : #testing }
-FylgjaConditionBlock >> matches: anEntity context: aContext [
+{ #category : #accessing }
+FylgjaConditionBlock class >> priority [
 
-	^ block cull: anEntity cull: aContext
+	^ 1
+]
+
+{ #category : #testing }
+FylgjaConditionBlock >> matches: aProvenanceEntity context: aDestinationContext [
+
+
+	^ block cull: aProvenanceEntity cull: aDestinationContext
 ]
 
 { #category : #testing }

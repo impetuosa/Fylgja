@@ -7,10 +7,15 @@ Class {
 	#category : #'Fylgja-Rule-Conditions'
 }
 
-{ #category : #testing }
-FylgjaConditionModelTypeIs >> matches: anAlcixLocalVariable context: aMOMethod [
+{ #category : #accessing }
+FylgjaConditionModelTypeIs class >> priority [
+	 ^ 7 
+]
 
-	^ types anySatisfy: [ :t | anAlcixLocalVariable isKindOf: t ]
+{ #category : #testing }
+FylgjaConditionModelTypeIs >> matches: aProvenanceEntity context: aDestinationContext [
+
+	^ types anySatisfy: [ :t | aProvenanceEntity class = t ]
 ]
 
 { #category : #testing }

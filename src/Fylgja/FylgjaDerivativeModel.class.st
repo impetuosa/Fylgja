@@ -8,6 +8,11 @@ Class {
 	#category : #'Fylgja-Model'
 }
 
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> allNewEntities [
+	^ derivativeModels flatCollect: #entities 
+]
+
 { #category : #accessing }
 FylgjaDerivativeModel >> derivativeModels [
 	^ derivativeModels
