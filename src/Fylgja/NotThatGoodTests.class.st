@@ -37,7 +37,7 @@ NotThatGoodTests >> blockDataSourceConfigClassConfigPackage [
 { #category : #initialization }
 NotThatGoodTests >> configClassConfigPackage [
 
-	^ self configPackage types detect: [ :t | t name = 'Config' ]
+	^ self configPackage allTypes detect: [ :t | t name = 'Config' ]
 ]
 
 { #category : #initialization }
@@ -83,7 +83,7 @@ NotThatGoodTests >> modelPackage [
 { #category : #initialization }
 NotThatGoodTests >> modelStubClass [
 
-	^ (java packages detect: [ :p | p name = 'Model' ]) types detect: [ 
+	^ (java packages detect: [ :p | p name = 'Model' ]) allTypes detect: [ 
 		  :t | t name = 'Stub' ]
 ]
 
@@ -219,7 +219,7 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformAddRuleToMapBoo
 
 	" By default when going to java "
 	FylgjaRuleInstaller new
-		context: (fylgja selectDestinationModelFor: destinationClass);
+		context: (fylgja selectDerivativeModelFor: destinationClass);
 		anyModelEntityOfTypes: { 
 				MOFunction.
 				MOProcedure };
@@ -227,7 +227,7 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformAddRuleToMapBoo
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new
-		context: (fylgja selectDestinationModelFor: destinationClass);
+		context: (fylgja selectDerivativeModelFor: destinationClass);
 		anyTypeReferenceNamed: #Boolean;
 		copyAsTypesReferenceNamed: #bool;
 		installInto: fylgja.
@@ -285,8 +285,16 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformAddRuleToMapBoo
 
 
 	self assert: result result language isJava.
-	modifiedClass := result derivative derivativeModels third entities
-		                 first.
+	self deny: result result parent == destinationClass.
+	self
+		assert:
+			(result derivative derivativeModels select: [ :a | 
+				 a language isJava ]) size
+		equals: 1.
+	modifiedClass := (result derivative derivativeModels select: [ :a | 
+		                  a language isJava ]) first entities detect: [ :a | 
+		                 a = result result parent ].
+
 	self assert: modifiedClass name equals: destinationClass name.
 	self
 		assert: modifiedClass attributes
@@ -313,7 +321,7 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformAddRuleToMapVar
 
 	" By default when going to java "
 	FylgjaRuleInstaller new
-		context: (fylgja selectDestinationModelFor: destinationClass);
+		context: (fylgja selectDerivativeModelFor: destinationClass);
 		anyModelEntityOfTypes: { 
 				MOFunction.
 				MOProcedure };
@@ -321,7 +329,7 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformAddRuleToMapVar
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new
-		context: (fylgja selectDestinationModelFor: destinationClass);
+		context: (fylgja selectDerivativeModelFor: destinationClass);
 		anyTypeReferenceNamed: #Variant;
 		copyAsTypesReferenceNamed: #Object;
 		installInto: fylgja.
@@ -329,11 +337,11 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformAddRuleToMapVar
 
 	result := fylgja produce: function into: destinationClass.
 	self assert: result result isKindOf: MOMethod.
-	
+
 	self
 		assert: result result returnTypeReference name
-		equals: function typeReference  name.
-	
+		equals: function typeReference name.
+
 	self assert: result result modifiers size equals: 1.
 	self assert: result result modifiers first equals: #static.
 	self assert: result result language isJava.
@@ -349,7 +357,7 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformAddRuleToMapVar
 	self
 		assert: result result parameters first name
 		equals: function parameters first name.
-		
+
 	self
 		assert: result result parameters first typeReference name
 		equals: function parameters first typeReference name.
@@ -381,8 +389,8 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformAddRuleToMapVar
 
 
 	self assert: result result language isJava.
-	modifiedClass := result derivative derivativeModels third entities
-		                 first.
+	self deny: destinationClass equals: result result parent.
+	modifiedClass := result result parent.
 	self assert: modifiedClass name equals: destinationClass name.
 	self
 		assert: modifiedClass attributes
@@ -409,7 +417,7 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformDefault [
 
 	" By default when going to java "
 	FylgjaRuleInstaller new
-		context: (fylgja selectDestinationModelFor: destinationClass);
+		context: (fylgja selectDerivativeModelFor: destinationClass);
 		anyModelEntityOfTypes: { 
 				MOFunction.
 				MOProcedure };
@@ -473,8 +481,8 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformDefault [
 
 
 	self assert: result result language isJava.
-	modifiedClass := result derivative derivativeModels third entities
-		                 first.
+	self deny: destinationClass equals: result result parent.
+	modifiedClass := result result parent.
 	self assert: modifiedClass name equals: destinationClass name.
 	self
 		assert: modifiedClass attributes
@@ -535,7 +543,7 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformRewriteMsgBoxIn
 
 	" By default when going to java "
 	FylgjaRuleInstaller new
-		context: (fylgja selectDestinationModelFor: destinationClass);
+		context: (fylgja selectDerivativeModelFor: destinationClass);
 		anyModelEntityOfTypes: { 
 				MOFunction.
 				MOProcedure };
@@ -544,7 +552,7 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformRewriteMsgBoxIn
 
 	installer := FylgjaRuleInstaller new
 		             context:
-			             (fylgja selectDestinationModelFor: destinationClass);
+			             (fylgja selectDerivativeModelFor: destinationClass);
 		             anyInvocationTo: #MsgBox;
 		             yourself.
 
@@ -566,7 +574,7 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformRewriteMsgBoxIn
 	self assert: result result modifiers first equals: #static.
 	self assert: result result language isJava.
 	self assert: result result block language isJava.
-	
+
 	self
 		assert: result result parameters size
 		equals: function parameters size.
@@ -607,8 +615,7 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformRewriteMsgBoxIn
 
 
 	self assert: result result language isJava.
-	modifiedClass := result derivative derivativeModels third entities
-		                 first.
+	modifiedClass := result result parent.
 	self assert: modifiedClass name equals: destinationClass name.
 	self
 		assert: modifiedClass attributes
@@ -617,10 +624,10 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformRewriteMsgBoxIn
 		assert: modifiedClass methods allButLast
 		equals: destinationClass methods.
 	self assert: modifiedClass methods last equals: result result.
-	
-self
+
+	self
 		assert: result result block statements size
-		equals: function block statements size.
+		equals: function block statements size
 ]
 
 { #category : #'as yet unclassified' }
@@ -641,31 +648,31 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformRewriteMsgBoxIn
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new
-		context: (fylgja selectDestinationModelFor: destinationClass);
+		context: (fylgja selectDerivativeModelFor: destinationClass);
 		binaryOperator: #&;
 		replaceOperatorWith: #+;
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new
-		context: (fylgja selectDestinationModelFor: destinationClass);
+		context: (fylgja selectDerivativeModelFor: destinationClass);
 		binaryOperator: #<>;
 		replaceOperatorWith: #!=;
 		installInto: fylgja.
 
-FylgjaRuleInstaller new
-		context: (fylgja selectDestinationModelFor: destinationClass);
+	FylgjaRuleInstaller new
+		context: (fylgja selectDerivativeModelFor: destinationClass);
 		referenceNamed: 'vbCrLf';
 		replaceWithStringLiteral: '\r\n';
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new
-		context: (fylgja selectDestinationModelFor: destinationClass);
+		context: (fylgja selectDerivativeModelFor: destinationClass);
 		anyTypeReferenceNamed: #Boolean;
 		copyAsTypesReferenceNamed: #bool;
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new
-		context: (fylgja selectDestinationModelFor: destinationClass);
+		context: (fylgja selectDerivativeModelFor: destinationClass);
 		anyTypeReferenceNamed: #Variant;
 		copyAsTypesReferenceNamed: #Object;
 		installInto: fylgja.
@@ -678,7 +685,7 @@ FylgjaRuleInstaller new
 
 	" By default when going to java "
 	FylgjaRuleInstaller new
-		context: (fylgja selectDestinationModelFor: destinationClass);
+		context: (fylgja selectDerivativeModelFor: destinationClass);
 		anyModelEntityOfTypes: { 
 				MOFunction.
 				MOProcedure };
@@ -687,7 +694,7 @@ FylgjaRuleInstaller new
 
 	installer := FylgjaRuleInstaller new
 		             context:
-			             (fylgja selectDestinationModelFor: destinationClass);
+			             (fylgja selectDerivativeModelFor: destinationClass);
 		             anyInvocationTo: #MsgBox;
 		             yourself.
 
@@ -699,8 +706,10 @@ FylgjaRuleInstaller new
 	installer installInto: fylgja.
 
 	result := fylgja produce: function into: destinationClass.
-	self halt.
-	result result produceCode
+
+	self
+		assert: (JavaParser parse: result result parent produceCode)
+		isKindOf: JavaProgramFileNode
 ]
 
 { #category : #'as yet unclassified' }
@@ -717,20 +726,19 @@ NotThatGoodTests >> testProduceVariableIntoMethodByCopyNodeTransformDefault [
 		installInto: fylgja.
 
 	result := fylgja produce: variable into: destinationContext.
-	self assert: (result result isKindOf: MOBlock).
+	self assert: (result result isKindOf: MOVariable).
 	self assert: result result language isJava.
 	self
-		assert: result result statements size
+		assert: result result parent statements size
 		equals: destinationContext statements size + 1.
 	1 to: destinationContext statements size do: [ :i | 
-		self assert: (result result statements at: i)
+		self assert: (result result parent statements at: i)
 			== (destinationContext statements at: i) ].
-	self assert: result result statements last name = variable name.
-	self assert: result result statements last language isJava.
 	self assert:
-		result result statements last typeReference name
-		= variable type name.
-
+		result result parent statements last name = variable name.
+	self assert: result result parent statements last language isJava.
+	self assert: result result statements parent last typeReference name
+		= variable type name
 ]
 
 { #category : #initialization }
@@ -763,7 +771,7 @@ NotThatGoodTests >> testRespondsToPatternConditionMatchesTheCase [
 		matchesPattern: (FylgjaPatternBuilder new
 				 parse: ' dim $ as String ';
 				 parser: VBParser;
-				 reader: MOAlceModelReader;
+				 reader: MOJinDAMModelReader ;
 				 model: MOModel newMicrosoftAccess;
 				 build);
 		copy;

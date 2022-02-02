@@ -15,20 +15,19 @@ FylgjaTranslateInvocationToMessageSend >> applyTo: aProvenanceEntity context: aD
 
 	| invocation ctx |
 	aFylgjaDerivativeModel
-	
 		writerFor: aProvenanceEntity
 		inContextOf: aDestinationContext
 		do: [ :writingEntity :contextWriter | 
-			invocation := contextWriter writeMethodInvocation: [ 
-				              :methodInvocationWriter | 
-				              methodInvocationWriter receiverReference:
-					              (receiverBlock
-						               cull: methodInvocationWriter
-						               cull: aProvenanceEntity
-						               cull: aDestinationContext
-						               cull: aFylgjaDerivativeModel).
-				              methodInvocationWriter selector:
-					              (selector ifNil: [ aProvenanceEntity selector ]) ] ].
+			invocation := contextWriter writeStatement: [ :stmt | 
+				              stmt
+					              invokeMethodNamed:
+					              (selector ifNil: [ aProvenanceEntity selector ])
+					              receiver: [ 
+						              receiverBlock
+							              cull: stmt
+							              cull: aProvenanceEntity
+							              cull: aDestinationContext
+							              cull: aFylgjaDerivativeModel ] ] ].
 	aFylgjaDerivativeModel
 		writerFor: aProvenanceEntity
 		inContextOf: invocation

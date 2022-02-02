@@ -30,6 +30,13 @@ FylgjaDerivativeModel >> initialize [
 	derivativeModels := OrderedCollection new
 ]
 
+{ #category : #testing }
+FylgjaDerivativeModel >> isDerivativeEntity: anEntity [
+
+	self selectDerivativeModelFor: anEntity ifNone: [ ^ false ].
+	^ true
+]
+
 { #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> map: aProvenanceReferenceEntity into: aDestinationContext [  
 	^ fylgja map: aProvenanceReferenceEntity into: aDestinationContext using: self
@@ -50,27 +57,54 @@ FylgjaDerivativeModel >> produce: aProvenanceEntity into: aContextDestination [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> readForReading: anEntity [
+	
+	^ (self readerFor: anEntity) read: anEntity
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> readForWriting: anEntity [
+
+	^ (self isDerivativeEntity: anEntity)
+		  ifTrue: [ anEntity ]
+		  ifFalse: [ (self readerFor: anEntity) read: anEntity ]
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> readerFor: aModelEntity [
 
 	^ (FylgjaResolver readerOn: self for: aModelEntity) resolve
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> selectDestinationModelFor: aDestinationContext [
+FylgjaDerivativeModel >> selectDerivativeModelFor: aDestinationContext [
+
+	^ self selectDerivativeModelFor: aDestinationContext ifNone: [ 
+		  | model |
+		  model := (fylgja selectDerivativeModelFor: aDestinationContext)
+			           derivative.
+		  derivativeModels add: model.
+		  model ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> selectDerivativeModelFor: aDestinationContext ifNone: aBlock [
+
 	^ derivativeModels
-		  detect: [ :d | d entities includes: aDestinationContext ]
-		  ifNone: [ 
-			  | model |
-			  model := (fylgja selectDestinationModelFor: aDestinationContext) derivative.
-			  derivativeModels add: model.
-			  model ]
+		  detect: [ :d | d includes: aDestinationContext ]
+		  ifNone: [ aBlock value ]
 ]
 
 { #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> writerFor: aProvenanceEntity inContextOf: aDestinationContext do: anUpdatingBlock [
 
-	^ (self selectDestinationModelFor: aDestinationContext) writer
-		  updaterFor: aDestinationContext
-		  with: aProvenanceEntity
-		  do: anUpdatingBlock
+	| writer destinationEntity |
+	writer := (self selectDerivativeModelFor: aDestinationContext)
+		          writer.
+	destinationEntity := writer
+		                     updaterFor: aDestinationContext
+		                     with: aProvenanceEntity
+		                     do: anUpdatingBlock.
+	writer populateAnchor.
+	^ destinationEntity
 ]

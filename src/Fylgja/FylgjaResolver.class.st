@@ -47,6 +47,6 @@ FylgjaResolver >> privateResolveArtefact [
 FylgjaResolver >> resolve [
 
 	^ self privateResolveArtefact
-		  model: (fylgja selectDestinationModelFor: entity);
+		  model: (fylgja selectDerivativeModelFor: entity);
 		  yourself
 ]

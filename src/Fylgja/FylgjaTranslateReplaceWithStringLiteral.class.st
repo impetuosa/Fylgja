@@ -11,7 +11,7 @@ Class {
 { #category : #'as yet unclassified' }
 FylgjaTranslateReplaceWithStringLiteral >> applyTo: aProvenanceEntity context: aDestinationContext using: aFylgjaDerivativeModel [
 
-	writer := (aFylgjaDerivativeModel selectDestinationModelFor:
+	writer := (aFylgjaDerivativeModel selectDerivativeModelFor:
 		           aDestinationContext) writer.
 	^ writer stringLiteral: string
 ]

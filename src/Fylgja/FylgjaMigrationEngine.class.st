@@ -48,7 +48,7 @@ FylgjaMigrationEngine >> lookupRulesForMapping: aProvenanceEntity toContext: aDe
 	^ self
 		  lookupRulesForMapping: aProvenanceEntity
 		  toContext: aDestinationContext
-		  model: (self selectDestinationModelFor: aDestinationContext)
+		  model: (self selectDerivativeModelFor: aDestinationContext)
 ]
 
 { #category : #'as yet unclassified' }
@@ -83,7 +83,7 @@ FylgjaMigrationEngine >> lookupRulesForProducing: aProvenanceEntity toContext: a
 	^ self
 		  lookupRulesForProducing: aProvenanceEntity
 		  toContext: aMOClass
-		  model: (self selectDestinationModelFor: aMOClass)
+		  model: (self selectDerivativeModelFor: aMOClass)
 ]
 
 { #category : #'as yet unclassified' }
@@ -130,28 +130,30 @@ FylgjaMigrationEngine >> map: aProvenanceReferenceEntity into: aDestinationConte
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> map: aProvenanceReferenceEntity into: aDestinationContext using: aModifiedFylgjaMigrationEngine [
 
-	| rules element |
+	| rules element destinationContext |
 	element := (aModifiedFylgjaMigrationEngine readerFor:
 		            aProvenanceReferenceEntity) read:
 		           aProvenanceReferenceEntity.
+	destinationContext := (aModifiedFylgjaMigrationEngine readerFor:
+		                       aDestinationContext) read:
+		                      aDestinationContext.
 	rules := self
 		         lookupRulesForMapping: element
-		         toContext: aDestinationContext
+		         toContext: destinationContext
 		         destinationModel:
 			         (aModifiedFylgjaMigrationEngine 
-				          selectDestinationModelFor: aDestinationContext).
+				          selectDerivativeModelFor: aDestinationContext).
 
 	rules ifEmpty: [ 
-
 		^ self
 			  produce: aProvenanceReferenceEntity
-			  into: aDestinationContext
+			  into: destinationContext
 			  using: aModifiedFylgjaMigrationEngine ].
 
 	self halt.
 	^ rules first
 		  applyTo: element
-		  context: aDestinationContext
+		  context: destinationContext
 		  using: aModifiedFylgjaMigrationEngine
 ]
 
@@ -185,26 +187,32 @@ FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext [
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext using: aModifiedFylgjaMigrationEngine [
 
-	| rules element |
-	element := (aModifiedFylgjaMigrationEngine readerFor: aProvenanceEntity) 
-		           read: aProvenanceEntity.
+	| rules element destinationContext |
+	element := aModifiedFylgjaMigrationEngine readForReading:
+		           aProvenanceEntity.
+
+
+
+	destinationContext := aModifiedFylgjaMigrationEngine readForWriting:
+		                      aDestinationContext.
+
 	rules := self
 		         lookupRulesForProducing: element
-		         toContext: aDestinationContext
+		         toContext: destinationContext
 		         destinationModel:
-		         (aModifiedFylgjaMigrationEngine selectDestinationModelFor:
-			          aDestinationContext).
+			         (aModifiedFylgjaMigrationEngine 
+				          selectDerivativeModelFor: aDestinationContext).
 
 	rules ifEmpty: [ NotFound signal: 'No producing rule found ' ].
 
 	^ rules first
 		  applyTo: element
-		  context: aDestinationContext
+		  context: destinationContext
 		  using: aModifiedFylgjaMigrationEngine
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> selectDestinationModelFor: aDestinationContext [
+FylgjaMigrationEngine >> selectDerivativeModelFor: aDestinationContext [
 
-	^ models detect: [ :d | d entities includes: aDestinationContext ]
+	^ models detect: [ :d | d includes: aDestinationContext ]
 ]

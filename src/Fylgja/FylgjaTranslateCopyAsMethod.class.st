@@ -8,28 +8,28 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaTranslateCopyAsMethod >> applyTo: element context: aMethod using: aFylgjaDerivativeModel [
+FylgjaTranslateCopyAsMethod >> applyTo: aProvenanceElement context: aDestinationContext using: aFylgjaDerivativeModel [
 
 	| method |
 	aFylgjaDerivativeModel
-		writerFor: element
-		inContextOf: aMethod
+		writerFor: aProvenanceElement
+		inContextOf: aDestinationContext
 		do: [ :writingEntity :contextWriter | 
 			contextWriter writeMethod: [ :methodWriter | 
 				methodWriter onBuild: [ :m | method := m ].
-				self configure: methodWriter with: element ] ].
+				self configure: methodWriter with: aProvenanceElement ] ].
 
 	self
-		produceChildren: element
+		produceChildren: aProvenanceElement
 		into: method
 		using: aFylgjaDerivativeModel.
 	^ method
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaTranslateCopyAsMethod >> configure: aMOMethodWriter with: aMOFunction [ 
+FylgjaTranslateCopyAsMethod >> configure: aMOMethodWriter with: aProvenanceEntity [ 
 	writer := aMOMethodWriter.
-	aMOFunction acceptVisitor: self
+	aProvenanceEntity acceptVisitor: self
 ]
 
 { #category : #printing }
@@ -38,18 +38,18 @@ FylgjaTranslateCopyAsMethod >> printOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaTranslateCopyAsMethod >> produceChildren: aFunction into: aMethod using: fylgja [
+FylgjaTranslateCopyAsMethod >> produceChildren: aProvenanceEntity into: aDestinationEntity using: fylgja [
 
-	aFunction parameters do: [ :p | fylgja migrate: p into: aMethod ].
-	aMethod returnTypeReference:
-		(fylgja produce: aFunction returnTypeReference into: aMethod).
+	aProvenanceEntity parameters do: [ :p | fylgja migrate: p into: aDestinationEntity ].
+	aDestinationEntity returnTypeReference:
+		(fylgja produce: aProvenanceEntity returnTypeReference into: aDestinationEntity).
 
-	fylgja produce: aFunction block into: aMethod.
-	aMethod modifiers: aFunction modifiers.
-	aMethod modifiers add: #static. 
-	aMethod thrownTypeReferences:
-		(aFunction thrownTypeReferences collect: [ :tr | 
-			 fylgja produce: tr into: aMethod ])
+	fylgja produce: aProvenanceEntity block into: aDestinationEntity.
+	aDestinationEntity modifiers: aProvenanceEntity modifiers.
+	aDestinationEntity modifiers add: #static. 
+	aDestinationEntity thrownTypeReferences:
+		(aProvenanceEntity thrownTypeReferences collect: [ :tr | 
+			 fylgja produce: tr into: aDestinationEntity ])
 ]
 
 { #category : #visiting }

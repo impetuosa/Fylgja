@@ -12,10 +12,9 @@ FylgjaTranslateCopy >> applyTo: aProvenanceEntity context: aDestinationContext u
 			  writeCopyOf: aProvenanceEntity
 			  withContext: aDestinationContext
 			  inWriter:
-			  (aFylgjaDerivativeModel selectDestinationModelFor: aDestinationContext)
+			  (aFylgjaDerivativeModel selectDerivativeModelFor: aDestinationContext)
 				  writer
 			  using: aFylgjaDerivativeModel ].
-
 	^ aFylgjaDerivativeModel
 		  writerFor: aProvenanceEntity
 		  inContextOf: aDestinationContext

@@ -184,7 +184,7 @@ FylgjaRuleInstaller >> modelFor: aFylgjaModel [
 		  ifTrue: [ 
 			  self assert: (aFylgjaModel models includes: context).
 			  context ]
-		  ifFalse: [ aFylgjaModel selectDestinationModelFor: context ]
+		  ifFalse: [ aFylgjaModel selectDerivativeModelFor: context ]
 ]
 
 { #category : #accessing }
