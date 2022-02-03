@@ -131,18 +131,16 @@ FylgjaMigrationEngine >> map: aProvenanceReferenceEntity into: aDestinationConte
 FylgjaMigrationEngine >> map: aProvenanceReferenceEntity into: aDestinationContext using: aModifiedFylgjaMigrationEngine [
 
 	| rules element destinationContext |
-	element := (aModifiedFylgjaMigrationEngine readerFor:
-		            aProvenanceReferenceEntity) read:
+	element := aModifiedFylgjaMigrationEngine readEntity:
 		           aProvenanceReferenceEntity.
-	destinationContext := (aModifiedFylgjaMigrationEngine readerFor:
-		                       aDestinationContext) read:
+	destinationContext := aModifiedFylgjaMigrationEngine readEntity:
 		                      aDestinationContext.
 	rules := self
 		         lookupRulesForMapping: element
 		         toContext: destinationContext
 		         destinationModel:
-			         (aModifiedFylgjaMigrationEngine 
-				          selectDerivativeModelFor: aDestinationContext).
+			         (aModifiedFylgjaMigrationEngine selectDerivativeModelFor:
+				          aDestinationContext).
 
 	rules ifEmpty: [ 
 		^ self
@@ -188,20 +186,17 @@ FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext [
 FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext using: aModifiedFylgjaMigrationEngine [
 
 	| rules element destinationContext |
-	element := aModifiedFylgjaMigrationEngine readForReading:
+	element := aModifiedFylgjaMigrationEngine readEntity:
 		           aProvenanceEntity.
-
-
-
-	destinationContext := aModifiedFylgjaMigrationEngine readForWriting:
+	destinationContext := aModifiedFylgjaMigrationEngine readEntity:
 		                      aDestinationContext.
 
 	rules := self
 		         lookupRulesForProducing: element
 		         toContext: destinationContext
 		         destinationModel:
-			         (aModifiedFylgjaMigrationEngine 
-				          selectDerivativeModelFor: aDestinationContext).
+			         (aModifiedFylgjaMigrationEngine selectDerivativeModelFor:
+				          aDestinationContext).
 
 	rules ifEmpty: [ NotFound signal: 'No producing rule found ' ].
 

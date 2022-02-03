@@ -57,13 +57,7 @@ FylgjaDerivativeModel >> produce: aProvenanceEntity into: aContextDestination [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> readForReading: anEntity [
-	
-	^ (self readerFor: anEntity) read: anEntity
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> readForWriting: anEntity [
+FylgjaDerivativeModel >> readEntity: anEntity [
 
 	^ (self isDerivativeEntity: anEntity)
 		  ifTrue: [ anEntity ]

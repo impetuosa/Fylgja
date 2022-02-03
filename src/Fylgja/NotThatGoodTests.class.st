@@ -285,7 +285,7 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformAddRuleToMapBoo
 
 
 	self assert: result result language isJava.
-	self deny: result result parent == destinationClass.
+	self deny: result result parent equals: destinationClass.
 	self
 		assert:
 			(result derivative derivativeModels select: [ :a | 
@@ -737,7 +737,7 @@ NotThatGoodTests >> testProduceVariableIntoMethodByCopyNodeTransformDefault [
 	self assert:
 		result result parent statements last name = variable name.
 	self assert: result result parent statements last language isJava.
-	self assert: result result statements parent last typeReference name
+	self assert: result result parent statements last typeReference name
 		= variable type name
 ]
 
@@ -779,7 +779,7 @@ NotThatGoodTests >> testRespondsToPatternConditionMatchesTheCase [
 
 	self assert: (fylgja
 			 lookupRulesForProducing: moVariable
-			 toContext: destinationContext) size = 1
+			 toContext: destinationContext) size equals: 1
 ]
 
 { #category : #initialization }
@@ -803,7 +803,7 @@ NotThatGoodTests >> testTypeConditionMatchesTheCase [
 	self assert:
 		(fylgja
 			 lookupRulesForProducing: variable
-			 toContext: destinationContext) size = 1
+			 toContext: destinationContext) size equals: 1
 ]
 
 { #category : #'as yet unclassified' }
