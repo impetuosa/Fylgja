@@ -18,7 +18,7 @@ FylgjaTranslate >> isDelegate [
 { #category : #writing }
 FylgjaTranslate >> writeCopyOf: aProvenanceEntity withContext: aDestinationContext inWriter: aDestinationContextWriter using: aFylgjaDerivativeModel [
 
-	^ MOModelWriteTypeBasedResolver new
+	^ MOModelWriteTypeBasedCopyResolver new
 		  resolveWriterFor: aProvenanceEntity
 		  context: aDestinationContext
 		  writingContext: aDestinationContextWriter
