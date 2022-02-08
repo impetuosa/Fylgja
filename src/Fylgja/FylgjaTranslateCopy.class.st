@@ -6,7 +6,6 @@ Class {
 
 { #category : #'as yet unclassified' }
 FylgjaTranslateCopy >> applyTo: aProvenanceEntity context: aDestinationContext using: aFylgjaDerivativeModel [
-
 	(self isWrittenInContext: aProvenanceEntity context: aDestinationContext) ifFalse: [ 
 		^ self
 			  writeCopyOf: aProvenanceEntity
@@ -15,6 +14,7 @@ FylgjaTranslateCopy >> applyTo: aProvenanceEntity context: aDestinationContext u
 			  (aFylgjaDerivativeModel selectDerivativeModelFor: aDestinationContext)
 				  writer
 			  using: aFylgjaDerivativeModel ].
+		
 	^ aFylgjaDerivativeModel
 		  writerFor: aProvenanceEntity
 		  inContextOf: aDestinationContext

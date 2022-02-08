@@ -188,6 +188,7 @@ FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext us
 	| rules element destinationContext |
 	element := aModifiedFylgjaMigrationEngine readEntity:
 		           aProvenanceEntity.
+	
 	destinationContext := aModifiedFylgjaMigrationEngine readEntity:
 		                      aDestinationContext.
 

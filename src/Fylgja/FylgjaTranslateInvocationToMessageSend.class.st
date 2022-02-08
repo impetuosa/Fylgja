@@ -18,7 +18,7 @@ FylgjaTranslateInvocationToMessageSend >> applyTo: aProvenanceEntity context: aD
 		writerFor: aProvenanceEntity
 		inContextOf: aDestinationContext
 		do: [ :writingEntity :contextWriter | 
-			invocation := contextWriter writeStatement: [ :stmt | 
+			invocation := contextWriter writeExpression: [ :stmt | 
 				              stmt
 					              invokeMethodNamed:
 					              (selector ifNil: [ aProvenanceEntity selector ])

@@ -75,6 +75,11 @@ FylgjaTranslateCopyAsMethod >> visitFunction: aMOFunction [
 	
 ]
 
+{ #category : #visiting }
+FylgjaTranslateCopyAsMethod >> visitMethod: aMOMethod [ 
+	self shouldBeImplemented.
+]
+
 { #category : #'as yet unclassified' }
 FylgjaTranslateCopyAsMethod >> with: anInstanceVariableSlot write: anUndefinedObject to: aMOVariable [ 
 	aMOVariable perform: anInstanceVariableSlot name,':' withArguments: { anUndefinedObject  }

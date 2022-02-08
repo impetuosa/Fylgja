@@ -194,6 +194,88 @@ NotThatGoodTests >> testEntityIdenticalConditionMatchesTheCase [
 ]
 
 { #category : #initialization }
+NotThatGoodTests >> testErrorHandlingToPackage [
+
+	| provenance destination result installer vbCrlf |
+	provenance :=  self errorHandlingClass.
+	destination := self configPackage.
+	vbCrlf := self vbCrlf.
+
+
+
+	" By default in the system we copy"
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		copy;
+		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		context: (fylgja selectDerivativeModelFor: destination);
+		binaryOperator: #&;
+		replaceOperatorWith: #+;
+		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		context: (fylgja selectDerivativeModelFor: destination);
+		binaryOperator: #<>;
+		replaceOperatorWith: #!=;
+		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		context: (fylgja selectDerivativeModelFor: destination);
+		referenceNamed: 'vbCrLf';
+		replaceWithStringLiteral: '\r\n';
+		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		context: (fylgja selectDerivativeModelFor: destination);
+		anyTypeReferenceNamed: #Boolean;
+		copyAsTypesReferenceNamed: #bool;
+		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		context: (fylgja selectDerivativeModelFor: destination);
+		anyTypeReferenceNamed: #Variant;
+		copyAsTypesReferenceNamed: #Object;
+		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		atLanguageNamed: #java;
+		anyInvocation;
+		invocationToMessageSendToSelf;
+		installInto: fylgja.
+
+	" By default when going to java "
+	FylgjaRuleInstaller new
+		context: (fylgja selectDerivativeModelFor: destination);
+		anyModelEntityOfTypes: { 
+				MOFunction.
+				MOProcedure };
+		copyAsMethod;
+		installInto: fylgja.
+
+	installer := FylgjaRuleInstaller new
+		             context:
+			             (fylgja selectDerivativeModelFor: destination);
+		             anyInvocationTo: #MsgBox;
+		             yourself.
+
+	installer invocationToMessageSend
+		selector: #log;
+		receiverBlock: [ :writer | writer referenceToSelf ];
+		withArgumentCollection: [ :arguments :writer | 
+			{ (writer constantReferenceNamed: #ERROR) } , arguments ].
+	installer installInto: fylgja.
+
+	result := fylgja produce: provenance into: destination.
+
+	self
+		assert: (JavaParser parse: result result produceCode)
+		isKindOf: JavaProgramFileNode
+]
+
+{ #category : #initialization }
 NotThatGoodTests >> testLogErrorToClassNoMappingExists [
 
 	| debug destination |
@@ -633,9 +715,9 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformRewriteMsgBoxIn
 { #category : #'as yet unclassified' }
 NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformRewriteMsgBoxInvocationToSelfLogErrorGenerate [
 
-	| function destinationClass result installer vbCrlf |
-	function := self logErrorFunction.
-	destinationClass := self configClassConfigPackage.
+	| provenance destination result installer vbCrlf |
+	provenance := self logErrorFunction.
+	destination := self configClassConfigPackage.
 	vbCrlf := self vbCrlf.
 
 
@@ -648,31 +730,31 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformRewriteMsgBoxIn
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new
-		context: (fylgja selectDerivativeModelFor: destinationClass);
+		context: (fylgja selectDerivativeModelFor: destination);
 		binaryOperator: #&;
 		replaceOperatorWith: #+;
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new
-		context: (fylgja selectDerivativeModelFor: destinationClass);
+		context: (fylgja selectDerivativeModelFor: destination);
 		binaryOperator: #<>;
 		replaceOperatorWith: #!=;
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new
-		context: (fylgja selectDerivativeModelFor: destinationClass);
+		context: (fylgja selectDerivativeModelFor: destination);
 		referenceNamed: 'vbCrLf';
 		replaceWithStringLiteral: '\r\n';
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new
-		context: (fylgja selectDerivativeModelFor: destinationClass);
+		context: (fylgja selectDerivativeModelFor: destination);
 		anyTypeReferenceNamed: #Boolean;
 		copyAsTypesReferenceNamed: #bool;
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new
-		context: (fylgja selectDerivativeModelFor: destinationClass);
+		context: (fylgja selectDerivativeModelFor: destination);
 		anyTypeReferenceNamed: #Variant;
 		copyAsTypesReferenceNamed: #Object;
 		installInto: fylgja.
@@ -685,7 +767,7 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformRewriteMsgBoxIn
 
 	" By default when going to java "
 	FylgjaRuleInstaller new
-		context: (fylgja selectDerivativeModelFor: destinationClass);
+		context: (fylgja selectDerivativeModelFor: destination);
 		anyModelEntityOfTypes: { 
 				MOFunction.
 				MOProcedure };
@@ -694,7 +776,7 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformRewriteMsgBoxIn
 
 	installer := FylgjaRuleInstaller new
 		             context:
-			             (fylgja selectDerivativeModelFor: destinationClass);
+			             (fylgja selectDerivativeModelFor: destination);
 		             anyInvocationTo: #MsgBox;
 		             yourself.
 
@@ -705,8 +787,7 @@ NotThatGoodTests >> testProduceMethodIntoClassByCopyNodeTransformRewriteMsgBoxIn
 			{ (writer constantReferenceNamed: #ERROR) } , arguments ].
 	installer installInto: fylgja.
 
-	result := fylgja produce: function into: destinationClass.
-
+	result := fylgja produce: provenance into: destination.
 	self
 		assert: (JavaParser parse: result result parent produceCode)
 		isKindOf: JavaProgramFileNode
