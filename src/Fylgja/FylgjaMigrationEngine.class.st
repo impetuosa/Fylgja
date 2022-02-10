@@ -3,10 +3,16 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'models',
-		'migrationRuleSpace'
+		'migrationRuleSpace',
+		'tracing'
 	],
 	#category : #'Fylgja-Model'
 }
+
+{ #category : #accessing }
+FylgjaMigrationEngine >> activateTracing [
+	tracing := tracing activateTracing 
+]
 
 { #category : #adding }
 FylgjaMigrationEngine >> addModel: aMOHeterogeneousAbstractSemanticGraph [
@@ -38,8 +44,9 @@ FylgjaMigrationEngine >> get: anAlcixFunction for: aMOJavaClass [
 { #category : #accessing }
 FylgjaMigrationEngine >> initialize [
 
-	super initialize. 
+	super initialize.
 	migrationRuleSpace := FylgjaMigrationRuleSpace new.
+	tracing := FylgjaMigrationNullTracingStrategy new
 ]
 
 { #category : #'as yet unclassified' }
@@ -167,6 +174,11 @@ FylgjaMigrationEngine >> models [
 	^ models ifNil: [ models := Set new ]
 ]
 
+{ #category : #accessing }
+FylgjaMigrationEngine >> noTracing [
+	tracing := tracing noTracing
+]
+
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext [
 
@@ -185,10 +197,10 @@ FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext [
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext using: aModifiedFylgjaMigrationEngine [
 
-	| rules element destinationContext |
+	| rules element destinationContext partialResult |
 	element := aModifiedFylgjaMigrationEngine readEntity:
 		           aProvenanceEntity.
-	
+
 	destinationContext := aModifiedFylgjaMigrationEngine readEntity:
 		                      aDestinationContext.
 
@@ -201,14 +213,33 @@ FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext us
 
 	rules ifEmpty: [ NotFound signal: 'No producing rule found ' ].
 
-	^ rules first
-		  applyTo: element
-		  context: destinationContext
-		  using: aModifiedFylgjaMigrationEngine
+	partialResult := rules first
+		                 applyTo: element
+		                 context: destinationContext
+		                 using: aModifiedFylgjaMigrationEngine.
+	self
+		trace: element
+		to: aDestinationContext
+		produced: partialResult.
+	^ partialResult
 ]
 
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> selectDerivativeModelFor: aDestinationContext [
 
 	^ models detect: [ :d | d includes: aDestinationContext ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> trace: aProvenanceEntity to: aDestinationContext produced: partialResult [
+
+	tracing
+		trace: aProvenanceEntity
+		to: aDestinationContext
+		produced: partialResult
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> traces [
+	^ tracing traces
 ]
