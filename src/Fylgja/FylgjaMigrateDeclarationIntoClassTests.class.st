@@ -309,7 +309,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTransformDefaultFailsForMessageNotUnderstood [
+FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTransformDefaultCreatesAFunction [
 
 	| variable destinationContext result |
 	variable := self logErrorFunction.
@@ -322,10 +322,10 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 		copy;
 		installInto: fylgja.
 
-	self
-		should: [ 
-		result := fylgja produce: variable into: destinationContext ]
-		raise: MessageNotUnderstood
+	result := fylgja produce: variable into: destinationContext.
+
+	self assert: result result isKindOf: MOFunction.
+	self assert: result result language isJava
 ]
 
 { #category : #'as yet unclassified' }

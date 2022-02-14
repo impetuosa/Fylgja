@@ -1,5 +1,5 @@
 Class {
-	#name : #FylgjaCopyReplaceOperator,
+	#name : #FylgjaCopyReplaceBinaryOperator,
 	#superclass : #FylgjaTranslate,
 	#instVars : [
 		'operator'
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaCopyReplaceOperator >> applyTo: aProvenanceEntity context: aDestinationContext using: aFylgjaDerivativeModel [
+FylgjaCopyReplaceBinaryOperator >> applyTo: aProvenanceEntity context: aDestinationContext using: aFylgjaDerivativeModel [
 
 	^ aFylgjaDerivativeModel
 		  writerFor: aProvenanceEntity
@@ -24,17 +24,17 @@ FylgjaCopyReplaceOperator >> applyTo: aProvenanceEntity context: aDestinationCon
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaCopyReplaceOperator >> isWrittenInContext: aProvenanceEntity context: aDestinationContext [
+FylgjaCopyReplaceBinaryOperator >> isWrittenInContext: aProvenanceEntity context: aDestinationContext [
 	^ (aProvenanceEntity isTypeReference ) not
 ]
 
 { #category : #accessing }
-FylgjaCopyReplaceOperator >> operator: aString [ 
+FylgjaCopyReplaceBinaryOperator >> operator: aString [ 
 	operator := aString
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaCopyReplaceOperator >> printOn: aStream [
+FylgjaCopyReplaceBinaryOperator >> printOn: aStream [
 
 	aStream
 		nextPutAll: '{L} ';

@@ -40,16 +40,40 @@ FylgjaTranslateCopyAsMethod >> printOn: aStream [
 { #category : #'as yet unclassified' }
 FylgjaTranslateCopyAsMethod >> produceChildren: aProvenanceEntity into: aDestinationEntity using: fylgja [
 
-	aProvenanceEntity parameters do: [ :p | fylgja migrate: p into: aDestinationEntity ].
-	aDestinationEntity returnTypeReference:
-		(fylgja produce: aProvenanceEntity returnTypeReference into: aDestinationEntity).
+	aProvenanceEntity parameters do: [ :p | 
+		fylgja migrate: p into: aDestinationEntity ].
+	fylgja migrate: aProvenanceEntity block into: aDestinationEntity.
+	(aProvenanceEntity isKindOf: MOFunction) ifTrue: [ 
+		| ref |
+		ref := fylgja
+			       migrate: aProvenanceEntity returnTypeReference
+			       into: aDestinationEntity.
+		aDestinationEntity returnTypeReference: (fylgja
+				 migrate: aProvenanceEntity returnTypeReference
+				 into: aDestinationEntity).
 
-	fylgja produce: aProvenanceEntity block into: aDestinationEntity.
+		fylgja
+			writerFor: nil
+			inContextOf: aDestinationEntity block
+			do: [ :writingEntity :contextWriter | 
+				contextWriter setAddingStatemntsAtFirst.
+				contextWriter writeVariable: [ :variable | 
+					variable name: aProvenanceEntity selector.
+					variable typeReference: ref ] ] ].
+	fylgja
+		writerFor: nil
+		inContextOf: aDestinationEntity block
+		do: [ :writingEntity :contextWriter | 
+			contextWriter writeStatement: [ :stmt | 
+				stmt return: [ :expression | 
+					expression variableReferenceNamed: aProvenanceEntity selector ] ] ].
+		
+		
 	aDestinationEntity modifiers: aProvenanceEntity modifiers.
-	aDestinationEntity modifiers add: #static. 
+	aDestinationEntity bindingKind: aProvenanceEntity bindingKind.
 	aDestinationEntity thrownTypeReferences:
 		(aProvenanceEntity thrownTypeReferences collect: [ :tr | 
-			 fylgja produce: tr into: aDestinationEntity ])
+			 fylgja migrate: tr into: aDestinationEntity ])
 ]
 
 { #category : #visiting }
@@ -78,6 +102,13 @@ FylgjaTranslateCopyAsMethod >> visitFunction: aMOFunction [
 { #category : #visiting }
 FylgjaTranslateCopyAsMethod >> visitMethod: aMOMethod [ 
 	self shouldBeImplemented.
+]
+
+{ #category : #visiting }
+FylgjaTranslateCopyAsMethod >> visitProcedure: aMOProcedure [
+
+	writer selector: aMOProcedure selector.
+	writer returnTypeReference: (writer typeReferenceNamed: #void)
 ]
 
 { #category : #'as yet unclassified' }

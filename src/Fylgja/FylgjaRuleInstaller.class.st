@@ -48,6 +48,12 @@ FylgjaRuleInstaller >> anyModelEntityOfTypes: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> anyOnErrorGoToBlockTransformableToTryCatch [
+
+	^ self condition: FylgjaConditionOnErrorGoToBlockTransformableToTryCatch new
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> anyTypeReferenceNamed: aString [
 
 	^ self condition: (FylgjaConditionTypeReferenceIs new
@@ -187,6 +193,12 @@ FylgjaRuleInstaller >> modelFor: aFylgjaModel [
 		  ifFalse: [ aFylgjaModel selectDerivativeModelFor: context ]
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> onErrorGoToToTryCatch [
+
+	^ self operation: FylgjaCopyReplaceErrorGoToToTryCatch new 
+]
+
 { #category : #accessing }
 FylgjaRuleInstaller >> operation [
 	^ operation
@@ -196,6 +208,15 @@ FylgjaRuleInstaller >> operation [
 FylgjaRuleInstaller >> operation: anOperation [
 
 	operation := anOperation
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> prefixUnaryOperator: aString [
+
+	^ self condition: (FylgjaConditionUnaryOperator new
+			   operator: aString;
+			   setAsPrefix;
+			   yourself)
 ]
 
 { #category : #'as yet unclassified' }
@@ -214,8 +235,17 @@ FylgjaRuleInstaller >> referenceTo: aJinDAMAttribute [
 { #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> replaceOperatorWith: aString [
 
-	^ self operation: (FylgjaCopyReplaceOperator new
+	^ self operation: (FylgjaCopyReplaceBinaryOperator new
 			   operator: aString;
+			   yourself)
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> replacePrefixUnaryOperatorWith: aString [
+
+	^ self operation: (FylgjaCopyReplaceUnaryOperator new
+			   operator: aString;
+			   setAsPrefix;
 			   yourself)
 ]
 

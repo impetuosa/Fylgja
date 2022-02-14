@@ -88,6 +88,62 @@ NotThatGoodTests >> modelStubClass [
 ]
 
 { #category : #initialization }
+NotThatGoodTests >> moduleCustomerOrders [
+
+
+	^ northwind entities detect: [ :a | 
+		  (a isKindOf: JinDAMModule) and: [ a name = 'CustomerOrders' ] ]
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> moduleDomainFunctionWrappers [
+
+
+	^ northwind entities detect: [ :a | 
+		  (a isKindOf: JinDAMModule) and: [ a name = 'DomainFunctionWrappers' ] ]
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> moduleInventory [
+
+
+	^ northwind entities detect: [ :a | 
+		  (a isKindOf: JinDAMModule) and: [ a name = 'Inventory' ] ]
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> modulePrivileges [
+
+
+	^ northwind entities detect: [ :a | 
+		  (a isKindOf: JinDAMModule) and: [ a name = 'Privileges' ] ]
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> modulePurchaseOrders [
+
+
+	^ northwind entities detect: [ :a | 
+		  (a isKindOf: JinDAMModule) and: [ a name = 'PurchaseOrders' ] ]
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> moduleReflective [
+
+
+	^ northwind entities detect: [ :a | 
+		  (a isKindOf: JinDAMModule) and: [ a name = 'Reflective' ] ]
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> moduleUtilities [
+
+
+	^ northwind entities detect: [ :a | 
+		  (a isKindOf: JinDAMModule) and: [ a name = 'Utilities' ] ]
+]
+
+{ #category : #initialization }
 NotThatGoodTests >> recordsetWrapper [
 
 	^ northwind entities detect: [ :a | 
