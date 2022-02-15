@@ -21,7 +21,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 	" By default when going to java "
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destinationClass);
-		anyModelEntityOfTypes: { 
+		anyModelEntityOfTypesWhenGoingClass: { 
 				MOFunction.
 				MOProcedure };
 		copyAsMethod;
@@ -39,13 +39,13 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 
 	self assert: result result returnTypeReference name equals: #bool.
 
-	self assert: result result modifiers size equals: 1.
-	self assert: result result modifiers first equals: #static.
+	self assert: result result isStaticBinding .
+
 	self assert: result result language isJava.
 	self assert: result result block language isJava.
 	self
 		assert: result result block statements size
-		equals: function block statements size.
+		equals: function block statements size + 2 .
 	self
 		assert: result result parameters size
 		equals: function parameters size.
@@ -123,7 +123,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 	" By default when going to java "
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destinationClass);
-		anyModelEntityOfTypes: { 
+		anyModelEntityOfTypesWhenGoingClass: { 
 				MOFunction.
 				MOProcedure };
 		copyAsMethod;
@@ -143,13 +143,13 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 		assert: result result returnTypeReference name
 		equals: function typeReference name.
 
-	self assert: result result modifiers size equals: 1.
-	self assert: result result modifiers first equals: #static.
+	self assert: result result isStaticBinding .
+
 	self assert: result result language isJava.
 	self assert: result result block language isJava.
 	self
-		assert: result result block statements size
-		equals: function block statements size.
+		assert: result result block statements size 
+		equals: function block statements size + 2.
 	self
 		assert: result result parameters size
 		equals: function parameters size.
@@ -219,7 +219,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 	" By default when going to java "
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destinationClass);
-		anyModelEntityOfTypes: { 
+		anyModelEntityOfTypesWhenGoingClass: { 
 				MOFunction.
 				MOProcedure };
 		copyAsMethod;
@@ -233,8 +233,8 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 		assert: result result returnTypeReference name
 		equals: function typeReference name.
 
-	self assert: result result modifiers size equals: 1.
-	self assert: result result modifiers first equals: #static.
+	self assert: result result isStaticBinding .
+
 	self assert: result result language isJava.
 	self assert: result result block language isJava.
 	self assert:
@@ -242,7 +242,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 			 a language isJava ]).
 	self
 		assert: result result block statements size
-		equals: function block statements size.
+		equals: function block statements size + 2.
 	self
 		assert: result result parameters size
 		equals: function parameters size.
@@ -345,7 +345,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 	" By default when going to java "
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destinationClass);
-		anyModelEntityOfTypes: { 
+		anyModelEntityOfTypesWhenGoingClass: { 
 				MOFunction.
 				MOProcedure };
 		copyAsMethod;
@@ -371,8 +371,8 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 
 	self assert: result result returnTypeReference name equals: #Boolean.
 
-	self assert: result result modifiers size equals: 1.
-	self assert: result result modifiers first equals: #static.
+	self assert: result result isStaticBinding .
+
 	self assert: result result language isJava.
 	self assert: result result block language isJava.
 
@@ -428,7 +428,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 
 	self
 		assert: result result block statements size
-		equals: function block statements size
+		equals: function block statements size + 2
 ]
 
 { #category : #'as yet unclassified' }
@@ -487,7 +487,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 	" By default when going to java "
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destination);
-		anyModelEntityOfTypes: { 
+		anyModelEntityOfTypesWhenGoingClass: { 
 				MOFunction.
 				MOProcedure };
 		copyAsMethod;

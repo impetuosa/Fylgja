@@ -17,7 +17,7 @@ FylgjaTranslateCopy >> applyTo: aProvenanceEntity context: aDestinationContext u
 		
 	^ aFylgjaDerivativeModel
 		  writerFor: aProvenanceEntity
-		  inContextOf: aDestinationContext
+		  inContextOf: aDestinationContext 
 		  do: [ :writingEntity :contextWriter | 
 			  self
 				  writeCopyOf: writingEntity

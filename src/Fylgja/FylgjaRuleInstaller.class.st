@@ -40,10 +40,11 @@ FylgjaRuleInstaller >> anyInvocationTo: aString [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaRuleInstaller >> anyModelEntityOfTypes: aCollection [
+FylgjaRuleInstaller >> anyModelEntityOfTypesWhenGoingClass: aCollection [
 
-	^ self condition: (FylgjaConditionModelTypeIs new
+	^ self condition: (FylgjaConditionModelTypeIsAndContextIs new
 			   types: aCollection;
+			   contextType: MOClass;
 			   yourself)
 ]
 

@@ -74,7 +74,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> installRulesFor: destination [
 	" By default when going to java "
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destination);
-		anyModelEntityOfTypes: { 
+		anyModelEntityOfTypesWhenGoingClass: { 
 				MOFunction.
 				MOProcedure };
 		copyAsMethod;
@@ -104,7 +104,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testErrorHandlingToPackage [
 
 
 	result := fylgja produce: provenance into: destination.
-
+result result produceCode inspect. 
 	self
 		assert: (JavaParser parse: result result produceCode)
 		isKindOf: JavaProgramFileNode
@@ -351,26 +351,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModulePrivilegesToPackage [
 ]
 
 { #category : #initialization }
-FylgjaMigrateDeclarationIntoPackageTests >> testModulePurchaseOrdersToPackage [
-
-	| provenance destination result |
-
-
-	provenance := self modulePurchaseOrders.
-	destination := self configPackage.
-
-	self installRulesFor: destination.
-
-
-	result := fylgja produce: provenance into: destination.
-
-	self
-		assert: (JavaParser parse: result result produceCode)
-		isKindOf: JavaProgramFileNode
-]
-
-{ #category : #initialization }
-FylgjaMigrateDeclarationIntoPackageTests >> testModulePurchaseOrdersWrappersOnlyCopy [
+FylgjaMigrateDeclarationIntoPackageTests >> testModulePurchaseOrdersOnlyCopy [
 
 	| provenance destination result |
 	"'ModulePrivileges' 'ModuleInventory' 'ModuleCustomerOrders' 'ModuleDomainFunctionWrappers' 'ModulePurchaseOrders' 'ModuleUtilities' 'ModuleReflective'"
@@ -400,6 +381,25 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModulePurchaseOrdersWrappersOnly
 				 a first allReferences size = a last allReferences size and: [ 
 					 a first allExpressions size = a last allExpressions size ] ] ])
 			isEmpty
+]
+
+{ #category : #initialization }
+FylgjaMigrateDeclarationIntoPackageTests >> testModulePurchaseOrdersToPackage [
+
+	| provenance destination result |
+
+
+	provenance := self modulePurchaseOrders.
+	destination := self configPackage.
+
+	self installRulesFor: destination.
+
+
+	result := fylgja produce: provenance into: destination.
+ result result produceCode inspect. 
+	self
+		assert: (JavaParser parse: result result produceCode)
+		isKindOf: JavaProgramFileNode
 ]
 
 { #category : #initialization }
@@ -448,7 +448,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleReflectiveToPackage [
 
 
 	result := fylgja produce: provenance into: destination.
-
+ result result produceCode inspect. 
 	self
 		assert: (JavaParser parse: result result produceCode)
 		isKindOf: JavaProgramFileNode
