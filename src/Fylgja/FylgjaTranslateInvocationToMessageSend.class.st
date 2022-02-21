@@ -11,33 +11,30 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaTranslateInvocationToMessageSend >> applyTo: aProvenanceEntity context: aDestinationContext using: aFylgjaDerivativeModel [
+FylgjaTranslateInvocationToMessageSend >> applyTo: aProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
-	| invocation ctx |
-	aFylgjaDerivativeModel
-		writerFor: aProvenanceEntity
-		inContextOf: aDestinationContext
-		do: [ :writingEntity :contextWriter | 
-			invocation := contextWriter writeExpression: [ :stmt | 
-				              stmt
-					              invokeMethodNamed:
-					              (selector ifNil: [ aProvenanceEntity selector ])
-					              receiver: [ 
-						              receiverBlock
-							              cull: stmt
-							              cull: aProvenanceEntity
-							              cull: aDestinationContext
-							              cull: aFylgjaDerivativeModel ] ] ].
-	aFylgjaDerivativeModel
-		writerFor: aProvenanceEntity
-		inContextOf: invocation
-		do: [ :writingEntity :contextWriter | 
-			invocation arguments: (argumentCollectionTransform
-					 cull: (aProvenanceEntity arguments collect: [ :a | 
-							  aFylgjaDerivativeModel migrate: a into: invocation ])
-					 cull: contextWriter) ].
-
-	^ invocation
+	^ MOModelWriteTypeBasedCopyResolver new
+		  resolveWriterFor: aProvenanceEntity
+		  writingContext: aDestinationWriter
+		  do: [ :elementWriter | 
+			  elementWriter writeExpression: [ :stmt | 
+				  stmt
+					  invokeMethodNamed:
+					  (selector ifNil: [ aProvenanceEntity selector ])
+					  receiver: [ 
+						  receiverBlock
+							  cull: stmt
+							  cull: aProvenanceEntity
+							  cull: aDestinationWriter
+							  cull: aFylgjaDerivativeModel ]
+					  arguments: [ :exp | 
+						  argumentCollectionTransform
+							  cull: (aProvenanceEntity arguments collect: [ :a | 
+									   aFylgjaDerivativeModel
+										   migrate: a
+										   intoDestinationWriter: exp
+										   lookUp: aFylgjaLookUpContext ])
+							  cull: exp ] ] ]
 ]
 
 { #category : #'as yet unclassified' }

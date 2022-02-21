@@ -5,25 +5,13 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaTranslateCopy >> applyTo: aProvenanceEntity context: aDestinationContext using: aFylgjaDerivativeModel [
-	(self isWrittenInContext: aProvenanceEntity context: aDestinationContext) ifFalse: [ 
-		^ self
-			  writeCopyOf: aProvenanceEntity
-			  withContext: aDestinationContext
-			  inWriter:
-			  (aFylgjaDerivativeModel selectDerivativeModelFor: aDestinationContext)
-				  writer
-			  using: aFylgjaDerivativeModel ].
-		
-	^ aFylgjaDerivativeModel
-		  writerFor: aProvenanceEntity
-		  inContextOf: aDestinationContext 
-		  do: [ :writingEntity :contextWriter | 
-			  self
-				  writeCopyOf: writingEntity
-				  withContext: aDestinationContext
-				  inWriter: contextWriter
-				  using: aFylgjaDerivativeModel ]
+FylgjaTranslateCopy >> applyTo: aProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+
+	^ self
+		  writeCopyOf: aProvenanceEntity
+		  destinationWriter: aDestinationWriter
+		  lookUp: aFylgjaLookUpContext
+		  using: aFylgjaDerivativeModel
 ]
 
 { #category : #'as yet unclassified' }

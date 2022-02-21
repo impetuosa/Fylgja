@@ -51,9 +51,24 @@ FylgjaDerivativeModel >> migrate: aProvenanceEntity into: aDestinationContext [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> migrate: aProvenanceEntity intoDestinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext [
+
+	^ fylgja
+		  migrate: aProvenanceEntity
+		  intoDestinationWriter: aDestinationWriter
+		  lookUp: aFylgjaLookUpContext
+		  using: self
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> produce: aProvenanceEntity into: aContextDestination [
 
-	^ fylgja produce: aProvenanceEntity into: aContextDestination using: self
+	self halt:
+		' should be using produce: aProvenanceEntity destinationWriter: aWriter lookUp: aLookupContext using: aModifiedFylgjaMigrationEngine'.
+	^ fylgja
+		  produce: aProvenanceEntity
+		  into: aContextDestination
+		  using: self
 ]
 
 { #category : #'as yet unclassified' }
@@ -87,6 +102,11 @@ FylgjaDerivativeModel >> selectDerivativeModelFor: aDestinationContext ifNone: a
 	^ derivativeModels
 		  detect: [ :d | d includes: aDestinationContext ]
 		  ifNone: [ aBlock value ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> trace: aProvenanceEntity to: aDestinationContext produced: partialResult [
+	fylgja trace: aProvenanceEntity to: aDestinationContext produced: partialResult
 ]
 
 { #category : #'as yet unclassified' }

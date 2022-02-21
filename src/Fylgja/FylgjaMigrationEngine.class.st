@@ -36,7 +36,9 @@ FylgjaMigrationEngine >> get: anAlcixFunction for: aMOJavaClass [
 	| rules |
 	rules := self
 		         lookupRulesForMapping: anAlcixFunction
-		         toContext: aMOJavaClass.
+		         toContext: aMOJavaClass
+		         destinationModel:
+		         (self selectDerivativeModelFor: aMOJavaClass).
 	rules ifEmpty: [ NotFound signal: 'No mapping rule found ' ].
 	^ rules first applyTo: anAlcixFunction context: aMOJavaClass
 ]
@@ -50,73 +52,31 @@ FylgjaMigrationEngine >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> lookupRulesForMapping: aProvenanceEntity toContext: aDestinationContext [
+FylgjaMigrationEngine >> lookupContextFor: aProvenanceEntity toContext: aDestinationContext model: aMOModel [
 
-	^ self
-		  lookupRulesForMapping: aProvenanceEntity
+	^ migrationRuleSpace
+		  lookupContextFor: aProvenanceEntity
 		  toContext: aDestinationContext
-		  model: (self selectDerivativeModelFor: aDestinationContext)
+		  model: aMOModel
 ]
 
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> lookupRulesForMapping: aProvenanceEntity toContext: aDestinationContext destinationModel: destinationModel [
 
-	| rules |
-	rules := self
-		         lookupRulesForMapping: aProvenanceEntity
-		         toContext: aDestinationContext
-		         model: destinationModel.
-	[ 
-	rules asDictionary values.
-	^ rules collect: #value ]
-		on: Error
-		do: [ 
-			self error:
-				'Rule selection collision: More than one rule applies on the same map space for the given entity! ' ]
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> lookupRulesForMapping: aProvenanceEntity toContext: aDestinationContext model: aModel [ 
-
-	^ migrationRuleSpace
-		  lookupRulesForMapping: aProvenanceEntity
-		  toContext: aDestinationContext
-		  model: aModel
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> lookupRulesForProducing: aProvenanceEntity toContext: aMOClass [
-
-	^ self
-		  lookupRulesForProducing: aProvenanceEntity
-		  toContext: aMOClass
-		  model: (self selectDerivativeModelFor: aMOClass)
+	^ (self
+		   lookupContextFor: aProvenanceEntity
+		   toContext: aDestinationContext
+		   model: destinationModel) lookupRulesForMapping: aProvenanceEntity
 ]
 
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> lookupRulesForProducing: aProvenanceEntity toContext: aDestinationContext destinationModel: destinationModel [
 
-	| rules |
-	rules := self
-		         lookupRulesForProducing: aProvenanceEntity
-		         toContext: aDestinationContext
-		         model: destinationModel.
-	[ 
-	rules asDictionary values.
-	^ rules collect: #value ]
-		on: Error
-		do: [ 
-			self error:
-				'Rule selection collision: More than one rule applies on the same map space for the given entity! ' ]
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> lookupRulesForProducing: aProvenanceEntity toContext: aDestinationContext model: aModel [ 
-
-	^ migrationRuleSpace
-		  lookupRulesForProducing: aProvenanceEntity
-		  toContext: aDestinationContext
-		  model: aModel
+	^ (self
+		   lookupContextFor: aProvenanceEntity
+		   toContext: aDestinationContext
+		   model: destinationModel) lookupRulesForProducing:
+		  aProvenanceEntity
 ]
 
 { #category : #'as yet unclassified' }
@@ -162,6 +122,16 @@ FylgjaMigrationEngine >> map: aProvenanceReferenceEntity into: aDestinationConte
 		  using: aModifiedFylgjaMigrationEngine
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> migrate: aProvenanceEntity intoDestinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+
+	^ self
+		  produce: aProvenanceEntity
+		  destinationWriter: aDestinationWriter
+		  lookUp: aFylgjaLookUpContext
+		  using: aFylgjaDerivativeModel
+]
+
 { #category : #accessing }
 FylgjaMigrationEngine >> migrationRuleSpace [
 
@@ -180,14 +150,39 @@ FylgjaMigrationEngine >> noTracing [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> produce: aProvenanceEntity destinationWriter: aWriter lookUp: aLookupContext using: aModifiedFylgjaMigrationEngine [
+
+	| rules element partialResult |
+	element := aModifiedFylgjaMigrationEngine readEntity:
+		           aProvenanceEntity.
+
+
+
+	rules := aLookupContext lookupRulesForProducing: element.
+
+	rules ifEmpty: [ NotFound signal: 'No producing rule found ' ].
+
+	partialResult := rules first
+		                 applyTo: element
+		                 destinationWriter: aWriter
+		                 lookUp: aLookupContext
+		                 using: aModifiedFylgjaMigrationEngine.
+
+	self trace: element to: aWriter produced: partialResult.
+	^ partialResult
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext [
 
-	| result derivative |
+	| result derivative|
 	derivative := self derivative.
+
 	result := self
 		          produce: aProvenanceEntity
 		          into: aDestinationContext
 		          using: derivative.
+
 	^ FylgjaDerivationResult new
 		  derivative: derivative;
 		  result: result;
@@ -197,31 +192,33 @@ FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext [
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext using: aModifiedFylgjaMigrationEngine [
 
-	| rules element destinationContext partialResult |
+	| element destinationContext partialResult lookup writer |
 	element := aModifiedFylgjaMigrationEngine readEntity:
 		           aProvenanceEntity.
 
 	destinationContext := aModifiedFylgjaMigrationEngine readEntity:
 		                      aDestinationContext.
 
-	rules := self
-		         lookupRulesForProducing: element
-		         toContext: destinationContext
-		         destinationModel:
-			         (aModifiedFylgjaMigrationEngine selectDerivativeModelFor:
-				          aDestinationContext).
+	lookup := self
+		          lookupContextFor: aProvenanceEntity
+		          toContext: aDestinationContext
+		          model:
+			          (aModifiedFylgjaMigrationEngine 
+				           selectDerivativeModelFor: aDestinationContext).
 
-	rules ifEmpty: [ NotFound signal: 'No producing rule found ' ].
+	partialResult := (aModifiedFylgjaMigrationEngine 
+		                  selectDerivativeModelFor: aDestinationContext)
+		                 writer
+		                 updaterFor: destinationContext
+		                 with: element
+		                 do: [ :elem :destinationWriter | 
+			                 self
+				                 produce: element
+				                 destinationWriter: destinationWriter
+				                 lookUp: lookup
+				                 using: aModifiedFylgjaMigrationEngine ].
 
-	partialResult := rules first
-		                 applyTo: element
-		                 context: destinationContext
-		                 using: aModifiedFylgjaMigrationEngine.
-
-	self
-		trace: element
-		to: aDestinationContext
-		produced: partialResult.
+	"	self trace: element to: aDestinationContext produced: partialResult."
 	^ partialResult
 ]
 

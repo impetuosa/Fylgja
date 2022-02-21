@@ -9,9 +9,9 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaTranslateCopyRenameTypeReference >> applyTo: aProvenanceEntity context: aDestinationContext using: aFylgjaDerivativeModel [
-	writer := (aFylgjaDerivativeModel selectDerivativeModelFor:
-		           aDestinationContext) writer.
+FylgjaTranslateCopyRenameTypeReference >> applyTo: aProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+
+	writer := aDestinationWriter.
 	^ aProvenanceEntity acceptVisitor: self
 ]
 

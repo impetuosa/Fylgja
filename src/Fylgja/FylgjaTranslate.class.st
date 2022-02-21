@@ -1,12 +1,14 @@
 Class {
 	#name : #FylgjaTranslate,
 	#superclass : #FylgjaProduce,
+	#instVars : [
+		'result'
+	],
 	#category : #'Fylgja-Rule-Operations'
 }
 
 { #category : #'as yet unclassified' }
-FylgjaTranslate >> applyTo: aProvenanceEntity context: aDestinationContext using: aFylgjaDerivativeModel [
-
+FylgjaTranslate >> applyTo: aProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 	self subclassResponsibility 
 ]
 
@@ -16,15 +18,17 @@ FylgjaTranslate >> isDelegate [
 ]
 
 { #category : #writing }
-FylgjaTranslate >> writeCopyOf: aProvenanceEntity withContext: aDestinationContext inWriter: aDestinationContextWriter using: aFylgjaDerivativeModel [
-
+FylgjaTranslate >> writeCopyOf: aProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+  
 	^ MOModelWriteTypeBasedCopyResolver new
 		  resolveWriterFor: aProvenanceEntity
-		  context: aDestinationContext
-		  writingContext: aDestinationContextWriter
+		  writingContext: aDestinationWriter
 		  do: [ :elementWriter | 
 			  elementWriter
 				  writeCopyOf: aProvenanceEntity
-				  readingValues: [ :context :value | 
-					  aFylgjaDerivativeModel migrate: value into: context ] ]
+				  readingValues: [ :contextWriter :value | 
+					  aFylgjaDerivativeModel
+						  migrate: value
+						  intoDestinationWriter: contextWriter
+						  lookUp: aFylgjaLookUpContext ] ]
 ]

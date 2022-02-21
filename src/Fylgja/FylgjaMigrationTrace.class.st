@@ -6,5 +6,5 @@ Class {
 		'desintationContext',
 		'destination'
 	],
-	#category : #'Fylgja-Model'
+	#category : #'Fylgja-Tracing'
 }

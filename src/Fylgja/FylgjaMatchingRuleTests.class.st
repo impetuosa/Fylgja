@@ -11,21 +11,23 @@ FylgjaMatchingRuleTests >> testAllConditionMatchesTheCase [
 	variable := self logErrorFunctionVariable.
 	destinationContext := self dataSourceConfigClassConfigPackage.
 
-	self assert:
-		(fylgja
+	self assert: (fylgja
 			 lookupRulesForProducing: variable
-			 toContext: destinationContext) isEmpty.
-			
+			 toContext: destinationContext
+			 destinationModel:
+			 (fylgja selectDerivativeModelFor: destinationContext)) isEmpty.
+
 	FylgjaRuleInstaller new
 		context: destinationContext;
 		anyEntity;
 		copy;
 		installInto: fylgja.
 
-	self assert:
-		(fylgja
+	self assert: (fylgja
 			 lookupRulesForProducing: variable
-			 toContext: destinationContext) size = 1
+			 toContext: destinationContext
+			 destinationModel:
+			 (fylgja selectDerivativeModelFor: destinationContext)) size = 1
 ]
 
 { #category : #initialization }
@@ -47,7 +49,9 @@ FylgjaMatchingRuleTests >> testEntityEqualsConditionMatchesTheCase [
 
 	self assert: (fylgja
 			 lookupRulesForProducing: variable
-			 toContext: destinationContext) isEmpty.
+			 toContext: destinationContext
+			 destinationModel:
+			 (fylgja selectDerivativeModelFor: destinationContext)) isEmpty.
 
 	FylgjaRuleInstaller new
 		context: destinationContext;
@@ -57,7 +61,9 @@ FylgjaMatchingRuleTests >> testEntityEqualsConditionMatchesTheCase [
 
 	self assert: (fylgja
 			 lookupRulesForProducing: variable
-			 toContext: destinationContext) size = 1
+			 toContext: destinationContext
+			 destinationModel:
+			 (fylgja selectDerivativeModelFor: destinationContext)) size = 1
 ]
 
 { #category : #initialization }
@@ -69,7 +75,9 @@ FylgjaMatchingRuleTests >> testEntityIdenticalConditionMatchesTheCase [
 
 	self assert: (fylgja
 			 lookupRulesForProducing: variable
-			 toContext: destinationContext) isEmpty.
+			 toContext: destinationContext
+			 destinationModel:
+			 (fylgja selectDerivativeModelFor: destinationContext)) isEmpty.
 
 	FylgjaRuleInstaller new
 		context: destinationContext;
@@ -79,7 +87,9 @@ FylgjaMatchingRuleTests >> testEntityIdenticalConditionMatchesTheCase [
 
 	self assert: (fylgja
 			 lookupRulesForProducing: variable
-			 toContext: destinationContext) size = 1
+			 toContext: destinationContext
+			 destinationModel:
+			 (fylgja selectDerivativeModelFor: destinationContext)) size = 1
 ]
 
 { #category : #initialization }
@@ -99,10 +109,11 @@ FylgjaMatchingRuleTests >> testTypeConditionMatchesTheCase [
 	variable := self logErrorFunctionVariable.
 	destinationContext := self dataSourceConfigClassConfigPackage.
 
-	self assert:
-		(fylgja
+	self assert: (fylgja
 			 lookupRulesForProducing: variable
-			 toContext: destinationContext) isEmpty.
+			 toContext: destinationContext
+			 destinationModel:
+			 (fylgja selectDerivativeModelFor: destinationContext)) isEmpty.
 
 	FylgjaRuleInstaller new
 		context: destinationContext;
@@ -110,8 +121,11 @@ FylgjaMatchingRuleTests >> testTypeConditionMatchesTheCase [
 		copy;
 		installInto: fylgja.
 
-	self assert:
-		(fylgja
-			 lookupRulesForProducing: variable
-			 toContext: destinationContext) size equals: 1
+	self
+		assert: (fylgja
+				 lookupRulesForProducing: variable
+				 toContext: destinationContext
+				 destinationModel:
+				 (fylgja selectDerivativeModelFor: destinationContext)) size
+		equals: 1
 ]

@@ -14,6 +14,12 @@ FylgjaRule >> applyTo: anAlcixLocalVariable context: aMOMethod using: aFylgjaMod
 	self subclassResponsibility
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaRule >> applyTo: aProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+
+	self subclassResponsibility
+]
+
 { #category : #accessing }
 FylgjaRule >> condition: aFylgjaConditionAll [ 
 	condition := aFylgjaConditionAll

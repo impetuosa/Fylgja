@@ -8,19 +8,15 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaCopyReplaceBinaryOperator >> applyTo: aProvenanceEntity context: aDestinationContext using: aFylgjaDerivativeModel [
+FylgjaCopyReplaceBinaryOperator >> applyTo: aProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
-	^ aFylgjaDerivativeModel
-		  writerFor: aProvenanceEntity
-		  inContextOf: aDestinationContext
-		  do: [ :writingEntity :contextWriter | 
-			  (self
-				   writeCopyOf: writingEntity
-				   withContext: aDestinationContext
-				   inWriter: contextWriter
-				   using: aFylgjaDerivativeModel)
-				  operator: operator;
-				  yourself ]
+	^ (self
+		   writeCopyOf: aProvenanceEntity
+		   destinationWriter: aDestinationWriter
+		   lookUp: aFylgjaLookUpContext
+		   using: aFylgjaDerivativeModel)
+		  operator: operator;
+		  yourself
 ]
 
 { #category : #'as yet unclassified' }

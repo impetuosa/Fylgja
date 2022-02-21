@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'traces'
 	],
-	#category : #'Fylgja-Model'
+	#category : #'Fylgja-Tracing'
 }
 
 { #category : #'as yet unclassified' }

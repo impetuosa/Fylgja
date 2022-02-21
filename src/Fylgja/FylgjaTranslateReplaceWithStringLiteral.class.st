@@ -9,11 +9,9 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaTranslateReplaceWithStringLiteral >> applyTo: aProvenanceEntity context: aDestinationContext using: aFylgjaDerivativeModel [
+FylgjaTranslateReplaceWithStringLiteral >> applyTo: aProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
-	writer := (aFylgjaDerivativeModel selectDerivativeModelFor:
-		           aDestinationContext) writer.
-	^ writer stringLiteral: string
+	^ aDestinationWriter stringLiteral: string
 ]
 
 { #category : #accessing }

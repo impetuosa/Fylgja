@@ -1,7 +1,7 @@
 Class {
 	#name : #FylgjaMigrationNullTracingStrategy,
 	#superclass : #FylgjaMigrationTracingStrategy,
-	#category : #'Fylgja-Model'
+	#category : #'Fylgja-Tracing'
 }
 
 { #category : #'as yet unclassified' }

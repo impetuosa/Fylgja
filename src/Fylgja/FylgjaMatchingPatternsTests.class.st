@@ -14,20 +14,26 @@ FylgjaMatchingPatternsTests >> testRespondsToPatternConditionMatchesTheCase [
 
 	self assert: (fylgja
 			 lookupRulesForProducing: variable
-			 toContext: destinationContext) isEmpty.
+			 toContext: destinationContext
+			 destinationModel:
+			 (fylgja selectDerivativeModelFor: destinationContext)) isEmpty.
 
 	FylgjaRuleInstaller new
 		context: destinationContext;
 		matchesPattern: (FylgjaPatternBuilder new
 				 parse: ' dim $ as String ';
 				 parser: VBParser;
-				 reader: MOJinDAMModelReader ;
+				 reader: MOJinDAMModelReader;
 				 model: MOModel newMicrosoftAccess;
 				 build);
 		copy;
 		installInto: fylgja.
 
-	self assert: (fylgja
-			 lookupRulesForProducing: moVariable
-			 toContext: destinationContext) size equals: 1
+	self
+		assert: (fylgja
+				 lookupRulesForProducing: moVariable
+				 toContext: destinationContext
+				 destinationModel:
+				 (fylgja selectDerivativeModelFor: destinationContext)) size
+		equals: 1
 ]

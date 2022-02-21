@@ -33,19 +33,19 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 		copyAsTypesReferenceNamed: #bool;
 		installInto: fylgja.
 
-
+self halt. 
 	result := fylgja produce: function into: destinationClass.
 	self assert: result result isKindOf: MOMethod.
 
 	self assert: result result returnTypeReference name equals: #bool.
 
-	self assert: result result isStaticBinding .
+	self assert: result result isStaticBinding.
 
 	self assert: result result language isJava.
 	self assert: result result block language isJava.
 	self
 		assert: result result block statements size
-		equals: function block statements size + 2 .
+		equals: function block statements size.
 	self
 		assert: result result parameters size
 		equals: function parameters size.
@@ -149,7 +149,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 	self assert: result result block language isJava.
 	self
 		assert: result result block statements size 
-		equals: function block statements size + 2.
+		equals: function block statements size.
 	self
 		assert: result result parameters size
 		equals: function parameters size.
@@ -242,7 +242,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 			 a language isJava ]).
 	self
 		assert: result result block statements size
-		equals: function block statements size + 2.
+		equals: function block statements size.
 	self
 		assert: result result parameters size
 		equals: function parameters size.
@@ -428,7 +428,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 
 	self
 		assert: result result block statements size
-		equals: function block statements size + 2
+		equals: function block statements size
 ]
 
 { #category : #'as yet unclassified' }
@@ -519,6 +519,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyOnlyPr
 	| provenance destination result |
 	provenance := self logErrorFunction.
 	destination := self configClassConfigPackage.
+		fylgja activateTracing.
 
 
 	" By default in the system we copy"
