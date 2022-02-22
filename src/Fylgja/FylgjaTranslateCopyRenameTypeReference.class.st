@@ -30,3 +30,9 @@ FylgjaTranslateCopyRenameTypeReference >> visitPrimitiveTypeReference: aMOPrimit
 
 	^ writer primitiveTypeReferenceNamed: name
 ]
+
+{ #category : #visiting }
+FylgjaTranslateCopyRenameTypeReference >> visitTypeReference: aMOTypeReference [
+
+	^ writer typeReferenceNamed: name
+]

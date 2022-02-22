@@ -33,7 +33,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 		copyAsTypesReferenceNamed: #bool;
 		installInto: fylgja.
 
-self halt. 
+
 	result := fylgja produce: function into: destinationClass.
 	self assert: result result isKindOf: MOMethod.
 
@@ -298,11 +298,11 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 		= 2.
 	self assert:
 		((result allNewEntities select: [ :a | a isKindOf: MOIfElse ]) 
-			 allSatisfy: [ :a | a ifTrue isKindOf: MOBlock ]).
+			 allSatisfy: [ :a | MOBlock = a ifTrue species  ]).
 
 	self assert:
 		((result allNewEntities select: [ :a | a isKindOf: MOIfElse ]) 
-			 allSatisfy: [ :a | a ifFalse isKindOf: MOBlock ]).
+			 allSatisfy: [ :a | { MOBlock . MOEmptyBlock } includes: a ifFalse species ]).
 	self assert:
 		((result allNewEntities select: [ :a | a isKindOf: MOIfElse ]) 
 			 allSatisfy: [ :a | a condition isNotNil ])
@@ -507,6 +507,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 	installer installInto: fylgja.
 
 	result := fylgja produce: provenance into: destination.
+
 	
 	self
 		assert: (JavaParser parse: result result parent produceCode)

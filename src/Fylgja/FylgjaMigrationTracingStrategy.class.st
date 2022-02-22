@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaMigrationTracingStrategy >> trace: provenance to: desintationContext produced: destination [
+FylgjaMigrationTracingStrategy >> trace: provenance to: aRule produced: destination [
 
 	self subclassResponsibility 
 ]

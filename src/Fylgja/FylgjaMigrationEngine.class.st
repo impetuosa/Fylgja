@@ -152,7 +152,7 @@ FylgjaMigrationEngine >> noTracing [
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> produce: aProvenanceEntity destinationWriter: aWriter lookUp: aLookupContext using: aModifiedFylgjaMigrationEngine [
 
-	| rules element partialResult |
+	| rules element partialResult rule |
 	element := aModifiedFylgjaMigrationEngine readEntity:
 		           aProvenanceEntity.
 
@@ -161,14 +161,14 @@ FylgjaMigrationEngine >> produce: aProvenanceEntity destinationWriter: aWriter l
 	rules := aLookupContext lookupRulesForProducing: element.
 
 	rules ifEmpty: [ NotFound signal: 'No producing rule found ' ].
-
-	partialResult := rules first
+	rule := rules first.
+	partialResult := rule
 		                 applyTo: element
 		                 destinationWriter: aWriter
 		                 lookUp: aLookupContext
 		                 using: aModifiedFylgjaMigrationEngine.
 
-	self trace: element to: aWriter produced: partialResult.
+	self trace: element to: rule produced: partialResult.
 	^ partialResult
 ]
 
@@ -229,11 +229,11 @@ FylgjaMigrationEngine >> selectDerivativeModelFor: aDestinationContext [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> trace: aProvenanceEntity to: aDestinationContext produced: partialResult [
+FylgjaMigrationEngine >> trace: aProvenanceEntity to: aRule produced: partialResult [
 
 	tracing
 		trace: aProvenanceEntity
-		to: aDestinationContext
+		to: aRule
 		produced: partialResult
 ]
 

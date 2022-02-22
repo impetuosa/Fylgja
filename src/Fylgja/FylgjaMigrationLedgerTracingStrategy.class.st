@@ -19,11 +19,11 @@ FylgjaMigrationLedgerTracingStrategy >> noTracing [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigrationLedgerTracingStrategy >> trace: provenance to: desintationContext produced: destination [
+FylgjaMigrationLedgerTracingStrategy >> trace: provenance to: aRule produced: destination [
 
 	self traces add: { 
 			provenance.
-			desintationContext.
+			aRule.
 			destination }
 ]
 

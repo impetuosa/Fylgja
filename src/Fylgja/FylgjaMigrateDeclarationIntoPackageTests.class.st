@@ -292,7 +292,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleInventoryToPackage [
 
 
 	result := fylgja produce: provenance into: destination.
-
+ result result produceCode inspect.
 	self
 		assert: (JavaParser parse: result result produceCode)
 		isKindOf: JavaProgramFileNode
@@ -387,8 +387,6 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModulePurchaseOrdersOnlyCopy [
 FylgjaMigrateDeclarationIntoPackageTests >> testModulePurchaseOrdersToPackage [
 
 	| provenance destination result |
-
-
 	provenance := self modulePurchaseOrders.
 	destination := self configPackage.
 
@@ -396,7 +394,6 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModulePurchaseOrdersToPackage [
 
 
 	result := fylgja produce: provenance into: destination.
- result result produceCode inspect. 
 	self
 		assert: (JavaParser parse: result result produceCode)
 		isKindOf: JavaProgramFileNode
@@ -527,7 +524,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testRecordsetWrapperToPackage [
 FylgjaMigrateDeclarationIntoPackageTests >> testRecordsetWrapperoPackageOnlyCopy [
 
 	| provenance destination result |
-provenance := self recordsetWrapper.
+	provenance := self recordsetWrapper.
 	destination := self configPackage.
 	fylgja activateTracing.
 

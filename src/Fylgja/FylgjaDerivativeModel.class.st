@@ -105,8 +105,8 @@ FylgjaDerivativeModel >> selectDerivativeModelFor: aDestinationContext ifNone: a
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> trace: aProvenanceEntity to: aDestinationContext produced: partialResult [
-	fylgja trace: aProvenanceEntity to: aDestinationContext produced: partialResult
+FylgjaDerivativeModel >> trace: aProvenanceEntity to: aRule produced: partialResult [
+	fylgja trace: aProvenanceEntity to: aRule produced: partialResult
 ]
 
 { #category : #'as yet unclassified' }

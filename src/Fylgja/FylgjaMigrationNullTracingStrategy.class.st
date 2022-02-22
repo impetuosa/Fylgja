@@ -17,7 +17,7 @@ FylgjaMigrationNullTracingStrategy >> noTracing [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigrationNullTracingStrategy >> trace: provenance to: desintationContext produced: destination [
+FylgjaMigrationNullTracingStrategy >> trace: provenance to: aRule produced: destination [
 	" nothing todo "
 ]
 
