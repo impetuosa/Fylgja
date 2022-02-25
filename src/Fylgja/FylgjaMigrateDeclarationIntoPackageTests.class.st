@@ -53,6 +53,12 @@ FylgjaMigrateDeclarationIntoPackageTests >> installRulesFor: destination [
 		copyAsTypesReferenceNamed: #bool;
 		installInto: fylgja.
 
+"	FylgjaRuleInstaller new
+		context: (fylgja selectDerivativeModelFor: destination);
+		anyAlceModule;
+		copyAsPublicClass;
+		installInto: fylgja."
+
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destination);
 		anyOnErrorGoToBlockTransformableToTryCatch;
@@ -104,7 +110,6 @@ FylgjaMigrateDeclarationIntoPackageTests >> testErrorHandlingToPackage [
 
 
 	result := fylgja produce: provenance into: destination.
-result result produceCode inspect. 
 	self
 		assert: (JavaParser parse: result result produceCode)
 		isKindOf: JavaProgramFileNode
@@ -179,8 +184,6 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleCustomerOrdersOnlyCopy [
 FylgjaMigrateDeclarationIntoPackageTests >> testModuleCustomerOrdersToPackage [
 
 	| provenance destination result |
-
-
 	provenance := self moduleCustomerOrders.
 	destination := self configPackage.
 
@@ -292,7 +295,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleInventoryToPackage [
 
 
 	result := fylgja produce: provenance into: destination.
- result result produceCode inspect.
+
 	self
 		assert: (JavaParser parse: result result produceCode)
 		isKindOf: JavaProgramFileNode
@@ -445,7 +448,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleReflectiveToPackage [
 
 
 	result := fylgja produce: provenance into: destination.
- result result produceCode inspect. 
+
 	self
 		assert: (JavaParser parse: result result produceCode)
 		isKindOf: JavaProgramFileNode

@@ -8,7 +8,7 @@ Class {
 FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTransformAddRuleToMapBooleanToBool [
 
 	| function destinationClass result modifiedClass |
-	function := self logErrorFunction.
+	function := self logErrorFunction yourself.
 	destinationClass := self configClassConfigPackage.
 
 	" By default in the system we copy"

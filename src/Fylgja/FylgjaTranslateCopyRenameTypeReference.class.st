@@ -9,10 +9,10 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaTranslateCopyRenameTypeReference >> applyTo: aProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+FylgjaTranslateCopyRenameTypeReference >> applyTo: aRelatedProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	writer := aDestinationWriter.
-	^ aProvenanceEntity acceptVisitor: self
+	^ aRelatedProvenanceEntity acceptVisitor: self
 ]
 
 { #category : #accessing }

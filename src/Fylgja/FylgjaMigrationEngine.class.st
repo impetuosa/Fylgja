@@ -192,7 +192,8 @@ FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext [
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext using: aModifiedFylgjaMigrationEngine [
 
-	| element destinationContext partialResult lookup writer |
+	| element destinationContext partialResult lookup  |
+
 	element := aModifiedFylgjaMigrationEngine readEntity:
 		           aProvenanceEntity.
 

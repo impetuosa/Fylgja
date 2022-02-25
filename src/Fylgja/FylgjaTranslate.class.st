@@ -1,14 +1,11 @@
 Class {
 	#name : #FylgjaTranslate,
 	#superclass : #FylgjaProduce,
-	#instVars : [
-		'result'
-	],
 	#category : #'Fylgja-Rule-Operations'
 }
 
 { #category : #'as yet unclassified' }
-FylgjaTranslate >> applyTo: aProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+FylgjaTranslate >> applyTo: aRelatedProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 	self subclassResponsibility 
 ]
 

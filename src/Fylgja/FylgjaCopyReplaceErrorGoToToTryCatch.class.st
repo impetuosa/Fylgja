@@ -5,29 +5,29 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaCopyReplaceErrorGoToToTryCatch >> applyTo: aProvenanceElement destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+FylgjaCopyReplaceErrorGoToToTryCatch >> applyTo: aRelatedProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	| blockStatements tryStatements catchStatements indexOfLabel onErrorGoTo |
-	onErrorGoTo := aProvenanceElement statements detect: [ :a | 
+	onErrorGoTo := aRelatedProvenanceEntity statements detect: [ :a | 
 		               a isKindOf: MOAlceOnErrorGoToLabel ].
 
-	indexOfLabel := aProvenanceElement statements detectIndex: [ :a | 
+	indexOfLabel := aRelatedProvenanceEntity statements detectIndex: [ :a | 
 		                a isLabelledAs: onErrorGoTo destination name ].
 
-	blockStatements := aProvenanceElement statements
+	blockStatements := aRelatedProvenanceEntity statements
 		                   copyFrom: 1
 		                   to:
-		                   (aProvenanceElement statements indexOf:
+		                   (aRelatedProvenanceEntity statements indexOf:
 			                    onErrorGoTo) - 1.
 
-	tryStatements := aProvenanceElement statements
+	tryStatements := aRelatedProvenanceEntity statements
 		                 copyFrom:
-		                 (aProvenanceElement statements indexOf: onErrorGoTo)
+		                 (aRelatedProvenanceEntity statements indexOf: onErrorGoTo)
 		                 + 1
 		                 to: indexOfLabel - 2.
-	catchStatements := aProvenanceElement statements
+	catchStatements := aRelatedProvenanceEntity statements
 		                   copyFrom: indexOfLabel + 1
-		                   to: aProvenanceElement statements size.
+		                   to: aRelatedProvenanceEntity statements size.
 
 
 

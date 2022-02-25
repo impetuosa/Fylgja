@@ -18,6 +18,14 @@ FylgjaRuleInstaller >> all [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> anyAlceModule [
+
+	^ self condition: (FylgjaConditionModelTypeIs new
+			   type: MOModule;
+			   yourself)
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> anyEntity [
 
 	^ self condition: FylgjaConditionAll new
@@ -107,6 +115,12 @@ FylgjaRuleInstaller >> copy [
 FylgjaRuleInstaller >> copyAsMethod [
 
 	self operation: FylgjaTranslateCopyAsMethod new
+]
+
+{ #category : #copying }
+FylgjaRuleInstaller >> copyAsPublicClass [
+
+	^ self operation: FylgjaTranslateCopyAsClass new
 ]
 
 { #category : #copying }

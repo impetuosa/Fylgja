@@ -11,25 +11,25 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaTranslateInvocationToMessageSend >> applyTo: aProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+FylgjaTranslateInvocationToMessageSend >> applyTo: aRelatedProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	^ MOModelWriteTypeBasedCopyResolver new
-		  resolveWriterFor: aProvenanceEntity
+		  resolveWriterFor: aRelatedProvenanceEntity
 		  writingContext: aDestinationWriter
 		  do: [ :elementWriter | 
 			  elementWriter writeExpression: [ :stmt | 
 				  stmt
 					  invokeMethodNamed:
-					  (selector ifNil: [ aProvenanceEntity selector ])
+					  (selector ifNil: [ aRelatedProvenanceEntity selector ])
 					  receiver: [ 
 						  receiverBlock
 							  cull: stmt
-							  cull: aProvenanceEntity
+							  cull: aRelatedProvenanceEntity
 							  cull: aDestinationWriter
 							  cull: aFylgjaDerivativeModel ]
 					  arguments: [ :exp | 
 						  argumentCollectionTransform
-							  cull: (aProvenanceEntity arguments collect: [ :a | 
+							  cull: (aRelatedProvenanceEntity arguments collect: [ :a | 
 									   aFylgjaDerivativeModel
 										   migrate: a
 										   intoDestinationWriter: exp

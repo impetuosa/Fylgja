@@ -14,10 +14,10 @@ FylgjaProductionRule >> applyTo: aProvenanceEntity context: aDestinationContext 
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaProductionRule >> applyTo: aProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+FylgjaProductionRule >> applyTo: aRelatedProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	^ operation
-		  applyTo: aProvenanceEntity
+		  applyTo: aRelatedProvenanceEntity
 		  destinationWriter: aDestinationWriter
 		  lookUp: aFylgjaLookUpContext
 		  using: aFylgjaDerivativeModel
