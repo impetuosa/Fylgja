@@ -57,14 +57,14 @@ NotThatGoodTests >> dataSourceConfigClassConfigPackage [
 NotThatGoodTests >> errorHandlingClass [
 
 	^ northwind entities detect: [ :a | 
-		  (a isKindOf: JinDAMClass) and: [ a name = 'ErrorHandling' ] ]
+		  (a isKindOf: MOClass) and: [ a name = 'ErrorHandling' ] ]
 ]
 
 { #category : #initialization }
 NotThatGoodTests >> logErrorFunction [
 
 	^ northwind entities detect: [ :a | 
-		  (a isKindOf: JinDAMInvocable) and: [ 
+		  (a isKindOf: MOInvocable) and: [ 
 			  a name = 'LogError' ] ]
 ]
 
@@ -92,7 +92,7 @@ NotThatGoodTests >> moduleCustomerOrders [
 
 
 	^ northwind entities detect: [ :a | 
-		  (a isKindOf: JinDAMModule) and: [ a name = 'CustomerOrders' ] ]
+		  (a isKindOf: MOModule) and: [ a name = 'CustomerOrders' ] ]
 ]
 
 { #category : #initialization }
@@ -100,7 +100,7 @@ NotThatGoodTests >> moduleDomainFunctionWrappers [
 
 
 	^ northwind entities detect: [ :a | 
-		  (a isKindOf: JinDAMModule) and: [ a name = 'DomainFunctionWrappers' ] ]
+		  (a isKindOf: MOModule) and: [ a name = 'DomainFunctionWrappers' ] ]
 ]
 
 { #category : #initialization }
@@ -108,7 +108,7 @@ NotThatGoodTests >> moduleInventory [
 
 
 	^ northwind entities detect: [ :a | 
-		  (a isKindOf: JinDAMModule) and: [ a name = 'Inventory' ] ]
+		  (a isKindOf: MOModule) and: [ a name = 'Inventory' ] ]
 ]
 
 { #category : #initialization }
@@ -116,7 +116,7 @@ NotThatGoodTests >> modulePrivileges [
 
 
 	^ northwind entities detect: [ :a | 
-		  (a isKindOf: JinDAMModule) and: [ a name = 'Privileges' ] ]
+		  (a isKindOf: MOModule) and: [ a name = 'Privileges' ] ]
 ]
 
 { #category : #initialization }
@@ -124,7 +124,7 @@ NotThatGoodTests >> modulePurchaseOrders [
 
 
 	^ northwind entities detect: [ :a | 
-		  (a isKindOf: JinDAMModule) and: [ a name = 'PurchaseOrders' ] ]
+		  (a isKindOf: MOModule) and: [ a name = 'PurchaseOrders' ] ]
 ]
 
 { #category : #initialization }
@@ -132,7 +132,7 @@ NotThatGoodTests >> moduleReflective [
 
 
 	^ northwind entities detect: [ :a | 
-		  (a isKindOf: JinDAMModule) and: [ a name = 'Reflective' ] ]
+		  (a isKindOf: MOModule) and: [ a name = 'Reflective' ] ]
 ]
 
 { #category : #initialization }
@@ -140,14 +140,14 @@ NotThatGoodTests >> moduleUtilities [
 
 
 	^ northwind entities detect: [ :a | 
-		  (a isKindOf: JinDAMModule) and: [ a name = 'Utilities' ] ]
+		  (a isKindOf: MOModule) and: [ a name = 'Utilities' ] ]
 ]
 
 { #category : #initialization }
 NotThatGoodTests >> recordsetWrapper [
 
 	^ northwind entities detect: [ :a | 
-		  (a isKindOf: JinDAMClass) and: [ a name = 'RecordsetWrapper' ] ]
+		  (a isKindOf: MOClass) and: [ a name = 'RecordsetWrapper' ] ]
 ]
 
 { #category : #initialization }
@@ -161,7 +161,7 @@ NotThatGoodTests >> setUp [
 	super setUp.
 
 	fylgja := FylgjaMigrationEngine new.
-	northwind := JinDAMModel northwind.
+	northwind := MOJinDAMImporter northwind . 
 	angular := MOAngularLoader northwind.
 	java := MOJavaMavenProjectLoader northwind.
 
@@ -182,5 +182,5 @@ NotThatGoodTests >> statementDataSourceConfigClassConfigPackage [
 NotThatGoodTests >> vbCrlf [
 
 	^ northwind entities detect: [ :a | 
-		  (a isKindOf: JinDAMAttribute) and: [ a name = 'vbCrLf' ] ]
+		  (a isKindOf: MOAttribute) and: [ a name = 'vbCrLf' ] ]
 ]

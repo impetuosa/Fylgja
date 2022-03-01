@@ -151,7 +151,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testErrorHandlingToPackageOnlyCopy [
 FylgjaMigrateDeclarationIntoPackageTests >> testModuleCustomerOrdersOnlyCopy [
 
 	| provenance destination result |
-	"'ModulePrivileges' 'ModuleInventory' 'ModuleCustomerOrders' 'ModuleDomainFunctionWrappers' 'ModulePurchaseOrders' 'ModuleUtilities' 'ModuleReflective'"
+
 	provenance := self moduleCustomerOrders.
 	destination := self configPackage.
 	fylgja activateTracing.
@@ -201,7 +201,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleCustomerOrdersToPackage [
 FylgjaMigrateDeclarationIntoPackageTests >> testModuleDomainFunctionWrappersOnlyCopy [
 
 	| provenance destination result |
-	"'ModulePrivileges' 'ModuleInventory' 'ModuleCustomerOrders' 'ModuleDomainFunctionWrappers' 'ModulePurchaseOrders' 'ModuleUtilities' 'ModuleReflective'"
+
 	provenance := self moduleDomainFunctionWrappers.
 	destination := self configPackage.
 	fylgja activateTracing.
@@ -253,7 +253,8 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleDomainFunctionWrappersToPa
 FylgjaMigrateDeclarationIntoPackageTests >> testModuleInventoryOnlyCopy [
 
 	| provenance destination result |
-	"'ModulePrivileges' 'ModuleInventory' 'ModuleCustomerOrders' 'ModuleDomainFunctionWrappers' 'ModulePurchaseOrders' 'ModuleUtilities' 'ModuleReflective'"
+
+	
 	provenance := self moduleInventory.
 	destination := self configPackage.
 	fylgja activateTracing.
@@ -305,7 +306,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleInventoryToPackage [
 FylgjaMigrateDeclarationIntoPackageTests >> testModulePrivilegesOnlyCopy [
 
 	| provenance destination result |
-	"'ModulePrivileges' 'ModuleInventory' 'ModuleCustomerOrders' 'ModuleDomainFunctionWrappers' 'ModulePurchaseOrders' 'ModuleUtilities' 'ModuleReflective'"
+
 	provenance := self modulePrivileges.
 	destination := self configPackage.
 	fylgja activateTracing.
@@ -357,7 +358,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModulePrivilegesToPackage [
 FylgjaMigrateDeclarationIntoPackageTests >> testModulePurchaseOrdersOnlyCopy [
 
 	| provenance destination result |
-	"'ModulePrivileges' 'ModuleInventory' 'ModuleCustomerOrders' 'ModuleDomainFunctionWrappers' 'ModulePurchaseOrders' 'ModuleUtilities' 'ModuleReflective'"
+
 	provenance := self modulePurchaseOrders.
 	destination := self configPackage.
 	fylgja activateTracing.
@@ -458,7 +459,8 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleReflectiveToPackage [
 FylgjaMigrateDeclarationIntoPackageTests >> testModuleUtilitiesOnlyCopy [
 
 	| provenance destination result |
-	"'ModulePrivileges' 'ModuleInventory' 'ModuleCustomerOrders' 'ModuleDomainFunctionWrappers' 'ModulePurchaseOrders' 'ModuleUtilities' 'ModuleReflective'"
+
+	
 	provenance := self moduleUtilities.
 	destination := self configPackage.
 	fylgja activateTracing.

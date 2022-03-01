@@ -175,7 +175,7 @@ FylgjaMigrationEngine >> produce: aProvenanceEntity destinationWriter: aWriter l
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext [
 
-	| result derivative|
+	| result derivative |
 	derivative := self derivative.
 
 	result := self

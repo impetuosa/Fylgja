@@ -8,7 +8,7 @@ Class {
 FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTransformAddRuleToMapBooleanToBool [
 
 	| function destinationClass result modifiedClass |
-	function := self logErrorFunction yourself.
+	function := self logErrorFunction.
 	destinationClass := self configClassConfigPackage.
 
 	" By default in the system we copy"
@@ -39,7 +39,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 
 	self assert: result result returnTypeReference name equals: #bool.
 
-	self assert: result result isStaticBinding.
+	self assert: result result isDynamicBinding.
 
 	self assert: result result language isJava.
 	self assert: result result block language isJava.
@@ -141,9 +141,9 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 
 	self
 		assert: result result returnTypeReference name
-		equals: function typeReference name.
+		equals: function returnTypeReference name.
 
-	self assert: result result isStaticBinding .
+	self assert: result result isDynamicBinding  .
 
 	self assert: result result language isJava.
 	self assert: result result block language isJava.
@@ -231,9 +231,9 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 
 	self
 		assert: result result returnTypeReference name
-		equals: function typeReference name.
+		equals: function returnTypeReference name.
 
-	self assert: result result isStaticBinding .
+	self assert: result result isDynamicBinding .
 
 	self assert: result result language isJava.
 	self assert: result result block language isJava.
@@ -371,7 +371,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 
 	self assert: result result returnTypeReference name equals: #Boolean.
 
-	self assert: result result isStaticBinding .
+	self assert: result result isDynamicBinding .
 
 	self assert: result result language isJava.
 	self assert: result result block language isJava.
