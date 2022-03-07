@@ -13,10 +13,10 @@ FylgjaConditionReferenceNamed class >> priority [
 ]
 
 { #category : #testing }
-FylgjaConditionReferenceNamed >> matches: aProvenanceEntity context: aDestinationContext [
+FylgjaConditionReferenceNamed >> matches: aProvenanceEntityRelation context: aDestinationContextRelation [
 
-	^ aProvenanceEntity isReference and: [ 
-		  names includes: aProvenanceEntity name ]
+	^ aProvenanceEntityRelation to isReference and: [ 
+		  names includes: aProvenanceEntityRelation to name ]
 ]
 
 { #category : #testing }

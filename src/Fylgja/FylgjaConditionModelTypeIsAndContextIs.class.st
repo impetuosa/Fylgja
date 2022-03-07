@@ -20,9 +20,11 @@ FylgjaConditionModelTypeIsAndContextIs >> contextTypes: aCollection [
 ]
 
 { #category : #testing }
-FylgjaConditionModelTypeIsAndContextIs >> matches: aProvenanceEntity context: aDestinationContext [
+FylgjaConditionModelTypeIsAndContextIs >> matches: aProvenanceEntityRelation context: aDestinationContextRelation [
 
-	^ (contextTypes anySatisfy: [ :t | aDestinationContext class = t ]) 
-		  and: [ 
-		  super matches: aProvenanceEntity context: aDestinationContext ]
+	^ (contextTypes anySatisfy: [ :t | 
+		   aDestinationContextRelation to class = t ]) and: [ 
+		  super
+			  matches: aProvenanceEntityRelation
+			  context: aDestinationContextRelation ]
 ]

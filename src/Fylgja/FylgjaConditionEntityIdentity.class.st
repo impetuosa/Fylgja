@@ -20,8 +20,8 @@ FylgjaConditionEntityIdentity >> entity: anAlcixLocalVariable [
 ]
 
 { #category : #testing }
-FylgjaConditionEntityIdentity >> matches: aProvenanceEntity context: aDestinationContext [
-	^ entity == aProvenanceEntity
+FylgjaConditionEntityIdentity >> matches: aProvenanceEntityRelation context: aDestinationContextRelation [
+	^ entity == aProvenanceEntityRelation to
 ]
 
 { #category : #accessing }

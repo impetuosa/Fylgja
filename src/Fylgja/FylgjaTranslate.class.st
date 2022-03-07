@@ -15,14 +15,14 @@ FylgjaTranslate >> isDelegate [
 ]
 
 { #category : #writing }
-FylgjaTranslate >> writeCopyOf: aProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+FylgjaTranslate >> writeCopyOf: aProvenanceEntityRelation destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
   
 	^ MOModelWriteTypeBasedCopyResolver new
-		  resolveWriterFor: aProvenanceEntity
+		  resolveWriterFor: aProvenanceEntityRelation
 		  writingContext: aDestinationWriter
 		  do: [ :elementWriter | 
 			  elementWriter
-				  writeCopyOf: aProvenanceEntity
+				  writeCopyOf: aProvenanceEntityRelation
 				  readingValues: [ :contextWriter :value | 
 					  aFylgjaDerivativeModel
 						  migrate: value

@@ -9,11 +9,11 @@ Class {
 }
 
 { #category : #testing }
-FylgjaConditionUnaryOperator >> matches: aProvenanceEntity context: aDestinationContext [
+FylgjaConditionUnaryOperator >> matches: aProvenanceEntityRelation context: aDestinationContextRelation [
 
-	^ (aProvenanceEntity isKindOf: MOUnaryOperation) and: [ 
-		  aProvenanceEntity operator = operator and: [ 
-			  order = aProvenanceEntity order ] ]
+	^ (aProvenanceEntityRelation to isKindOf: MOUnaryOperation) and: [ 
+		  aProvenanceEntityRelation to operator = operator and: [ 
+			  order = aProvenanceEntityRelation to order ] ]
 ]
 
 { #category : #testing }

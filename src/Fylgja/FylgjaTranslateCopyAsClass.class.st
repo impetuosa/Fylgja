@@ -5,14 +5,14 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaTranslateCopyAsClass >> applyTo: aRelatedProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+FylgjaTranslateCopyAsClass >> applyTo: aProvenanceEntityRelation destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	aDestinationWriter writeDeclarationUnit: [ :unit | 
 		unit writeClass: [ :class | 
 			class visibility: #public.
-			class name: aRelatedProvenanceEntity name.
+			class name: aProvenanceEntityRelation name.
 			class
-				writeCopyOf: aRelatedProvenanceEntity
+				writeCopyOf: aProvenanceEntityRelation
 				readingValues: [ :context :value | 
 					aFylgjaDerivativeModel
 						migrate: value

@@ -5,29 +5,32 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaCopyReplaceErrorGoToToTryCatch >> applyTo: aRelatedProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+FylgjaCopyReplaceErrorGoToToTryCatch >> applyTo: aProvenanceEntityRelation destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
-	| blockStatements tryStatements catchStatements indexOfLabel onErrorGoTo |
-	onErrorGoTo := aRelatedProvenanceEntity statements detect: [ :a | 
-		               a isKindOf: MOAlceOnErrorGoToLabel ].
+	| statmentRelations blockStatements tryStatements catchStatements indexOfLabel onErrorGoTo |
+	
+	statmentRelations := aProvenanceEntityRelation to relationsNamed: #statements. 
+	
+	onErrorGoTo :=( statmentRelations detect: [ :a | 
+		               a to isKindOf: MOAlceOnErrorGoToLabel ]) to .
 
-	indexOfLabel := aRelatedProvenanceEntity statements detectIndex: [ :a | 
-		                a isLabelledAs: onErrorGoTo destination name ].
+	indexOfLabel :=statmentRelations detectIndex: [ :a | 
+		                a to isLabelledAs: onErrorGoTo destination name ].
 
-	blockStatements := aRelatedProvenanceEntity statements
+	blockStatements := statmentRelations
 		                   copyFrom: 1
 		                   to:
-		                   (aRelatedProvenanceEntity statements indexOf:
+		                   (aProvenanceEntityRelation to statements indexOf:
 			                    onErrorGoTo) - 1.
 
-	tryStatements := aRelatedProvenanceEntity statements
+	tryStatements := statmentRelations
 		                 copyFrom:
-		                 (aRelatedProvenanceEntity statements indexOf: onErrorGoTo)
+		                 (aProvenanceEntityRelation to statements indexOf: onErrorGoTo)
 		                 + 1
 		                 to: indexOfLabel - 2.
-	catchStatements := aRelatedProvenanceEntity statements
+	catchStatements := statmentRelations
 		                   copyFrom: indexOfLabel + 1
-		                   to: aRelatedProvenanceEntity statements size.
+		                   to: aProvenanceEntityRelation to  statements size.
 
 
 

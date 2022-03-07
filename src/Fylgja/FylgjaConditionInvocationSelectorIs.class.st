@@ -14,9 +14,9 @@ FylgjaConditionInvocationSelectorIs class >> priority [
 ]
 
 { #category : #testing }
-FylgjaConditionInvocationSelectorIs >> matches: aMOFunction context: aMOClass [
+FylgjaConditionInvocationSelectorIs >> matches: aProvenanceEntityRelation context: aDestinationContextRelation [
 
-	^ aMOFunction isInvocation and: [ aMOFunction selector = selector ]
+	^ aProvenanceEntityRelation to isInvocation and: [ aProvenanceEntityRelation to selector = selector ]
 ]
 
 { #category : #accessing }

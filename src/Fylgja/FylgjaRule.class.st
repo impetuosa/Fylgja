@@ -26,9 +26,9 @@ FylgjaRule >> condition: aFylgjaConditionAll [
 ]
 
 { #category : #testing }
-FylgjaRule >> matches: anAlcixLocalVariable context: aMOMethod [
+FylgjaRule >> matches: aProvenanceEntityRelation context: aDestinationContextRelation [
 
-	^ condition matches: anAlcixLocalVariable context: aMOMethod
+	^ condition matches: aProvenanceEntityRelation context: aDestinationContextRelation
 ]
 
 { #category : #accessing }

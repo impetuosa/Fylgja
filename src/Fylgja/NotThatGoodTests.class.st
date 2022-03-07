@@ -29,6 +29,24 @@ NotThatGoodTests >> assert: newClass isKindOf: aType [
 ]
 
 { #category : #'as yet unclassified' }
+NotThatGoodTests >> assertProducedElementsAreEquivalent [
+
+	self assert: (fylgja traces reject: [ :a | 
+			 a first to allContainments size = a last allContainments size and: [ 
+				 a first to allReferences size = a last allReferences size and: [ 
+					 a first to allExpressions size = a last allExpressions size ] ] ])
+			isEmpty
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> assertTracedClasses [
+
+	self assert:
+		(fylgja traces reject: [ :a | a first to class = a last class ])
+			isEmpty
+]
+
+{ #category : #'as yet unclassified' }
 NotThatGoodTests >> blockDataSourceConfigClassConfigPackage [
 
 	^ self dataSourceConfigClassConfigPackage block

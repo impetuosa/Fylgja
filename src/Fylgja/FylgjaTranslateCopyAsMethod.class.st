@@ -8,13 +8,13 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaTranslateCopyAsMethod >> applyTo: aRelatedProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+FylgjaTranslateCopyAsMethod >> applyTo: aProvenanceEntityRelation destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	^ aDestinationWriter writeMethod: [ :methodWriter | 
 		  writer := methodWriter.
-		  aRelatedProvenanceEntity acceptVisitor: self.
+		  aProvenanceEntityRelation to acceptVisitor: self.
 		  methodWriter
-			  writeCopyOf: aRelatedProvenanceEntity
+			  writeCopyOf: aProvenanceEntityRelation
 			  readingValues: [ :context :value | 
 				  aFylgjaDerivativeModel
 					  migrate: value

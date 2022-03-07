@@ -14,10 +14,10 @@ FylgjaConditionBinaryExpression class >> priority [
 ]
 
 { #category : #testing }
-FylgjaConditionBinaryExpression >> matches: aProvenanceEntity context: aDestinationContext [
+FylgjaConditionBinaryExpression >> matches: aProvenanceEntityRelation context: aDestinationContextRelation [
 
-	^ (aProvenanceEntity isKindOf: MOBinaryOperation) and: [ 
-		  aProvenanceEntity operator = operator ]
+	^ (aProvenanceEntityRelation to isKindOf: MOBinaryOperation) and: [ 
+		  aProvenanceEntityRelation to operator = operator ]
 ]
 
 { #category : #accessing }

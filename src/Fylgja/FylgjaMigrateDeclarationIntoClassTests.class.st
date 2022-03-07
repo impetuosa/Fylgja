@@ -534,15 +534,8 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyOnlyPr
 	result := fylgja produce: provenance into: destination.
 
 	" When copying all the produced things should be of the same type "
-	self assert:
-		(fylgja traces reject: [ :a | a first class = a last class ])
-			isEmpty.
-
+	self assertTracedClasses .
 
 	" When copying all the produced things look similar from the point of view of composition "
-	self assert: (fylgja traces reject: [ :a | 
-			 a first allContainments size = a last allContainments size and: [ 
-				 a first allReferences size = a last allReferences size and: [ 
-					 a first allExpressions size = a last allExpressions size ] ] ])
-			isEmpty
+	self assertProducedElementsAreEquivalent
 ]

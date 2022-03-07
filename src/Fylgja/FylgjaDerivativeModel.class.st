@@ -10,7 +10,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> allNewEntities [
-	^ derivativeModels flatCollect: #entities 
+	^ self derivativeModels flatCollect: #entities 
 ]
 
 { #category : #accessing }
@@ -51,10 +51,10 @@ FylgjaDerivativeModel >> migrate: aProvenanceEntity into: aDestinationContext [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> migrate: aProvenanceEntity intoDestinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext [
+FylgjaDerivativeModel >> migrate: aProvenanceEntityRelation intoDestinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext [
 
 	^ fylgja
-		  migrate: aProvenanceEntity
+		  migrate: aProvenanceEntityRelation
 		  intoDestinationWriter: aDestinationWriter
 		  lookUp: aFylgjaLookUpContext
 		  using: self
@@ -80,6 +80,24 @@ FylgjaDerivativeModel >> readEntity: anEntity [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> readEntitysContextualizingRelation: anEntity [
+
+	^ (self isDerivativeEntity: anEntity)
+		  ifTrue: [ anEntity ]
+		  ifFalse: [ 
+			  (self readerFor: anEntity) readEntitysContextualizingRelation:
+				  anEntity ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> readRelation: aRelation [
+
+	^ (self isDerivativeEntity: aRelation to)
+		  ifTrue: [ aRelation ]
+		  ifFalse: [ (self readerFor: aRelation to) readRelation: aRelation ]
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> readerFor: aModelEntity [
 
 	^ (FylgjaResolver readerOn: self for: aModelEntity) resolve
@@ -92,14 +110,14 @@ FylgjaDerivativeModel >> selectDerivativeModelFor: aDestinationContext [
 		  | model |
 		  model := (fylgja selectDerivativeModelFor: aDestinationContext)
 			           derivative.
-		  derivativeModels add: model.
+		  self derivativeModels add: model.
 		  model ]
 ]
 
 { #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> selectDerivativeModelFor: aDestinationContext ifNone: aBlock [
 
-	^ derivativeModels
+	^ self derivativeModels
 		  detect: [ :d | d includes: aDestinationContext ]
 		  ifNone: [ aBlock value ]
 ]

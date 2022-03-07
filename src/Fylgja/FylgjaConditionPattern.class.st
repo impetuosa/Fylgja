@@ -76,9 +76,9 @@ FylgjaConditionPattern >> matchValue: anUndefinedObject with: anUndefinedObject2
 ]
 
 { #category : #testing }
-FylgjaConditionPattern >> matches: aProvenanceEntity context: aDestinationContext [
+FylgjaConditionPattern >> matches: aProvenanceEntityRelation context: aDestinationContextRelation [
 self halt .
-	^ self matchPattern: node with: aProvenanceEntity
+	^ self matchPattern: node with: aProvenanceEntityRelation to
 ]
 
 { #category : #accessing }

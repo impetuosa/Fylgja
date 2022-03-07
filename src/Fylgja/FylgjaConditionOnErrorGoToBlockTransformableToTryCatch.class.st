@@ -5,21 +5,21 @@ Class {
 }
 
 { #category : #testing }
-FylgjaConditionOnErrorGoToBlockTransformableToTryCatch >> matches: aProvenanceEntity context: aDestinationContext [
+FylgjaConditionOnErrorGoToBlockTransformableToTryCatch >> matches: aProvenanceEntityRelation context: aDestinationContextRelation [
 
 	| stmt onErrorGoTo |
-	(aProvenanceEntity isKindOf: MOBlock) ifFalse: [ ^ false ].
-	aProvenanceEntity statements ifEmpty: [ ^ false ].
-	onErrorGoTo := aProvenanceEntity statements
+	(aProvenanceEntityRelation to isKindOf: MOBlock) ifFalse: [ ^ false ].
+	aProvenanceEntityRelation to statements ifEmpty: [ ^ false ].
+	onErrorGoTo := aProvenanceEntityRelation to statements
 		               detect: [ :a | a isKindOf: MOAlceOnErrorGoToLabel ]
 		               ifNone: [ ^ false ].
-	stmt := aProvenanceEntity statements
+	stmt := aProvenanceEntityRelation to statements
 		        detect: [ :a | 
 			        (a isKindOf: MOStatementExpression) and: [ 
 				        (a expression isKindOf: MOAlceLabelReference) and: [ 
 					        a expression name = onErrorGoTo destination name ] ] ]
 		        ifNone: [ ^ false ].
-	^ (aProvenanceEntity statements at:
-		   (aProvenanceEntity statements indexOf: stmt) - 1) isKindOf:
-		  MOAlceExit
+	^ (aProvenanceEntityRelation to statements at:
+		   (aProvenanceEntityRelation to statements indexOf: stmt) - 1) 
+		  isKindOf: MOAlceExit
 ]

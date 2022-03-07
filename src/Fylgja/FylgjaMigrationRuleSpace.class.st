@@ -80,12 +80,13 @@ FylgjaMigrationRuleSpace >> installProducingRule: aFylgjaProductionRule [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigrationRuleSpace >> lookupContextFor: aProvenanceEntity toContext: aDestinationContext model: aMOModel [
+FylgjaMigrationRuleSpace >> lookupContextFor: aProvenanceEntityRelation toContext: aDestinationContextRelation model: aMOModel [
 
 	^ FylgjaLookUpContext new
 		  mrs: ((self migrationRuleSpaceForModel: aMOModel) 
-				   migrationRuleSpaceForAnchor: aDestinationContext anchor)
-		  destination: aDestinationContext;
+				   migrationRuleSpaceForAnchor:
+					   aDestinationContextRelation to anchor)
+		  destination: aDestinationContextRelation;
 		  yourself
 ]
 
@@ -110,11 +111,11 @@ FylgjaMigrationRuleSpace >> lookupRulesForMapping: aProvenanceEntity toContext: 
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigrationRuleSpace >> lookupRulesForProducing: aProvenanceEntity toContext: aDestinationContext [
+FylgjaMigrationRuleSpace >> lookupRulesForProducing: aProvenanceEntityRelation toContext: aDestinationContextRelation [
 
 	| thisLevelRules max |
 	thisLevelRules := producingRules select: [ :mr | 
-		                  mr matches: aProvenanceEntity context: aDestinationContext ].
+		                  mr matches: aProvenanceEntityRelation context: aDestinationContextRelation ].
 	thisLevelRules size > 1 ifTrue: [ 
 		max := thisLevelRules max: #priority.
 		thisLevelRules := thisLevelRules select: [ :a | a priority = max ] ].
@@ -123,8 +124,8 @@ FylgjaMigrationRuleSpace >> lookupRulesForProducing: aProvenanceEntity toContext
 		   ifNil: [ {  } ]
 		   ifNotNil: [ 
 		   parent
-			   lookupRulesForProducing: aProvenanceEntity
-			   toContext: aDestinationContext ])
+			   lookupRulesForProducing: aProvenanceEntityRelation
+			   toContext: aDestinationContextRelation ])
 ]
 
 { #category : #'as yet unclassified' }

@@ -2,8 +2,8 @@ Class {
 	#name : #FylgjaLookUpContext,
 	#superclass : #Object,
 	#instVars : [
-		'destination',
-		'mrs'
+		'mrs',
+		'destinationContextRelation'
 	],
 	#category : #'Fylgja-MRS'
 }
@@ -21,33 +21,33 @@ FylgjaLookUpContext >> ensureNotDuplicated: rules [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaLookUpContext >> lookupRulesForDelegating: aProvenanceEntity [
+FylgjaLookUpContext >> lookupRulesForDelegating: aProvenanceEntityRelation [
 
 	^ self ensureNotDuplicated: (mrs
-			   lookupRulesForDelegating: aProvenanceEntity
-			   toContext: destination)
+			   lookupRulesForDelegating: aProvenanceEntityRelation
+			   toContext: destinationContextRelation)
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaLookUpContext >> lookupRulesForMapping: aProvenanceEntity [
+FylgjaLookUpContext >> lookupRulesForMapping: aProvenanceEntityRelation [
 
 	^ self ensureNotDuplicated:
 		  (mrs
-			   lookupRulesForMapping: aProvenanceEntity
-			   toContext: destination)
+			   lookupRulesForMapping: aProvenanceEntityRelation
+			   toContext: destinationContextRelation)
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaLookUpContext >> lookupRulesForProducing: aProvenanceEntity [
+FylgjaLookUpContext >> lookupRulesForProducing: aProvenanceEntityRelation [
 
 	^ self ensureNotDuplicated:
 		  (mrs
-			   lookupRulesForProducing: aProvenanceEntity
-			   toContext: destination)
+			   lookupRulesForProducing: aProvenanceEntityRelation
+			   toContext: destinationContextRelation)
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaLookUpContext >> mrs: aMrs destination: aDestinationContext [ 
+FylgjaLookUpContext >> mrs: aMrs destination: aDestinationContextRelation [ 
 	mrs := aMrs .
-	destination := aDestinationContext
+	destinationContextRelation := aDestinationContextRelation
 ]

@@ -98,9 +98,9 @@ FylgjaMigrationEngine >> map: aProvenanceReferenceEntity into: aDestinationConte
 FylgjaMigrationEngine >> map: aProvenanceReferenceEntity into: aDestinationContext using: aModifiedFylgjaMigrationEngine [
 
 	| rules element destinationContext |
-	element := aModifiedFylgjaMigrationEngine readEntity:
+	element := aModifiedFylgjaMigrationEngine readEntitysContextualizingRelation:
 		           aProvenanceReferenceEntity.
-	destinationContext := aModifiedFylgjaMigrationEngine readEntity:
+	destinationContext := aModifiedFylgjaMigrationEngine readEntitysContextualizingRelation:
 		                      aDestinationContext.
 	rules := self
 		         lookupRulesForMapping: element
@@ -123,10 +123,10 @@ FylgjaMigrationEngine >> map: aProvenanceReferenceEntity into: aDestinationConte
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> migrate: aProvenanceEntity intoDestinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+FylgjaMigrationEngine >> migrate: aProvenanceEntityRelation intoDestinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	^ self
-		  produce: aProvenanceEntity
+		  produce: aProvenanceEntityRelation
 		  destinationWriter: aDestinationWriter
 		  lookUp: aFylgjaLookUpContext
 		  using: aFylgjaDerivativeModel
@@ -150,25 +150,26 @@ FylgjaMigrationEngine >> noTracing [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> produce: aProvenanceEntity destinationWriter: aWriter lookUp: aLookupContext using: aModifiedFylgjaMigrationEngine [
+FylgjaMigrationEngine >> produce: aProvenanceEntityRelation destinationWriter: aWriter lookUp: aLookupContext using: aModifiedFylgjaMigrationEngine [
 
-	| rules element partialResult rule |
-	element := aModifiedFylgjaMigrationEngine readEntity:
-		           aProvenanceEntity.
+	| rules relation partialResult rule |
+
+	relation := aModifiedFylgjaMigrationEngine readRelation:
+		            aProvenanceEntityRelation.
 
 
 
-	rules := aLookupContext lookupRulesForProducing: element.
+	rules := aLookupContext lookupRulesForProducing: relation.
 
 	rules ifEmpty: [ NotFound signal: 'No producing rule found ' ].
 	rule := rules first.
 	partialResult := rule
-		                 applyTo: element
+		                 applyTo: relation
 		                 destinationWriter: aWriter
 		                 lookUp: aLookupContext
 		                 using: aModifiedFylgjaMigrationEngine.
 
-	self trace: element to: rule produced: partialResult.
+	self trace: relation to: rule produced: partialResult.
 	^ partialResult
 ]
 
@@ -192,35 +193,34 @@ FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext [
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext using: aModifiedFylgjaMigrationEngine [
 
-	| element destinationContext partialResult lookup  |
+	| elementRelation destinationContextRelation resultingRelation lookup  |
 
-	element := aModifiedFylgjaMigrationEngine readEntity:
+	elementRelation := aModifiedFylgjaMigrationEngine readEntitysContextualizingRelation:
 		           aProvenanceEntity.
 
-	destinationContext := aModifiedFylgjaMigrationEngine readEntity:
+	destinationContextRelation := aModifiedFylgjaMigrationEngine readEntitysContextualizingRelation:
 		                      aDestinationContext.
 
 	lookup := self
-		          lookupContextFor: aProvenanceEntity
-		          toContext: aDestinationContext
+		          lookupContextFor: elementRelation
+		          toContext: destinationContextRelation
 		          model:
 			          (aModifiedFylgjaMigrationEngine 
 				           selectDerivativeModelFor: aDestinationContext).
 
-	partialResult := (aModifiedFylgjaMigrationEngine 
+	resultingRelation := (aModifiedFylgjaMigrationEngine 
 		                  selectDerivativeModelFor: aDestinationContext)
 		                 writer
-		                 updaterFor: destinationContext
-		                 with: element
+		                 updaterFor: destinationContextRelation
+		                 with: elementRelation
 		                 do: [ :elem :destinationWriter | 
 			                 self
-				                 produce: element
+				                 produce: elementRelation
 				                 destinationWriter: destinationWriter
 				                 lookUp: lookup
 				                 using: aModifiedFylgjaMigrationEngine ].
 
-	"	self trace: element to: aDestinationContext produced: partialResult."
-	^ partialResult
+	^ resultingRelation
 ]
 
 { #category : #'as yet unclassified' }

@@ -12,7 +12,7 @@ Class {
 FylgjaTranslateCopyRenameTypeReference >> applyTo: aRelatedProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	writer := aDestinationWriter.
-	^ aRelatedProvenanceEntity acceptVisitor: self
+	^ aRelatedProvenanceEntity to acceptVisitor: self
 ]
 
 { #category : #accessing }

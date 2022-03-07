@@ -18,9 +18,9 @@ FylgjaConditionEntityEquality >> entity: anAlcixLocalVariable [
 ]
 
 { #category : #testing }
-FylgjaConditionEntityEquality >> matches: aProvenanceEntity context: aDestinationContext [
+FylgjaConditionEntityEquality >> matches: aProvenanceEntityRelation context: aDestinationContextRelation [
 
-	^ entity = aProvenanceEntity
+	^ entity = aProvenanceEntityRelation to 
 ]
 
 { #category : #testing }
