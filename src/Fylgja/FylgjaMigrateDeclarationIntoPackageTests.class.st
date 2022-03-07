@@ -29,6 +29,28 @@ FylgjaMigrateDeclarationIntoPackageTests >> installRulesFor: destination [
 		replaceOperatorWith: #==;
 		installInto: fylgja.
 
+
+	FylgjaRuleInstaller new
+		context: (fylgja selectDerivativeModelFor: destination);
+		binaryOperator: #And;
+		replaceOperatorWith: #&&;
+		installInto: fylgja.
+		
+		
+	FylgjaRuleInstaller new
+		context: (fylgja selectDerivativeModelFor: destination);
+		binaryOperator: #Or;
+		replaceOperatorWith: #||;
+		installInto: fylgja.
+		
+
+
+	FylgjaRuleInstaller new
+		context: (fylgja selectDerivativeModelFor: destination);
+		binaryOperator: #=;
+		replaceOperatorWith: #==;
+		installInto: fylgja.
+
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destination);
 		binaryOperator: #&;
@@ -53,11 +75,11 @@ FylgjaMigrateDeclarationIntoPackageTests >> installRulesFor: destination [
 		copyAsTypesReferenceNamed: #bool;
 		installInto: fylgja.
 
-"	FylgjaRuleInstaller new
+	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destination);
 		anyAlceModule;
 		copyAsPublicClass;
-		installInto: fylgja."
+		installInto: fylgja.
 
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destination);
@@ -70,6 +92,15 @@ FylgjaMigrateDeclarationIntoPackageTests >> installRulesFor: destination [
 		anyTypeReferenceNamed: #Variant;
 		copyAsTypesReferenceNamed: #Object;
 		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		context: (fylgja selectDerivativeModelFor: destination);
+		anyTypeReferenceNamed: '#_TypeUndefined';
+		copyAsTypesReferenceNamed: #Object;
+		installInto: fylgja.
+
+
+
 
 	FylgjaRuleInstaller new
 		atLanguageNamed: #java;
