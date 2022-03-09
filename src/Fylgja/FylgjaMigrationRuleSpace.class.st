@@ -94,20 +94,26 @@ FylgjaMigrationRuleSpace >> lookupContextFor: aProvenanceEntityRelation toContex
 FylgjaMigrationRuleSpace >> lookupRulesForDelegating: aProvenanceEntity toContext: aDestinationContext [
 
 	^ (delegatingRules select: [ :mr | 
-		   mr matches: aProvenanceEntity context: aDestinationContext ]) , (parent
-		   ifNil: [ {  } ]
-		   ifNotNil: [ 
-		   parent lookupRulesForDelegating: aProvenanceEntity toContext: aDestinationContext ])
+		   mr
+			   matches: aProvenanceEntity
+			   context: aDestinationContext
+			   forWriting: MOType ]) , (parent ifNil: [ {  } ] ifNotNil: [ 
+		   parent
+			   lookupRulesForDelegating: aProvenanceEntity
+			   toContext: aDestinationContext ])
 ]
 
 { #category : #'as yet unclassified' }
 FylgjaMigrationRuleSpace >> lookupRulesForMapping: aProvenanceEntity toContext: aDestinationContext [
 
 	^ (mappingRules select: [ :mr | 
-		   mr matches: aProvenanceEntity context: aDestinationContext ]) , (parent
-		   ifNil: [ {  } ]
-		   ifNotNil: [ 
-		   parent lookupRulesForMapping: aProvenanceEntity toContext: aDestinationContext ])
+		   mr
+			   matches: aProvenanceEntity
+			   context: aDestinationContext
+			   forWriting: MOType ]) , (parent ifNil: [ {  } ] ifNotNil: [ 
+		   parent
+			   lookupRulesForMapping: aProvenanceEntity
+			   toContext: aDestinationContext ])
 ]
 
 { #category : #'as yet unclassified' }
@@ -115,17 +121,40 @@ FylgjaMigrationRuleSpace >> lookupRulesForProducing: aProvenanceEntityRelation t
 
 	| thisLevelRules max |
 	thisLevelRules := producingRules select: [ :mr | 
-		                  mr matches: aProvenanceEntityRelation context: aDestinationContextRelation ].
+		                  mr
+			                  matches: aProvenanceEntityRelation
+			                  context: aDestinationContextRelation
+			                  forWriting: MOType ].
 	thisLevelRules size > 1 ifTrue: [ 
 		max := thisLevelRules max: #priority.
 		thisLevelRules := thisLevelRules select: [ :a | a priority = max ] ].
 
-	^ (thisLevelRules collect: [ :mr | self -> mr ]) , (parent
-		   ifNil: [ {  } ]
-		   ifNotNil: [ 
-		   parent
-			   lookupRulesForProducing: aProvenanceEntityRelation
-			   toContext: aDestinationContextRelation ])
+	^ (thisLevelRules collect: [ :mr | self -> mr ])
+	  , (parent ifNil: [ {  } ] ifNotNil: [ 
+			   parent
+				   lookupRulesForProducing: aProvenanceEntityRelation
+				   toContext: aDestinationContextRelation ])
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationRuleSpace >> lookupRulesForProducing: aProvenanceEntityRelation toContext: aDestinationContextRelation forWriting: aType [
+
+	| thisLevelRules max |
+	thisLevelRules := producingRules select: [ :mr | 
+		                  mr
+			                  matches: aProvenanceEntityRelation
+			                  context: aDestinationContextRelation
+			                  forWriting: aType ].
+	thisLevelRules size > 1 ifTrue: [ 
+		max := thisLevelRules max: #priority.
+		thisLevelRules := thisLevelRules select: [ :a | a priority = max ] ].
+
+	^ (thisLevelRules collect: [ :mr | self -> mr ])
+	  , (parent ifNil: [ {  } ] ifNotNil: [ 
+			   parent
+				   lookupRulesForProducing: aProvenanceEntityRelation
+				   toContext: aDestinationContextRelation
+				   forWriting: aType ])
 ]
 
 { #category : #'as yet unclassified' }

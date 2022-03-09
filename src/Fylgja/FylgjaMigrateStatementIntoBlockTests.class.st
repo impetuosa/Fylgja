@@ -18,7 +18,7 @@ FylgjaMigrateStatementIntoBlockTests >> testProduceVariableIntoMethodByCopyNodeT
 		installInto: fylgja.
 
 	result := fylgja produce: variable into: destinationContext.
-	self assert: (result result isKindOf: MOVariable).
+	self assert: (result result isKindOf: MOLocalVariable).
 	self assert: result result language isJava.
 	self
 		assert: result result parent statements size

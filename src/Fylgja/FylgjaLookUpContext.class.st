@@ -47,6 +47,15 @@ FylgjaLookUpContext >> lookupRulesForProducing: aProvenanceEntityRelation [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaLookUpContext >> lookupRulesForProducing: aProvenanceEntityRelation forWriting: aType [
+
+	^ self ensureNotDuplicated: (mrs
+			   lookupRulesForProducing: aProvenanceEntityRelation
+			   toContext: destinationContextRelation
+			   forWriting: aType)
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaLookUpContext >> mrs: aMrs destination: aDestinationContextRelation [ 
 	mrs := aMrs .
 	destinationContextRelation := aDestinationContextRelation

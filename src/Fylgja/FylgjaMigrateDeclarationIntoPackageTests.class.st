@@ -35,14 +35,14 @@ FylgjaMigrateDeclarationIntoPackageTests >> installRulesFor: destination [
 		binaryOperator: #And;
 		replaceOperatorWith: #&&;
 		installInto: fylgja.
-		
-		
+
+
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destination);
 		binaryOperator: #Or;
-		replaceOperatorWith: #||;
+		replaceOperatorWith: #'||';
 		installInto: fylgja.
-		
+
 
 
 	FylgjaRuleInstaller new
@@ -112,10 +112,22 @@ FylgjaMigrateDeclarationIntoPackageTests >> installRulesFor: destination [
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destination);
 		anyModelEntityOfTypesWhenGoingClass: { 
+				MOClassFunction.
+				MOClassProcedure.
 				MOFunction.
 				MOProcedure };
 		copyAsMethod;
 		installInto: fylgja.
+	" By default when going to java "
+	FylgjaRuleInstaller new
+		context: (fylgja selectDerivativeModelFor: destination);
+		anyModelEntityOfTypesWhenGoingClass: { 
+				MOGlobalVariable.
+				MOGlobalConstant };
+		copyAsAttribute;
+		installInto: fylgja.
+
+
 
 	installer := FylgjaRuleInstaller new
 		             context: (fylgja selectDerivativeModelFor: destination);
@@ -141,6 +153,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testErrorHandlingToPackage [
 
 
 	result := fylgja produce: provenance into: destination.
+
 	self
 		assert: (JavaParser parse: result result produceCode)
 		isKindOf: JavaProgramFileNode

@@ -28,41 +28,36 @@ FylgjaTranslateCopyAsMethod >> printOn: aStream [
 ]
 
 { #category : #visiting }
-FylgjaTranslateCopyAsMethod >> shouldBeProcessed: anObject [
+FylgjaTranslateCopyAsMethod >> visitClassFunction: aMOClassFunction [
 
-	^ (anObject isKindOf: MOObject) and: [ 
-		  (anObject isKindOf: MOLanguage) not ]
+	writer setDynamicBinding.
+	writer selector: aMOClassFunction selector.
+	writer returnTypeReference:
+		(writer typeReferenceNamed:
+			 aMOClassFunction returnTypeReference name)
 ]
 
-{ #category : #'as yet unclassified' }
-FylgjaTranslateCopyAsMethod >> shouldBeSet: anObject [
+{ #category : #visiting }
+FylgjaTranslateCopyAsMethod >> visitClassProcedure: aMOClassProcedure [
 
-	^ (anObject isKindOf: MOLanguage) not and: [ 
-		  (anObject isKindOf: JinAnchor) not and: [ anObject isNotNil ] ]
+	writer setDynamicBinding.
+	writer selector: aMOClassProcedure selector.
+	writer returnTypeReference: (writer typeReferenceNamed: #void)
 ]
 
 { #category : #visiting }
 FylgjaTranslateCopyAsMethod >> visitFunction: aMOFunction [
 
+	writer setStaticBinding.
 	writer selector: aMOFunction selector.
-	writer returnTypeReference:
-		(writer typeReferenceNamed: aMOFunction returnTypeReference name).
-	
-]
-
-{ #category : #visiting }
-FylgjaTranslateCopyAsMethod >> visitMethod: aMOMethod [ 
-	self shouldBeImplemented.
+	aMOFunction returnTypeReference ifNotNil: [ 
+		writer returnTypeReference:
+			(writer typeReferenceNamed: aMOFunction returnTypeReference name) ]
 ]
 
 { #category : #visiting }
 FylgjaTranslateCopyAsMethod >> visitProcedure: aMOProcedure [
-
+	writer setStaticBinding.
 	writer selector: aMOProcedure selector.
 	writer returnTypeReference: (writer typeReferenceNamed: #void)
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaTranslateCopyAsMethod >> with: anInstanceVariableSlot write: anUndefinedObject to: aMOVariable [ 
-	aMOVariable perform: anInstanceVariableSlot name,':' withArguments: { anUndefinedObject  }
 ]

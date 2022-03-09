@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #testing }
-FylgjaConditionUnaryOperator >> matches: aProvenanceEntityRelation context: aDestinationContextRelation [
+FylgjaConditionUnaryOperator >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
 
 	^ (aProvenanceEntityRelation to isKindOf: MOUnaryOperation) and: [ 
 		  aProvenanceEntityRelation to operator = operator and: [ 

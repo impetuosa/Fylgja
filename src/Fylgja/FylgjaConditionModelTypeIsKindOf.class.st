@@ -13,7 +13,7 @@ FylgjaConditionModelTypeIsKindOf class >> priority [
 ]
 
 { #category : #testing }
-FylgjaConditionModelTypeIsKindOf >> matches: aProvenanceEntityRelation context: aDestinationContextRelation [
+FylgjaConditionModelTypeIsKindOf >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
 
 	^ types anySatisfy: [ :t | aProvenanceEntityRelation to isKindOf: t ]
 ]

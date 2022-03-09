@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #testing }
-FylgjaConditionAll >> matches: aProvenanceEntityRelation context: aDestinationContextRelation [
+FylgjaConditionAll >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
 
 
 	^ true

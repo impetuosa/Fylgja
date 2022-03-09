@@ -13,7 +13,7 @@ FylgjaConditionModelTypeIs class >> priority [
 ]
 
 { #category : #testing }
-FylgjaConditionModelTypeIs >> matches: aProvenanceEntityRelation context: aDestinationContextRelation [
+FylgjaConditionModelTypeIs >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
 
 	^ types anySatisfy: [ :t | aProvenanceEntityRelation to class = t ]
 ]

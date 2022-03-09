@@ -27,7 +27,7 @@ FylgjaCondition >> initialize [
 ]
 
 { #category : #testing }
-FylgjaCondition >> matches: aProvenanceEntity context: aDestinationContext [
+FylgjaCondition >> matches: aProvenanceEntity context: aDestinationContext forWriting: aType [
 
 
 	self subclassResponsibility

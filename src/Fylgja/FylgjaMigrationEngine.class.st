@@ -153,13 +153,14 @@ FylgjaMigrationEngine >> noTracing [
 FylgjaMigrationEngine >> produce: aProvenanceEntityRelation destinationWriter: aWriter lookUp: aLookupContext using: aModifiedFylgjaMigrationEngine [
 
 	| rules relation partialResult rule |
-
 	relation := aModifiedFylgjaMigrationEngine readRelation:
 		            aProvenanceEntityRelation.
 
 
 
-	rules := aLookupContext lookupRulesForProducing: relation.
+	rules := aLookupContext
+		         lookupRulesForProducing: relation
+		         forWriting: aWriter writingType.
 
 	rules ifEmpty: [ NotFound signal: 'No producing rule found ' ].
 	rule := rules first.

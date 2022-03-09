@@ -20,11 +20,11 @@ FylgjaConditionModelTypeIsAndContextIs >> contextTypes: aCollection [
 ]
 
 { #category : #testing }
-FylgjaConditionModelTypeIsAndContextIs >> matches: aProvenanceEntityRelation context: aDestinationContextRelation [
+FylgjaConditionModelTypeIsAndContextIs >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
 
-	^ (contextTypes anySatisfy: [ :t | 
-		   aDestinationContextRelation to class = t ]) and: [ 
+	^ (contextTypes anySatisfy: [ :t | aType = t ]) and: [ 
 		  super
 			  matches: aProvenanceEntityRelation
-			  context: aDestinationContextRelation ]
+			  context: aDestinationContextRelation
+			  forWriting: aType ]
 ]

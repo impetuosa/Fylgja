@@ -25,7 +25,7 @@ FylgjaConditionReferenceTo >> elements: aCollection [
 ]
 
 { #category : #accessing }
-FylgjaConditionReferenceTo >> matches: aProvenanceEntityRelation context: aDestinationContextRelation [
+FylgjaConditionReferenceTo >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
 
 	^ aProvenanceEntityRelation to isReference and: [ 
 		  elements includes: aProvenanceEntityRelation to candidate ]

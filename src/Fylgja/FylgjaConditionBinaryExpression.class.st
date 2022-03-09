@@ -14,7 +14,7 @@ FylgjaConditionBinaryExpression class >> priority [
 ]
 
 { #category : #testing }
-FylgjaConditionBinaryExpression >> matches: aProvenanceEntityRelation context: aDestinationContextRelation [
+FylgjaConditionBinaryExpression >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
 
 	^ (aProvenanceEntityRelation to isKindOf: MOBinaryOperation) and: [ 
 		  aProvenanceEntityRelation to operator = operator ]

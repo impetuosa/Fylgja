@@ -112,6 +112,12 @@ FylgjaRuleInstaller >> copy [
 ]
 
 { #category : #copying }
+FylgjaRuleInstaller >> copyAsAttribute [
+
+	self operation: FylgjaTranslateCopyAsAttribute new
+]
+
+{ #category : #copying }
 FylgjaRuleInstaller >> copyAsMethod [
 
 	self operation: FylgjaTranslateCopyAsMethod new

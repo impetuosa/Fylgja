@@ -20,7 +20,7 @@ FylgjaConditionEntityIdentity >> entity: anAlcixLocalVariable [
 ]
 
 { #category : #testing }
-FylgjaConditionEntityIdentity >> matches: aProvenanceEntityRelation context: aDestinationContextRelation [
+FylgjaConditionEntityIdentity >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
 	^ entity == aProvenanceEntityRelation to
 ]
 

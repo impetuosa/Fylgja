@@ -22,6 +22,8 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destinationClass);
 		anyModelEntityOfTypesWhenGoingClass: { 
+				MOClassFunction.
+				MOClassProcedure.
 				MOFunction.
 				MOProcedure };
 		copyAsMethod;
@@ -124,8 +126,10 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destinationClass);
 		anyModelEntityOfTypesWhenGoingClass: { 
+					MOClassFunction.
+				MOClassProcedure.
 				MOFunction.
-				MOProcedure };
+				MOProcedure  };
 		copyAsMethod;
 		installInto: fylgja.
 
@@ -220,8 +224,10 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destinationClass);
 		anyModelEntityOfTypesWhenGoingClass: { 
+					MOClassFunction.
+				MOClassProcedure.
 				MOFunction.
-				MOProcedure };
+				MOProcedure  };
 		copyAsMethod;
 		installInto: fylgja.
 
@@ -346,8 +352,10 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destinationClass);
 		anyModelEntityOfTypesWhenGoingClass: { 
+					MOClassFunction.
+				MOClassProcedure.
 				MOFunction.
-				MOProcedure };
+				MOProcedure  };
 		copyAsMethod;
 		installInto: fylgja.
 
@@ -488,14 +496,15 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destination);
 		anyModelEntityOfTypesWhenGoingClass: { 
+				MOClassFunction.
+				MOClassProcedure.
 				MOFunction.
 				MOProcedure };
 		copyAsMethod;
 		installInto: fylgja.
 
 	installer := FylgjaRuleInstaller new
-		             context:
-			             (fylgja selectDerivativeModelFor: destination);
+		             context: (fylgja selectDerivativeModelFor: destination);
 		             anyInvocationTo: #MsgBox;
 		             yourself.
 
@@ -508,7 +517,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 
 	result := fylgja produce: provenance into: destination.
 
-	
+
 	self
 		assert: (JavaParser parse: result result parent produceCode)
 		isKindOf: JavaProgramFileNode

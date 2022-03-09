@@ -13,7 +13,7 @@ FylgjaConditionTypeReferenceIs class >> priority [
 ]
 
 { #category : #testing }
-FylgjaConditionTypeReferenceIs >> matches: aProvenanceEntityRelation context: aDestinationContextRelation [
+FylgjaConditionTypeReferenceIs >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
 
 	^ aProvenanceEntityRelation to isTypeReference and: [ 
 		  typeNames includes: aProvenanceEntityRelation to name ]

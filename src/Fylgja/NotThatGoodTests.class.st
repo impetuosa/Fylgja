@@ -200,5 +200,5 @@ NotThatGoodTests >> statementDataSourceConfigClassConfigPackage [
 NotThatGoodTests >> vbCrlf [
 
 	^ northwind entities detect: [ :a | 
-		  (a isKindOf: MOAttribute) and: [ a name = 'vbCrLf' ] ]
+		  (a isKindOf: MOGlobalVariable ) and: [ a name = 'vbCrLf' ] ]
 ]
