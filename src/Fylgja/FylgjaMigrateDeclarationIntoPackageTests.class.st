@@ -177,12 +177,18 @@ FylgjaMigrateDeclarationIntoPackageTests >> testErrorHandlingToPackageOnlyCopy [
 
 
 	result := fylgja produce: provenance into: destination.
-	
+
 	" When copying all the produced things should be of the same type "
-	self assertTracedClasses .
+	self assertTracedClasses.
 
 	" When copying all the produced things look similar from the point of view of composition "
-	self assertProducedElementsAreEquivalent
+	self assertProducedElementsAreEquivalentBut: [ :a | 
+		self
+			assert: a third allExpressionRelations first name
+			equals: #packageReference.
+		self assert: a third allExpressionRelations size equals: 1.
+		self assert: a first to allExpressionRelations size equals: 0.
+		true ]
 ]
 
 { #category : #initialization }
@@ -310,7 +316,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleInventoryToPackage [
 	destination := self configPackage.
 
 	self installRulesFor: destination.
-
+	
 
 	result := fylgja produce: provenance into: destination.
 
@@ -401,6 +407,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModulePurchaseOrdersToPackage [
 
 
 	result := fylgja produce: provenance into: destination.
+	
 	self
 		assert: (JavaParser parse: result result produceCode)
 		isKindOf: JavaProgramFileNode
@@ -508,7 +515,6 @@ FylgjaMigrateDeclarationIntoPackageTests >> testRecordsetWrapperToPackage [
 	self installRulesFor: destination.
 
 	result := fylgja produce: provenance into: destination.
-
 	self
 		assert: (JavaParser parse: result result produceCode)
 		isKindOf: JavaProgramFileNode
@@ -532,9 +538,15 @@ FylgjaMigrateDeclarationIntoPackageTests >> testRecordsetWrapperoPackageOnlyCopy
 
 
 	result := fylgja produce: provenance into: destination.
-		" When copying all the produced things should be of the same type "
-	self assertTracedClasses .
+	" When copying all the produced things should be of the same type "
+	self assertTracedClasses.
 
 	" When copying all the produced things look similar from the point of view of composition "
-	self assertProducedElementsAreEquivalent
+	self assertProducedElementsAreEquivalentBut: [ :a | 
+		self
+			assert: a third allExpressionRelations first name
+			equals: #packageReference.
+		self assert: a third allExpressionRelations size equals: 1.
+		self assert: a first to allExpressionRelations size equals: 0.
+		true ]
 ]

@@ -8,10 +8,11 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaCopyReplaceBinaryOperator >> applyTo: aRelatedProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+FylgjaCopyReplaceBinaryOperator >> applyTo: aProvenanceEntityRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	^ (self
-		   writeCopyOf: aRelatedProvenanceEntity
+		   writeCopyOf: aProvenanceEntityRelation
+			croppingRelationsWith: aBlock 
 		   destinationWriter: aDestinationWriter
 		   lookUp: aFylgjaLookUpContext
 		   using: aFylgjaDerivativeModel)

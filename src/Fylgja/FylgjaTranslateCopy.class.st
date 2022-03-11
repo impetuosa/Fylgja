@@ -5,10 +5,11 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaTranslateCopy >> applyTo: aRelatedProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+FylgjaTranslateCopy >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	^ self
 		  writeCopyOf: aRelatedProvenanceEntity
+		  croppingRelationsWith: aBlock
 		  destinationWriter: aDestinationWriter
 		  lookUp: aFylgjaLookUpContext
 		  using: aFylgjaDerivativeModel

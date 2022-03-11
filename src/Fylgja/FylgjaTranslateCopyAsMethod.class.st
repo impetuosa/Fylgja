@@ -8,22 +8,25 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaTranslateCopyAsMethod >> applyTo: aProvenanceEntityRelation destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+FylgjaTranslateCopyAsMethod >> applyTo: aProvenanceEntityRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	^ aDestinationWriter writeMethod: [ :methodWriter | 
 		  writer := methodWriter.
 		  aProvenanceEntityRelation to acceptVisitor: self.
 		  methodWriter
 			  writeCopyOf: aProvenanceEntityRelation
+			  croppingRelationsWith: aBlock
 			  readingValues: [ :context :value | 
 				  aFylgjaDerivativeModel
 					  migrate: value
+					  croppingRelationsWith: aBlock
 					  intoDestinationWriter: methodWriter
 					  lookUp: aFylgjaLookUpContext ] ]
 ]
 
 { #category : #printing }
 FylgjaTranslateCopyAsMethod >> printOn: aStream [
+
  	aStream nextPutAll: 'CopyAsMethod'
 ]
 
@@ -57,6 +60,7 @@ FylgjaTranslateCopyAsMethod >> visitFunction: aMOFunction [
 
 { #category : #visiting }
 FylgjaTranslateCopyAsMethod >> visitProcedure: aMOProcedure [
+	
 	writer setStaticBinding.
 	writer selector: aMOProcedure selector.
 	writer returnTypeReference: (writer typeReferenceNamed: #void)

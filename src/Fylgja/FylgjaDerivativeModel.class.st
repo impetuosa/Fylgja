@@ -38,37 +38,33 @@ FylgjaDerivativeModel >> isDerivativeEntity: anEntity [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> map: aProvenanceReferenceEntity into: aDestinationContext [  
-	^ fylgja map: aProvenanceReferenceEntity into: aDestinationContext using: self
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> migrate: aProvenanceEntity into: aDestinationContext [
-	^ aProvenanceEntity isReference
-		  ifTrue: [ self map: aProvenanceEntity into: aDestinationContext ]
-		  ifFalse: [ 
-		  self produce: aProvenanceEntity into: aDestinationContext ]
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> migrate: aProvenanceEntityRelation intoDestinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext [
+FylgjaDerivativeModel >> migrate: aProvenanceEntityRelation croppingRelationsWith: aBlock intoDestinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext [
 
 	^ fylgja
 		  migrate: aProvenanceEntityRelation
+		  croppingRelationsWith: aBlock
 		  intoDestinationWriter: aDestinationWriter
 		  lookUp: aFylgjaLookUpContext
 		  using: self
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> produce: aProvenanceEntity into: aContextDestination [
+FylgjaDerivativeModel >> produce: aProvenanceEntity croppingRelationsWith: aFullBlockClosure into: aDestinationContext [
 
-	self halt:
-		' should be using produce: aProvenanceEntity destinationWriter: aWriter lookUp: aLookupContext using: aModifiedFylgjaMigrationEngine'.
 	^ fylgja
 		  produce: aProvenanceEntity
-		  into: aContextDestination
+		  croppingRelationsWith: aFullBlockClosure
+		  into: aDestinationContext
 		  using: self
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> produce: aProvenanceEntity into: aContextDestinationEntity [
+
+	^ self
+		  produce: aProvenanceEntity
+		  croppingRelationsWith: [ :a | a ]
+		  into: aContextDestinationEntity
 ]
 
 { #category : #'as yet unclassified' }
@@ -83,7 +79,13 @@ FylgjaDerivativeModel >> readEntity: anEntity [
 FylgjaDerivativeModel >> readEntitysContextualizingRelation: anEntity [
 
 	^ (self isDerivativeEntity: anEntity)
-		  ifTrue: [ anEntity ]
+		  ifTrue: [ 
+			  | relation |
+			" This code should not be here :( "
+			  relation := anEntity parent allRelations select: [ :a | 
+				              a to = anEntity ].
+			  self assert: relation size = 1.
+			  self readRelation: relation first ]
 		  ifFalse: [ 
 			  (self readerFor: anEntity) readEntitysContextualizingRelation:
 				  anEntity ]

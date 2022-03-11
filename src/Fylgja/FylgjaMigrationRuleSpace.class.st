@@ -117,6 +117,27 @@ FylgjaMigrationRuleSpace >> lookupRulesForMapping: aProvenanceEntity toContext: 
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaMigrationRuleSpace >> lookupRulesForMapping: aProvenanceEntityRelation toContext: aDestinationContextRelation forWriting: aType [
+
+	| thisLevelRules max |
+	thisLevelRules := mappingRules select: [ :mr | 
+		                  mr
+			                  matches: aProvenanceEntityRelation
+			                  context: aDestinationContextRelation
+			                  forWriting: aType ].
+	thisLevelRules size > 1 ifTrue: [ 
+		max := thisLevelRules max: #priority.
+		thisLevelRules := thisLevelRules select: [ :a | a priority = max ] ].
+
+	^ (thisLevelRules collect: [ :mr | self -> mr ])
+	  , (parent ifNil: [ {  } ] ifNotNil: [ 
+			   parent
+				   lookupRulesForMapping: aProvenanceEntityRelation
+				   toContext: aDestinationContextRelation
+				   forWriting: aType ]) 
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaMigrationRuleSpace >> lookupRulesForProducing: aProvenanceEntityRelation toContext: aDestinationContextRelation [
 
 	| thisLevelRules max |

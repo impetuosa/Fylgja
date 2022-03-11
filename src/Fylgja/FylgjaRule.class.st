@@ -9,15 +9,14 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaRule >> applyTo: anAlcixLocalVariable context: aMOMethod using: aFylgjaModel [
+FylgjaRule >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
-	self subclassResponsibility
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaRule >> applyTo: aRelatedProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
-
-	self subclassResponsibility
+	^ operation
+		  applyTo: aRelatedProvenanceEntity
+		  croppingRelationsWith: aBlock
+		  destinationWriter: aDestinationWriter
+		  lookUp: aFylgjaLookUpContext
+		  using: aFylgjaDerivativeModel
 ]
 
 { #category : #accessing }
@@ -32,6 +31,11 @@ FylgjaRule >> matches: aProvenanceEntityRelation context: aDestinationContextRel
 		  matches: aProvenanceEntityRelation
 		  context: aDestinationContextRelation
 		  forWriting: aType
+]
+
+{ #category : #accessing }
+FylgjaRule >> operation: aFylgjaTranslateCopy [ 
+	operation := aFylgjaTranslateCopy 
 ]
 
 { #category : #accessing }

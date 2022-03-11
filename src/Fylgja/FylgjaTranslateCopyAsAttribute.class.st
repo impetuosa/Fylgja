@@ -5,26 +5,35 @@ Class {
 		'writer',
 		'relation',
 		'lookup',
-		'using'
+		'using',
+		'croppingBlock'
 	],
 	#category : #'Fylgja-Rule-Operations'
 }
 
 { #category : #'as yet unclassified' }
-FylgjaTranslateCopyAsAttribute >> applyTo: aProvenanceEntityRelation destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+FylgjaTranslateCopyAsAttribute >> applyTo: aProvenanceEntityRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	writer := aDestinationWriter.
 	relation := aProvenanceEntityRelation.
 	lookup := aFylgjaLookUpContext.
 	using := aFylgjaDerivativeModel.
+	croppingBlock := aBlock.
 	^ aProvenanceEntityRelation to acceptVisitor: self
 ]
 
 { #category : #visiting }
 FylgjaTranslateCopyAsAttribute >> keepCopyingWith: aWriter [
 
-	^ aWriter writeCopyOf: relation readingValues: [ :context :value | 
-		  using migrate: value intoDestinationWriter: aWriter lookUp: lookup ]
+	^ aWriter
+		  writeCopyOf: relation
+		  croppingRelationsWith: croppingBlock
+		  readingValues: [ :context :value | 
+			  using
+				  migrate: value
+				  croppingRelationsWith: croppingBlock
+				  intoDestinationWriter: aWriter
+				  lookUp: lookup ]
 ]
 
 { #category : #printing }
@@ -49,6 +58,5 @@ FylgjaTranslateCopyAsAttribute >> visitGlobalVariable: aMOGlobalVariable [
 		  attribute setStaticBinding.
 		  attribute name: aMOGlobalVariable name.
 		  attribute typeReferenceNamed: aMOGlobalVariable typeReference name.
-		  self keepCopyingWith: attribute. 
-		]
+		  self keepCopyingWith: attribute ]
 ]

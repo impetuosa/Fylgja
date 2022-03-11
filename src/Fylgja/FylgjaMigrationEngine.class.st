@@ -80,56 +80,47 @@ FylgjaMigrationEngine >> lookupRulesForProducing: aProvenanceEntity toContext: a
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> map: aProvenanceReferenceEntity into: aDestinationContext [
+FylgjaMigrationEngine >> map: aProvenanceEntityRelation croppingRelationsWith: aBlock intoDestinationWriter: aWriter lookUp: aLookupContext using: aModifiedFylgjaMigrationEngine [
 
-	| result derivative |
-	derivative := self derivative.
-	result := self
-		          map: aProvenanceReferenceEntity
-		          into: aDestinationContext
-		          using: derivative.
-	^ FylgjaDerivationResult new
-		  derivative: derivative;
-		  result: result;
-		  yourself
+	| rules relation partialResult rule |
+	relation := aModifiedFylgjaMigrationEngine readRelation:
+		            aProvenanceEntityRelation.
+
+	rules := aLookupContext
+		         lookupRulesForMapping: relation
+		         forWriting: aWriter writingType.
+
+	rules ifEmpty: [ NotFound signal: 'No mapping rule found ' ].
+	rule := rules first.
+	partialResult := rule
+		                 applyTo: relation
+		                 croppingRelationsWith: aBlock
+		                 destinationWriter: aWriter
+		                 lookUp: aLookupContext
+		                 using: aModifiedFylgjaMigrationEngine.
+ 
+	self trace: relation to: rule produced: partialResult.
+	^ partialResult
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> map: aProvenanceReferenceEntity into: aDestinationContext using: aModifiedFylgjaMigrationEngine [
+FylgjaMigrationEngine >> migrate: aProvenanceEntityRelation croppingRelationsWith: aBlock intoDestinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
-	| rules element destinationContext |
-	element := aModifiedFylgjaMigrationEngine readEntitysContextualizingRelation:
-		           aProvenanceReferenceEntity.
-	destinationContext := aModifiedFylgjaMigrationEngine readEntitysContextualizingRelation:
-		                      aDestinationContext.
-	rules := self
-		         lookupRulesForMapping: element
-		         toContext: destinationContext
-		         destinationModel:
-			         (aModifiedFylgjaMigrationEngine selectDerivativeModelFor:
-				          aDestinationContext).
-
-	rules ifEmpty: [ 
-		^ self
-			  produce: aProvenanceReferenceEntity
-			  into: destinationContext
-			  using: aModifiedFylgjaMigrationEngine ].
-
-	self halt.
-	^ rules first
-		  applyTo: element
-		  context: destinationContext
-		  using: aModifiedFylgjaMigrationEngine
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> migrate: aProvenanceEntityRelation intoDestinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
-
-	^ self
-		  produce: aProvenanceEntityRelation
-		  destinationWriter: aDestinationWriter
-		  lookUp: aFylgjaLookUpContext
-		  using: aFylgjaDerivativeModel
+	^ aProvenanceEntityRelation isReference
+		  ifTrue: [ 
+			  self
+				  map: aProvenanceEntityRelation
+				  croppingRelationsWith: aBlock
+				  intoDestinationWriter: aDestinationWriter
+				  lookUp: aFylgjaLookUpContext
+				  using: aFylgjaDerivativeModel ]
+		  ifFalse: [ 
+			  self
+				  produce: aProvenanceEntityRelation
+				  croppingRelationsWith: aBlock
+				  destinationWriter: aDestinationWriter
+				  lookUp: aFylgjaLookUpContext
+				  using: aFylgjaDerivativeModel ]
 ]
 
 { #category : #accessing }
@@ -150,14 +141,12 @@ FylgjaMigrationEngine >> noTracing [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> produce: aProvenanceEntityRelation destinationWriter: aWriter lookUp: aLookupContext using: aModifiedFylgjaMigrationEngine [
+FylgjaMigrationEngine >> produce: aProvenanceEntityRelation croppingRelationsWith: aBlock destinationWriter: aWriter lookUp: aLookupContext using: aModifiedFylgjaMigrationEngine [
 
 	| rules relation partialResult rule |
 	relation := aModifiedFylgjaMigrationEngine readRelation:
 		            aProvenanceEntityRelation.
-
-
-
+		
 	rules := aLookupContext
 		         lookupRulesForProducing: relation
 		         forWriting: aWriter writingType.
@@ -166,6 +155,7 @@ FylgjaMigrationEngine >> produce: aProvenanceEntityRelation destinationWriter: a
 	rule := rules first.
 	partialResult := rule
 		                 applyTo: relation
+		                 croppingRelationsWith: aBlock
 		                 destinationWriter: aWriter
 		                 lookUp: aLookupContext
 		                 using: aModifiedFylgjaMigrationEngine.
@@ -175,13 +165,14 @@ FylgjaMigrationEngine >> produce: aProvenanceEntityRelation destinationWriter: a
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext [
+FylgjaMigrationEngine >> produce: aProvenanceEntity croppingRelationsWith: aBlock into: aDestinationContext [
 
 	| result derivative |
 	derivative := self derivative.
 
 	result := self
 		          produce: aProvenanceEntity
+		          croppingRelationsWith: aBlock
 		          into: aDestinationContext
 		          using: derivative.
 
@@ -192,15 +183,16 @@ FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext using: aModifiedFylgjaMigrationEngine [
+FylgjaMigrationEngine >> produce: aProvenanceEntity croppingRelationsWith: aBlock into: aDestinationContext using: aModifiedFylgjaMigrationEngine [
 
-	| elementRelation destinationContextRelation resultingRelation lookup  |
+	| elementRelation destinationContextRelation resultingRelation lookup |
+	elementRelation := aModifiedFylgjaMigrationEngine 
+		                   readEntitysContextualizingRelation:
+		                   aProvenanceEntity.
 
-	elementRelation := aModifiedFylgjaMigrationEngine readEntitysContextualizingRelation:
-		           aProvenanceEntity.
-
-	destinationContextRelation := aModifiedFylgjaMigrationEngine readEntitysContextualizingRelation:
-		                      aDestinationContext.
+	destinationContextRelation := aModifiedFylgjaMigrationEngine 
+		                              readEntitysContextualizingRelation:
+		                              aDestinationContext.
 
 	lookup := self
 		          lookupContextFor: elementRelation
@@ -210,18 +202,28 @@ FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext us
 				           selectDerivativeModelFor: aDestinationContext).
 
 	resultingRelation := (aModifiedFylgjaMigrationEngine 
-		                  selectDerivativeModelFor: aDestinationContext)
-		                 writer
-		                 updaterFor: destinationContextRelation
-		                 with: elementRelation
-		                 do: [ :elem :destinationWriter | 
-			                 self
-				                 produce: elementRelation
-				                 destinationWriter: destinationWriter
-				                 lookUp: lookup
-				                 using: aModifiedFylgjaMigrationEngine ].
+		                      selectDerivativeModelFor: aDestinationContext)
+		                     writer
+		                     updaterFor: destinationContextRelation
+		                     with: elementRelation
+		                     do: [ :elem :destinationWriter | 
+			                     self
+				                     produce: elementRelation
+				                     croppingRelationsWith: aBlock
+				                     destinationWriter: destinationWriter
+				                     lookUp: lookup
+				                     using: aModifiedFylgjaMigrationEngine ].
 
 	^ resultingRelation
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext [
+
+	^ self
+		  produce: aProvenanceEntity
+		  croppingRelationsWith: [ :a | a ]
+		  into: aDestinationContext
 ]
 
 { #category : #'as yet unclassified' }

@@ -167,10 +167,7 @@ FylgjaRuleInstaller >> installInto: aFylgja [
 	rule := self build.
 	self isMap
 		ifTrue: [ space installMappingRule: rule ]
-		ifFalse: [ 
-			self isDelegate
-				ifTrue: [ space installDelegatingRule: rule ]
-				ifFalse: [ space installProducingRule: rule ] ]
+		ifFalse: [ space installProducingRule: rule ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -187,15 +184,15 @@ FylgjaRuleInstaller >> invocationToMessageSendToSelf [
 ]
 
 { #category : #testing }
-FylgjaRuleInstaller >> isDelegate [
-
-	^ operation isDelegate
-]
-
-{ #category : #testing }
 FylgjaRuleInstaller >> isMap [
 
 	^ operation isMap
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> mappingStubInstall [
+
+	self operation: FylgjaMapToLinkedtStub new
 ]
 
 { #category : #testing }

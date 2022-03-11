@@ -9,8 +9,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaTranslateReplaceWithStringLiteral >> applyTo: aRelatedProvenanceEntity destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
-
+FylgjaTranslateReplaceWithStringLiteral >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock  destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 	^ aDestinationWriter stringLiteral: string
 ]
 

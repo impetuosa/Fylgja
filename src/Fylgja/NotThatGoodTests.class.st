@@ -38,6 +38,17 @@ NotThatGoodTests >> assertProducedElementsAreEquivalent [
 			isEmpty
 ]
 
+{ #category : #'as yet unclassified' }
+NotThatGoodTests >> assertProducedElementsAreEquivalentBut: aBlock [
+
+	self assert: ((fylgja traces reject: [ :a | 
+			  a first to allContainments size = a last allContainments size 
+				  and: [ 
+					  a first to allReferences size = a last allReferences size and: [ 
+						  a first to allExpressions size = a last allExpressions size ] ] ]) 
+			 reject: aBlock) isEmpty
+]
+
 { #category : #initialization }
 NotThatGoodTests >> assertTracedClasses [
 

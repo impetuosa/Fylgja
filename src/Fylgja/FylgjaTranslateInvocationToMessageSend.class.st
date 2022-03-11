@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaTranslateInvocationToMessageSend >> applyTo: aProvenanceEntityRelation destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+FylgjaTranslateInvocationToMessageSend >> applyTo: aProvenanceEntityRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	^ MOModelWriteTypeBasedCopyResolver new
 		  resolveWriterFor: aProvenanceEntityRelation
@@ -29,11 +29,14 @@ FylgjaTranslateInvocationToMessageSend >> applyTo: aProvenanceEntityRelation des
 							  cull: aFylgjaDerivativeModel ]
 					  arguments: [ :exp | 
 						  argumentCollectionTransform
-							  cull: ((aProvenanceEntityRelation to relationsNamed: #arguments) collect: [ :a | 
-									   aFylgjaDerivativeModel
-										   migrate: a
-										   intoDestinationWriter: exp
-										   lookUp: aFylgjaLookUpContext ])
+							  cull:
+								  ((aProvenanceEntityRelation to relationsNamed: #arguments) 
+									   collect: [ :a | 
+										   aFylgjaDerivativeModel
+											   migrate: a
+											   croppingRelationsWith: aBlock
+											   intoDestinationWriter: exp
+											   lookUp: aFylgjaLookUpContext ])
 							  cull: exp ] ] ]
 ]
 

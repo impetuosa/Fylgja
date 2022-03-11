@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaTranslateCopyAsClass >> applyTo: aProvenanceEntityRelation destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+FylgjaTranslateCopyAsClass >> applyTo: aProvenanceEntityRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	^ aDestinationWriter writeDeclarationUnit: [ :unit | 
 		  unit writeClass: [ :class | 
@@ -13,13 +13,14 @@ FylgjaTranslateCopyAsClass >> applyTo: aProvenanceEntityRelation destinationWrit
 			  class name: aProvenanceEntityRelation name.
 			  class
 				  writeCopyOf: aProvenanceEntityRelation
-				  croppingWith: [ :col | 
-					  col select: [ :relation | 
+				  croppingRelationsWith: [ :col | 
+					  (aBlock value: col) select: [ :relation | 
 						  relation isMOObject not or: [ 
 							  relation to isVariable or: [ relation to isInvocable ] ] ] ]
 				  readingValues: [ :context :value | 
 					  aFylgjaDerivativeModel
 						  migrate: value
+						  croppingRelationsWith: aBlock
 						  intoDestinationWriter: context
 						  lookUp: aFylgjaLookUpContext ] ] ]
 ]
