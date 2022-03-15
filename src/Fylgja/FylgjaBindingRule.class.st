@@ -1,10 +1,10 @@
 Class {
-	#name : #FylgjaMapRule,
+	#name : #FylgjaBindingRule,
 	#superclass : #FylgjaRule,
 	#category : #'Fylgja-Rules'
 }
 
 { #category : #'as yet unclassified' }
-FylgjaMapRule >> printingSymbol [ 
+FylgjaBindingRule >> printingSymbol [ 
 	^ '=>'
 ]

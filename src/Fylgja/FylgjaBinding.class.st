@@ -1,11 +1,11 @@
 Class {
-	#name : #FylgjaMap,
+	#name : #FylgjaBinding,
 	#superclass : #FylgjaOperation,
 	#category : #'Fylgja-Rule-Operations'
 }
 
 { #category : #testing }
-FylgjaMap >> isMap [
+FylgjaBinding >> isBinding [
 
 	^ true
 ]

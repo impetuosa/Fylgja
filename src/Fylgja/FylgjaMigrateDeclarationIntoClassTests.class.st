@@ -17,95 +17,11 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 		anyEntity;
 		copy;
 		installInto: fylgja.
-
-	" By default when going to java "
 	FylgjaRuleInstaller new
-		context: (fylgja selectDerivativeModelFor: destinationClass);
-		anyModelEntityOfTypesWhenGoingClass: { 
-				MOClassFunction.
-				MOClassProcedure.
-				MOFunction.
-				MOProcedure };
-		copyAsMethod;
-		installInto: fylgja.
-
-	FylgjaRuleInstaller new
-		context: (fylgja selectDerivativeModelFor: destinationClass);
-		anyTypeReferenceNamed: #Boolean;
-		copyAsTypesReferenceNamed: #bool;
-		installInto: fylgja.
-
-
-	result := fylgja produce: function into: destinationClass.
-	self assert: result result isKindOf: MOMethod.
-
-	self assert: result result returnTypeReference name equals: #bool.
-
-	self assert: result result isDynamicBinding.
-
-	self assert: result result language isJava.
-	self assert: result result block language isJava.
-	self
-		assert: result result block statements size
-		equals: function block statements size.
-	self
-		assert: result result parameters size
-		equals: function parameters size.
-
-	" First parameter "
-	self
-		assert: result result parameters first name
-		equals: function parameters first name.
-
-	self
-		assert: result result parameters first typeReference name
-		equals: function parameters first typeReference name.
-	self assert: result result parameters first isKindOf: MOParameter.
-	self assert: result result parameters first language isJava.
-	self assert:
-		result result parameters first typeReference language isJava.
-
-
-	" Second parameter "
-
-	self
-		assert: result result parameters second name
-		equals: function parameters second name.
-
-	" The second parameter does not have type specification. So it becomes Variant "
-	self
-		assert: result result parameters second typeReference name
-		equals: #Variant.
-
-	" The second parameter is var-arg kind, without type specification. So it becomes Variant "
-	self
-		assert: result result parameters second
-		isKindOf: MOVariableArgumentsParameter.
-
-	self assert: result result parameters second language isJava.
-	self assert:
-		result result parameters second typeReference language isJava.
-
-
-	self assert: result result language isJava.
-	self deny: result result parent equals: destinationClass.
-	self
-		assert:
-			(result derivative derivativeModels select: [ :a | 
-				 a language isJava ]) size
-		equals: 1.
-	modifiedClass := (result derivative derivativeModels select: [ :a | 
-		                  a language isJava ]) first entities detect: [ :a | 
-		                 a = result result parent ].
-
-	self assert: modifiedClass name equals: destinationClass name.
-	self
-		assert: modifiedClass attributes
-		equals: destinationClass attributes.
-	self
-		assert: modifiedClass methods allButLast
-		equals: destinationClass methods.
-	self assert: modifiedClass methods last equals: result result
+		topLevel;
+		anyEntity;
+		mappingStubInstall;
+		installInto: fylgja
 ]
 
 { #category : #'as yet unclassified' }
@@ -121,15 +37,20 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 		anyEntity;
 		copy;
 		installInto: fylgja.
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		mappingStubInstall;
+		installInto: fylgja.
 
 	" By default when going to java "
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destinationClass);
 		anyModelEntityOfTypesWhenGoingClass: { 
-					MOClassFunction.
+				MOClassFunction.
 				MOClassProcedure.
 				MOFunction.
-				MOProcedure  };
+				MOProcedure };
 		copyAsMethod;
 		installInto: fylgja.
 
@@ -147,12 +68,12 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 		assert: result result returnTypeReference name
 		equals: function returnTypeReference name.
 
-	self assert: result result isDynamicBinding  .
+	self assert: result result isDynamicBinding.
 
 	self assert: result result language isJava.
 	self assert: result result block language isJava.
 	self
-		assert: result result block statements size 
+		assert: result result block statements size
 		equals: function block statements size.
 	self
 		assert: result result parameters size
@@ -219,15 +140,20 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 		anyEntity;
 		copy;
 		installInto: fylgja.
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		mappingStubInstall;
+		installInto: fylgja.
 
 	" By default when going to java "
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destinationClass);
 		anyModelEntityOfTypesWhenGoingClass: { 
-					MOClassFunction.
+				MOClassFunction.
 				MOClassProcedure.
 				MOFunction.
-				MOProcedure  };
+				MOProcedure };
 		copyAsMethod;
 		installInto: fylgja.
 
@@ -239,7 +165,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 		assert: result result returnTypeReference name
 		equals: function returnTypeReference name.
 
-	self assert: result result isDynamicBinding .
+	self assert: result result isDynamicBinding.
 
 	self assert: result result language isJava.
 	self assert: result result block language isJava.
@@ -304,11 +230,14 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 		= 2.
 	self assert:
 		((result allNewEntities select: [ :a | a isKindOf: MOIfElse ]) 
-			 allSatisfy: [ :a | MOBlock = a ifTrue species  ]).
+			 allSatisfy: [ :a | MOBlock = a ifTrue species ]).
 
 	self assert:
 		((result allNewEntities select: [ :a | a isKindOf: MOIfElse ]) 
-			 allSatisfy: [ :a | { MOBlock . MOEmptyBlock } includes: a ifFalse species ]).
+			 allSatisfy: [ :a | 
+				 { 
+					 MOBlock.
+					 MOEmptyBlock } includes: a ifFalse species ]).
 	self assert:
 		((result allNewEntities select: [ :a | a isKindOf: MOIfElse ]) 
 			 allSatisfy: [ :a | a condition isNotNil ])
@@ -326,6 +255,11 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 		context: destinationContext;
 		anyEntity;
 		copy;
+		installInto: fylgja.
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		mappingStubInstall;
 		installInto: fylgja.
 
 	result := fylgja produce: variable into: destinationContext.
@@ -347,15 +281,19 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 		anyEntity;
 		copy;
 		installInto: fylgja.
-
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		mappingStubInstall;
+		installInto: fylgja.
 	" By default when going to java "
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destinationClass);
 		anyModelEntityOfTypesWhenGoingClass: { 
-					MOClassFunction.
+				MOClassFunction.
 				MOClassProcedure.
 				MOFunction.
-				MOProcedure  };
+				MOProcedure };
 		copyAsMethod;
 		installInto: fylgja.
 
@@ -379,7 +317,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 
 	self assert: result result returnTypeReference name equals: #Boolean.
 
-	self assert: result result isDynamicBinding .
+	self assert: result result isDynamicBinding.
 
 	self assert: result result language isJava.
 	self assert: result result block language isJava.
@@ -455,6 +393,11 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 		anyEntity;
 		copy;
 		installInto: fylgja.
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		mappingStubInstall;
+		installInto: fylgja.
 
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destination);
@@ -529,7 +472,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyOnlyPr
 	| provenance destination result |
 	provenance := self logErrorFunction.
 	destination := self configClassConfigPackage.
-		fylgja activateTracing.
+	fylgja activateTracing.
 
 
 	" By default in the system we copy"
@@ -538,12 +481,16 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyOnlyPr
 		anyEntity;
 		copy;
 		installInto: fylgja.
-
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		mappingStubInstall;
+		installInto: fylgja.
 
 	result := fylgja produce: provenance into: destination.
 
 	" When copying all the produced things should be of the same type "
-	self assertTracedClasses .
+	self assertTracedClasses.
 
 	" When copying all the produced things look similar from the point of view of composition "
 	self assertProducedElementsAreEquivalent

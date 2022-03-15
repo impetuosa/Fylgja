@@ -4,7 +4,9 @@ Class {
 	#instVars : [
 		'models',
 		'migrationRuleSpace',
-		'tracing'
+		'tracing',
+		'automaticMapping',
+		'automapDictionary'
 	],
 	#category : #'Fylgja-Model'
 }
@@ -20,6 +22,85 @@ FylgjaMigrationEngine >> addModel: aMOHeterogeneousAbstractSemanticGraph [
 	self migrationRuleSpace registerSpace: aMOHeterogeneousAbstractSemanticGraph name.
 	^ self models add: aMOHeterogeneousAbstractSemanticGraph.
 	
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> applyNewMappingRuleOverStubs: aCollection contextModel: contextModel using: aModifiedFylgjaMigrationEngine [
+
+	| newElement |
+	aCollection do: [ :stub | 
+		| elementRelation destinationContextRelation lookup |
+		elementRelation := stub provenance.
+
+		destinationContextRelation := aModifiedFylgjaMigrationEngine 
+			                              readEntitysContextualizingRelation:
+			                              stub parent.
+
+		lookup := self
+			          lookupContextFor: elementRelation
+			          toContext: destinationContextRelation
+			          model: contextModel.
+
+
+		newElement := contextModel writer
+			              updaterFor: destinationContextRelation
+			              with: elementRelation
+			              do: [ :elem :destinationWriter | 
+				              self
+					              migrate: elementRelation
+					              croppingRelationsWith: [ :a | a ]
+					              intoDestinationWriter: destinationWriter
+					              lookUp: lookup
+					              using: aModifiedFylgjaMigrationEngine ].
+		self model: contextModel swap: stub with: newElement ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> autoMap: aProvenanceEntity to: aDestinationEntity using: aModifiedFylgjaMigrationEngine [
+
+	(automapDictionary
+		 at: aProvenanceEntity
+		 ifAbsentPut: [ OrderedCollection new ]) add: aDestinationEntity
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> automapDuring: aFullBlockClosure [
+
+	| prev ret |
+	automaticMapping ifFalse: [ automapDictionary := Dictionary new ].
+	prev := automaticMapping.
+	automaticMapping := true.
+
+	ret := aFullBlockClosure ensure: [ automaticMapping := prev ].
+	automaticMapping ifFalse: [ 
+		automapDictionary keysAndValuesDo: [ :origin :destinations | 
+			destinations do: [ :d | 
+				self map: origin to: d using: ret derivative ] ] ].
+	^ ret
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> bind: aProvenanceEntityRelation croppingRelationsWith: aBlock intoDestinationWriter: aWriter lookUp: aLookupContext using: aModifiedFylgjaMigrationEngine [
+
+	| rules relation partialResult rule |
+	relation := aModifiedFylgjaMigrationEngine readRelation:
+		            aProvenanceEntityRelation.
+
+	rules := aLookupContext
+		         lookupRulesForBinding: relation
+		         forWriting: aWriter writingType.
+
+	rules ifEmpty: [ NotFound signal: 'No mapping rule found ' ].
+	rule := rules first.
+	partialResult := rule
+		                 applyTo: relation
+		                 croppingRelationsWith: aBlock
+		                 destinationWriter: aWriter
+		                 lookUp: aLookupContext
+		                 using: aModifiedFylgjaMigrationEngine.
+ 
+	self trace: relation to: rule produced: partialResult using: aModifiedFylgjaMigrationEngine.
+	^ partialResult
 ]
 
 { #category : #'as yet unclassified' }
@@ -48,7 +129,8 @@ FylgjaMigrationEngine >> initialize [
 
 	super initialize.
 	migrationRuleSpace := FylgjaMigrationRuleSpace new.
-	tracing := FylgjaMigrationNullTracingStrategy new
+	tracing := FylgjaMigrationNullTracingStrategy new.
+	automaticMapping := false. 
 ]
 
 { #category : #'as yet unclassified' }
@@ -80,27 +162,28 @@ FylgjaMigrationEngine >> lookupRulesForProducing: aProvenanceEntity toContext: a
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> map: aProvenanceEntityRelation croppingRelationsWith: aBlock intoDestinationWriter: aWriter lookUp: aLookupContext using: aModifiedFylgjaMigrationEngine [
+FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aModifiedFylgjaMigrationEngine [
 
-	| rules relation partialResult rule |
-	relation := aModifiedFylgjaMigrationEngine readRelation:
-		            aProvenanceEntityRelation.
+	| context contextModel |
+	self assert: aProvenanceEntity isDeclaration.
+	self assert: aDestinationEntity isDeclaration.
 
-	rules := aLookupContext
-		         lookupRulesForMapping: relation
-		         forWriting: aWriter writingType.
+	contextModel := aModifiedFylgjaMigrationEngine 
+		                selectDerivativeModelFor: aDestinationEntity.
+	context := aDestinationEntity parent ifNil: [ contextModel ].
 
-	rules ifEmpty: [ NotFound signal: 'No mapping rule found ' ].
-	rule := rules first.
-	partialResult := rule
-		                 applyTo: relation
-		                 croppingRelationsWith: aBlock
-		                 destinationWriter: aWriter
-		                 lookUp: aLookupContext
-		                 using: aModifiedFylgjaMigrationEngine.
- 
-	self trace: relation to: rule produced: partialResult.
-	^ partialResult
+	FylgjaRuleInstaller new
+		context: context;
+		whenIsReferenceWithCandidate: aProvenanceEntity;
+		bindRewriteTo: aDestinationEntity;
+		installInto: aModifiedFylgjaMigrationEngine.
+
+	self
+		applyNewMappingRuleOverStubs: (aModifiedFylgjaMigrationEngine
+				 stubReferencesTo: aProvenanceEntity
+				 from: contextModel)
+		contextModel: contextModel
+		using: aModifiedFylgjaMigrationEngine
 ]
 
 { #category : #'as yet unclassified' }
@@ -108,8 +191,9 @@ FylgjaMigrationEngine >> migrate: aProvenanceEntityRelation croppingRelationsWit
 
 	^ aProvenanceEntityRelation isReference
 		  ifTrue: [ 
+				aProvenanceEntityRelation to isInvocation ifTrue: [ self halt  ].
 			  self
-				  map: aProvenanceEntityRelation
+				  bind: aProvenanceEntityRelation
 				  croppingRelationsWith: aBlock
 				  intoDestinationWriter: aDestinationWriter
 				  lookUp: aFylgjaLookUpContext
@@ -130,6 +214,14 @@ FylgjaMigrationEngine >> migrationRuleSpace [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> model: aMOModelDerivative swap: aFylgjaCandidateStub with: aMOVariableReference [
+	aMOModelDerivative
+		swap: aFylgjaCandidateStub
+		with: aMOVariableReference.
+	tracing swap: aFylgjaCandidateStub with: aMOVariableReference
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> models [ 
 
 	^ models ifNil: [ models := Set new ]
@@ -146,7 +238,7 @@ FylgjaMigrationEngine >> produce: aProvenanceEntityRelation croppingRelationsWit
 	| rules relation partialResult rule |
 	relation := aModifiedFylgjaMigrationEngine readRelation:
 		            aProvenanceEntityRelation.
-		
+
 	rules := aLookupContext
 		         lookupRulesForProducing: relation
 		         forWriting: aWriter writingType.
@@ -160,7 +252,11 @@ FylgjaMigrationEngine >> produce: aProvenanceEntityRelation croppingRelationsWit
 		                 lookUp: aLookupContext
 		                 using: aModifiedFylgjaMigrationEngine.
 
-	self trace: relation to: rule produced: partialResult.
+	self
+		trace: relation
+		to: rule
+		produced: partialResult
+		using: aModifiedFylgjaMigrationEngine.
 	^ partialResult
 ]
 
@@ -185,7 +281,7 @@ FylgjaMigrationEngine >> produce: aProvenanceEntity croppingRelationsWith: aBloc
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> produce: aProvenanceEntity croppingRelationsWith: aBlock into: aDestinationContext using: aModifiedFylgjaMigrationEngine [
 
-	| elementRelation destinationContextRelation resultingRelation lookup |
+	| elementRelation destinationContextRelation resultingRelation lookup destinationModel |
 	elementRelation := aModifiedFylgjaMigrationEngine 
 		                   readEntitysContextualizingRelation:
 		                   aProvenanceEntity.
@@ -193,17 +289,15 @@ FylgjaMigrationEngine >> produce: aProvenanceEntity croppingRelationsWith: aBloc
 	destinationContextRelation := aModifiedFylgjaMigrationEngine 
 		                              readEntitysContextualizingRelation:
 		                              aDestinationContext.
-
+	destinationModel := aModifiedFylgjaMigrationEngine 
+		                    selectDerivativeModelFor: aDestinationContext.
 	lookup := self
 		          lookupContextFor: elementRelation
 		          toContext: destinationContextRelation
-		          model:
-			          (aModifiedFylgjaMigrationEngine 
-				           selectDerivativeModelFor: aDestinationContext).
+		          model: destinationModel.
 
-	resultingRelation := (aModifiedFylgjaMigrationEngine 
-		                      selectDerivativeModelFor: aDestinationContext)
-		                     writer
+
+	resultingRelation := destinationModel writer
 		                     updaterFor: destinationContextRelation
 		                     with: elementRelation
 		                     do: [ :elem :destinationWriter | 
@@ -233,12 +327,16 @@ FylgjaMigrationEngine >> selectDerivativeModelFor: aDestinationContext [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> trace: aProvenanceEntity to: aRule produced: partialResult [
+FylgjaMigrationEngine >> trace: aProvenanceEntity to: aRule produced: partialResult using: aModifiedFylgjaMigrationEngine [
 
-	tracing
-		trace: aProvenanceEntity
-		to: aRule
-		produced: partialResult
+
+	tracing trace: aProvenanceEntity to: aRule produced: partialResult.
+
+	(automaticMapping and: [ partialResult isDeclaration ]) ifTrue: [ 
+		self
+			autoMap: aProvenanceEntity to
+			to: partialResult
+			using: aModifiedFylgjaMigrationEngine ]
 ]
 
 { #category : #'as yet unclassified' }

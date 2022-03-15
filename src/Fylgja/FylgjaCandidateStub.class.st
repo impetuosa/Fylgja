@@ -1,13 +1,21 @@
 Class {
 	#name : #FylgjaCandidateStub,
 	#superclass : #FylgjaAbstractCandidateStub,
-	#instVars : [
-		'#originalCandidate => MOPropertySlot'
-	],
 	#category : #'Fylgja-ReadersWriters'
 }
 
 { #category : #accessing }
-FylgjaCandidateStub >> originalCandidate: aMOPrimitiveType [ 
-	originalCandidate := aMOPrimitiveType
+FylgjaCandidateStub >> acceptVisitor: aMOJavaCodeGenerator [
+
+	self provenance to acceptVisitor: aMOJavaCodeGenerator
+]
+
+{ #category : #accessing }
+FylgjaCandidateStub >> printOn: aStream [
+
+	aStream
+		nextPutAll: 'Fylgja STUB: ';
+		nextPutAll: (self parent name ifNil: [ self parent className ]);
+		nextPutAll: 'Should Point To: ';
+		print: candidate
 ]

@@ -4,6 +4,11 @@ Class {
 	#category : #'Fylgja-Tracing'
 }
 
+{ #category : #accessing }
+FylgjaMigrationTracingStrategy >> swap: aFylgjaCandidateStub with: aMOVariableReference [ 
+	self subclassResponsibility 
+]
+
 { #category : #'as yet unclassified' }
 FylgjaMigrationTracingStrategy >> trace: provenance to: aRule produced: destination [
 

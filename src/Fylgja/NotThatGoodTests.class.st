@@ -52,8 +52,9 @@ NotThatGoodTests >> assertProducedElementsAreEquivalentBut: aBlock [
 { #category : #initialization }
 NotThatGoodTests >> assertTracedClasses [
 
-	self assert:
-		(fylgja traces reject: [ :a | a first to class = a last class ])
+	self assert: (fylgja traces reject: [ :a | 
+			 a first to class = a last class or: [ 
+				 a last isFylgjaStub and: [ a last provenance = a first ] ] ])
 			isEmpty
 ]
 

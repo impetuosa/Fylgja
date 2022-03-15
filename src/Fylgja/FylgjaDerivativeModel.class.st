@@ -37,6 +37,12 @@ FylgjaDerivativeModel >> isDerivativeEntity: anEntity [
 	^ true
 ]
 
+{ #category : #accessing }
+FylgjaDerivativeModel >> map: aProvenanceEntity to: aDestinationEntity [
+
+	^ fylgja map: aProvenanceEntity to: aDestinationEntity using: self
+]
+
 { #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> migrate: aProvenanceEntityRelation croppingRelationsWith: aBlock intoDestinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext [
 
@@ -46,6 +52,11 @@ FylgjaDerivativeModel >> migrate: aProvenanceEntityRelation croppingRelationsWit
 		  intoDestinationWriter: aDestinationWriter
 		  lookUp: aFylgjaLookUpContext
 		  using: self
+]
+
+{ #category : #accessing }
+FylgjaDerivativeModel >> migrationRuleSpace [
+	^ fylgja migrationRuleSpace
 ]
 
 { #category : #'as yet unclassified' }
@@ -125,8 +136,21 @@ FylgjaDerivativeModel >> selectDerivativeModelFor: aDestinationContext ifNone: a
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> trace: aProvenanceEntity to: aRule produced: partialResult [
-	fylgja trace: aProvenanceEntity to: aRule produced: partialResult
+FylgjaDerivativeModel >> stubReferencesTo: aMOClassFunction [ 
+	self shouldBeImplemented.
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> stubReferencesTo: aProvenanceEntity from: aDestinationModel [
+
+	^ aDestinationModel entities select: [ :a | 
+		  (a isKindOf: FylgjaCandidateStub) and: [ 
+			  a candidate = aProvenanceEntity ] ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> trace: aProvenanceEntity to: aRule produced: partialResult [ 
+	fylgja trace: aProvenanceEntity to: aRule produced: partialResult using: self 
 ]
 
 { #category : #'as yet unclassified' }

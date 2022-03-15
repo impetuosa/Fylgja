@@ -16,7 +16,11 @@ FylgjaMigrateDeclarationIntoPackageStepByStepTests >> installRulesFor: destinati
 		anyEntity;
 		copy;
 		installInto: fylgja.
-
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		mappingStubInstall;
+		installInto: fylgja.
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destination);
 		prefixUnaryOperator: #Not;

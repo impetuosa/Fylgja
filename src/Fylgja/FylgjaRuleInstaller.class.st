@@ -83,10 +83,18 @@ FylgjaRuleInstaller >> binaryOperator: aString [
 			   yourself)
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> bindRewriteTo: aDestinationEntity [
+
+	^ self operation: (FylgjaBindRewrite new
+			   destinationEntity: aDestinationEntity;
+			   yourself)
+]
+
 { #category : #accessing }
 FylgjaRuleInstaller >> build [
-	^ (operation isMap
-		   ifTrue: [ FylgjaMapRule new ]
+	^ (operation isBinding
+		   ifTrue: [ FylgjaBindingRule new ]
 		   ifFalse: [ FylgjaProductionRule new ])
 		  condition: condition;
 		  operation: operation;
@@ -101,8 +109,8 @@ FylgjaRuleInstaller >> condition: aCondition [
 ]
 
 { #category : #accessing }
-FylgjaRuleInstaller >> context: aMOMethod [ 
-	context := aMOMethod
+FylgjaRuleInstaller >> context: anInstallationContext [ 
+	context := anInstallationContext
 ]
 
 { #category : #accessing }
@@ -165,7 +173,7 @@ FylgjaRuleInstaller >> installInto: aFylgja [
 						         ensureNamespace: context
 						         model: (self modelFor: aFylgja) ] ].
 	rule := self build.
-	self isMap
+	self isBinding
 		ifTrue: [ space installMappingRule: rule ]
 		ifFalse: [ space installProducingRule: rule ]
 ]
@@ -184,15 +192,15 @@ FylgjaRuleInstaller >> invocationToMessageSendToSelf [
 ]
 
 { #category : #testing }
-FylgjaRuleInstaller >> isMap [
+FylgjaRuleInstaller >> isBinding [
 
-	^ operation isMap
+	^ operation isBinding
 ]
 
 { #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> mappingStubInstall [
 
-	self operation: FylgjaMapToLinkedtStub new
+	self operation: FylgjaBindToLinkedStub new
 ]
 
 { #category : #testing }
@@ -202,13 +210,9 @@ FylgjaRuleInstaller >> matchesPattern: aFylgjaPattern [
 ]
 
 { #category : #hooks }
-FylgjaRuleInstaller >> modelFor: aFylgjaModel [
+FylgjaRuleInstaller >> modelFor: aFylgjaMigrationEngine [
 
-	^ (context isKindOf: MOModel)
-		  ifTrue: [ 
-			  self assert: (aFylgjaModel models includes: context).
-			  context ]
-		  ifFalse: [ aFylgjaModel selectDerivativeModelFor: context ]
+	^ context resolveModelUsing: aFylgjaMigrationEngine
 ]
 
 { #category : #'as yet unclassified' }
@@ -243,11 +247,6 @@ FylgjaRuleInstaller >> referenceNamed: aString [
 	^ self condition: (FylgjaConditionReferenceNamed new
 			   name: aString;
 			   yourself)
-]
-
-{ #category : #accessing }
-FylgjaRuleInstaller >> referenceTo: aJinDAMAttribute [ 
-	self shouldBeImplemented.
 ]
 
 { #category : #'as yet unclassified' }
@@ -293,6 +292,14 @@ FylgjaRuleInstaller >> whenEntityIsIdenticalTo: anAlcixLocalVariable [
 
 	^ self condition: (FylgjaConditionEntityIdentity new
 			   entity: anAlcixLocalVariable;
+			   yourself)
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> whenIsReferenceWithCandidate: aProvenanceCandidate [
+
+	^ self condition: (FylgjaConditionReferenceCandidateIs new
+			   candidate: aProvenanceCandidate;
 			   yourself)
 ]
 

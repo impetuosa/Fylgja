@@ -16,6 +16,11 @@ FylgjaMigrationNullTracingStrategy >> noTracing [
 	^ self 
 ]
 
+{ #category : #accessing }
+FylgjaMigrationNullTracingStrategy >> swap: aFylgjaCandidateStub with: aMOVariableReference [ 
+	 " nothing to do "
+]
+
 { #category : #'as yet unclassified' }
 FylgjaMigrationNullTracingStrategy >> trace: provenance to: aRule produced: destination [
 	" nothing todo "

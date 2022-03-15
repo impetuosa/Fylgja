@@ -11,7 +11,7 @@ FylgjaOperation >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlo
 ]
 
 { #category : #testing }
-FylgjaOperation >> isMap [ 
+FylgjaOperation >> isBinding [ 
 	^ false. 
 ]
 

@@ -10,12 +10,18 @@ FylgjaMigrateDeclarationIntoPackageCroppingTests >> installRulesFor: destination
 	| vbCrlf installer |
 	vbCrlf := self vbCrlf.
 
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		mappingStubInstall;
+		installInto: fylgja.
 	" By default in the system we copy"
 	FylgjaRuleInstaller new
 		topLevel;
 		anyEntity;
 		copy;
 		installInto: fylgja.
+
 
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destination);

@@ -17,6 +17,14 @@ FylgjaMigrateDeclarationIntoPackageTests >> installRulesFor: destination [
 		copy;
 		installInto: fylgja.
 
+
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		mappingStubInstall;
+		installInto: fylgja.
+
+
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destination);
 		prefixUnaryOperator: #Not;
@@ -99,9 +107,6 @@ FylgjaMigrateDeclarationIntoPackageTests >> installRulesFor: destination [
 		copyAsTypesReferenceNamed: #Object;
 		installInto: fylgja.
 
-
-
-
 	FylgjaRuleInstaller new
 		atLanguageNamed: #java;
 		anyInvocation;
@@ -174,6 +179,11 @@ FylgjaMigrateDeclarationIntoPackageTests >> testErrorHandlingToPackageOnlyCopy [
 		anyEntity;
 		copy;
 		installInto: fylgja.
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		mappingStubInstall;
+		installInto: fylgja.
 
 
 	result := fylgja produce: provenance into: destination.
@@ -183,19 +193,19 @@ FylgjaMigrateDeclarationIntoPackageTests >> testErrorHandlingToPackageOnlyCopy [
 
 	" When copying all the produced things look similar from the point of view of composition "
 	self assertProducedElementsAreEquivalentBut: [ :a | 
-		self
-			assert: a third allExpressionRelations first name
-			equals: #packageReference.
-		self assert: a third allExpressionRelations size equals: 1.
-		self assert: a first to allExpressionRelations size equals: 0.
-		true ]
+		a third isFylgjaStub or: [ 
+			self
+				assert: a third allExpressionRelations first name
+				equals: #packageReference.
+			self assert: a third allExpressionRelations size equals: 1.
+			self assert: a first to allExpressionRelations size equals: 0.
+			true ] ]
 ]
 
 { #category : #initialization }
 FylgjaMigrateDeclarationIntoPackageTests >> testModuleCustomerOrdersOnlyCopy [
 
 	| provenance destination result |
-
 	provenance := self moduleCustomerOrders.
 	destination := self configPackage.
 	fylgja activateTracing.
@@ -207,11 +217,16 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleCustomerOrdersOnlyCopy [
 		anyEntity;
 		copy;
 		installInto: fylgja.
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		mappingStubInstall;
+		installInto: fylgja.
 
 
 	result := fylgja produce: provenance into: destination.
-		" When copying all the produced things should be of the same type "
-	self assertTracedClasses .
+	" When copying all the produced things should be of the same type "
+	self assertTracedClasses.
 
 	" When copying all the produced things look similar from the point of view of composition "
 	self assertProducedElementsAreEquivalent
@@ -238,7 +253,6 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleCustomerOrdersToPackage [
 FylgjaMigrateDeclarationIntoPackageTests >> testModuleDomainFunctionWrappersOnlyCopy [
 
 	| provenance destination result |
-
 	provenance := self moduleDomainFunctionWrappers.
 	destination := self configPackage.
 	fylgja activateTracing.
@@ -250,11 +264,16 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleDomainFunctionWrappersOnly
 		anyEntity;
 		copy;
 		installInto: fylgja.
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		mappingStubInstall;
+		installInto: fylgja.
 
 
 	result := fylgja produce: provenance into: destination.
-			" When copying all the produced things should be of the same type "
-	self assertTracedClasses .
+	" When copying all the produced things should be of the same type "
+	self assertTracedClasses.
 
 	" When copying all the produced things look similar from the point of view of composition "
 	self assertProducedElementsAreEquivalent
@@ -283,8 +302,6 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleDomainFunctionWrappersToPa
 FylgjaMigrateDeclarationIntoPackageTests >> testModuleInventoryOnlyCopy [
 
 	| provenance destination result |
-
-	
 	provenance := self moduleInventory.
 	destination := self configPackage.
 	fylgja activateTracing.
@@ -296,11 +313,16 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleInventoryOnlyCopy [
 		anyEntity;
 		copy;
 		installInto: fylgja.
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		mappingStubInstall;
+		installInto: fylgja.
 
 
 	result := fylgja produce: provenance into: destination.
-		" When copying all the produced things should be of the same type "
-	self assertTracedClasses .
+	" When copying all the produced things should be of the same type "
+	self assertTracedClasses.
 
 	" When copying all the produced things look similar from the point of view of composition "
 	self assertProducedElementsAreEquivalent
@@ -329,7 +351,6 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleInventoryToPackage [
 FylgjaMigrateDeclarationIntoPackageTests >> testModulePrivilegesOnlyCopy [
 
 	| provenance destination result |
-
 	provenance := self modulePrivileges.
 	destination := self configPackage.
 	fylgja activateTracing.
@@ -341,11 +362,15 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModulePrivilegesOnlyCopy [
 		anyEntity;
 		copy;
 		installInto: fylgja.
-
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		mappingStubInstall;
+		installInto: fylgja.
 
 	result := fylgja produce: provenance into: destination.
-		" When copying all the produced things should be of the same type "
-	self assertTracedClasses .
+	" When copying all the produced things should be of the same type "
+	self assertTracedClasses.
 
 	" When copying all the produced things look similar from the point of view of composition "
 	self assertProducedElementsAreEquivalent
@@ -374,7 +399,6 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModulePrivilegesToPackage [
 FylgjaMigrateDeclarationIntoPackageTests >> testModulePurchaseOrdersOnlyCopy [
 
 	| provenance destination result |
-
 	provenance := self modulePurchaseOrders.
 	destination := self configPackage.
 	fylgja activateTracing.
@@ -387,10 +411,14 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModulePurchaseOrdersOnlyCopy [
 		copy;
 		installInto: fylgja.
 
-
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		mappingStubInstall;
+		installInto: fylgja.
 	result := fylgja produce: provenance into: destination.
-		" When copying all the produced things should be of the same type "
-	self assertTracedClasses .
+	" When copying all the produced things should be of the same type "
+	self assertTracedClasses.
 
 	" When copying all the produced things look similar from the point of view of composition "
 	self assertProducedElementsAreEquivalent
@@ -417,7 +445,6 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModulePurchaseOrdersToPackage [
 FylgjaMigrateDeclarationIntoPackageTests >> testModuleReflectiveOnlyCopy [
 
 	| provenance destination result |
-
 	provenance := self moduleReflective.
 	destination := self configPackage.
 	fylgja activateTracing.
@@ -429,11 +456,15 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleReflectiveOnlyCopy [
 		anyEntity;
 		copy;
 		installInto: fylgja.
-
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		mappingStubInstall;
+		installInto: fylgja.
 
 	result := fylgja produce: provenance into: destination.
-		" When copying all the produced things should be of the same type "
-	self assertTracedClasses .
+	" When copying all the produced things should be of the same type "
+	self assertTracedClasses.
 
 	" When copying all the produced things look similar from the point of view of composition "
 	self assertProducedElementsAreEquivalent
@@ -462,8 +493,6 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleReflectiveToPackage [
 FylgjaMigrateDeclarationIntoPackageTests >> testModuleUtilitiesOnlyCopy [
 
 	| provenance destination result |
-
-	
 	provenance := self moduleUtilities.
 	destination := self configPackage.
 	fylgja activateTracing.
@@ -475,11 +504,15 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleUtilitiesOnlyCopy [
 		anyEntity;
 		copy;
 		installInto: fylgja.
-
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		mappingStubInstall;
+		installInto: fylgja.
 
 	result := fylgja produce: provenance into: destination.
-		" When copying all the produced things should be of the same type "
-	self assertTracedClasses .
+	" When copying all the produced things should be of the same type "
+	self assertTracedClasses.
 
 	" When copying all the produced things look similar from the point of view of composition "
 	self assertProducedElementsAreEquivalent
@@ -534,6 +567,11 @@ FylgjaMigrateDeclarationIntoPackageTests >> testRecordsetWrapperoPackageOnlyCopy
 		topLevel;
 		anyEntity;
 		copy;
+		installInto: fylgja.
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		mappingStubInstall;
 		installInto: fylgja.
 
 

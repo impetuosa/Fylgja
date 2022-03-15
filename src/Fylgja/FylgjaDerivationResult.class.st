@@ -30,6 +30,12 @@ FylgjaDerivationResult >> entity [
 	self shouldBeImplemented.
 ]
 
+{ #category : #accessing }
+FylgjaDerivationResult >> map: aProvenanceEntity to: aDestinationEntity [
+
+	derivative map: aProvenanceEntity to: aDestinationEntity
+]
+
 { #category : #'as yet unclassified' }
 FylgjaDerivationResult >> produce: aProvenanceEntity [
 

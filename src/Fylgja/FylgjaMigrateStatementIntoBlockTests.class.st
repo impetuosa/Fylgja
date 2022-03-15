@@ -16,7 +16,11 @@ FylgjaMigrateStatementIntoBlockTests >> testProduceVariableIntoMethodByCopyNodeT
 		anyEntity;
 		copy;
 		installInto: fylgja.
-
+	FylgjaRuleInstaller new
+		topLevel;
+		anyEntity;
+		mappingStubInstall;
+		installInto: fylgja.
 	result := fylgja produce: variable into: destinationContext.
 	self assert: (result result isKindOf: MOLocalVariable).
 	self assert: result result language isJava.
@@ -30,8 +34,7 @@ FylgjaMigrateStatementIntoBlockTests >> testProduceVariableIntoMethodByCopyNodeT
 		result result parent statements last name = variable name.
 	self assert: result result parent statements last language isJava.
 	self assert: result result parent statements last typeReference name
-		= variable type name.
-
+		= variable type name
 ]
 
 { #category : #initialization }

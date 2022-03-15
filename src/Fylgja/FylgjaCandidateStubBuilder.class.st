@@ -2,7 +2,9 @@ Class {
 	#name : #FylgjaCandidateStubBuilder,
 	#superclass : #MOModelBuilderDelegate,
 	#instVars : [
-		'originalCandidate'
+		'candidate',
+		'parent',
+		'provenance'
 	],
 	#category : #'Fylgja-ReadersWriters'
 }
@@ -10,9 +12,21 @@ Class {
 { #category : #'as yet unclassified' }
 FylgjaCandidateStubBuilder >> buildsType [
 
-	^ originalCandidate
+	^ candidate
 		  ifNil: [ FylgjaMissingCandidateStub ]
 		  ifNotNil: [ FylgjaCandidateStub ]
+]
+
+{ #category : #accessing }
+FylgjaCandidateStubBuilder >> candidate [
+
+	^ candidate
+]
+
+{ #category : #accessing }
+FylgjaCandidateStubBuilder >> candidate: aCandidate [ 
+
+	 candidate := aCandidate 
 ]
 
 { #category : #accessing }
@@ -22,15 +36,13 @@ FylgjaCandidateStubBuilder >> loadBuilderWithEntity: anEntity [
 ]
 
 { #category : #accessing }
-FylgjaCandidateStubBuilder >> originalCandidate [
-
-	^ originalCandidate
+FylgjaCandidateStubBuilder >> parent [
+	^ parent
 ]
 
-{ #category : #'as yet unclassified' }
-FylgjaCandidateStubBuilder >> originalCandidate: anElement [
-
-	originalCandidate := anElement
+{ #category : #accessing }
+FylgjaCandidateStubBuilder >> parent: aMOPrimitiveTypeReference [ 
+	parent := aMOPrimitiveTypeReference
 ]
 
 { #category : #accessing }
@@ -38,7 +50,19 @@ FylgjaCandidateStubBuilder >> privateBuild [
 
 	| instance |
 	instance := self instantiate: self buildsType.
-	self originalCandidate ifNotNil: [ 
-		instance originalCandidate: self originalCandidate ].
+	instance provenance: self provenance.
+	self candidate ifNotNil: [ instance candidate: self candidate ].
+
 	^ instance
+]
+
+{ #category : #accessing }
+FylgjaCandidateStubBuilder >> provenance [
+	 ^ provenance ifNil: [ self error: ' Cannot build a stub without provenance ' ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaCandidateStubBuilder >> provenance: aMOObjectObjectRelation [
+
+	provenance := aMOObjectObjectRelation
 ]

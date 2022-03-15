@@ -43,15 +43,14 @@ FylgjaMigrateDeclarationIntoClassPreMappingTests >> installRulesFor: destination
 FylgjaMigrateDeclarationIntoClassPreMappingTests >> testProduceMethodIntoClassByCopyNodeTransformAddRuleToMapBooleanToBool [
 
 	| function destinationClass result |
-	
-	
 	function := self logErrorFunction.
 	destinationClass := self configClassConfigPackage.
-	
-	
+
+
 	self installRulesFor: destinationClass.
-	
-	result := fylgja produce: function into: destinationClass.
-	self halt. 
-	
+
+	result := fylgja automapDuring: [ 
+		          fylgja produce: function into: destinationClass ].
+
+	self halt
 ]
