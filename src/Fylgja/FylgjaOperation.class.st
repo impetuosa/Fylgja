@@ -4,12 +4,6 @@ Class {
 	#category : #'Fylgja-Rule-Operations'
 }
 
-{ #category : #'as yet unclassified' }
-FylgjaOperation >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgja [
-
-	self subclassResponsibility
-]
-
 { #category : #testing }
 FylgjaOperation >> isBinding [ 
 	^ false. 
@@ -30,6 +24,16 @@ FylgjaOperation >> writeCopyOf: aProvenanceEntityRelation croppingRelationsWith:
 						  migrate: value
 						  croppingRelationsWith: aBlock
 						  intoDestinationWriter: contextWriter
+						  lookUp: aFylgjaLookUpContext ]
+				  bindingWithCandidates: [ 
+					  :contextWriter 
+					  :provenanceEntityCandidate 
+					  :destinationEntity | 
+					  aFylgjaDerivativeModel
+						  bindAndReturnEntity: destinationEntity
+						  as: provenanceEntityCandidate
+						  croppingRelationsWith: aBlock
+						  usingWriter: contextWriter
 						  lookUp: aFylgjaLookUpContext ] ]
 ]
 

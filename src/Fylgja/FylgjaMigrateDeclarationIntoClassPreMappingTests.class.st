@@ -49,8 +49,7 @@ FylgjaMigrateDeclarationIntoClassPreMappingTests >> testProduceMethodIntoClassBy
 
 	self installRulesFor: destinationClass.
 
-	result := fylgja automapDuring: [ 
-		          fylgja produce: function into: destinationClass ].
+	result := fylgja produce: function into: destinationClass.
 
 	self halt
 ]

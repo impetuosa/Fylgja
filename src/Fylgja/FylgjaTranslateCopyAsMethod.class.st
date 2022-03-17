@@ -21,6 +21,12 @@ FylgjaTranslateCopyAsMethod >> applyTo: aProvenanceEntityRelation croppingRelati
 					  migrate: value
 					  croppingRelationsWith: aBlock
 					  intoDestinationWriter: methodWriter
+					  lookUp: aFylgjaLookUpContext ]
+			  bindingWithCandidates: [ :contextWriter :value | 
+				  aFylgjaDerivativeModel
+					  bind: value
+					  croppingRelationsWith: aBlock
+					  intoDestinationWriter: contextWriter
 					  lookUp: aFylgjaLookUpContext ] ]
 ]
 

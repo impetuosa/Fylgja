@@ -24,15 +24,6 @@ FylgjaRule >> condition: aFylgjaConditionAll [
 	condition := aFylgjaConditionAll
 ]
 
-{ #category : #testing }
-FylgjaRule >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
-
-	^ condition
-		  matches: aProvenanceEntityRelation
-		  context: aDestinationContextRelation
-		  forWriting: aType
-]
-
 { #category : #accessing }
 FylgjaRule >> operation: aFylgjaTranslateCopy [ 
 	operation := aFylgjaTranslateCopy 

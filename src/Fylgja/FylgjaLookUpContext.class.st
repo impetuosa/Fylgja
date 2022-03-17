@@ -21,12 +21,12 @@ FylgjaLookUpContext >> ensureNotDuplicated: rules [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaLookUpContext >> lookupRulesForBinding: aProvenanceEntityRelation forWriting: aType [
+FylgjaLookUpContext >> lookupRulesForBinding: aDestinationEntity with: aCandidateRelation [
 
 	^ self ensureNotDuplicated: (mrs
-			   lookupRulesForBinding: aProvenanceEntityRelation
-			   toContext: destinationContextRelation
-			   forWriting: aType)
+			   lookupRulesForBinding: aDestinationEntity
+			   with: aCandidateRelation
+			   inTheContextOf: destinationContextRelation)
 ]
 
 { #category : #'as yet unclassified' }
@@ -34,15 +34,6 @@ FylgjaLookUpContext >> lookupRulesForDelegating: aProvenanceEntityRelation [
 
 	^ self ensureNotDuplicated: (mrs
 			   lookupRulesForDelegating: aProvenanceEntityRelation
-			   toContext: destinationContextRelation)
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaLookUpContext >> lookupRulesForMapping: aProvenanceEntityRelation [
-
-	^ self ensureNotDuplicated:
-		  (mrs
-			   lookupRulesForMapping: aProvenanceEntityRelation
 			   toContext: destinationContextRelation)
 ]
 

@@ -51,6 +51,7 @@ FylgjaCandidateStubBuilder >> privateBuild [
 	| instance |
 	instance := self instantiate: self buildsType.
 	instance provenance: self provenance.
+	instance parent: self parent. 
 	self candidate ifNotNil: [ instance candidate: self candidate ].
 
 	^ instance

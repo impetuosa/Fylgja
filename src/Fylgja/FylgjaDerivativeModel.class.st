@@ -13,6 +13,23 @@ FylgjaDerivativeModel >> allNewEntities [
 	^ self derivativeModels flatCollect: #entities 
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> bind: aMOObjectObjectRelation croppingRelationsWith: aFullBlockClosure intoDestinationWriter: aMOExpressionWriter lookUp: aFylgjaLookUpContext [ 
+	self shouldBeImplemented.
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> bindAndReturnEntity: aDestinationEntity as: aCandidateRelation croppingRelationsWith: aFullBlockClosure usingWriter: aWriter lookUp: aFylgjaLookUpContext [
+
+	^ fylgja
+		  bindAndReturnEntity: aDestinationEntity
+		  as: aCandidateRelation
+		  croppingRelationsWith: aFullBlockClosure
+		  usingWriter: aWriter
+		  lookUp: aFylgjaLookUpContext
+		  using: self
+]
+
 { #category : #accessing }
 FylgjaDerivativeModel >> derivativeModels [
 	^ derivativeModels

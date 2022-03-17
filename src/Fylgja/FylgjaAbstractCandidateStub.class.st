@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #testing }
+FylgjaAbstractCandidateStub >> canBeReferredAsVariable [
+
+	^ true
+]
+
+{ #category : #testing }
 FylgjaAbstractCandidateStub >> isFylgjaStub [
 
 	^ true

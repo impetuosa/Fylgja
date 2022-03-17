@@ -151,7 +151,7 @@ FylgjaMigrateDeclarationIntoPackageStepByStepTests >> testErrorHandlingToPackage
 
 	| provenance destination result method |
 	provenance := self errorHandlingClass.
-	destination := self configPackage.
+	destination := self controllerPackage.
 
 	self installRulesFor: destination.
 

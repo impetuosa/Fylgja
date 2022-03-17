@@ -34,6 +34,12 @@ FylgjaTranslateCopyAsAttribute >> keepCopyingWith: aWriter [
 				  croppingRelationsWith: croppingBlock
 				  intoDestinationWriter: aWriter
 				  lookUp: lookup ]
+		  bindingWithCandidates: [ :contextWriter :value | 
+			  using
+				  bind: value
+				  croppingRelationsWith: croppingBlock
+				  intoDestinationWriter: contextWriter
+				  lookUp: lookup ]
 ]
 
 { #category : #printing }

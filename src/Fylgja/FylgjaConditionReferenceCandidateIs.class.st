@@ -18,3 +18,9 @@ FylgjaConditionReferenceCandidateIs >> matches: aProvenanceEntityRelation contex
 	^ aProvenanceEntityRelation isReference and: [ 
 		  aProvenanceEntityRelation to candidate = candidate ]
 ]
+
+{ #category : #testing }
+FylgjaConditionReferenceCandidateIs >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation [
+
+	^ candidate = aCandidateRelation to
+]

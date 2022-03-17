@@ -77,6 +77,12 @@ NotThatGoodTests >> configPackage [
 ]
 
 { #category : #initialization }
+NotThatGoodTests >> controllerPackage [
+
+	^ java packages detect: [ :p | p name = 'Controller' ]
+]
+
+{ #category : #initialization }
 NotThatGoodTests >> dataSourceConfigClassConfigPackage [
 
 	^ self configClassConfigPackage methods detect: [ :i | 

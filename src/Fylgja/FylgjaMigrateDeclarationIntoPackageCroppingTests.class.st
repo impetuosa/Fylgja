@@ -153,17 +153,17 @@ FylgjaMigrateDeclarationIntoPackageCroppingTests >> testErrorHandlingToPackageCr
 
 	| provenance destination result |
 	provenance := self errorHandlingClass.
-	destination := self configPackage.
+	destination := self controllerPackage.
 
 	self installRulesFor: destination.
-	
+
 
 	result := fylgja
 		          produce: provenance
-		          croppingRelationsWith: [ :col |
-		          col reject: [ :c | c to isKindOf: MOInvocable ].  ]
+		          croppingRelationsWith: [ :col | 
+		          col reject: [ :c | c to isKindOf: MOInvocable ] ]
 		          into: destination.
-		
+
 	self assert: result result allContainments size equals: 0.
 	self
 		assert: (JavaParser parse: result result produceCode)
@@ -307,7 +307,7 @@ FylgjaMigrateDeclarationIntoPackageCroppingTests >> testModuleUtilitiesToPackage
 
 	| provenance destination result |
 	provenance := self moduleUtilities.
-	destination := self configPackage.
+	destination := self controllerPackage.
 
 	self installRulesFor: destination.
 

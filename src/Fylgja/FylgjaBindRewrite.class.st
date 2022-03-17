@@ -8,17 +8,16 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaBindRewrite >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgja [
+FylgjaBindRewrite >> bind: aDestinationEntity as: aCandidateRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgja [
 
 	| produced |
-	produced := self
-		            writeCopyOf: aRelatedProvenanceEntity
-		            croppingRelationsWith: aBlock
-		            destinationWriter: aDestinationWriter
-		            lookUp: aFylgjaLookUpContext
-		            using: aFylgja.
-	produced candidate: destinationEntity.
-	^ produced
+
+	self assert:
+		(aDestinationEntity refersToObjectsLike: destinationEntity).
+	self assert: aDestinationEntity name = destinationEntity name.
+	self assert: (aCandidateRelation read: aDestinationEntity) isNil.
+	aCandidateRelation write: destinationEntity to: aDestinationEntity.
+	^ aDestinationEntity
 ]
 
 { #category : #'as yet unclassified' }

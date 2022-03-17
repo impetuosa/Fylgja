@@ -5,17 +5,14 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaBindToLinkedStub >> applyTo: aProvenanceEntityRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+FylgjaBindToLinkedStub >> bind: aDestinationEntity as: aCandidateRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgja [
 
-	"	produced := self
-		            writeCopyOf: aProvenanceEntityRelation
-		            croppingRelationsWith: aBlock
-		            destinationWriter: aDestinationWriter
-		            lookUp: aFylgjaLookUpContext
-		            using: aFylgjaDerivativeModel.
-	^ produced"
+	| candidate |
 
-	^ aDestinationWriter writeFylgjaCandidateStub: [ :a | 
-		  a provenance: aProvenanceEntityRelation.
-		  a candidate: aProvenanceEntityRelation to candidate ]
+	candidate := aDestinationWriter writeFylgjaCandidateStub: [ :a | 
+		             a parent: aDestinationEntity.
+		             a provenance: aCandidateRelation.
+		             a candidate: aCandidateRelation to ].
+	aCandidateRelation write: candidate to: aDestinationEntity.
+	^ aDestinationEntity
 ]

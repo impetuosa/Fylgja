@@ -19,3 +19,9 @@ FylgjaCandidateStub >> printOn: aStream [
 		nextPutAll: 'Should Point To: ';
 		print: candidate
 ]
+
+{ #category : #'as yet unclassified' }
+FylgjaCandidateStub >> refersToObjectsLike: aMOPrimitiveType [
+
+	^ aMOPrimitiveType isDeclaration
+]

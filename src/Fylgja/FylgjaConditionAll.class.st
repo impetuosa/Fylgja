@@ -12,6 +12,12 @@ FylgjaConditionAll >> matches: aProvenanceEntityRelation context: aDestinationCo
 ]
 
 { #category : #testing }
+FylgjaConditionAll >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation [
+
+	^ true
+]
+
+{ #category : #testing }
 FylgjaConditionAll >> printOn: aStream [ 
 	aStream nextPutAll: 'AllwaysTrue'
 ]

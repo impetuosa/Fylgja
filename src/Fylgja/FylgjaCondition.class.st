@@ -33,6 +33,12 @@ FylgjaCondition >> matches: aProvenanceEntity context: aDestinationContext forWr
 	self subclassResponsibility
 ]
 
+{ #category : #testing }
+FylgjaCondition >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation [
+
+	^ self subclassResponsibility
+]
+
 { #category : #accessing }
 FylgjaCondition >> priority [
 	^ priority

@@ -4,9 +4,7 @@ Class {
 	#instVars : [
 		'models',
 		'migrationRuleSpace',
-		'tracing',
-		'automaticMapping',
-		'automapDictionary'
+		'tracing'
 	],
 	#category : #'Fylgja-Model'
 }
@@ -56,50 +54,23 @@ FylgjaMigrationEngine >> applyNewMappingRuleOverStubs: aCollection contextModel:
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> autoMap: aProvenanceEntity to: aDestinationEntity using: aModifiedFylgjaMigrationEngine [
+FylgjaMigrationEngine >> bindAndReturnEntity: aDestinationEntity as: aCandidateRelation croppingRelationsWith: aBlock usingWriter: aWriter lookUp: aLookupContext using: aModifiedFylgjaMigrationEngine [
 
-	(automapDictionary
-		 at: aProvenanceEntity
-		 ifAbsentPut: [ OrderedCollection new ]) add: aDestinationEntity
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> automapDuring: aFullBlockClosure [
-
-	| prev ret |
-	automaticMapping ifFalse: [ automapDictionary := Dictionary new ].
-	prev := automaticMapping.
-	automaticMapping := true.
-
-	ret := aFullBlockClosure ensure: [ automaticMapping := prev ].
-	automaticMapping ifFalse: [ 
-		automapDictionary keysAndValuesDo: [ :origin :destinations | 
-			destinations do: [ :d | 
-				self map: origin to: d using: ret derivative ] ] ].
-	^ ret
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> bind: aProvenanceEntityRelation croppingRelationsWith: aBlock intoDestinationWriter: aWriter lookUp: aLookupContext using: aModifiedFylgjaMigrationEngine [
-
-	| rules relation partialResult rule |
-	relation := aModifiedFylgjaMigrationEngine readRelation:
-		            aProvenanceEntityRelation.
-
+	| rules partialResult rule |
 	rules := aLookupContext
-		         lookupRulesForBinding: relation
-		         forWriting: aWriter writingType.
+		         lookupRulesForBinding: aDestinationEntity
+		         with: aCandidateRelation.
 
 	rules ifEmpty: [ NotFound signal: 'No mapping rule found ' ].
 	rule := rules first.
 	partialResult := rule
-		                 applyTo: relation
+		                 bind: aDestinationEntity
+		                 as: aCandidateRelation
 		                 croppingRelationsWith: aBlock
 		                 destinationWriter: aWriter
 		                 lookUp: aLookupContext
 		                 using: aModifiedFylgjaMigrationEngine.
- 
-	self trace: relation to: rule produced: partialResult using: aModifiedFylgjaMigrationEngine.
+
 	^ partialResult
 ]
 
@@ -111,26 +82,12 @@ FylgjaMigrationEngine >> derivative [
 		  yourself
 ]
 
-{ #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> get: anAlcixFunction for: aMOJavaClass [
-
-	| rules |
-	rules := self
-		         lookupRulesForMapping: anAlcixFunction
-		         toContext: aMOJavaClass
-		         destinationModel:
-		         (self selectDerivativeModelFor: aMOJavaClass).
-	rules ifEmpty: [ NotFound signal: 'No mapping rule found ' ].
-	^ rules first applyTo: anAlcixFunction context: aMOJavaClass
-]
-
 { #category : #accessing }
 FylgjaMigrationEngine >> initialize [
 
 	super initialize.
 	migrationRuleSpace := FylgjaMigrationRuleSpace new.
 	tracing := FylgjaMigrationNullTracingStrategy new.
-	automaticMapping := false. 
 ]
 
 { #category : #'as yet unclassified' }
@@ -140,15 +97,6 @@ FylgjaMigrationEngine >> lookupContextFor: aProvenanceEntity toContext: aDestina
 		  lookupContextFor: aProvenanceEntity
 		  toContext: aDestinationContext
 		  model: aMOModel
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> lookupRulesForMapping: aProvenanceEntity toContext: aDestinationContext destinationModel: destinationModel [
-
-	^ (self
-		   lookupContextFor: aProvenanceEntity
-		   toContext: aDestinationContext
-		   model: destinationModel) lookupRulesForMapping: aProvenanceEntity
 ]
 
 { #category : #'as yet unclassified' }
@@ -189,9 +137,16 @@ FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aM
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> migrate: aProvenanceEntityRelation croppingRelationsWith: aBlock intoDestinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
-	^ aProvenanceEntityRelation isReference
+	^ self
+		  produce: aProvenanceEntityRelation
+		  croppingRelationsWith: aBlock
+		  destinationWriter: aDestinationWriter
+		  lookUp: aFylgjaLookUpContext
+		  using: aFylgjaDerivativeModel
+
+
+	" aProvenanceEntityRelation isReference
 		  ifTrue: [ 
-				aProvenanceEntityRelation to isInvocation ifTrue: [ self halt  ].
 			  self
 				  bind: aProvenanceEntityRelation
 				  croppingRelationsWith: aBlock
@@ -204,7 +159,7 @@ FylgjaMigrationEngine >> migrate: aProvenanceEntityRelation croppingRelationsWit
 				  croppingRelationsWith: aBlock
 				  destinationWriter: aDestinationWriter
 				  lookUp: aFylgjaLookUpContext
-				  using: aFylgjaDerivativeModel ]
+				  using: aFylgjaDerivativeModel ]"
 ]
 
 { #category : #accessing }
@@ -329,12 +284,11 @@ FylgjaMigrationEngine >> selectDerivativeModelFor: aDestinationContext [
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> trace: aProvenanceEntity to: aRule produced: partialResult using: aModifiedFylgjaMigrationEngine [
 
-
 	tracing trace: aProvenanceEntity to: aRule produced: partialResult.
 
-	(automaticMapping and: [ partialResult isDeclaration ]) ifTrue: [ 
+	partialResult isDeclaration ifTrue: [ 
 		self
-			autoMap: aProvenanceEntity to
+			map: aProvenanceEntity to
 			to: partialResult
 			using: aModifiedFylgjaMigrationEngine ]
 ]
