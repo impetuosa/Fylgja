@@ -5,8 +5,9 @@ Class {
 }
 
 { #category : #accessing }
-FylgjaMigrationTracingStrategy >> swap: aFylgjaCandidateStub with: aMOVariableReference [ 
-	self subclassResponsibility 
+FylgjaMigrationTracingStrategy >> swap: aFylgjaCandidateStub with: aMOVariableReference [
+
+	self assert: aFylgjaCandidateStub parent = aMOVariableReference
 ]
 
 { #category : #'as yet unclassified' }

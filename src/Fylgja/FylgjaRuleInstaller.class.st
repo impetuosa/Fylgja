@@ -26,9 +26,20 @@ FylgjaRuleInstaller >> anyAlceModule [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> anyBindableEntity [
+	^ self condition: (FylgjaConditionReferenceWithoutCandidate new)
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> anyEntity [
 
 	^ self condition: FylgjaConditionAll new
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> anyFittedBindableEntity [
+
+	^ self condition: FylgjaConditionReferenceWithCandidate new
 ]
 
 { #category : #'as yet unclassified' }
@@ -272,6 +283,12 @@ FylgjaRuleInstaller >> replaceWithStringLiteral: aString [
 	^ self operation: (FylgjaTranslateReplaceWithStringLiteral new
 			   string: aString;
 			   yourself)
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> returnSameBinding [
+
+	^ self operation: FylgjaBindToSameStub new
 ]
 
 { #category : #'as yet unclassified' }

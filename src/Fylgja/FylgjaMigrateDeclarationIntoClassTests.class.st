@@ -11,17 +11,113 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 	function := self logErrorFunction.
 	destinationClass := self configClassConfigPackage.
 
-	" By default in the system we copy"
+FylgjaRuleInstaller new
+		topLevel;
+		anyBindableEntity;
+		mappingStubInstall;
+		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		topLevel;
+		anyFittedBindableEntity;
+		returnSameBinding;
+		installInto: fylgja.
+
+
 	FylgjaRuleInstaller new
 		topLevel;
 		anyEntity;
 		copy;
 		installInto: fylgja.
+
+	" By default when going to java "
 	FylgjaRuleInstaller new
-		topLevel;
-		anyEntity;
-		mappingStubInstall;
-		installInto: fylgja
+		context: (fylgja selectDerivativeModelFor: destinationClass);
+		anyModelEntityOfTypesWhenGoingClass: { 
+				MOClassFunction.
+				MOClassProcedure.
+				MOFunction.
+				MOProcedure };
+		copyAsMethod;
+		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		context: (fylgja selectDerivativeModelFor: destinationClass);
+		anyTypeReferenceNamed: #Boolean;
+		copyAsTypesReferenceNamed: #bool;
+		installInto: fylgja.
+
+
+	result := fylgja produce: function into: destinationClass.
+	self assert: result result isKindOf: MOMethod.
+
+	self assert: result result returnTypeReference name equals: #bool.
+
+	self assert: result result isDynamicBinding.
+
+	self assert: result result language isJava.
+	self assert: result result block language isJava.
+	self
+		assert: result result block statements size
+		equals: function block statements size.
+	self
+		assert: result result parameters size
+		equals: function parameters size.
+
+	" First parameter "
+	self
+		assert: result result parameters first name
+		equals: function parameters first name.
+
+	self
+		assert: result result parameters first typeReference name
+		equals: function parameters first typeReference name.
+	self assert: result result parameters first isKindOf: MOParameter.
+	self assert: result result parameters first language isJava.
+	self assert:
+		result result parameters first typeReference language isJava.
+
+
+	" Second parameter "
+
+	self
+		assert: result result parameters second name
+		equals: function parameters second name.
+
+	" The second parameter does not have type specification. So it becomes Variant "
+	self
+		assert: result result parameters second typeReference name
+		equals: #Variant.
+
+	" The second parameter is var-arg kind, without type specification. So it becomes Variant "
+	self
+		assert: result result parameters second
+		isKindOf: MOVariableArgumentsParameter.
+
+	self assert: result result parameters second language isJava.
+	self assert:
+		result result parameters second typeReference language isJava.
+
+
+	self assert: result result language isJava.
+	self deny: result result parent equals: destinationClass.
+	self
+		assert:
+			(result derivative derivativeModels select: [ :a | 
+				 a language isJava ]) size
+		equals: 1.
+	modifiedClass := (result derivative derivativeModels select: [ :a | 
+		                  a language isJava ]) first entities detect: [ :a | 
+		                 a = result result parent ].
+
+	self assert: modifiedClass name equals: destinationClass name.
+	self
+		assert: modifiedClass attributes
+		equals: destinationClass attributes.
+	self
+		assert: modifiedClass methods allButLast
+		equals: destinationClass methods.
+	self assert: modifiedClass methods last equals: result result
 ]
 
 { #category : #'as yet unclassified' }
@@ -37,6 +133,16 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 		anyEntity;
 		copy;
 		installInto: fylgja.
+
+
+	FylgjaRuleInstaller new
+		topLevel;
+		anyFittedBindableEntity;
+		returnSameBinding;
+		installInto: fylgja.
+
+
+
 	FylgjaRuleInstaller new
 		topLevel;
 		anyEntity;
@@ -140,6 +246,14 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 		anyEntity;
 		copy;
 		installInto: fylgja.
+		
+	FylgjaRuleInstaller new
+		topLevel;
+		anyFittedBindableEntity;
+		returnSameBinding;
+		installInto: fylgja.
+
+
 	FylgjaRuleInstaller new
 		topLevel;
 		anyEntity;
@@ -252,6 +366,13 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 
 
 	FylgjaRuleInstaller new
+		topLevel;
+		anyFittedBindableEntity;
+		returnSameBinding;
+		installInto: fylgja.
+
+
+	FylgjaRuleInstaller new
 		context: destinationContext;
 		anyEntity;
 		copy;
@@ -276,6 +397,13 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 	destinationClass := self configClassConfigPackage.
 
 	" By default in the system we copy"
+	FylgjaRuleInstaller new
+		topLevel;
+		anyFittedBindableEntity;
+		returnSameBinding;
+		installInto: fylgja.
+
+
 	FylgjaRuleInstaller new
 		topLevel;
 		anyEntity;
@@ -386,6 +514,13 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 	vbCrlf := self vbCrlf.
 
 
+	FylgjaRuleInstaller new
+		topLevel;
+		anyFittedBindableEntity;
+		returnSameBinding;
+		installInto: fylgja.
+
+
 
 	" By default in the system we copy"
 	FylgjaRuleInstaller new
@@ -473,6 +608,13 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyOnlyPr
 	provenance := self logErrorFunction.
 	destination := self configClassConfigPackage.
 	fylgja activateTracing.
+
+
+	FylgjaRuleInstaller new
+		topLevel;
+		anyFittedBindableEntity;
+		returnSameBinding;
+		installInto: fylgja.
 
 
 	" By default in the system we copy"

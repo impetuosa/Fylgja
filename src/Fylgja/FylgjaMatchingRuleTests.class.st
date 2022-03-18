@@ -45,16 +45,6 @@ FylgjaMatchingRuleTests >> testAllConditionMatchesTheCase [
 ]
 
 { #category : #initialization }
-FylgjaMatchingRuleTests >> testDataSourceToErrorHandling [
-
-	| debug destination |
-	debug := self derivative  readEntitysContextualizingRelation:self dataSourceConfigClassConfigPackage.
-	destination := self derivative  readEntitysContextualizingRelation: self errorHandlingClass.
-
-	self should: [ fylgja get: debug for: destination ] raise: NotFound
-]
-
-{ #category : #initialization }
 FylgjaMatchingRuleTests >> testEntityEqualsConditionMatchesTheCase [
 
 	| variable destinationContextRelation destinationContext |
@@ -112,18 +102,6 @@ FylgjaMatchingRuleTests >> testEntityIdenticalConditionMatchesTheCase [
 			 toContext: destinationContextRelation
 			 destinationModel:
 			 (fylgja selectDerivativeModelFor: destinationContext)) size = 1
-]
-
-{ #category : #initialization }
-FylgjaMatchingRuleTests >> testLogErrorToClassNoMappingExists [
-
-	| debug destination |
-	debug := self derivative readEntitysContextualizingRelation:
-		         self logErrorFunction.
-	destination := self derivative readEntitysContextualizingRelation:
-		               self modelStubClass.
-
-	self should: [ fylgja get: debug for: destination ] raise: NotFound
 ]
 
 { #category : #initialization }

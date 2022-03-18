@@ -16,6 +16,16 @@ FylgjaMigrateDeclarationIntoPackageStepByStepTests >> installRulesFor: destinati
 		anyEntity;
 		copy;
 		installInto: fylgja.
+
+
+	FylgjaRuleInstaller new
+		topLevel;
+		anyFittedBindableEntity;
+		returnSameBinding;
+		installInto: fylgja.
+
+
+
 	FylgjaRuleInstaller new
 		topLevel;
 		anyEntity;

@@ -10,12 +10,13 @@ Class {
 { #category : #'as yet unclassified' }
 FylgjaBindRewrite >> bind: aDestinationEntity as: aCandidateRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgja [
 
-	| produced |
-
+	| currentCandidate |
 	self assert:
 		(aDestinationEntity refersToObjectsLike: destinationEntity).
 	self assert: aDestinationEntity name = destinationEntity name.
-	self assert: (aCandidateRelation read: aDestinationEntity) isNil.
+	currentCandidate := aCandidateRelation read: aDestinationEntity.
+	self assert:
+		(currentCandidate isNil or: [ currentCandidate isFylgjaStub ]).
 	aCandidateRelation write: destinationEntity to: aDestinationEntity.
 	^ aDestinationEntity
 ]

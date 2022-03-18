@@ -15,6 +15,14 @@ FylgjaMigrateDeclarationIntoPackageCroppingTests >> installRulesFor: destination
 		anyEntity;
 		mappingStubInstall;
 		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		topLevel;
+		anyFittedBindableEntity;
+		returnSameBinding;
+		installInto: fylgja.
+
+
 	" By default in the system we copy"
 	FylgjaRuleInstaller new
 		topLevel;

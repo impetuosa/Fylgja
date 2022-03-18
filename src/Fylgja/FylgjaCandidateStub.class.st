@@ -23,5 +23,7 @@ FylgjaCandidateStub >> printOn: aStream [
 { #category : #'as yet unclassified' }
 FylgjaCandidateStub >> refersToObjectsLike: aMOPrimitiveType [
 
-	^ aMOPrimitiveType isDeclaration
+	^ aMOPrimitiveType isCollection
+		  ifTrue: [ aMOPrimitiveType allSatisfy: [ : a | self refersToObjectsLike: a ]  ]
+		  ifFalse: [ aMOPrimitiveType isDeclaration ]
 ]

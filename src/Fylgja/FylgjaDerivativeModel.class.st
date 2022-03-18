@@ -134,6 +134,12 @@ FylgjaDerivativeModel >> readerFor: aModelEntity [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> reapplyMappingRulesOnStubs [
+
+	^ fylgja reapplyMappingRulesOnStubs: self
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> selectDerivativeModelFor: aDestinationContext [
 
 	^ self selectDerivativeModelFor: aDestinationContext ifNone: [ 

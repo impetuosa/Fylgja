@@ -17,11 +17,16 @@ FylgjaMigrateDeclarationIntoPackageTests >> installRulesFor: destination [
 		copy;
 		installInto: fylgja.
 
+	FylgjaRuleInstaller new
+		topLevel;
+		anyBindableEntity;
+		mappingStubInstall;
+		installInto: fylgja.
 
 	FylgjaRuleInstaller new
 		topLevel;
-		anyEntity;
-		mappingStubInstall;
+		anyFittedBindableEntity;
+		returnSameBinding;
 		installInto: fylgja.
 
 
@@ -179,11 +184,19 @@ FylgjaMigrateDeclarationIntoPackageTests >> testErrorHandlingToPackageOnlyCopy [
 		anyEntity;
 		copy;
 		installInto: fylgja.
+		
 	FylgjaRuleInstaller new
 		topLevel;
-		anyEntity;
+		anyBindableEntity;
 		mappingStubInstall;
 		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		topLevel;
+		anyFittedBindableEntity;
+		returnSameBinding;
+		installInto: fylgja.
+
 
 
 	result := fylgja produce: provenance into: destination.
@@ -219,9 +232,16 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleCustomerOrdersOnlyCopy [
 		installInto: fylgja.
 	FylgjaRuleInstaller new
 		topLevel;
-		anyEntity;
+		anyBindableEntity;
 		mappingStubInstall;
 		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		topLevel;
+		anyFittedBindableEntity;
+		returnSameBinding;
+		installInto: fylgja.
+
 
 
 	result := fylgja produce: provenance into: destination.
@@ -264,11 +284,18 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleDomainFunctionWrappersOnly
 		anyEntity;
 		copy;
 		installInto: fylgja.
-	FylgjaRuleInstaller new
+		FylgjaRuleInstaller new
 		topLevel;
-		anyEntity;
+		anyBindableEntity;
 		mappingStubInstall;
 		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		topLevel;
+		anyFittedBindableEntity;
+		returnSameBinding;
+		installInto: fylgja.
+
 
 
 	result := fylgja produce: provenance into: destination.
@@ -313,10 +340,16 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleInventoryOnlyCopy [
 		anyEntity;
 		copy;
 		installInto: fylgja.
+		FylgjaRuleInstaller new
+		topLevel;
+		anyBindableEntity;
+		mappingStubInstall;
+		installInto: fylgja.
+
 	FylgjaRuleInstaller new
 		topLevel;
-		anyEntity;
-		mappingStubInstall;
+		anyFittedBindableEntity;
+		returnSameBinding;
 		installInto: fylgja.
 
 
@@ -364,9 +397,16 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModulePrivilegesOnlyCopy [
 		installInto: fylgja.
 	FylgjaRuleInstaller new
 		topLevel;
-		anyEntity;
+		anyBindableEntity;
 		mappingStubInstall;
 		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		topLevel;
+		anyFittedBindableEntity;
+		returnSameBinding;
+		installInto: fylgja.
+
 
 	result := fylgja produce: provenance into: destination.
 	" When copying all the produced things should be of the same type "
@@ -411,11 +451,18 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModulePurchaseOrdersOnlyCopy [
 		copy;
 		installInto: fylgja.
 
-	FylgjaRuleInstaller new
+		FylgjaRuleInstaller new
 		topLevel;
-		anyEntity;
+		anyBindableEntity;
 		mappingStubInstall;
 		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		topLevel;
+		anyFittedBindableEntity;
+		returnSameBinding;
+		installInto: fylgja.
+
 	result := fylgja produce: provenance into: destination.
 	" When copying all the produced things should be of the same type "
 	self assertTracedClasses.
@@ -456,11 +503,18 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleReflectiveOnlyCopy [
 		anyEntity;
 		copy;
 		installInto: fylgja.
-	FylgjaRuleInstaller new
+		FylgjaRuleInstaller new
 		topLevel;
-		anyEntity;
+		anyBindableEntity;
 		mappingStubInstall;
 		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		topLevel;
+		anyFittedBindableEntity;
+		returnSameBinding;
+		installInto: fylgja.
+
 
 	result := fylgja produce: provenance into: destination.
 	" When copying all the produced things should be of the same type "
@@ -506,9 +560,16 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleUtilitiesOnlyCopy [
 		installInto: fylgja.
 	FylgjaRuleInstaller new
 		topLevel;
-		anyEntity;
+		anyBindableEntity;
 		mappingStubInstall;
 		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		topLevel;
+		anyFittedBindableEntity;
+		returnSameBinding;
+		installInto: fylgja.
+
 
 	result := fylgja produce: provenance into: destination.
 	" When copying all the produced things should be of the same type "
@@ -568,10 +629,18 @@ FylgjaMigrateDeclarationIntoPackageTests >> testRecordsetWrapperoPackageOnlyCopy
 		anyEntity;
 		copy;
 		installInto: fylgja.
+
+
 	FylgjaRuleInstaller new
 		topLevel;
-		anyEntity;
+		anyBindableEntity;
 		mappingStubInstall;
+		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		topLevel;
+		anyFittedBindableEntity;
+		returnSameBinding;
 		installInto: fylgja.
 
 

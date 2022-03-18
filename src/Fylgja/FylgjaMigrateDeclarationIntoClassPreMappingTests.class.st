@@ -5,15 +5,30 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+FylgjaMigrateDeclarationIntoClassPreMappingTests >> allReferencesFrom: aFylgjaDerivationResult [
+
+	^ aFylgjaDerivationResult derivative derivativeModels second entities 
+		  select: [ :a | a isReference ]
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaMigrateDeclarationIntoClassPreMappingTests >> installRulesFor: destinationClass [
 
 	" By default in the system we copy"
 
 	FylgjaRuleInstaller new
 		topLevel;
-		anyEntity;
+		anyBindableEntity;
 		mappingStubInstall;
 		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		topLevel;
+		anyFittedBindableEntity;
+		returnSameBinding;
+		installInto: fylgja.
+
+
 
 	FylgjaRuleInstaller new
 		topLevel;
@@ -45,11 +60,12 @@ FylgjaMigrateDeclarationIntoClassPreMappingTests >> testProduceMethodIntoClassBy
 	| function destinationClass result |
 	function := self logErrorFunction.
 	destinationClass := self configClassConfigPackage.
-
+	
 
 	self installRulesFor: destinationClass.
 
 	result := fylgja produce: function into: destinationClass.
+	self assertAllReferencesHaveCandidate: result.
 
 	self halt
 ]

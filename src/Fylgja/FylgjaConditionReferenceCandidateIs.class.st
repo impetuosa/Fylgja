@@ -24,3 +24,8 @@ FylgjaConditionReferenceCandidateIs >> matches: aDestinationEntity context: aDes
 
 	^ candidate = aCandidateRelation to
 ]
+
+{ #category : #testing }
+FylgjaConditionReferenceCandidateIs >> printOn: aStream [
+ 	aStream nextPutAll:'IsReference With Candidate '; nextPutAll: candidate name 
+]

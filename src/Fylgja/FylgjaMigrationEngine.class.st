@@ -39,17 +39,14 @@ FylgjaMigrationEngine >> applyNewMappingRuleOverStubs: aCollection contextModel:
 			          toContext: destinationContextRelation
 			          model: contextModel.
 
+		newElement := aModifiedFylgjaMigrationEngine
+			              bindAndReturnEntity: stub parent
+			              as: stub provenance
+			              croppingRelationsWith: [ :a | a ]
+			              usingWriter: contextModel writer
+			              lookUp: lookup.
 
-		newElement := contextModel writer
-			              updaterFor: destinationContextRelation
-			              with: elementRelation
-			              do: [ :elem :destinationWriter | 
-				              self
-					              migrate: elementRelation
-					              croppingRelationsWith: [ :a | a ]
-					              intoDestinationWriter: destinationWriter
-					              lookUp: lookup
-					              using: aModifiedFylgjaMigrationEngine ].
+
 		self model: contextModel swap: stub with: newElement ]
 ]
 
@@ -112,26 +109,20 @@ FylgjaMigrationEngine >> lookupRulesForProducing: aProvenanceEntity toContext: a
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aModifiedFylgjaMigrationEngine [
 
-	| context contextModel |
+	| context |
 	self assert: aProvenanceEntity isDeclaration.
 	self assert: aDestinationEntity isDeclaration.
 
-	contextModel := aModifiedFylgjaMigrationEngine 
-		                selectDerivativeModelFor: aDestinationEntity.
-	context := aDestinationEntity parent ifNil: [ contextModel ].
+
+	context := aDestinationEntity parent ifNil: [ 
+		           aModifiedFylgjaMigrationEngine selectDerivativeModelFor:
+			           aDestinationEntity ].
 
 	FylgjaRuleInstaller new
 		context: context;
 		whenIsReferenceWithCandidate: aProvenanceEntity;
 		bindRewriteTo: aDestinationEntity;
-		installInto: aModifiedFylgjaMigrationEngine.
-
-	self
-		applyNewMappingRuleOverStubs: (aModifiedFylgjaMigrationEngine
-				 stubReferencesTo: aProvenanceEntity
-				 from: contextModel)
-		contextModel: contextModel
-		using: aModifiedFylgjaMigrationEngine
+		installInto: aModifiedFylgjaMigrationEngine
 ]
 
 { #category : #'as yet unclassified' }
@@ -144,22 +135,6 @@ FylgjaMigrationEngine >> migrate: aProvenanceEntityRelation croppingRelationsWit
 		  lookUp: aFylgjaLookUpContext
 		  using: aFylgjaDerivativeModel
 
-
-	" aProvenanceEntityRelation isReference
-		  ifTrue: [ 
-			  self
-				  bind: aProvenanceEntityRelation
-				  croppingRelationsWith: aBlock
-				  intoDestinationWriter: aDestinationWriter
-				  lookUp: aFylgjaLookUpContext
-				  using: aFylgjaDerivativeModel ]
-		  ifFalse: [ 
-			  self
-				  produce: aProvenanceEntityRelation
-				  croppingRelationsWith: aBlock
-				  destinationWriter: aDestinationWriter
-				  lookUp: aFylgjaLookUpContext
-				  using: aFylgjaDerivativeModel ]"
 ]
 
 { #category : #accessing }
@@ -227,6 +202,10 @@ FylgjaMigrationEngine >> produce: aProvenanceEntity croppingRelationsWith: aBloc
 		          into: aDestinationContext
 		          using: derivative.
 
+	derivative reapplyMappingRulesOnStubs.
+
+
+
 	^ FylgjaDerivationResult new
 		  derivative: derivative;
 		  result: result;
@@ -273,6 +252,16 @@ FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext [
 		  produce: aProvenanceEntity
 		  croppingRelationsWith: [ :a | a ]
 		  into: aDestinationContext
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> reapplyMappingRulesOnStubs: aModifiedFylgjaMigrationEngine [
+
+	^ aModifiedFylgjaMigrationEngine derivativeModels do: [ :contextModel | 
+		  self
+			  applyNewMappingRuleOverStubs: contextModel allStubs
+			  contextModel: contextModel
+			  using: aModifiedFylgjaMigrationEngine ]
 ]
 
 { #category : #'as yet unclassified' }

@@ -41,9 +41,9 @@ FylgjaTranslateCopyAsMethod >> visitClassFunction: aMOClassFunction [
 
 	writer setDynamicBinding.
 	writer selector: aMOClassFunction selector.
-	writer returnTypeReference:
+	"writer returnTypeReference: 
 		(writer typeReferenceNamed:
-			 aMOClassFunction returnTypeReference name)
+			 aMOClassFunction returnTypeReference name)"
 ]
 
 { #category : #visiting }
@@ -59,9 +59,9 @@ FylgjaTranslateCopyAsMethod >> visitFunction: aMOFunction [
 
 	writer setStaticBinding.
 	writer selector: aMOFunction selector.
-	aMOFunction returnTypeReference ifNotNil: [ 
+	"aMOFunction returnTypeReference ifNotNil: [ 
 		writer returnTypeReference:
-			(writer typeReferenceNamed: aMOFunction returnTypeReference name) ]
+			(writer typeReferenceNamed: aMOFunction returnTypeReference name) ]"
 ]
 
 { #category : #visiting }

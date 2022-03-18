@@ -28,6 +28,14 @@ NotThatGoodTests >> assert: newClass isKindOf: aType [
 	self assert: (newClass isKindOf: aType)
 ]
 
+{ #category : #asserting }
+NotThatGoodTests >> assertAllReferencesHaveCandidate: aFylgjaDerivationResult [
+
+	self assert:
+		((self allReferencesFrom: aFylgjaDerivationResult) select: [ :e | 
+			 e candidate isNil ]) isEmpty
+]
+
 { #category : #'as yet unclassified' }
 NotThatGoodTests >> assertProducedElementsAreEquivalent [
 
