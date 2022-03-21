@@ -73,7 +73,7 @@ FylgjaMigrateDeclarationIntoClassMappingTests >> javaObject [
 { #category : #'as yet unclassified' }
 FylgjaMigrateDeclarationIntoClassMappingTests >> testProduceMethodIntoClassByCopyNodeTransformAddRuleToMapBooleanToBooleanClass [
 
-	| function destinationClass result modifiedClass |
+	| function destinationClass result |
 	function := self logErrorFunction.
 	destinationClass := self configClassConfigPackage.
 
