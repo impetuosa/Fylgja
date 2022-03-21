@@ -49,9 +49,10 @@ FylgjaDerivativeModel >> initialize [
 
 { #category : #testing }
 FylgjaDerivativeModel >> isDerivativeEntity: anEntity [
+	 | model |
+	model := self selectDerivativeModelFor: anEntity ifNone: [ ^ false ].
+	^ model exclusivelyincludes: anEntity 
 
-	self selectDerivativeModelFor: anEntity ifNone: [ ^ false ].
-	^ true
 ]
 
 { #category : #accessing }
@@ -89,10 +90,14 @@ FylgjaDerivativeModel >> produce: aProvenanceEntity croppingRelationsWith: aFull
 { #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> produce: aProvenanceEntity into: aContextDestinationEntity [
 
-	^ self
-		  produce: aProvenanceEntity
-		  croppingRelationsWith: [ :a | a ]
-		  into: aContextDestinationEntity
+	^ FylgjaDerivationResult new
+		  derivative: self;
+		  result: (fylgja
+				   produce: aProvenanceEntity
+				   croppingRelationsWith: [ :a | a ]
+				   into: aContextDestinationEntity
+				   using: self);
+		  yourself
 ]
 
 { #category : #'as yet unclassified' }

@@ -52,8 +52,8 @@ FylgjaMigrationEngine >> applyNewMappingRuleOverStubs: aCollection contextModel:
 
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> bindAndReturnEntity: aDestinationEntity as: aCandidateRelation croppingRelationsWith: aBlock usingWriter: aWriter lookUp: aLookupContext using: aModifiedFylgjaMigrationEngine [
-
 	| rules partialResult rule |
+	
 	rules := aLookupContext
 		         lookupRulesForBinding: aDestinationEntity
 		         with: aCandidateRelation.
@@ -106,6 +106,18 @@ FylgjaMigrationEngine >> lookupRulesForProducing: aProvenanceEntity toContext: a
 		  aProvenanceEntity
 ]
 
+{ #category : #accessing }
+FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity [
+
+	| derivative |
+	derivative := self derivative.
+
+	self map: aProvenanceEntity to: aDestinationEntity using: derivative.
+
+
+	^ derivative
+]
+
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aModifiedFylgjaMigrationEngine [
 
@@ -114,10 +126,10 @@ FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aM
 	self assert: aDestinationEntity isDeclaration.
 
 
-	context := aDestinationEntity parent ifNil: [ 
-		           aModifiedFylgjaMigrationEngine selectDerivativeModelFor:
-			           aDestinationEntity ].
-
+	context := aModifiedFylgjaMigrationEngine selectDerivativeModelFor:
+		           aDestinationEntity. "aDestinationEntity parent ifNil: [ 
+		            ].
+"
 	FylgjaRuleInstaller new
 		context: context;
 		whenIsReferenceWithCandidate: aProvenanceEntity;
@@ -202,10 +214,7 @@ FylgjaMigrationEngine >> produce: aProvenanceEntity croppingRelationsWith: aBloc
 		          into: aDestinationContext
 		          using: derivative.
 
-	derivative reapplyMappingRulesOnStubs.
-
-
-
+	
 	^ FylgjaDerivationResult new
 		  derivative: derivative;
 		  result: result;

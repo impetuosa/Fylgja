@@ -24,7 +24,7 @@ FylgjaMigrateDeclarationIntoClassPreMappingTests >> installRulesFor: destination
 
 	FylgjaRuleInstaller new
 		topLevel;
-		anyFittedBindableEntity;
+		anyReferenceWithCandidate;
 		returnSameBinding;
 		installInto: fylgja.
 
@@ -60,12 +60,12 @@ FylgjaMigrateDeclarationIntoClassPreMappingTests >> testProduceMethodIntoClassBy
 	| function destinationClass result |
 	function := self logErrorFunction.
 	destinationClass := self configClassConfigPackage.
-	
+
 
 	self installRulesFor: destinationClass.
 
 	result := fylgja produce: function into: destinationClass.
 	self assertAllReferencesHaveCandidate: result.
 
-	self halt
+
 ]

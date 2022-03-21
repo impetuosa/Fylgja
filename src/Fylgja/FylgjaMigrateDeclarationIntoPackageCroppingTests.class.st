@@ -18,7 +18,7 @@ FylgjaMigrateDeclarationIntoPackageCroppingTests >> installRulesFor: destination
 
 	FylgjaRuleInstaller new
 		topLevel;
-		anyFittedBindableEntity;
+		anyReferenceWithCandidate;
 		returnSameBinding;
 		installInto: fylgja.
 

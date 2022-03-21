@@ -52,6 +52,11 @@ FylgjaDerivationResult >> produce: aProvenanceEntity into: aDestinationContext [
 		  yourself
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaDerivationResult >> reapplyMappingRulesOnStubs [
+	^ derivative reapplyMappingRulesOnStubs
+]
+
 { #category : #accessing }
 FylgjaDerivationResult >> result [
 	^ result

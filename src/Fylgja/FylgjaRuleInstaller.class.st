@@ -37,12 +37,6 @@ FylgjaRuleInstaller >> anyEntity [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaRuleInstaller >> anyFittedBindableEntity [
-
-	^ self condition: FylgjaConditionReferenceWithCandidate new
-]
-
-{ #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> anyInvocation [
 
 	^ self condition: (FylgjaConditionModelTypeIs new
@@ -71,6 +65,12 @@ FylgjaRuleInstaller >> anyModelEntityOfTypesWhenGoingClass: aCollection [
 FylgjaRuleInstaller >> anyOnErrorGoToBlockTransformableToTryCatch [
 
 	^ self condition: FylgjaConditionOnErrorGoToBlockTransformableToTryCatch new
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> anyReferenceWithCandidate [
+
+	^ self condition: FylgjaConditionReferenceWithCandidate new
 ]
 
 { #category : #'as yet unclassified' }
@@ -288,7 +288,7 @@ FylgjaRuleInstaller >> replaceWithStringLiteral: aString [
 { #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> returnSameBinding [
 
-	^ self operation: FylgjaBindToSameStub new
+	^ self operation: FylgjaBindToSameBinding new
 ]
 
 { #category : #'as yet unclassified' }

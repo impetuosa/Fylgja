@@ -36,14 +36,3 @@ FylgjaOperation >> writeCopyOf: aProvenanceEntityRelation croppingRelationsWith:
 						  usingWriter: contextWriter
 						  lookUp: aFylgjaLookUpContext ] ]
 ]
-
-{ #category : #writing }
-FylgjaOperation >> writeCopyOf: aProvenanceEntityRelation destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
-
-	^ self
-		  writeCopyOf: aProvenanceEntityRelation
-		  croppingRelationsWith: [ :c | c ]
-		  destinationWriter: aDestinationWriter
-		  lookUp: aFylgjaLookUpContext
-		  using: aFylgjaDerivativeModel
-]

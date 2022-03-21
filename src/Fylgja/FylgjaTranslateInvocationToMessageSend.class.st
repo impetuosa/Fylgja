@@ -17,27 +17,38 @@ FylgjaTranslateInvocationToMessageSend >> applyTo: aProvenanceEntityRelation cro
 		  resolveWriterFor: aProvenanceEntityRelation
 		  writingContext: aDestinationWriter
 		  do: [ :elementWriter | 
-			  elementWriter writeExpression: [ :stmt | 
-				  stmt
-					  invokeMethodNamed:
-					  (selector ifNil: [ aProvenanceEntityRelation to selector ])
-					  receiver: [ 
-						  receiverBlock
-							  cull: stmt
-							  cull: aProvenanceEntityRelation
-							  cull: aDestinationWriter
-							  cull: aFylgjaDerivativeModel ]
-					  arguments: [ :exp | 
-						  argumentCollectionTransform
-							  cull:
-								  ((aProvenanceEntityRelation to relationsNamed: #arguments) 
-									   collect: [ :a | 
-										   aFylgjaDerivativeModel
-											   migrate: a
-											   croppingRelationsWith: aBlock
-											   intoDestinationWriter: exp
-											   lookUp: aFylgjaLookUpContext ])
-							  cull: exp ] ] ]
+			  | destinationEntity |
+			
+			  destinationEntity := elementWriter writeExpression: [ :stmt | 
+				                       stmt
+					                       invokeMethodNamed:
+					                       (selector ifNil: [ 
+						                        aProvenanceEntityRelation to selector ])
+					                       receiver: [ 
+						                       receiverBlock
+							                       cull: stmt
+							                       cull: aProvenanceEntityRelation
+							                       cull: aDestinationWriter
+							                       cull: aFylgjaDerivativeModel ]
+					                       arguments: [ :exp | 
+						                       argumentCollectionTransform
+							                       cull:
+								                       ((aProvenanceEntityRelation to 
+									                         relationsNamed: #arguments) 
+									                        collect: [ :a | 
+										                        aFylgjaDerivativeModel
+											                        migrate: a
+											                        croppingRelationsWith: aBlock
+											                        intoDestinationWriter: exp
+											                        lookUp: aFylgjaLookUpContext ])
+							                       cull: exp ] ].
+			  self
+				  applyBindTo: destinationEntity
+				  withCandidateFrom: aProvenanceEntityRelation
+				  croppingRelationsWith: aBlock
+				  writer: elementWriter
+				  lookup: aFylgjaLookUpContext
+				  using: aFylgjaDerivativeModel ]
 ]
 
 { #category : #'as yet unclassified' }

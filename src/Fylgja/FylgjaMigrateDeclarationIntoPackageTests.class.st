@@ -25,7 +25,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> installRulesFor: destination [
 
 	FylgjaRuleInstaller new
 		topLevel;
-		anyFittedBindableEntity;
+		anyReferenceWithCandidate;
 		returnSameBinding;
 		installInto: fylgja.
 
@@ -193,7 +193,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testErrorHandlingToPackageOnlyCopy [
 
 	FylgjaRuleInstaller new
 		topLevel;
-		anyFittedBindableEntity;
+		anyReferenceWithCandidate;
 		returnSameBinding;
 		installInto: fylgja.
 
@@ -238,7 +238,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleCustomerOrdersOnlyCopy [
 
 	FylgjaRuleInstaller new
 		topLevel;
-		anyFittedBindableEntity;
+		anyReferenceWithCandidate;
 		returnSameBinding;
 		installInto: fylgja.
 
@@ -263,6 +263,8 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleCustomerOrdersToPackage [
 
 
 	result := fylgja produce: provenance into: destination.
+
+	result reapplyMappingRulesOnStubs.
 
 	self
 		assert: (JavaParser parse: result result produceCode)
@@ -292,7 +294,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleDomainFunctionWrappersOnly
 
 	FylgjaRuleInstaller new
 		topLevel;
-		anyFittedBindableEntity;
+		anyReferenceWithCandidate;
 		returnSameBinding;
 		installInto: fylgja.
 
@@ -310,8 +312,6 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleDomainFunctionWrappersOnly
 FylgjaMigrateDeclarationIntoPackageTests >> testModuleDomainFunctionWrappersToPackage [
 
 	| provenance destination result |
-
-
 	provenance := self moduleDomainFunctionWrappers.
 	destination := self configPackage.
 
@@ -319,6 +319,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleDomainFunctionWrappersToPa
 
 
 	result := fylgja produce: provenance into: destination.
+	result reapplyMappingRulesOnStubs.
 
 	self
 		assert: (JavaParser parse: result result produceCode)
@@ -348,7 +349,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleInventoryOnlyCopy [
 
 	FylgjaRuleInstaller new
 		topLevel;
-		anyFittedBindableEntity;
+		anyReferenceWithCandidate;
 		returnSameBinding;
 		installInto: fylgja.
 
@@ -365,16 +366,15 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleInventoryOnlyCopy [
 FylgjaMigrateDeclarationIntoPackageTests >> testModuleInventoryToPackage [
 
 	| provenance destination result |
-
-
 	provenance := self moduleInventory.
 	destination := self configPackage.
 
 	self installRulesFor: destination.
-	
+
 
 	result := fylgja produce: provenance into: destination.
-
+	result reapplyMappingRulesOnStubs.
+	
 	self
 		assert: (JavaParser parse: result result produceCode)
 		isKindOf: JavaProgramFileNode
@@ -403,7 +403,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModulePrivilegesOnlyCopy [
 
 	FylgjaRuleInstaller new
 		topLevel;
-		anyFittedBindableEntity;
+		anyReferenceWithCandidate;
 		returnSameBinding;
 		installInto: fylgja.
 
@@ -420,8 +420,6 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModulePrivilegesOnlyCopy [
 FylgjaMigrateDeclarationIntoPackageTests >> testModulePrivilegesToPackage [
 
 	| provenance destination result |
-
-
 	provenance := self modulePrivileges.
 	destination := self configPackage.
 
@@ -429,7 +427,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModulePrivilegesToPackage [
 
 
 	result := fylgja produce: provenance into: destination.
-
+	result reapplyMappingRulesOnStubs.
 	self
 		assert: (JavaParser parse: result result produceCode)
 		isKindOf: JavaProgramFileNode
@@ -459,7 +457,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModulePurchaseOrdersOnlyCopy [
 
 	FylgjaRuleInstaller new
 		topLevel;
-		anyFittedBindableEntity;
+		anyReferenceWithCandidate;
 		returnSameBinding;
 		installInto: fylgja.
 
@@ -482,7 +480,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModulePurchaseOrdersToPackage [
 
 
 	result := fylgja produce: provenance into: destination.
-	
+	result reapplyMappingRulesOnStubs.
 	self
 		assert: (JavaParser parse: result result produceCode)
 		isKindOf: JavaProgramFileNode
@@ -511,7 +509,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleReflectiveOnlyCopy [
 
 	FylgjaRuleInstaller new
 		topLevel;
-		anyFittedBindableEntity;
+		anyReferenceWithCandidate;
 		returnSameBinding;
 		installInto: fylgja.
 
@@ -528,8 +526,6 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleReflectiveOnlyCopy [
 FylgjaMigrateDeclarationIntoPackageTests >> testModuleReflectiveToPackage [
 
 	| provenance destination result |
-
-
 	provenance := self moduleReflective.
 	destination := self configPackage.
 
@@ -537,6 +533,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleReflectiveToPackage [
 
 
 	result := fylgja produce: provenance into: destination.
+	result reapplyMappingRulesOnStubs.
 
 	self
 		assert: (JavaParser parse: result result produceCode)
@@ -566,7 +563,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleUtilitiesOnlyCopy [
 
 	FylgjaRuleInstaller new
 		topLevel;
-		anyFittedBindableEntity;
+		anyReferenceWithCandidate;
 		returnSameBinding;
 		installInto: fylgja.
 
@@ -583,8 +580,6 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleUtilitiesOnlyCopy [
 FylgjaMigrateDeclarationIntoPackageTests >> testModuleUtilitiesToPackage [
 
 	| provenance destination result |
-
-
 	provenance := self moduleUtilities.
 	destination := self configPackage.
 
@@ -592,7 +587,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleUtilitiesToPackage [
 
 
 	result := fylgja produce: provenance into: destination.
-
+	result reapplyMappingRulesOnStubs.
 	self
 		assert: (JavaParser parse: result result produceCode)
 		isKindOf: JavaProgramFileNode
@@ -609,6 +604,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testRecordsetWrapperToPackage [
 	self installRulesFor: destination.
 
 	result := fylgja produce: provenance into: destination.
+	result reapplyMappingRulesOnStubs.
 	self
 		assert: (JavaParser parse: result result produceCode)
 		isKindOf: JavaProgramFileNode
@@ -639,7 +635,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testRecordsetWrapperoPackageOnlyCopy
 
 	FylgjaRuleInstaller new
 		topLevel;
-		anyFittedBindableEntity;
+		anyReferenceWithCandidate;
 		returnSameBinding;
 		installInto: fylgja.
 

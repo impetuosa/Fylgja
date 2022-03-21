@@ -20,7 +20,7 @@ FylgjaMigrateDeclarationIntoPackageStepByStepTests >> installRulesFor: destinati
 
 	FylgjaRuleInstaller new
 		topLevel;
-		anyFittedBindableEntity;
+		anyReferenceWithCandidate;
 		returnSameBinding;
 		installInto: fylgja.
 

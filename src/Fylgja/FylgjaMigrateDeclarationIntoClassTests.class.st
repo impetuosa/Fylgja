@@ -19,7 +19,7 @@ FylgjaRuleInstaller new
 
 	FylgjaRuleInstaller new
 		topLevel;
-		anyFittedBindableEntity;
+		anyReferenceWithCandidate;
 		returnSameBinding;
 		installInto: fylgja.
 
@@ -137,7 +137,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 
 	FylgjaRuleInstaller new
 		topLevel;
-		anyFittedBindableEntity;
+		anyReferenceWithCandidate;
 		returnSameBinding;
 		installInto: fylgja.
 
@@ -249,7 +249,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 		
 	FylgjaRuleInstaller new
 		topLevel;
-		anyFittedBindableEntity;
+		anyReferenceWithCandidate;
 		returnSameBinding;
 		installInto: fylgja.
 
@@ -367,7 +367,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 
 	FylgjaRuleInstaller new
 		topLevel;
-		anyFittedBindableEntity;
+		anyReferenceWithCandidate;
 		returnSameBinding;
 		installInto: fylgja.
 
@@ -399,7 +399,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 	" By default in the system we copy"
 	FylgjaRuleInstaller new
 		topLevel;
-		anyFittedBindableEntity;
+		anyReferenceWithCandidate;
 		returnSameBinding;
 		installInto: fylgja.
 
@@ -516,7 +516,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 
 	FylgjaRuleInstaller new
 		topLevel;
-		anyFittedBindableEntity;
+		anyReferenceWithCandidate;
 		returnSameBinding;
 		installInto: fylgja.
 
@@ -595,7 +595,6 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 
 	result := fylgja produce: provenance into: destination.
 
-
 	self
 		assert: (JavaParser parse: result result parent produceCode)
 		isKindOf: JavaProgramFileNode
@@ -612,7 +611,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyOnlyPr
 
 	FylgjaRuleInstaller new
 		topLevel;
-		anyFittedBindableEntity;
+		anyReferenceWithCandidate;
 		returnSameBinding;
 		installInto: fylgja.
 

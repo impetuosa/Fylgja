@@ -44,6 +44,12 @@ FylgjaAbstractCandidateStub >> canBeReferredAsMethod [
 ]
 
 { #category : #testing }
+FylgjaAbstractCandidateStub >> canBeReferredAsPrimitiveType [
+
+	^ true
+]
+
+{ #category : #testing }
 FylgjaAbstractCandidateStub >> canBeReferredAsType [
 
 	^ true

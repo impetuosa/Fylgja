@@ -33,7 +33,7 @@ NotThatGoodTests >> assertAllReferencesHaveCandidate: aFylgjaDerivationResult [
 
 	self assert:
 		((self allReferencesFrom: aFylgjaDerivationResult) select: [ :e | 
-			 e candidate isNil ]) isEmpty
+			 e candidate isNil and: [ e isFylgjaMissingCandidateStub not  ] ]) isEmpty
 ]
 
 { #category : #'as yet unclassified' }
