@@ -46,7 +46,7 @@ FylgjaConditionPattern >> matchPattern: aPatternNode with: aNode [
 		ifPresent: [ :v | ^ v ].
 
 
-	(aPatternNode isKindOf: MOObject) ifTrue: [ 
+	(aPatternNode isKindOf: MODeclaration) ifTrue: [ 
 		^ aPatternNode class allSlots allSatisfy: [ :s | 
 			  self matchPattern: (s read: aPatternNode) with: (s read: aNode) ] ].
 	^ self matchValue: aPatternNode with: aNode
