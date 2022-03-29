@@ -1,5 +1,5 @@
 Class {
 	#name : #FylgjaGenerate,
-	#superclass : #FylgjaProduce,
+	#superclass : #FylgjaMigrationPredicate,
 	#category : #'Fylgja-Rule-Operations'
 }

@@ -25,21 +25,12 @@ FylgjaTranslateCopyAsAttribute >> applyTo: aProvenanceEntityRelation croppingRel
 { #category : #visiting }
 FylgjaTranslateCopyAsAttribute >> keepCopyingWith: aWriter [
 
-	^ aWriter
-		  writeCopyOf: relation
-		  croppingRelationsWith: croppingBlock
-		  readingValues: [ :context :value | 
-			  using
-				  migrate: value
-				  croppingRelationsWith: croppingBlock
-				  intoDestinationWriter: aWriter
-				  lookUp: lookup ]
-		  bindingWithCandidates: [ :contextWriter :value | 
-			  using
-				  bind: value
-				  croppingRelationsWith: croppingBlock
-				  intoDestinationWriter: contextWriter
-				  lookUp: lookup ]
+	^ FylgjaCopy new
+		  lookUp: lookup;
+		  fylgja: using;
+		  provenanceRelation: relation;
+		  cropping: croppingBlock;
+		  applyOn: aWriter
 ]
 
 { #category : #printing }

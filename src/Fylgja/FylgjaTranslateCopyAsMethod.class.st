@@ -13,25 +13,13 @@ FylgjaTranslateCopyAsMethod >> applyTo: aProvenanceEntityRelation croppingRelati
 	^ aDestinationWriter writeMethod: [ :methodWriter | 
 		  writer := methodWriter.
 		  aProvenanceEntityRelation to acceptVisitor: self.
-		  methodWriter
-			  writeCopyOf: aProvenanceEntityRelation
-			  croppingRelationsWith: aBlock
-			  readingValues: [ :context :value | 
-				  aFylgjaDerivativeModel
-					  migrate: value
-					  croppingRelationsWith: aBlock
-					  intoDestinationWriter: methodWriter
-					  lookUp: aFylgjaLookUpContext ]
-			  bindingWithCandidates: [ 
-				  :contextWriter 
-				  :provenanceEntityCandidate 
-				  :destinationEntity | 
-				  aFylgjaDerivativeModel
-					  bindAndReturnEntity: destinationEntity
-					  as: provenanceEntityCandidate
-					  croppingRelationsWith: aBlock
-					  usingWriter: contextWriter
-					  lookUp: aFylgjaLookUpContext ] ]
+
+		  FylgjaCopy new
+			  lookUp: aFylgjaLookUpContext;
+			  fylgja: aFylgjaDerivativeModel;
+			  provenanceRelation: aProvenanceEntityRelation;
+			  cropping: aBlock;
+			  applyOn: methodWriter ]
 ]
 
 { #category : #printing }

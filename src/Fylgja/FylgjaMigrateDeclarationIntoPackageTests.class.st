@@ -157,7 +157,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testErrorHandlingToPackage [
 
 	| provenance destination result |
 	provenance := self errorHandlingClass.
-	destination := self controllerPackage.
+	destination := self javaControllerPackage.
 
 	self installRulesFor: destination.
 
@@ -174,7 +174,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testErrorHandlingToPackageOnlyCopy [
 
 	| provenance destination result |
 	provenance := self errorHandlingClass.
-	destination := self controllerPackage.
+	destination := self javaControllerPackage.
 	fylgja activateTracing.
 
 

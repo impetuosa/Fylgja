@@ -161,7 +161,7 @@ FylgjaMigrateDeclarationIntoPackageCroppingTests >> testErrorHandlingToPackageCr
 
 	| provenance destination result |
 	provenance := self errorHandlingClass.
-	destination := self controllerPackage.
+	destination := self javaControllerPackage.
 
 	self installRulesFor: destination.
 
@@ -263,6 +263,7 @@ FylgjaMigrateDeclarationIntoPackageCroppingTests >> testModulePrivilegesToPackag
 		          col reject: [ :c | c to isKindOf: MOInvocable ] ]
 		          into: destination.
 	self assert: result result types first allContainments size equals: 0.
+
 	self
 		assert: (JavaParser parse: result result produceCode)
 		isKindOf: JavaProgramFileNode
@@ -315,7 +316,7 @@ FylgjaMigrateDeclarationIntoPackageCroppingTests >> testModuleUtilitiesToPackage
 
 	| provenance destination result |
 	provenance := self moduleUtilities.
-	destination := self controllerPackage.
+	destination := self javaControllerPackage.
 
 	self installRulesFor: destination.
 

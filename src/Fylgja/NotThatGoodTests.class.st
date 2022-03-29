@@ -10,6 +10,27 @@ Class {
 	#category : #'Fylgja-Test'
 }
 
+{ #category : #'as yet unclassified' }
+NotThatGoodTests >> accessDbAttachment [
+
+	^ northwind entities detect: [ :a | 
+		  (a isKindOf: MOPrimitiveType) and: [ a name = #dbAttachment ] ]
+]
+
+{ #category : #'as yet unclassified' }
+NotThatGoodTests >> accessDbMemoType [
+
+	^ northwind entities detect: [ :a | 
+		  (a isKindOf: MOPrimitiveType) and: [ a name = #dbMemo ] ]
+]
+
+{ #category : #'as yet unclassified' }
+NotThatGoodTests >> accessDbTextType [
+
+	^ northwind entities detect: [ :a | 
+		  (a isKindOf: MOPrimitiveType) and: [ a name = #dbText ] ]
+]
+
 { #category : #initialization }
 NotThatGoodTests >> angularClassStudent [
 
@@ -85,12 +106,6 @@ NotThatGoodTests >> configPackage [
 ]
 
 { #category : #initialization }
-NotThatGoodTests >> controllerPackage [
-
-	^ java packages detect: [ :p | p name = 'Controller' ]
-]
-
-{ #category : #initialization }
 NotThatGoodTests >> dataSourceConfigClassConfigPackage [
 
 	^ self configClassConfigPackage methods detect: [ :i | 
@@ -98,10 +113,57 @@ NotThatGoodTests >> dataSourceConfigClassConfigPackage [
 ]
 
 { #category : #initialization }
+NotThatGoodTests >> employeeDetails [
+
+
+	^ northwind entities detect: [ :a | 
+		  (a isKindOf: MOAlceForm) and: [ a name = 'Form_Employee_Details' ] ]
+]
+
+{ #category : #initialization }
 NotThatGoodTests >> errorHandlingClass [
 
 	^ northwind entities detect: [ :a | 
 		  (a isKindOf: MOClass) and: [ a name = 'ErrorHandling' ] ]
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> javaControllerPackage [
+
+	^ java packages detect: [ :p | p name = 'Controller' ]
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> javaDaoPackage [
+
+	^ java packages detect: [ :p | p name = 'DAO' ]
+]
+
+{ #category : #initialization }
+NotThatGoodTests >> javaModelPackage [
+
+	^ java packages detect: [ :p | p name = 'Model' ]
+]
+
+{ #category : #'as yet unclassified' }
+NotThatGoodTests >> javaServicePackage [
+
+	
+	^ java packages detect: [ :p | p name = 'Service' ]
+]
+
+{ #category : #'as yet unclassified' }
+NotThatGoodTests >> javaSqlBlob [
+
+	^ (java catalog entities select: [ :a | 
+		   (a isKindOf: MOClassType) and: [ a name = 'Blob' ] ]) first
+]
+
+{ #category : #'as yet unclassified' }
+NotThatGoodTests >> javaString [
+
+	^ (java entities select: [ :a | 
+		   (a isKindOf: MOClass) and: [ a name = 'String' ] ]) first
 ]
 
 { #category : #initialization }

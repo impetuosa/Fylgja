@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaBindRewrite,
-	#superclass : #FylgjaBinding,
+	#superclass : #FylgjaBindingPredicate,
 	#instVars : [
 		'destinationEntity'
 	],

@@ -38,6 +38,13 @@ FylgjaBindNameBasedRewriter >> adaptPrimitiveTypeReferenceToPrimitiveTypeReferen
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaBindNameBasedRewriter >> adaptPrimitiveTypeReferenceToPrimitiveTypeReferenceToPointToClassType [
+
+	^ self
+		  adaptPrimitiveTypeReferenceToPrimitiveTypeReferenceToPointToClass
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaBindNameBasedRewriter >> bind: aDestinationEntity to: aToBindElement semanticallyEquivalentTo: aCandidateRelation destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgja [
 
 	destinationEntity := aDestinationEntity.

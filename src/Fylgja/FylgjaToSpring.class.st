@@ -1,0 +1,212 @@
+Class {
+	#name : #FylgjaToSpring,
+	#superclass : #FylgjaGenerate,
+	#category : #'Fylgja-Rule-Operations'
+}
+
+{ #category : #adding }
+FylgjaToSpring >> addAttribute: attr boundAs: instance croppingRelationsWith: aBlock destinationWriter: class lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+
+	| typeReference |
+	typeReference := FylgjaMigrate new
+		                 cropping: aBlock;
+		                 fylgja: aFylgjaDerivativeModel;
+		                 lookUp: aFylgjaLookUpContext;
+		                 provenanceEntity: attr typeReference;
+		                 applyOn: class.
+
+
+
+	^ FylgjaAddAnnotatedAttribute new
+		  addAnnotationProduction:
+			  (self annotatingProductionColumn:
+					   (instance state at: #ControlSource));
+		  visibility: #protected;
+		  name: attr name;
+		  typeReference: typeReference;
+		  applyOn: class
+]
+
+{ #category : #adding }
+FylgjaToSpring >> addSessionFactoryAttribute: class [
+
+	| typeReference |
+	typeReference := self
+		                 calculateTypeReference: 'SessionFactory'
+		                 packageName: 'org.hibernate'
+		                 using: class.
+
+
+	^ FylgjaAddAnnotatedAttribute new
+		  addAnnotationProduction: self annotatingAsAutoWired;
+		  visibility: #protected;
+		  name: 'sessionFactory';
+		  typeReference: typeReference;
+		  applyOn: class
+]
+
+{ #category : #adding }
+FylgjaToSpring >> addSessionFactoryAttribute: aWriter for: aMOFormOrReport [ 
+	self shouldBeImplemented.
+]
+
+{ #category : #adding }
+FylgjaToSpring >> addSetterAndGetter: aMOAttribute into: aWriter [
+
+	FylgjaAddSetter new
+		attribute: aMOAttribute;
+		applyOn: aWriter.
+		
+	FylgjaAddGetter new
+		attribute: aMOAttribute;
+		applyOn: aWriter.
+	
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaToSpring >> allDataBoundableAttributes: object model: model [
+
+	| tableName |
+	tableName := object state at: #RecordSource.
+	self assert:
+		(tableName includesSubstring: #select caseSensitive: false) not.
+	^ (model entities select: [ :a | 
+		   ((a isKindOf: MOAlceTable) or: [ a isKindOf: MOAlceQuery ]) and: [ 
+			   a compareName: tableName ] ]) flatCollect: #attributes
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaToSpring >> annotate: class asTableNamed: tableName [
+
+	^ FylgjaAnnotate new
+		  packageName: 'javax.persistence';
+		  annotationName: 'Table';
+		  addNamedParameter: #name -> tableName;
+		  applyOn: class
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaToSpring >> annotateAsEntity: class [
+
+	^ FylgjaAnnotate new
+		  packageName: 'javax.persistence';
+		  annotationName: 'Entity';
+		  applyOn: class
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaToSpring >> annotateAsRepository: class [
+
+	^ FylgjaAnnotate new
+		  packageName: 'org.springframework.stereotype';
+		  annotationName: 'Repository';
+		  applyOn: class
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaToSpring >> annotatingAsAutoWired [
+
+	^ FylgjaAnnotate new
+		  packageName: 'org.springframework.beans.factory.annotation';
+		  annotationName: 'Autowired'
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaToSpring >> annotatingProductionColumn: columnName [
+
+	^ FylgjaAnnotate new
+		  packageName: 'javax.persistence';
+		  annotationName: 'Column';
+		  addNamedParameter: #name -> columnName
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaToSpring >> calculateTypeReference: aString packageName: aPackName using: aWriter [
+
+	| typeRef candidate |
+	candidate := (aWriter model allEntitiesSelect: [ :a | 
+		              a isType and: [ 
+			              a name = aString and: [ 
+				              a packageReference name = aPackName ] ] ]) ifEmpty: [ 
+		             aWriter model catalogEntitiesSelect: [ :a | 
+			             a isType and: [ 
+				             a name = aString and: [ 
+					             a packageReference name = aPackName ] ] ] ].
+	candidate := candidate
+		             ifEmpty: [ nil ]
+		             ifNotEmpty: [ candidate first ].
+	typeRef := aWriter typeReferenceNamed: aString.
+	typeRef candidate: candidate.
+	typeRef packageReference: (aWriter packageReferenceNamed: aPackName).
+	^ typeRef
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaToSpring >> calculateTypeReference: aString using: aMOClassWriter [ 
+	self shouldBeImplemented.
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaToSpring >> collectAllDatabaseBindings: aMOObject marringWith: dbAttrs [
+
+	^ (aMOObject state values
+		   select: [ :val | 
+			   (val isKindOf: MOObject) and: [ 
+				   (val state includesKey: #ControlSource) and: [ 
+					   (val state at: #ControlSource) isNotEmpty and: [ 
+						   (val state at: #ControlSource) first ~= $= ] ] ] ]
+		   thenCollect: [ :val | 
+			   val -> (dbAttrs detect: [ :db | 
+				    db compareName: (val state at: #ControlSource) ]) ])
+		  asDictionary
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaToSpring >> controllerNameFor: aFormOrReport [
+
+	^ (self saniteName: aFormOrReport) , '_Controller'
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaToSpring >> daoNameFor: aFormOrReport [
+
+	^ (self saniteName: aFormOrReport) , '_DAO'
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaToSpring >> databaseSourceName: object [
+
+	^ object state at: #RecordSource
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaToSpring >> defaultInstanceFor: aProvenanceEntity withIn: model [
+
+	| object |
+	object := model objects select: [ :a | 
+		          a type class = aProvenanceEntity class and: [ 
+			          a type name = aProvenanceEntity name ] ].
+
+	self assert: object size = 1.
+	^ object first
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaToSpring >> modelNameFor: aFormOrReport [
+
+	^ (self saniteName: aFormOrReport) , '_Model'
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaToSpring >> saniteName: aFormOrReport [
+
+	^ (aFormOrReport name copyReplaceAll: 'Form_' with: '')
+		  copyReplaceAll: 'Report_'
+		  with: ''
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaToSpring >> serviceNameFor: aFormOrReport [
+
+	^ (self saniteName: aFormOrReport) , '_Service'
+]

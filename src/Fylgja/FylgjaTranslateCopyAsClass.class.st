@@ -11,26 +11,13 @@ FylgjaTranslateCopyAsClass >> applyTo: aProvenanceEntityRelation croppingRelatio
 		  unit writeClass: [ :class | 
 			  class visibility: #public.
 			  class name: aProvenanceEntityRelation name.
-			  class
-				  writeCopyOf: aProvenanceEntityRelation
-				  croppingRelationsWith: [ :col | 
+			  FylgjaCopy new
+				  lookUp: aFylgjaLookUpContext;
+				  fylgja: aFylgjaDerivativeModel;
+				  provenanceRelation: aProvenanceEntityRelation;
+				  cropping: [ :col | 
 					  (aBlock value: col) select: [ :relation | 
-						  relation isMOObject not or: [ 
-							  relation to isVariable or: [ relation to isInvocable ] ] ] ]
-				  readingValues: [ :context :value | 
-					  aFylgjaDerivativeModel
-						  migrate: value
-						  croppingRelationsWith: aBlock
-						  intoDestinationWriter: context
-						  lookUp: aFylgjaLookUpContext ]
-				  bindingWithCandidates: [ 
-					  :contextWriter 
-					  :provenanceEntityCandidate 
-					  :destinationEntity | 
-					  aFylgjaDerivativeModel
-						  bindAndReturnEntity: destinationEntity
-						  as: provenanceEntityCandidate
-						  croppingRelationsWith: aBlock
-						  usingWriter: contextWriter
-						  lookUp: aFylgjaLookUpContext ] ] ]
+							  relation isMOObject not or: [ 
+									  relation to isVariable or: [ relation to isInvocable ] ] ] ];
+				  applyOn: class ] ]
 ]

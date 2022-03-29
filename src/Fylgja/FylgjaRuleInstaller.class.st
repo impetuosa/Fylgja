@@ -18,6 +18,14 @@ FylgjaRuleInstaller >> all [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> anyAlceForm [
+
+	^ self condition: (FylgjaConditionModelTypeIs new
+			   type: MOAlceForm;
+			   yourself)
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> anyAlceModule [
 
 	^ self condition: (FylgjaConditionModelTypeIs new
@@ -154,6 +162,48 @@ FylgjaRuleInstaller >> copyAsTypesReferenceNamed: aString [
 	^ self operation: (FylgjaTranslateCopyRenameTypeReference new
 			   name: aString;
 			   yourself)
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> formToAngularComponent [
+
+	^ self operation: FylgjaFormToAngularComponent new
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> formToAngularModel [
+
+	^ self operation: FylgjaFormToAngularModel new
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> formToAngularService [ 
+
+	^ self operation: FylgjaFormToAngularService new
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> formToSpringController [
+
+	^ self operation: FylgjaFormToSpringController new
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> formToSpringDAO [
+
+	^ self operation: FylgjaFormToSpringDAO new
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> formToSpringModel [
+
+	^ self operation: FylgjaFormToSpringModel new
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> formToSpringService [
+
+	^ self operation: FylgjaFormToSpringService new
 ]
 
 { #category : #'as yet unclassified' }
@@ -317,6 +367,14 @@ FylgjaRuleInstaller >> whenIsReferenceWithCandidate: aProvenanceCandidate [
 
 	^ self condition: (FylgjaConditionReferenceCandidateIs new
 			   candidate: aProvenanceCandidate;
+			   yourself)
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> whenIsReferenceWithCandidates:  someProvenanceCandidates [
+
+	^ self condition: (FylgjaConditionReferenceCandidateIsAny new
+			   candidates: someProvenanceCandidates;
 			   yourself)
 ]
 
