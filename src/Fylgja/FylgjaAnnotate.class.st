@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaAnnotate,
-	#superclass : #FylgjaProduce,
+	#superclass : #FylgjaProduction,
 	#instVars : [
 		'packageName',
 		'annotationName',

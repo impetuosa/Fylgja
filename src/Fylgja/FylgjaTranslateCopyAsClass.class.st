@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaTranslateCopyAsClass,
-	#superclass : #FylgjaTranslate,
+	#superclass : #FylgjaTranslation,
 	#category : #'Fylgja-Rule-Operations'
 }
 

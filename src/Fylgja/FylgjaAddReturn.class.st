@@ -1,8 +1,8 @@
 Class {
 	#name : #FylgjaAddReturn,
-	#superclass : #FylgjaProduce,
+	#superclass : #FylgjaProduction,
 	#instVars : [
-		'variable'
+		'expression'
 	],
 	#category : #'Fylgja-Rule-Operations'
 }
@@ -11,13 +11,10 @@ Class {
 FylgjaAddReturn >> applyOn: aWriter [
 
 	^ aWriter writeReturn: [ :return | 
-		  return writeExpression: [ :expression | 
-			  (expression variableReferenceNamed: variable name)
-				  candidate: variable;
-				  yourself ] ]
+		  return writeExpression: [ :e | expression ] ]
 ]
 
 { #category : #accessing }
-FylgjaAddReturn >> variable: aMOAttribute [ 
-	variable := aMOAttribute
+FylgjaAddReturn >> expression: anExpression [ 
+	expression := anExpression
 ]

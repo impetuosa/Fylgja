@@ -1,5 +1,5 @@
 Class {
-	#name : #FylgjaDelegate,
+	#name : #FylgjaRefactoring,
 	#superclass : #FylgjaOperation,
 	#category : #'Fylgja-Rule-Operations'
 }

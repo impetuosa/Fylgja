@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaTranslateInvocationToMessageSend,
-	#superclass : #FylgjaTranslate,
+	#superclass : #FylgjaTranslation,
 	#instVars : [
 		'selector',
 		'receiverBlock',

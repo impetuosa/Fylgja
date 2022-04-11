@@ -1,9 +1,6 @@
 Class {
 	#name : #FylgjaAddGetter,
-	#superclass : #FylgjaProduce,
-	#instVars : [
-		'attribute'
-	],
+	#superclass : #FylgjaAddAccessor,
 	#category : #'Fylgja-Rule-Operations'
 }
 
@@ -17,11 +14,6 @@ FylgjaAddGetter >> applyOn: aWriter [
 
 		  getter writeBlock: [ :block | 
 			  FylgjaAddReturn new
-				  variable: attribute;
+				  expression: (self attributeReference: block);
 				  applyOn: block ] ]
-]
-
-{ #category : #accessing }
-FylgjaAddGetter >> attribute: aMOAttribute [ 
-	attribute := aMOAttribute
 ]

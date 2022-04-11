@@ -1,9 +1,6 @@
 Class {
 	#name : #FylgjaAddSetter,
-	#superclass : #FylgjaProduce,
-	#instVars : [
-		'attribute'
-	],
+	#superclass : #FylgjaAddAccessor,
 	#category : #'Fylgja-Rule-Operations'
 }
 
@@ -23,12 +20,7 @@ FylgjaAddSetter >> applyOn: aWriter [
 
 		  setter writeBlock: [ :block | 
 			  FylgjaAddAssignment new
-				  read: parameter;
-				  write: attribute;
+				  read: (self referenceToVarLike: parameter using: block);
+				  write: (self attributeReference: block);
 				  applyOn: block ] ]
-]
-
-{ #category : #accessing }
-FylgjaAddSetter >> attribute: aMOAttribute [ 
-	attribute := aMOAttribute
 ]

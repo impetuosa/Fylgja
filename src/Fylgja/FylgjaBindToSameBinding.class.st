@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaBindToSameBinding,
-	#superclass : #FylgjaBindingPredicate,
+	#superclass : #FylgjaBinding,
 	#category : #'Fylgja-Rule-Operations'
 }
 

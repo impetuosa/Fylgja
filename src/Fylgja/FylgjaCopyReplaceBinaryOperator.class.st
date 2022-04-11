@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaCopyReplaceBinaryOperator,
-	#superclass : #FylgjaTranslate,
+	#superclass : #FylgjaTranslation,
 	#instVars : [
 		'operator'
 	],
