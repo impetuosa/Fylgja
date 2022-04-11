@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaAddAssignment,
-	#superclass : #FylgjaProduce,
+	#superclass : #FylgjaProduction,
 	#instVars : [
 		'read',
 		'write'
@@ -14,14 +14,8 @@ FylgjaAddAssignment >> applyOn: block [
 	^ block writeExpressionStatement: [ :stmt | 
 		  stmt writeExpression: [ :exp | 
 			  exp
-				  let: [ :writeExpression | 
-					  (writeExpression variableReferenceNamed: write name)
-						  candidate: write;
-						  yourself ]
-				  beAssignedWith: [ :readExpression | 
-					  (readExpression variableReferenceNamed: read name)
-						  candidate: read;
-						  yourself ] ] ]
+				  let: [ :writeExpression | write ]
+				  beAssignedWith: [ :readExpression | read ] ] ]
 ]
 
 { #category : #accessing }

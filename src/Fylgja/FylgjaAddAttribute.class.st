@@ -1,10 +1,11 @@
 Class {
 	#name : #FylgjaAddAttribute,
-	#superclass : #FylgjaProduce,
+	#superclass : #FylgjaProduction,
 	#instVars : [
 		'name',
 		'typeReference',
-		'visibility'
+		'visibility',
+		'initializer'
 	],
 	#category : #'Fylgja-Rule-Operations'
 }
@@ -16,7 +17,14 @@ FylgjaAddAttribute >> applyOn: aWriter [
 		  attr
 			  name: name;
 			  typeReference: typeReference;
-			  visibility: self visibility ]
+			  visibility: self visibility;
+			  initializer: initializer ]
+]
+
+{ #category : #accessing }
+FylgjaAddAttribute >> initializer: anInitializer [
+
+	initializer := anInitializer
 ]
 
 { #category : #accessing }

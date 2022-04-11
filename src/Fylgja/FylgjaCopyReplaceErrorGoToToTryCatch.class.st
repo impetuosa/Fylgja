@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaCopyReplaceErrorGoToToTryCatch,
-	#superclass : #FylgjaTranslate,
+	#superclass : #FylgjaTranslation,
 	#category : #'Fylgja-Rule-Operations'
 }
 

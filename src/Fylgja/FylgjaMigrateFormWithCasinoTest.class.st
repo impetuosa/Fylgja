@@ -239,19 +239,19 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToController [
 
 	| provenance destination result |
 	provenance := self employeeDetails.
-	destination := self javaControllerPackage .
-	
-	
+	destination := self javaControllerPackage.
+
+
 	self installRulesFor: destination.
-	
-	
+
+
 	FylgjaRuleInstaller new
 		context: destination;
-		anyAlceForm ;
+		anyAlceForm;
 		formToSpringController;
 		installInto: fylgja.
-	
-	
+
+
 
 	result := fylgja produce: provenance into: destination.
 	result reapplyMappingRulesOnStubs.
@@ -336,7 +336,7 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToModel [
 
 	result := fylgja produce: provenance into: destination.
 	result reapplyMappingRulesOnStubs.
-	result result produceCode inspect.
+
 	self
 		assert: (JavaParser parse: result result produceCode)
 		isKindOf: JavaProgramFileNode
@@ -362,7 +362,7 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToService [
 
 	result := fylgja produce: provenance into: destination.
 	result reapplyMappingRulesOnStubs.
-
+result result produceCode inspect. 
 	self
 		assert: (JavaParser parse: result result produceCode)
 		isKindOf: JavaProgramFileNode

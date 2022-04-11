@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaToSpring,
-	#superclass : #FylgjaGenerate,
+	#superclass : #FylgjaGeneration,
 	#category : #'Fylgja-Rule-Operations'
 }
 
@@ -28,7 +28,19 @@ FylgjaToSpring >> addAttribute: attr boundAs: instance croppingRelationsWith: aB
 ]
 
 { #category : #adding }
-FylgjaToSpring >> addSessionFactoryAttribute: class [
+FylgjaToSpring >> addDaoDelegate: class for: aMOFormOrReport [
+
+	^ FylgjaAddAnnotatedAttribute new
+		  addAnnotationProduction: self annotatingAsAutoWired;
+		  visibility: #protected;
+		  name: (self daoNameFor: aMOFormOrReport) uncapitalized;
+		  typeReference:
+			  (class typeReferenceNamed: (self daoNameFor: aMOFormOrReport));
+		  applyOn: class
+]
+
+{ #category : #adding }
+FylgjaToSpring >> addSessionFactoryAttribute: class for: aMOFormOrReport [
 
 	| typeReference |
 	typeReference := self
@@ -43,11 +55,6 @@ FylgjaToSpring >> addSessionFactoryAttribute: class [
 		  name: 'sessionFactory';
 		  typeReference: typeReference;
 		  applyOn: class
-]
-
-{ #category : #adding }
-FylgjaToSpring >> addSessionFactoryAttribute: aWriter for: aMOFormOrReport [ 
-	self shouldBeImplemented.
 ]
 
 { #category : #adding }
@@ -86,6 +93,25 @@ FylgjaToSpring >> annotate: class asTableNamed: tableName [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaToSpring >> annotateAsCrossOrigin: class [
+
+	^ FylgjaAnnotate new
+		  packageName: 'org.springframework.web.bind.annotation';
+		  annotationName: 'CrossOrigin';
+		  applyOn: class
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaToSpring >> annotateAsCrossOrigin: class withOriginAt: aString [
+
+	^ FylgjaAnnotate new
+		  packageName: 'org.springframework.web.bind.annotation';
+		  annotationName: 'CrossOrigin';
+		  addNamedParameter: #origin -> (class stringLiteral: aString);
+		  applyOn: class
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaToSpring >> annotateAsEntity: class [
 
 	^ FylgjaAnnotate new
@@ -104,6 +130,43 @@ FylgjaToSpring >> annotateAsRepository: class [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaToSpring >> annotateAsRequestMapping: class mappingTo: aString [
+
+	^ FylgjaAnnotate new
+		  packageName: 'org.springframework.web.bind.annotation';
+		  annotationName: 'RequestMapping';
+		  addNamedParameter: #value -> (class stringLiteral: aString);
+		  applyOn: class
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaToSpring >> annotateAsRestController: class [
+
+	^ FylgjaAnnotate new
+		  packageName: 'org.springframework.web.bind.annotation';
+		  annotationName: 'RestController';
+		  applyOn: class
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaToSpring >> annotateAsService: class [
+
+	^ FylgjaAnnotate new
+		  packageName: 'org.springframework.stereotype';
+		  annotationName: 'Service';
+		  applyOn: class
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaToSpring >> annotateAsTransactional: class [
+
+	^ FylgjaAnnotate new
+		  packageName: 'org.springframework.transaction.annotation';
+		  annotationName: 'Transactional';
+		  applyOn: class
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaToSpring >> annotatingAsAutoWired [
 
 	^ FylgjaAnnotate new
@@ -118,27 +181,6 @@ FylgjaToSpring >> annotatingProductionColumn: columnName [
 		  packageName: 'javax.persistence';
 		  annotationName: 'Column';
 		  addNamedParameter: #name -> columnName
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaToSpring >> calculateTypeReference: aString packageName: aPackName using: aWriter [
-
-	| typeRef candidate |
-	candidate := (aWriter model allEntitiesSelect: [ :a | 
-		              a isType and: [ 
-			              a name = aString and: [ 
-				              a packageReference name = aPackName ] ] ]) ifEmpty: [ 
-		             aWriter model catalogEntitiesSelect: [ :a | 
-			             a isType and: [ 
-				             a name = aString and: [ 
-					             a packageReference name = aPackName ] ] ] ].
-	candidate := candidate
-		             ifEmpty: [ nil ]
-		             ifNotEmpty: [ candidate first ].
-	typeRef := aWriter typeReferenceNamed: aString.
-	typeRef candidate: candidate.
-	typeRef packageReference: (aWriter packageReferenceNamed: aPackName).
-	^ typeRef
 ]
 
 { #category : #'as yet unclassified' }
@@ -209,4 +251,18 @@ FylgjaToSpring >> saniteName: aFormOrReport [
 FylgjaToSpring >> serviceNameFor: aFormOrReport [
 
 	^ (self saniteName: aFormOrReport) , '_Service'
+]
+
+{ #category : #'instance creation' }
+FylgjaToSpring >> typeReferenceListOf: aMOTypeReference using: aMOMethodWriter [
+
+	| ref |
+	ref := self
+		       calculateTypeReference: #List
+		       packageName: 'java.util'
+		       using: aMOMethodWriter.
+
+	ref argumentTypeReferences: { aMOTypeReference }.
+
+	^ ref
 ]

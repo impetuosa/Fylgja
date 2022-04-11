@@ -21,7 +21,8 @@ FylgjaAddAnnotatedAttribute >> applyOn: aWriter [
 		  attr
 			  name: name;
 			  typeReference: typeReference;
-			  visibility: self visibility ]
+			  visibility: self visibility;
+			  initializer: initializer ]
 ]
 
 { #category : #adding }

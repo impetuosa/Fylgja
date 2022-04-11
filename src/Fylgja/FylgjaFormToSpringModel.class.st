@@ -35,7 +35,8 @@ FylgjaFormToSpringModel >> applyTo: aRelatedProvenanceEntity croppingRelationsWi
 			         self annotateAsEntity: class.
 			         self annotate: class asTableNamed: tableName.
 
-			         class name: (self modelNameFor: aRelatedProvenanceEntity to).
+			         class name:
+				         (self modelNameFor: aRelatedProvenanceEntity to).
 			         attributes keysAndValuesDo: [ :instance :attr | 
 				         | new |
 				         new := self
@@ -47,6 +48,6 @@ FylgjaFormToSpringModel >> applyTo: aRelatedProvenanceEntity croppingRelationsWi
 					                using: aFylgjaDerivativeModel.
 				         self addSetterAndGetter: new into: class ] ].
 
-		  cls dependencies do: [ :type | 
+		  (self importableDependencies: cls) do: [ :type | 
 			  unit writeImport: [ :import | import importType: type ] ] ]
 ]

@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaCopy,
-	#superclass : #FylgjaProduce,
+	#superclass : #FylgjaProduction,
 	#instVars : [
 		'cropping',
 		'provenanceRelation',

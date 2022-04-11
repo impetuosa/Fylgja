@@ -1,5 +1,5 @@
 Class {
 	#name : #FylgjaFormToAngularComponent,
-	#superclass : #FylgjaGenerate,
+	#superclass : #FylgjaGeneration,
 	#category : #'Fylgja-Rule-Operations'
 }

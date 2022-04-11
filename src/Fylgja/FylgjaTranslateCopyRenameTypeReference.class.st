@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaTranslateCopyRenameTypeReference,
-	#superclass : #FylgjaTranslate,
+	#superclass : #FylgjaTranslation,
 	#instVars : [
 		'writer',
 		'name'

@@ -25,11 +25,6 @@ FylgjaBindNameBasedRewriter >> adaptInvocationToMethodInvocation [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaBindNameBasedRewriter >> adaptPrimitiveTypeReferenceToClass [
-	self shouldBeImplemented.
-]
-
-{ #category : #'as yet unclassified' }
 FylgjaBindNameBasedRewriter >> adaptPrimitiveTypeReferenceToPrimitiveTypeReferenceToPointToClass [
 
 	^ (destinationWriter typeReferenceNamed: toBindElement name)

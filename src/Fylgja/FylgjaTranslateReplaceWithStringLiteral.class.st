@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaTranslateReplaceWithStringLiteral,
-	#superclass : #FylgjaTranslate,
+	#superclass : #FylgjaTranslation,
 	#instVars : [
 		'writer',
 		'string'

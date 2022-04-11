@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaTranslateCopyAsAttribute,
-	#superclass : #FylgjaTranslate,
+	#superclass : #FylgjaTranslation,
 	#instVars : [
 		'writer',
 		'relation',
