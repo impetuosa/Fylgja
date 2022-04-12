@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaBind,
-	#superclass : #FylgjaProduction,
+	#superclass : #FylgjaModification,
 	#instVars : [
 		'cropping',
 		'destinationEntity',

@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaMigrate,
-	#superclass : #FylgjaProduction,
+	#superclass : #FylgjaModification,
 	#instVars : [
 		'cropping',
 		'provenanceRelation',

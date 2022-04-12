@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaAddCatchExceptionPrintStacktrace,
-	#superclass : #FylgjaProduction,
+	#superclass : #FylgjaModification,
 	#category : #'Fylgja-Rule-Operations'
 }
 

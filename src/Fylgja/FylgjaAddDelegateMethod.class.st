@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaAddDelegateMethod,
-	#superclass : #FylgjaProduction,
+	#superclass : #FylgjaModification,
 	#instVars : [
 		'attributeReference',
 		'returnTypeReference',

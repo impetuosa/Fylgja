@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaAddAssignment,
-	#superclass : #FylgjaProduction,
+	#superclass : #FylgjaModification,
 	#instVars : [
 		'read',
 		'write'

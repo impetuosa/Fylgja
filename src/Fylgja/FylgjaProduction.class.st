@@ -4,25 +4,25 @@ Class {
 	#category : #'Fylgja-Rule-Operations'
 }
 
-{ #category : #'instance creation' }
-FylgjaProduction >> applyOn: aWriter [
-	self subclassResponsibility 
+{ #category : #'as yet unclassified' }
+FylgjaProduction >> applyBindTo: aDestinationEntity withCandidateFrom: aProvenanceEntity croppingRelationsWith: aBlock writer: writer lookup: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+
+	| candidateRelations |
+	candidateRelations := aProvenanceEntity to allCandidateRelations.
+
+	self assert: candidateRelations size = 1.
+
+
+	^ aFylgjaDerivativeModel
+		  bindAndReturnEntity: aDestinationEntity
+		  as: candidateRelations first
+		  croppingRelationsWith: aBlock
+		  usingWriter: writer
+		  lookUp: aFylgjaLookUpContext
 ]
 
-{ #category : #'instance creation' }
-FylgjaProduction >> typeReferenceBasedOn: aBlock using: aWriter [
+{ #category : #'as yet unclassified' }
+FylgjaProduction >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgja [
 
-	| declaration ref |
-	declaration := ((aWriter model allEntitiesSelect: [ :a | 
-		                 aBlock value: a ]) ifEmpty: [ 
-		                aWriter model catalogEntitiesSelect: [ :a | 
-			                aBlock value: a ] ]) first.
-	ref := declaration isParametrizable
-		       ifTrue: [ 
-			       aWriter
-				       parametrizedTypeReferenceNamed: declaration name
-				       arguments: {  } ]
-		       ifFalse: [ aWriter typeReferenceNamed: declaration name ].
-	ref candidate: declaration.
-	^ ref
+	self subclassResponsibility
 ]

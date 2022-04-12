@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaAddAccessor,
-	#superclass : #FylgjaProduction,
+	#superclass : #FylgjaModification,
 	#instVars : [
 		'attribute'
 	],

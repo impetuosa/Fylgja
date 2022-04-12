@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaAddReturn,
-	#superclass : #FylgjaProduction,
+	#superclass : #FylgjaModification,
 	#instVars : [
 		'expression'
 	],

@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaAddHibernateMethod,
-	#superclass : #FylgjaProduction,
+	#superclass : #FylgjaModification,
 	#instVars : [
 		'modelTypeReference',
 		'sessionFactory'
