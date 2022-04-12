@@ -1,5 +1,5 @@
 Class {
 	#name : #FylgjaTranslation,
-	#superclass : #FylgjaMigration,
+	#superclass : #FylgjaProduction,
 	#category : #'Fylgja-Rule-Operations'
 }

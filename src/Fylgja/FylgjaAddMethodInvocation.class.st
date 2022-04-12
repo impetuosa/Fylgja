@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaAddMethodInvocation,
-	#superclass : #FylgjaProduction,
+	#superclass : #FylgjaModification,
 	#instVars : [
 		'receiver',
 		'selector',

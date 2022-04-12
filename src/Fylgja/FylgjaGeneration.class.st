@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaGeneration,
-	#superclass : #FylgjaMigration,
+	#superclass : #FylgjaProduction,
 	#category : #'Fylgja-Rule-Operations'
 }
 

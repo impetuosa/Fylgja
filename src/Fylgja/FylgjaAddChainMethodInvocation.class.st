@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaAddChainMethodInvocation,
-	#superclass : #FylgjaProduction,
+	#superclass : #FylgjaModification,
 	#instVars : [
 		'invocations',
 		'firstReceiverReference'

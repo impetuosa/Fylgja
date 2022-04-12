@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaAddAttribute,
-	#superclass : #FylgjaProduction,
+	#superclass : #FylgjaModification,
 	#instVars : [
 		'name',
 		'typeReference',
