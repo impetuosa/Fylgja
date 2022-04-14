@@ -248,7 +248,8 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToController [
 	FylgjaRuleInstaller new
 		context: destination;
 		anyAlceForm;
-		formToSpringController;
+		formToSpringController: 'http://localhost:4200'
+		apiURLExtention: '/api';
 		installInto: fylgja.
 
 

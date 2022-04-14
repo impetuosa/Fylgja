@@ -183,9 +183,12 @@ FylgjaRuleInstaller >> formToAngularService [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaRuleInstaller >> formToSpringController [
+FylgjaRuleInstaller >> formToSpringController: anUrl apiURLExtention: aString [
 
-	^ self operation: FylgjaFormToSpringController new
+	^ self operation: (FylgjaFormToSpringController new
+			   originURL: anUrl;
+			   apiURLExtention: aString;
+			   yourself)
 ]
 
 { #category : #'as yet unclassified' }
