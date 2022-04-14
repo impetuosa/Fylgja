@@ -25,7 +25,14 @@ SirenMigrationTests >> installRulesFor: aDestination [
      topLevel;
      anyEntity;
      copy;
-     installInto: fylgja
+     installInto: fylgja.
+
+  FylgjaRuleInstaller new
+     context: aDestination ;
+     anyPragmaWithSelector:#C:;
+     copyAsSelfFFiInvocation;
+     installInto: fylgja.
+
 ]
 
 { #category : #initialization }

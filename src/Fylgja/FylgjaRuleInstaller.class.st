@@ -76,6 +76,11 @@ FylgjaRuleInstaller >> anyOnErrorGoToBlockTransformableToTryCatch [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> anyPragmaWithSelector: aString [ 
+	self shouldBeImplemented.
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> anyReferenceWithCandidate [
 
 	^ self condition: FylgjaConditionReferenceWithCandidate new
