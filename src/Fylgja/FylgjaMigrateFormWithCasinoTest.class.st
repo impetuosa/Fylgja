@@ -155,6 +155,62 @@ FylgjaMigrateFormWithCasinoTest >> installRulesFor: destination [
 ]
 
 { #category : #initialization }
+FylgjaMigrateFormWithCasinoTest >> installRulesForJavaSpring [
+
+	"Types"
+
+	FylgjaRuleInstaller new
+		atLanguageNamed: #java;
+		whenIsReferenceWithCandidates: { 
+				self accessDbMemoType.
+				self accessDbTextType };
+		bindRewriteTo: self javaString;
+		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		atLanguageNamed: #java;
+		whenIsReferenceWithCandidate: self accessDbAttachment;
+		bindRewriteTo: self javaSqlBlob;
+		installInto: fylgja.
+
+
+	" Model "
+ 
+	FylgjaRuleInstaller new
+		context: self javaModelPackage;
+		anyAlceForm;
+		formToSpringModel;
+		installInto: fylgja.
+
+
+	" DAO "
+
+	FylgjaRuleInstaller new
+		context: self javaDaoPackage;
+		anyAlceForm;
+		formToSpringDAO;
+		installInto: fylgja.
+
+	" Service "
+
+
+	FylgjaRuleInstaller new
+		context: self javaServicePackage;
+		anyAlceForm;
+		formToSpringService;
+		installInto: fylgja.
+
+
+	"Controller "
+	FylgjaRuleInstaller new
+		context: self javaControllerPackage;
+		anyAlceForm;
+		formToSpringController: 'http://localhost:4200'
+		apiURLExtention: '/api';
+		installInto: fylgja
+]
+
+{ #category : #initialization }
 FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToAngularComponent [
 
 	| provenance destination result |
@@ -248,7 +304,8 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToController [
 	FylgjaRuleInstaller new
 		context: destination;
 		anyAlceForm;
-		formToSpringController;
+		formToSpringController: 'http://localhost:4200'
+		apiURLExtention: '/api';
 		installInto: fylgja.
 
 
@@ -293,6 +350,42 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToDAO [
 		installInto: fylgja.
 
 	
+
+	result := fylgja produce: provenance into: destination.
+	result reapplyMappingRulesOnStubs.
+
+	self
+		assert: (JavaParser parse: result result produceCode)
+		isKindOf: JavaProgramFileNode
+]
+
+{ #category : #initialization }
+FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToJavaSpringProject [
+
+	| provenance destination result |
+	provenance := self employeeDetails.
+	destination := self javaControllerPackage.
+
+	" THE MULTIPLICATION DISPATCHER RULE SHOULD WORKFINE, BUT OUR JAVA PACKAGES DO NOT HAVE A COMPLETE ANCHOR, AS MUCH AS THE SUBINSTANCES. 
+	  SINCE PACKAGE PARENT IS NIL, THEIR ANCHOR PATH IS ROOT! THIS IS WRONG.
+ 	  PARENT SHOULD BE THE OR SOMETHING ELSE LIKE A PROJECT . 
+	  ANCHOR SHOULD BE / PACKAGE / PNAME 
+	
+	"
+	self installRulesFor: destination.
+	self installRulesForJavaSpring.
+
+
+	FylgjaRuleInstaller new
+		atLanguageNamed: #java;
+		 anyAlceForm;
+		dispatchToSubPackages: { 
+				self javaModelPackage.
+				self javaDaoPackage.
+				self javaServicePackage.
+				self javaControllerPackage };
+		installInto: fylgja.
+
 
 	result := fylgja produce: provenance into: destination.
 	result reapplyMappingRulesOnStubs.
@@ -362,7 +455,7 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToService [
 
 	result := fylgja produce: provenance into: destination.
 	result reapplyMappingRulesOnStubs.
-result result produceCode inspect. 
+
 	self
 		assert: (JavaParser parse: result result produceCode)
 		isKindOf: JavaProgramFileNode

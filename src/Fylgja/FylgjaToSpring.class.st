@@ -40,6 +40,18 @@ FylgjaToSpring >> addDaoDelegate: class for: aMOFormOrReport [
 ]
 
 { #category : #adding }
+FylgjaToSpring >> addServiceDelegate: class for: aMOFormOrReport [
+
+	^ FylgjaAddAnnotatedAttribute new
+		  addAnnotationProduction: self annotatingAsAutoWired;
+		  visibility: #protected;
+		  name: (self serviceNameFor: aMOFormOrReport) uncapitalized;
+		  typeReference:
+			  (class typeReferenceNamed: (self serviceNameFor: aMOFormOrReport));
+		  applyOn: class
+]
+
+{ #category : #adding }
 FylgjaToSpring >> addSessionFactoryAttribute: class for: aMOFormOrReport [
 
 	| typeReference |
@@ -93,21 +105,12 @@ FylgjaToSpring >> annotate: class asTableNamed: tableName [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaToSpring >> annotateAsCrossOrigin: class [
-
-	^ FylgjaAnnotate new
-		  packageName: 'org.springframework.web.bind.annotation';
-		  annotationName: 'CrossOrigin';
-		  applyOn: class
-]
-
-{ #category : #'as yet unclassified' }
 FylgjaToSpring >> annotateAsCrossOrigin: class withOriginAt: aString [
 
 	^ FylgjaAnnotate new
 		  packageName: 'org.springframework.web.bind.annotation';
 		  annotationName: 'CrossOrigin';
-		  addNamedParameter: #origin -> (class stringLiteral: aString);
+		  addNamedParameter: #origins -> aString;
 		  applyOn: class
 ]
 
@@ -135,7 +138,7 @@ FylgjaToSpring >> annotateAsRequestMapping: class mappingTo: aString [
 	^ FylgjaAnnotate new
 		  packageName: 'org.springframework.web.bind.annotation';
 		  annotationName: 'RequestMapping';
-		  addNamedParameter: #value -> (class stringLiteral: aString);
+		  addNamedParameter: #value -> aString;
 		  applyOn: class
 ]
 
@@ -172,6 +175,15 @@ FylgjaToSpring >> annotatingAsAutoWired [
 	^ FylgjaAnnotate new
 		  packageName: 'org.springframework.beans.factory.annotation';
 		  annotationName: 'Autowired'
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaToSpring >> annotatingAsGetMapping: aString [
+
+	^ FylgjaAnnotate new
+		  packageName: 'org.springframework.web.bind.annotation';
+		  addNamedParameter: #value -> aString;
+		  annotationName: 'RequestMapping'
 ]
 
 { #category : #'as yet unclassified' }
@@ -225,12 +237,32 @@ FylgjaToSpring >> databaseSourceName: object [
 FylgjaToSpring >> defaultInstanceFor: aProvenanceEntity withIn: model [
 
 	| object |
-	object := model objects select: [ :a | 
+	object := model objectsSelect: [ :a | 
 		          a type class = aProvenanceEntity class and: [ 
 			          a type name = aProvenanceEntity name ] ].
 
 	self assert: object size = 1.
 	^ object first
+]
+
+{ #category : #testing }
+FylgjaToSpring >> hasId: aMOAlceForm using: aFylgjaDerivativeModel [
+
+	| model object tableName table |
+	self assert: aMOAlceForm methods isEmpty.
+
+	model := aFylgjaDerivativeModel selectDerivativeModelFor: aMOAlceForm.
+	object := self defaultInstanceFor: aMOAlceForm withIn: model.
+
+	tableName := self databaseSourceName: object.
+
+	table := (model allEntitiesSelect: [ :a | 
+		         a isDatasource and: [ 
+			         a name = tableName or: [ 
+				         a sanitizedName = (a sanitize: tableName) ] ] ]) first.
+
+
+	^ table hasIdColumns
 ]
 
 { #category : #'as yet unclassified' }

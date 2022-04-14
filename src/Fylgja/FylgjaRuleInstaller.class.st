@@ -170,6 +170,14 @@ FylgjaRuleInstaller >> copyAsTypesReferenceNamed: aString [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> dispatchToSubPackages: aCollection [
+
+	^ self operation: (FylgjaOperationMultiply new
+			   destinations: aCollection;
+			   yourself)
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> formToAngularComponent [
 
 	^ self operation: FylgjaFormToAngularComponent new
@@ -188,9 +196,12 @@ FylgjaRuleInstaller >> formToAngularService [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaRuleInstaller >> formToSpringController [
+FylgjaRuleInstaller >> formToSpringController: anUrl apiURLExtention: aString [
 
-	^ self operation: FylgjaFormToSpringController new
+	^ self operation: (FylgjaFormToSpringController new
+			   originURL: anUrl;
+			   apiURLExtention: aString;
+			   yourself)
 ]
 
 { #category : #'as yet unclassified' }
