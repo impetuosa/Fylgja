@@ -15,7 +15,7 @@ Class {
 FylgjaBind >> applyOn: aWriter [
 
 	^ fylgja
-		  bindAndReturnEntity: destinationEntity
+		  mapEntity: destinationEntity
 		  as: provenanceEntityCandidate
 		  croppingRelationsWith: cropping
 		  usingWriter: aWriter

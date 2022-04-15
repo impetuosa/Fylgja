@@ -30,6 +30,11 @@ FylgjaDerivationResult >> entity [
 	self shouldBeImplemented.
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaDerivationResult >> forceMap [
+	^ derivative forceMap
+]
+
 { #category : #accessing }
 FylgjaDerivationResult >> map: aProvenanceEntity to: aDestinationEntity [
 
@@ -50,11 +55,6 @@ FylgjaDerivationResult >> produce: aProvenanceEntity into: aDestinationContext [
 		  result:
 			  (derivative produce: aProvenanceEntity into: aDestinationContext);
 		  yourself
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaDerivationResult >> reapplyMappingRulesOnStubs [
-	^ derivative reapplyMappingRulesOnStubs
 ]
 
 { #category : #accessing }

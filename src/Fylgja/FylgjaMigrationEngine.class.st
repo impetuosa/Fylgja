@@ -23,7 +23,25 @@ FylgjaMigrationEngine >> addModel: aMOHeterogeneousAbstractSemanticGraph [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> applyNewMappingRuleOverStubs: aCollection contextModel: contextModel using: aModifiedFylgjaMigrationEngine [
+FylgjaMigrationEngine >> derivative [
+
+	^ FylgjaDerivativeModel new
+		  fylgja: self;
+		  yourself
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> forceMapStubs: aModifiedFylgjaMigrationEngine [
+
+	^ aModifiedFylgjaMigrationEngine derivativeModels do: [ :contextModel | 
+		  self
+			  forceReMappingRuleOverStubs: contextModel allStubs
+			  contextModel: contextModel
+			  using: aModifiedFylgjaMigrationEngine ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> forceReMappingRuleOverStubs: aCollection contextModel: contextModel using: aModifiedFylgjaMigrationEngine [
 
 	| newElement |
 	aCollection do: [ :stub | 
@@ -40,7 +58,7 @@ FylgjaMigrationEngine >> applyNewMappingRuleOverStubs: aCollection contextModel:
 			          model: contextModel.
 
 		newElement := aModifiedFylgjaMigrationEngine
-			              bindAndReturnEntity: stub parent
+			              mapEntity: stub parent
 			              as: stub provenance
 			              croppingRelationsWith: [ :a | a ]
 			              usingWriter: contextModel writer
@@ -48,35 +66,6 @@ FylgjaMigrationEngine >> applyNewMappingRuleOverStubs: aCollection contextModel:
 
 
 		self model: contextModel swap: stub with: newElement ]
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> bindAndReturnEntity: aDestinationEntity as: aCandidateRelation croppingRelationsWith: aBlock usingWriter: aWriter lookUp: aLookupContext using: aModifiedFylgjaMigrationEngine [
-	| rules partialResult rule |
-	
-	rules := aLookupContext
-		         lookupRulesForBinding: aDestinationEntity
-		         with: aCandidateRelation.
-
-	rules ifEmpty: [ NotFound signal: 'No mapping rule found ' ].
-	rule := rules first.
-	partialResult := rule
-		                 bind: aDestinationEntity
-		                 as: aCandidateRelation
-		                 croppingRelationsWith: aBlock
-		                 destinationWriter: aWriter
-		                 lookUp: aLookupContext
-		                 using: aModifiedFylgjaMigrationEngine.
-
-	^ partialResult
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> derivative [
-
-	^ FylgjaDerivativeModel new
-		  fylgja: self;
-		  yourself
 ]
 
 { #category : #accessing }
@@ -127,14 +116,33 @@ FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aM
 
 
 	context := aModifiedFylgjaMigrationEngine selectDerivativeModelFor:
-		           aDestinationEntity. "aDestinationEntity parent ifNil: [ 
-		            ].
-"
+		           aDestinationEntity. 
 	FylgjaRuleInstaller new
 		context: context;
 		whenIsReferenceWithCandidate: aProvenanceEntity;
 		bindRewriteTo: aDestinationEntity;
 		installInto: aModifiedFylgjaMigrationEngine
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> mapEntity: aDestinationEntity as: aCandidateRelation croppingRelationsWith: aBlock usingWriter: aWriter lookUp: aLookupContext using: aModifiedFylgjaMigrationEngine [
+	| rules partialResult rule |
+	
+	rules := aLookupContext
+		         lookupRulesForBinding: aDestinationEntity
+		         with: aCandidateRelation.
+
+	rules ifEmpty: [ NotFound signal: 'No mapping rule found ' ].
+	rule := rules first.
+	partialResult := rule
+		                 bind: aDestinationEntity
+		                 as: aCandidateRelation
+		                 croppingRelationsWith: aBlock
+		                 destinationWriter: aWriter
+		                 lookUp: aLookupContext
+		                 using: aModifiedFylgjaMigrationEngine.
+
+	^ partialResult
 ]
 
 { #category : #'as yet unclassified' }
@@ -261,16 +269,6 @@ FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext [
 		  produce: aProvenanceEntity
 		  croppingRelationsWith: [ :a | a ]
 		  into: aDestinationContext
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> reapplyMappingRulesOnStubs: aModifiedFylgjaMigrationEngine [
-
-	^ aModifiedFylgjaMigrationEngine derivativeModels do: [ :contextModel | 
-		  self
-			  applyNewMappingRuleOverStubs: contextModel allStubs
-			  contextModel: contextModel
-			  using: aModifiedFylgjaMigrationEngine ]
 ]
 
 { #category : #'as yet unclassified' }

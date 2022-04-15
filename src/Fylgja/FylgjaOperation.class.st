@@ -99,7 +99,7 @@ FylgjaOperation >> writeCopyOf: aProvenanceEntityRelation croppingRelationsWith:
 					  :provenanceEntityCandidate 
 					  :destinationEntity | 
 					  aFylgjaDerivativeModel
-						  bindAndReturnEntity: destinationEntity
+						  mapEntity: destinationEntity
 						  as: provenanceEntityCandidate
 						  croppingRelationsWith: aBlock
 						  usingWriter: contextWriter

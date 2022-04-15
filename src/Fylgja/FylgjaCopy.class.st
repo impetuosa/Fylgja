@@ -27,7 +27,7 @@ FylgjaCopy >> applyOn: aWriter [
 			  :provenanceEntityCandidate 
 			  :destinationEntity | 
 			  fylgja
-				  bindAndReturnEntity: destinationEntity
+				  mapEntity: destinationEntity
 				  as: provenanceEntityCandidate
 				  croppingRelationsWith: cropping
 				  usingWriter: contextWriter

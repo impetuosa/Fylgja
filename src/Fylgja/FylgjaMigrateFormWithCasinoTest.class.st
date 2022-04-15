@@ -230,7 +230,7 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToAngularComponent [
 	
 
 	result := fylgja produce: provenance into: destination.
-	result reapplyMappingRulesOnStubs.
+	result forceMap.
 
 	self
 		assert: (JavaParser parse: result result produceCode)
@@ -254,10 +254,9 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToAngularModel [
 		formToAngularModel;
 		installInto: fylgja.
 	
-	
 
 	result := fylgja produce: provenance into: destination.
-	result reapplyMappingRulesOnStubs.
+	result forceMap.
 
 	self
 		assert: (JavaParser parse: result result produceCode)
@@ -283,7 +282,7 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToAngularService [
 	
 
 	result := fylgja produce: provenance into: destination.
-	result reapplyMappingRulesOnStubs.
+	result forceMap.
 
 	self
 		assert: (JavaParser parse: result result produceCode)
@@ -311,7 +310,7 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToController [
 
 
 	result := fylgja produce: provenance into: destination.
-	result reapplyMappingRulesOnStubs.
+	result forceMap.
 
 	self
 		assert: (JavaParser parse: result result produceCode)
@@ -352,7 +351,7 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToDAO [
 	
 
 	result := fylgja produce: provenance into: destination.
-	result reapplyMappingRulesOnStubs.
+	result forceMap.
 
 	self
 		assert: (JavaParser parse: result result produceCode)
@@ -388,7 +387,7 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToJavaSpringProject [
 
 
 	result := fylgja produce: provenance into: destination.
-	result reapplyMappingRulesOnStubs.
+	result forceMap.
 
 	self
 		assert: (JavaParser parse: result result produceCode)
@@ -428,7 +427,7 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToModel [
 
 
 	result := fylgja produce: provenance into: destination.
-	result reapplyMappingRulesOnStubs.
+	result forceMap.
 
 	self
 		assert: (JavaParser parse: result result produceCode)
@@ -454,7 +453,7 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToService [
 	
 
 	result := fylgja produce: provenance into: destination.
-	result reapplyMappingRulesOnStubs.
+	result forceMap.
 
 	self
 		assert: (JavaParser parse: result result produceCode)
