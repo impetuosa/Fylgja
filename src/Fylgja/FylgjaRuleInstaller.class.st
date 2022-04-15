@@ -76,6 +76,18 @@ FylgjaRuleInstaller >> anyOnErrorGoToBlockTransformableToTryCatch [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> anyPragmaWithSelector: aString [
+  ^self condition: (FylgjaConditionIsPragmaWithSelector new
+           selector: aString;
+           yourself)
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> anyPreexistingClass [
+	^ self condition: FylgjaPreexistingClass new 
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> anyReferenceWithCandidate [
 
 	^ self condition: FylgjaConditionReferenceWithCandidate new
@@ -157,11 +169,21 @@ FylgjaRuleInstaller >> copyAsPublicClass [
 ]
 
 { #category : #copying }
+FylgjaRuleInstaller >> copyAsSelfFFiInvocation [
+	^ self operation: FylgjaTranslateCopyAsSelfFFICall new
+]
+
+{ #category : #copying }
 FylgjaRuleInstaller >> copyAsTypesReferenceNamed: aString [
 
 	^ self operation: (FylgjaTranslateCopyRenameTypeReference new
 			   name: aString;
 			   yourself)
+]
+
+{ #category : #copying }
+FylgjaRuleInstaller >> copyOrExtendClass [
+ self operation: FylgjaTranslateCopyOrExtendClass new 
 ]
 
 { #category : #'as yet unclassified' }

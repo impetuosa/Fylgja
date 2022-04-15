@@ -6,7 +6,7 @@ Class {
 
 { #category : #testing }
 FylgjaIsFFIPragma >> matches: aProvenanceEntity context: aDestinationContext forWriting: aType [
-  ^(aProvenanceEntity isKindOf: MOStPragma) and: [ aProvenanceEntity selector = #C: ]
+  ^(aProvenanceEntity isKindOf: MOStPragma) and: [ aProvenanceEntity selector literal = #C: ]
 ]
 
 { #category : #testing }
