@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : #initialization }
-SirenMigrationTests >> installRulesFor: aDestination [
+SirenMigrationTests >> installRulesFor: s [
   FylgjaRuleInstaller new
      topLevel;
      anyBindableEntity;
@@ -28,9 +28,16 @@ SirenMigrationTests >> installRulesFor: aDestination [
      installInto: fylgja.
 
   FylgjaRuleInstaller new
-     context: aDestination ;
+     atLanguageNamed: #phiren;
      anyPragmaWithSelector:#C:;
      copyAsSelfFFiInvocation;
+     installInto: fylgja.
+
+
+ FylgjaRuleInstaller new
+     atLanguageNamed: #phiren;
+     anyPreexistingClass;
+     copyOrExtendClass;
      installInto: fylgja.
 
 ]
@@ -62,8 +69,34 @@ SirenMigrationTests >> setUp [
 ]
 
 { #category : #initialization }
+SirenMigrationTests >> sirenClasses [
+  ^vw entities select: [:a |  a isKindOf: MOStClass ]
+]
+
+{ #category : #initialization }
 SirenMigrationTests >> sirenExternalInterface [
   ^vw entities detect: [:a |  a isType and: [ a name = #SirenExternalInterface ] ]
+]
+
+{ #category : #initialization }
+SirenMigrationTests >> testMoveAllClassesToPhSiren [
+  | destination provenance result tonel results |
+  destination := self pharoSirenPackage.
+  provenance := self sirenClasses.
+
+	result := fylgja.
+  self installRulesFor: destination.
+results:=provenance collect: [ : prov|  
+  result := result produce: prov into: destination.
+].
+	self halt. 
+
+
+  tonel := TonelParser parseString: result result produceCode.
+  self assert: tonel size equals: 26.
+  self assert: (tonel first isKindOf: MCClassDefinition).
+  self assert: (tonel allButFirst allSatisfy: [:a |  a isKindOf: MCMethodDefinition ]).
+
 ]
 
 { #category : #initialization }
@@ -73,6 +106,7 @@ SirenMigrationTests >> testMovePortMidiInterfaceToPhSiren [
   provenance := self portMidiInterface.
   self installRulesFor: destination.
   result := fylgja produce: provenance into: destination.
+  result result produceCode inspect. 
   tonel := TonelParser parseString: result result produceCode.
   self assert: tonel size equals: 26.
   self assert: (tonel first isKindOf: MCClassDefinition).
