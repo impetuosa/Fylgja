@@ -80,7 +80,7 @@ SirenMigrationTests >> sirenExternalInterface [
 
 { #category : #initialization }
 SirenMigrationTests >> testMoveAllClassesToPhSiren [
-  | destination provenance result tonel results |
+  | destination provenance result tonels results codes errors |
   destination := self pharoSirenPackage.
   provenance := self sirenClasses.
 
@@ -88,15 +88,12 @@ SirenMigrationTests >> testMoveAllClassesToPhSiren [
   self installRulesFor: destination.
 results:=provenance collect: [ : prov|  
   result := result produce: prov into: destination.
-].
-	self halt. 
-
-
-  tonel := TonelParser parseString: result result produceCode.
-  self assert: tonel size equals: 26.
-  self assert: (tonel first isKindOf: MCClassDefinition).
-  self assert: (tonel allButFirst allSatisfy: [:a |  a isKindOf: MCMethodDefinition ]).
-
+] .
+	
+  codes := results collect: [ :e | e produceResultsCode ]. 
+  tonels := codes collect: [ : cod|cod ->([ TonelParser parseString:cod] on:Error do: [:e | e ] ) ].
+errors := tonels select: [ :a | a value isError ].
+self assert: errors isEmpty 
 ]
 
 { #category : #initialization }

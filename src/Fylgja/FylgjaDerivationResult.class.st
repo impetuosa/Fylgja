@@ -36,6 +36,13 @@ FylgjaDerivationResult >> map: aProvenanceEntity to: aDestinationEntity [
 	derivative map: aProvenanceEntity to: aDestinationEntity
 ]
 
+{ #category : #accessing }
+FylgjaDerivationResult >> printOn: aStream [
+  aStream
+     nextPutAll: '#Result ';
+     print: result
+]
+
 { #category : #'as yet unclassified' }
 FylgjaDerivationResult >> produce: aProvenanceEntity [
 
@@ -50,6 +57,11 @@ FylgjaDerivationResult >> produce: aProvenanceEntity into: aDestinationContext [
 		  result:
 			  (derivative produce: aProvenanceEntity into: aDestinationContext);
 		  yourself
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivationResult >> produceResultsCode [
+	 ^ (result isKindOf: self class ) ifTrue: [ result  produceResultsCode ] ifFalse: [ result produceCode  ]
 ]
 
 { #category : #'as yet unclassified' }
