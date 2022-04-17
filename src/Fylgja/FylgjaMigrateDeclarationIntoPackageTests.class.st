@@ -264,7 +264,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleCustomerOrdersToPackage [
 
 	result := fylgja produce: provenance into: destination.
 
-	result reapplyMappingRulesOnStubs.
+	result forceMap.
 
 	self
 		assert: (JavaParser parse: result result produceCode)
@@ -319,7 +319,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleDomainFunctionWrappersToPa
 
 
 	result := fylgja produce: provenance into: destination.
-	result reapplyMappingRulesOnStubs.
+	result forceMap.
 
 	self
 		assert: (JavaParser parse: result result produceCode)
@@ -373,7 +373,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleInventoryToPackage [
 
 
 	result := fylgja produce: provenance into: destination.
-	result reapplyMappingRulesOnStubs.
+	result forceMap.
 	
 	self
 		assert: (JavaParser parse: result result produceCode)
@@ -427,7 +427,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModulePrivilegesToPackage [
 
 
 	result := fylgja produce: provenance into: destination.
-	result reapplyMappingRulesOnStubs.
+	result forceMap.
 	self
 		assert: (JavaParser parse: result result produceCode)
 		isKindOf: JavaProgramFileNode
@@ -480,7 +480,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModulePurchaseOrdersToPackage [
 
 
 	result := fylgja produce: provenance into: destination.
-	result reapplyMappingRulesOnStubs.
+	result forceMap.
 	self
 		assert: (JavaParser parse: result result produceCode)
 		isKindOf: JavaProgramFileNode
@@ -533,7 +533,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleReflectiveToPackage [
 
 
 	result := fylgja produce: provenance into: destination.
-	result reapplyMappingRulesOnStubs.
+	result forceMap.
 
 	self
 		assert: (JavaParser parse: result result produceCode)
@@ -587,7 +587,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleUtilitiesToPackage [
 
 
 	result := fylgja produce: provenance into: destination.
-	result reapplyMappingRulesOnStubs.
+	result forceMap.
 	self
 		assert: (JavaParser parse: result result produceCode)
 		isKindOf: JavaProgramFileNode
@@ -604,7 +604,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testRecordsetWrapperToPackage [
 	self installRulesFor: destination.
 
 	result := fylgja produce: provenance into: destination.
-	result reapplyMappingRulesOnStubs.
+	result forceMap.
 	self
 		assert: (JavaParser parse: result result produceCode)
 		isKindOf: JavaProgramFileNode

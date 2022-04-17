@@ -14,7 +14,7 @@ FylgjaProduction >> applyBindTo: aDestinationEntity withCandidateFrom: aProvenan
 
 
 	^ aFylgjaDerivativeModel
-		  bindAndReturnEntity: aDestinationEntity
+		  mapEntity: aDestinationEntity
 		  as: candidateRelations first
 		  croppingRelationsWith: aBlock
 		  usingWriter: writer

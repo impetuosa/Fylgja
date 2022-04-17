@@ -19,18 +19,6 @@ FylgjaDerivativeModel >> bind: aMOObjectObjectRelation croppingRelationsWith: aF
 	self shouldBeImplemented.
 ]
 
-{ #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> bindAndReturnEntity: aDestinationEntity as: aCandidateRelation croppingRelationsWith: aFullBlockClosure usingWriter: aWriter lookUp: aFylgjaLookUpContext [
-
-	^ fylgja
-		  bindAndReturnEntity: aDestinationEntity
-		  as: aCandidateRelation
-		  croppingRelationsWith: aFullBlockClosure
-		  usingWriter: aWriter
-		  lookUp: aFylgjaLookUpContext
-		  using: self
-]
-
 { #category : #accessing }
 FylgjaDerivativeModel >> derivativeModels [
 	^ derivativeModels
@@ -39,6 +27,12 @@ FylgjaDerivativeModel >> derivativeModels [
 { #category : #accessing }
 FylgjaDerivativeModel >> explicitMapping [
 	^ explicitMapping ifNil: [ explicitMapping := Dictionary new  ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> forceMap [
+
+	^ fylgja forceMapStubs: self
 ]
 
 { #category : #accessing }
@@ -65,6 +59,18 @@ FylgjaDerivativeModel >> isDerivativeEntity: anEntity [
 FylgjaDerivativeModel >> map: aProvenanceEntity to: aDestinationEntity [
 
 	^ fylgja map: aProvenanceEntity to: aDestinationEntity using: self
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> mapEntity: aDestinationEntity as: aCandidateRelation croppingRelationsWith: aFullBlockClosure usingWriter: aWriter lookUp: aFylgjaLookUpContext [
+
+	^ fylgja
+		  mapEntity: aDestinationEntity
+		  as: aCandidateRelation
+		  croppingRelationsWith: aFullBlockClosure
+		  usingWriter: aWriter
+		  lookUp: aFylgjaLookUpContext
+		  using: self
 ]
 
 { #category : #'as yet unclassified' }
@@ -142,12 +148,6 @@ FylgjaDerivativeModel >> readRelation: aRelation [
 FylgjaDerivativeModel >> readerFor: aModelEntity [
 
 	^ (FylgjaResolver readerOn: self for: aModelEntity) resolve
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> reapplyMappingRulesOnStubs [
-
-	^ fylgja reapplyMappingRulesOnStubs: self
 ]
 
 { #category : #'as yet unclassified' }
