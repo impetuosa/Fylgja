@@ -120,21 +120,17 @@ FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity [
 
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aModifiedFylgjaMigrationEngine [
-
-	| context |
-	self assert: aProvenanceEntity isDeclaration.
-	self assert: aDestinationEntity isDeclaration.
-
-
-	context := aModifiedFylgjaMigrationEngine selectDerivativeModelFor:
-		           aDestinationEntity. "aDestinationEntity parent ifNil: [ 
-		            ].
-"
-	FylgjaRuleInstaller new
-		context: context;
-		whenIsReferenceWithCandidate: aProvenanceEntity;
-		bindRewriteTo: aDestinationEntity;
-		installInto: aModifiedFylgjaMigrationEngine
+  | context |
+  self assert: aProvenanceEntity isDeclaration.
+  self assert: aDestinationEntity isDeclaration.
+  aModifiedFylgjaMigrationEngine setExplicitMapping: aProvenanceEntity to: aDestinationEntity.
+  context := aModifiedFylgjaMigrationEngine selectDerivativeModelFor: aDestinationEntity.
+  FylgjaRuleInstaller new
+     context: context;
+     whenIsReferenceWithCandidate: aProvenanceEntity;
+     bindRewriteTo: aDestinationEntity;
+     installInto: aModifiedFylgjaMigrationEngine.
+  ^aModifiedFylgjaMigrationEngine
 ]
 
 { #category : #'as yet unclassified' }

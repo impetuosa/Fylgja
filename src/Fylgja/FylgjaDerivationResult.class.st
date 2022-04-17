@@ -65,6 +65,11 @@ FylgjaDerivationResult >> produceResultsCode [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaDerivationResult >> realResult [
+	 ^ (result isKindOf: self class ) ifTrue: [ result realResult ] ifFalse: [ result  ]
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaDerivationResult >> reapplyMappingRulesOnStubs [
 	^ derivative reapplyMappingRulesOnStubs
 ]

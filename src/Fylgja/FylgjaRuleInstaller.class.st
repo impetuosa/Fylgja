@@ -45,6 +45,14 @@ FylgjaRuleInstaller >> anyEntity [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> anyEntityOfType: aType [ 
+
+	^ self condition: (FylgjaConditionModelTypeIs new
+			   type: aType;
+			   yourself)
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> anyInvocation [
 
 	^ self condition: (FylgjaConditionModelTypeIs new
@@ -80,11 +88,6 @@ FylgjaRuleInstaller >> anyPragmaWithSelector: aString [
   ^self condition: (FylgjaConditionIsPragmaWithSelector new
            selector: aString;
            yourself)
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaRuleInstaller >> anyPreexistingClass [
-	^ self condition: FylgjaPreexistingClass new 
 ]
 
 { #category : #'as yet unclassified' }
@@ -182,8 +185,8 @@ FylgjaRuleInstaller >> copyAsTypesReferenceNamed: aString [
 ]
 
 { #category : #copying }
-FylgjaRuleInstaller >> copyOrExtendClass [
- self operation: FylgjaTranslateCopyOrExtendClass new 
+FylgjaRuleInstaller >> copyReplaceCategoryWithDestinationPackage [
+	^ self operation: FylgjaTranslateCopyReplaceCategory new 
 ]
 
 { #category : #'as yet unclassified' }
@@ -292,6 +295,16 @@ FylgjaRuleInstaller >> isBinding [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> isNotPreexistingClass [
+  ^self condition: FylgjaIsNotPreexistingClass new
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> isPreexistingClass [
+  ^self condition: FylgjaIsPreexistingClass new
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> mappingStubInstall [
 
 	self operation: FylgjaBindToLinkedStub new
@@ -307,6 +320,11 @@ FylgjaRuleInstaller >> matchesPattern: aFylgjaPattern [
 FylgjaRuleInstaller >> modelFor: aFylgjaMigrationEngine [
 
 	^ context resolveModelUsing: aFylgjaMigrationEngine
+]
+
+{ #category : #copying }
+FylgjaRuleInstaller >> modifyExtendedClassOrCreateStubClass [
+	^ self operation: FylgjaTranslateModifyExistingOrCreateStub new 
 ]
 
 { #category : #'as yet unclassified' }
