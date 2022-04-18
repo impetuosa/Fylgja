@@ -162,7 +162,7 @@ SirenMigrationTests >> testExportMoveAllClassesToPhSiren [
 { #category : #initialization }
 SirenMigrationTests >> testFilenameToPhiren [
   | destination provenance result tonel |
-self sirenClasses inspect.
+
   destination := self pharoSirenPackage.
   provenance := self sirenFilenameExtensions.
   self installRulesFor: destination.
