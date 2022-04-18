@@ -139,15 +139,15 @@ SirenMigrationTests >> testExportMoveAllClassesToPhSiren [
   provenance do: [:prov | 
 	
 	 result := result produce: prov into: destination.
-	prov packageReference name = #Siren ifFalse: [
-	 result realResult packageReference name: 	 result realResult packageReference name, '-', prov packageReference name. 
+	prov packageReferenceName  = #Siren ifFalse: [
+	 result realResult packageReference name: 	 result realResult packageReference name, '-', prov packageReferenceName. 
 	result realResult category: result realResult packageReference name. 
 ].
 
 	className := result realResult name.
 	packageName := result realResult packageReference name.
 	
-    fn := result realResult isPreexisting ifTrue: [ className , '.extension.st' ] ifFalse: [ className, '.class.st' ].
+    fn := result realResult isMethodExtension ifTrue: [ className , '.extension.st' ] ifFalse: [ className, '.class.st' ].
 	(out / packageName ) exists ifFalse: [
 (	 out / packageName) ensureCreateDirectory.
 	 (out / packageName / 'package.st') writeStream nextPutAll: 'Package{ #name : #'; nextPutAll: packageName ; nextPutAll: '}'; newLine ; flush; close
