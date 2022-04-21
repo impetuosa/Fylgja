@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaTranslateModifyExistingOrCreateStub,
-	#superclass : #FylgjaOperation,
+	#superclass : #FylgjaTranslation,
 	#category : #'Fylgja-Test-VWPharo'
 }
 

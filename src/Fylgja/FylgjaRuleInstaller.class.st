@@ -69,6 +69,20 @@ FylgjaRuleInstaller >> anyInvocationTo: aString [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> anyMetaclassMethodNamed: aString [
+  self condition: (FylgjaIsMethodNamedInMetaclass new
+           names: {aString};
+           yourself)
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> anyMethodNamed: aCollection [
+  ^self operation: (FylgjaConditionAnyMethodNamed new
+           names: aCollection;
+           yourself)
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> anyModelEntityOfTypesWhenGoingClass: aCollection [
 
 	^ self condition: (FylgjaConditionModelTypeIsAndContextIs new
@@ -182,6 +196,18 @@ FylgjaRuleInstaller >> copyAsTypesReferenceNamed: aString [
 	^ self operation: (FylgjaTranslateCopyRenameTypeReference new
 			   name: aString;
 			   yourself)
+]
+
+{ #category : #copying }
+FylgjaRuleInstaller >> copyRecategorizeMethods [
+	self operation: FylgjaTranslateCopyRecategorizeExtensionMethods new 
+]
+
+{ #category : #copying }
+FylgjaRuleInstaller >> copyRenameMethod: aString [
+  self operation: (FylgjaCopyRenameMethod new
+           name: aString;
+           yourself)
 ]
 
 { #category : #copying }

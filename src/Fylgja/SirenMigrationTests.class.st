@@ -19,7 +19,7 @@ SirenMigrationTests >> checkit [
 
 ]
 
-{ #category : #initialization }
+{ #category : #'as yet unclassified' }
 SirenMigrationTests >> externalAddress [
   ^pharo entities detect: [:a |  (a isKindOf: MOStClass) and: [ a name = #ExternalAddress ] ]
 ]
@@ -31,34 +31,54 @@ SirenMigrationTests >> installRulesFor: s [
      anyBindableEntity;
      mappingStubInstall;
      installInto: fylgja.
+
   FylgjaRuleInstaller new
      topLevel;
      anyReferenceWithCandidate;
      returnSameBinding;
      installInto: fylgja.
+
   FylgjaRuleInstaller new
      topLevel;
      anyEntity;
      copy;
      installInto: fylgja.
 
- 
- 
   FylgjaRuleInstaller new
      atLanguageNamed: #phiren;
      anyPragmaWithSelector: #C:;
      copyAsSelfFFiInvocation;
      installInto: fylgja.
+
+  FylgjaRuleInstaller new
+     atLanguageNamed: #phiren;
+     referenceNamed: #ExternalInterface;
+     copyAsTypesReferenceNamed: #FFILibrary;
+     installInto: fylgja.
+
+  FylgjaRuleInstaller new
+     atLanguageNamed: #phiren;
+     anyEntityOfType: MOStExensionMethodDeclarationUnit;
+     copyRecategorizeMethods;
+     installInto: fylgja.
+
+ FylgjaRuleInstaller new
+     atLanguageNamed: #phiren;
+     anyMetaclassMethodNamed: #properties ;
+     copyRenameMethod: #props;
+     installInto: fylgja.
 	
-	
+ FylgjaRuleInstaller new
+	  context: (self pharoSequenciableCollection );
+     anyMethodNamed: {#atRandom: . #atRandom};
+     copyRenameMethod: { #atRandom:-> #randomValue: . #atRandom -> #randomValue} ;
+     installInto: fylgja.
+
+
 
   fylgja := fylgja map: self cPointer to: self externalAddress.
   fylgja := fylgja map: self vwColorValue to: self phColor.
-
-  fylgja := fylgja map: self vwFilename to: self phFileReference. 
-  
-
-
+  fylgja := fylgja map: self vwFilename to: self phFileReference
 ]
 
 { #category : #'as yet unclassified' }
@@ -69,6 +89,11 @@ SirenMigrationTests >> phColor [
 { #category : #'as yet unclassified' }
 SirenMigrationTests >> phFileReference [
   ^pharo entities detect: [:a |  (a isKindOf: MOStClass) and: [ a name = #FileReference ] ]
+]
+
+{ #category : #'as yet unclassified' }
+SirenMigrationTests >> pharoSequenciableCollection [
+  ^pharo entities detect: [:a |  a isType and: [ a name = #SequenceableCollection ] ]
 ]
 
 { #category : #initialization }
@@ -140,14 +165,21 @@ SirenMigrationTests >> testExportMoveAllClassesToPhSiren [
 	
 	 result := result produce: prov into: destination.
 	prov packageReferenceName  = #Siren ifFalse: [
-	 result realResult packageReference name: 	 result realResult packageReference name, '-', prov packageReferenceName. 
-	result realResult category: result realResult packageReference name. 
-].
+	 	result realResult packageReference name: 	 result realResult packageReference name, '-', prov packageReferenceName. 
+] ifTrue: [  
+		result realResult packageReference name: 	 result realResult packageReference name, '-', result realResult category. 
+	].
+		result realResult category: result realResult packageReference name. 
 
 	className := result realResult name.
 	packageName := result realResult packageReference name.
 	
-    fn := result realResult isMethodExtension ifTrue: [ className , '.extension.st' ] ifFalse: [ className, '.class.st' ].
+    result realResult isMethodExtension ifTrue: [	
+					result realResult extensionMethods do: [ : em | em category: '*', packageName ].
+						fn :=  className , '.extension.st' 
+					] ifFalse: [ 
+						fn := className, '.class.st' 
+					].
 	(out / packageName ) exists ifFalse: [
 (	 out / packageName) ensureCreateDirectory.
 	 (out / packageName / 'package.st') writeStream nextPutAll: 'Package{ #name : #'; nextPutAll: packageName ; nextPutAll: '}'; newLine ; flush; close
