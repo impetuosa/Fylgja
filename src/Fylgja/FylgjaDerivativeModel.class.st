@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'fylgja',
-		'derivativeModels'
+		'derivativeModels',
+		'explicitMapping'
 	],
 	#category : #'Fylgja-Model'
 }
@@ -21,6 +22,11 @@ FylgjaDerivativeModel >> bind: aMOObjectObjectRelation croppingRelationsWith: aF
 { #category : #accessing }
 FylgjaDerivativeModel >> derivativeModels [
 	^ derivativeModels
+]
+
+{ #category : #accessing }
+FylgjaDerivativeModel >> explicitMapping [
+	^ explicitMapping ifNil: [ explicitMapping := Dictionary new  ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -161,6 +167,12 @@ FylgjaDerivativeModel >> selectDerivativeModelFor: aDestinationContext ifNone: a
 	^ self derivativeModels
 		  detect: [ :d | d includes: aDestinationContext ]
 		  ifNone: [ aBlock value ]
+]
+
+{ #category : #initialization }
+FylgjaDerivativeModel >> setExplicitMapping: aMOStClass to: aMOStClass2 [ 
+	
+	self explicitMapping at: aMOStClass put: aMOStClass2
 ]
 
 { #category : #'as yet unclassified' }

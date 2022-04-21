@@ -14,7 +14,7 @@ FylgjaConditionReferenceWithCandidate class >> priority [
 
 { #category : #accessing }
 FylgjaConditionReferenceWithCandidate >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation [
-
-	^ aDestinationEntity allCandidateRelations noneSatisfy: [ :a | 
-		  a to isNil ]
+  | candidates |
+  candidates := aDestinationEntity allCandidateRelations.
+  ^candidates isNotEmpty and: [ candidates noneSatisfy: [:a |  a to isNil ] ]
 ]

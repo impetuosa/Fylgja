@@ -69,6 +69,11 @@ FylgjaDerivationResult >> produceResultsCode [
 	 ^ (result isKindOf: self class ) ifTrue: [ result  produceResultsCode ] ifFalse: [ result produceCode  ]
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaDerivationResult >> realResult [
+	 ^ (result isKindOf: self class ) ifTrue: [ result realResult ] ifFalse: [ result  ]
+]
+
 { #category : #accessing }
 FylgjaDerivationResult >> result [
 	^ result

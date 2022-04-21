@@ -108,5 +108,6 @@ FylgjaBindNameBasedRewriter >> invokeAdaptationFrom: aReferenceFrom to: aReferen
 FylgjaBindNameBasedRewriter >> trivialAdaptation [
 
 	candidateRelation write: toBindElement to: destinationEntity.
+	destinationEntity name: toBindElement name .
 	^ destinationEntity
 ]

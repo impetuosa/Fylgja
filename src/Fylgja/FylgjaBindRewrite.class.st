@@ -29,6 +29,5 @@ FylgjaBindRewrite >> destinationEntity: aDestinationEntity [
 
 { #category : #accessing }
 FylgjaBindRewrite >> rewriter [
-
 	^  FylgjaBindNameBasedRewriter new .
 ]
