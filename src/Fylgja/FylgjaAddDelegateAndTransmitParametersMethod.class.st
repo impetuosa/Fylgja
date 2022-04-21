@@ -1,24 +1,18 @@
 Class {
-	#name : #FylgjaAddAnnotatedDelegateMethod,
-	#superclass : #FylgjaAddDelegateAndTransmitParametersMethod,
+	#name : #FylgjaAddDelegateAndTransmitParametersMethod,
+	#superclass : #FylgjaAddMethod,
 	#instVars : [
-		'annotationProductions'
+		'attributeReference',
+		'delegatingMessage'
 	],
 	#category : #'Fylgja-Rule-Operations'
 }
 
-{ #category : #initialization }
-FylgjaAddAnnotatedDelegateMethod >> addAnnotationProduction: aFylgjaAnnotate [
-
-	annotationProductions add: aFylgjaAnnotate
-]
-
-{ #category : #initialization }
-FylgjaAddAnnotatedDelegateMethod >> applyOn: aMOClassWriter [
+{ #category : #'instance creation' }
+FylgjaAddDelegateAndTransmitParametersMethod >> applyOn: aMOClassWriter [
 
 	| rp |
 	^ aMOClassWriter writeMethod: [ :method | 
-		  annotationProductions do: [ :a | a applyOn: method ].
 		  method selector: selector.
 		  method returnTypeReference: returnTypeReference.
 		  rp := self parameters collect: [ :kv | 
@@ -37,9 +31,14 @@ FylgjaAddAnnotatedDelegateMethod >> applyOn: aMOClassWriter [
 						  rp collect: [ :pa | self variableReferenceTo: pa using: e ] ] ] ] ] ]
 ]
 
-{ #category : #initialization }
-FylgjaAddAnnotatedDelegateMethod >> initialize [
+{ #category : #accessing }
+FylgjaAddDelegateAndTransmitParametersMethod >> attributeReference: aMOVariableReference [ 
+	attributeReference := aMOVariableReference
+]
 
-	super initialize.
-	annotationProductions := OrderedCollection new
+{ #category : #accessing }
+FylgjaAddDelegateAndTransmitParametersMethod >> selector: aString [
+
+	super selector: aString. 
+	delegatingMessage ifNil: [ delegatingMessage := aString ]
 ]

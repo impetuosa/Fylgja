@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaFormToSpringDAO,
-	#superclass : #FylgjaToSpring,
+	#superclass : #FylgjaFormToSpring,
 	#category : #'Fylgja-Rule-Operations'
 }
 

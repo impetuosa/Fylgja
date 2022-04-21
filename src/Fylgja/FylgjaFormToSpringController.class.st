@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaFormToSpringController,
-	#superclass : #FylgjaToSpring,
+	#superclass : #FylgjaFormToSpring,
 	#instVars : [
 		'originURL',
 		'apiURLExtention'

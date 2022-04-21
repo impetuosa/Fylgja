@@ -1,34 +1,11 @@
 Class {
-	#name : #FylgjaToSpring,
+	#name : #FylgjaFormToSpring,
 	#superclass : #FylgjaGeneration,
 	#category : #'Fylgja-Rule-Operations'
 }
 
 { #category : #adding }
-FylgjaToSpring >> addAttribute: attr boundAs: instance croppingRelationsWith: aBlock destinationWriter: class lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
-
-	| typeReference |
-	typeReference := FylgjaMigrate new
-		                 cropping: aBlock;
-		                 fylgja: aFylgjaDerivativeModel;
-		                 lookUp: aFylgjaLookUpContext;
-		                 provenanceEntity: attr typeReference;
-		                 applyOn: class.
-
-
-
-	^ FylgjaAddAnnotatedAttribute new
-		  addAnnotationProduction:
-			  (self annotatingProductionColumn:
-					   (instance state at: #ControlSource));
-		  visibility: #protected;
-		  name: attr name;
-		  typeReference: typeReference;
-		  applyOn: class
-]
-
-{ #category : #adding }
-FylgjaToSpring >> addDaoDelegate: class for: aMOFormOrReport [
+FylgjaFormToSpring >> addDaoDelegate: class for: aMOFormOrReport [
 
 	^ FylgjaAddAnnotatedAttribute new
 		  addAnnotationProduction: self annotatingAsAutoWired;
@@ -40,7 +17,7 @@ FylgjaToSpring >> addDaoDelegate: class for: aMOFormOrReport [
 ]
 
 { #category : #adding }
-FylgjaToSpring >> addServiceDelegate: class for: aMOFormOrReport [
+FylgjaFormToSpring >> addServiceDelegate: class for: aMOFormOrReport [
 
 	^ FylgjaAddAnnotatedAttribute new
 		  addAnnotationProduction: self annotatingAsAutoWired;
@@ -52,7 +29,7 @@ FylgjaToSpring >> addServiceDelegate: class for: aMOFormOrReport [
 ]
 
 { #category : #adding }
-FylgjaToSpring >> addSessionFactoryAttribute: class for: aMOFormOrReport [
+FylgjaFormToSpring >> addSessionFactoryAttribute: class for: aMOFormOrReport [
 
 	| typeReference |
 	typeReference := self
@@ -70,7 +47,7 @@ FylgjaToSpring >> addSessionFactoryAttribute: class for: aMOFormOrReport [
 ]
 
 { #category : #adding }
-FylgjaToSpring >> addSetterAndGetter: aMOAttribute into: aWriter [
+FylgjaFormToSpring >> addSetterAndGetter: aMOAttribute into: aWriter [
 
 	FylgjaAddSetter new
 		attribute: aMOAttribute;
@@ -83,7 +60,7 @@ FylgjaToSpring >> addSetterAndGetter: aMOAttribute into: aWriter [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaToSpring >> allDataBoundableAttributes: object model: model [
+FylgjaFormToSpring >> allDataBoundableAttributes: object model: model [
 
 	| tableName |
 	tableName := object state at: #RecordSource.
@@ -95,27 +72,27 @@ FylgjaToSpring >> allDataBoundableAttributes: object model: model [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaToSpring >> annotate: class asTableNamed: tableName [
+FylgjaFormToSpring >> annotate: class asTableNamed: tableName [
 
 	^ FylgjaAnnotate new
 		  packageName: 'javax.persistence';
 		  annotationName: 'Table';
-		  addNamedParameter: #name -> tableName;
+		  addNamedArgument: #name -> tableName;
 		  applyOn: class
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaToSpring >> annotateAsCrossOrigin: class withOriginAt: aString [
+FylgjaFormToSpring >> annotateAsCrossOrigin: class withOriginAt: aString [
 
 	^ FylgjaAnnotate new
 		  packageName: 'org.springframework.web.bind.annotation';
 		  annotationName: 'CrossOrigin';
-		  addNamedParameter: #origins -> aString;
+		  addNamedArgument: #origins -> aString;
 		  applyOn: class
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaToSpring >> annotateAsEntity: class [
+FylgjaFormToSpring >> annotateAsEntity: class [
 
 	^ FylgjaAnnotate new
 		  packageName: 'javax.persistence';
@@ -124,7 +101,7 @@ FylgjaToSpring >> annotateAsEntity: class [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaToSpring >> annotateAsRepository: class [
+FylgjaFormToSpring >> annotateAsRepository: class [
 
 	^ FylgjaAnnotate new
 		  packageName: 'org.springframework.stereotype';
@@ -133,17 +110,17 @@ FylgjaToSpring >> annotateAsRepository: class [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaToSpring >> annotateAsRequestMapping: class mappingTo: aString [
+FylgjaFormToSpring >> annotateAsRequestMapping: class mappingTo: aString [
 
 	^ FylgjaAnnotate new
 		  packageName: 'org.springframework.web.bind.annotation';
 		  annotationName: 'RequestMapping';
-		  addNamedParameter: #value -> aString;
+		  addNamedArgument: #value -> aString;
 		  applyOn: class
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaToSpring >> annotateAsRestController: class [
+FylgjaFormToSpring >> annotateAsRestController: class [
 
 	^ FylgjaAnnotate new
 		  packageName: 'org.springframework.web.bind.annotation';
@@ -152,7 +129,7 @@ FylgjaToSpring >> annotateAsRestController: class [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaToSpring >> annotateAsService: class [
+FylgjaFormToSpring >> annotateAsService: class [
 
 	^ FylgjaAnnotate new
 		  packageName: 'org.springframework.stereotype';
@@ -161,7 +138,7 @@ FylgjaToSpring >> annotateAsService: class [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaToSpring >> annotateAsTransactional: class [
+FylgjaFormToSpring >> annotateAsTransactional: class [
 
 	^ FylgjaAnnotate new
 		  packageName: 'org.springframework.transaction.annotation';
@@ -170,7 +147,7 @@ FylgjaToSpring >> annotateAsTransactional: class [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaToSpring >> annotatingAsAutoWired [
+FylgjaFormToSpring >> annotatingAsAutoWired [
 
 	^ FylgjaAnnotate new
 		  packageName: 'org.springframework.beans.factory.annotation';
@@ -178,30 +155,25 @@ FylgjaToSpring >> annotatingAsAutoWired [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaToSpring >> annotatingAsGetMapping: aString [
+FylgjaFormToSpring >> annotatingAsGetMapping: aString [
 
 	^ FylgjaAnnotate new
 		  packageName: 'org.springframework.web.bind.annotation';
-		  addNamedParameter: #value -> aString;
+		  addNamedArgument: #value -> aString;
 		  annotationName: 'RequestMapping'
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaToSpring >> annotatingProductionColumn: columnName [
+FylgjaFormToSpring >> annotatingProductionColumn: columnName [
 
 	^ FylgjaAnnotate new
 		  packageName: 'javax.persistence';
 		  annotationName: 'Column';
-		  addNamedParameter: #name -> columnName
+		  addNamedArgument: #name -> columnName
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaToSpring >> calculateTypeReference: aString using: aMOClassWriter [ 
-	self shouldBeImplemented.
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaToSpring >> collectAllDatabaseBindings: aMOObject marringWith: dbAttrs [
+FylgjaFormToSpring >> collectAllDatabaseBindings: aMOObject marringWith: dbAttrs [
 
 	^ (aMOObject state values
 		   select: [ :val | 
@@ -216,37 +188,25 @@ FylgjaToSpring >> collectAllDatabaseBindings: aMOObject marringWith: dbAttrs [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaToSpring >> controllerNameFor: aFormOrReport [
+FylgjaFormToSpring >> controllerNameFor: aFormOrReport [
 
 	^ (self saniteName: aFormOrReport) , '_Controller'
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaToSpring >> daoNameFor: aFormOrReport [
+FylgjaFormToSpring >> daoNameFor: aFormOrReport [
 
 	^ (self saniteName: aFormOrReport) , '_DAO'
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaToSpring >> databaseSourceName: object [
+FylgjaFormToSpring >> databaseSourceName: object [
 
 	^ object state at: #RecordSource
 ]
 
-{ #category : #'as yet unclassified' }
-FylgjaToSpring >> defaultInstanceFor: aProvenanceEntity withIn: model [
-
-	| object |
-	object := model objectsSelect: [ :a | 
-		          a type class = aProvenanceEntity class and: [ 
-			          a type name = aProvenanceEntity name ] ].
-
-	self assert: object size = 1.
-	^ object first
-]
-
 { #category : #testing }
-FylgjaToSpring >> hasId: aMOAlceForm using: aFylgjaDerivativeModel [
+FylgjaFormToSpring >> hasId: aMOAlceForm using: aFylgjaDerivativeModel [
 
 	| model object tableName table |
 	self assert: aMOAlceForm methods isEmpty.
@@ -266,13 +226,13 @@ FylgjaToSpring >> hasId: aMOAlceForm using: aFylgjaDerivativeModel [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaToSpring >> modelNameFor: aFormOrReport [
+FylgjaFormToSpring >> modelNameFor: aFormOrReport [
 
 	^ (self saniteName: aFormOrReport) , '_Model'
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaToSpring >> saniteName: aFormOrReport [
+FylgjaFormToSpring >> saniteName: aFormOrReport [
 
 	^ (aFormOrReport name copyReplaceAll: 'Form_' with: '')
 		  copyReplaceAll: 'Report_'
@@ -280,13 +240,13 @@ FylgjaToSpring >> saniteName: aFormOrReport [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaToSpring >> serviceNameFor: aFormOrReport [
+FylgjaFormToSpring >> serviceNameFor: aFormOrReport [
 
 	^ (self saniteName: aFormOrReport) , '_Service'
 ]
 
 { #category : #'instance creation' }
-FylgjaToSpring >> typeReferenceListOf: aMOTypeReference using: aMOMethodWriter [
+FylgjaFormToSpring >> typeReferenceListOf: aMOTypeReference using: aMOMethodWriter [
 
 	| ref |
 	ref := self

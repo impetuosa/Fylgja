@@ -155,6 +155,28 @@ FylgjaMigrateFormWithCasinoTest >> installRulesFor: destination [
 ]
 
 { #category : #initialization }
+FylgjaMigrateFormWithCasinoTest >> installRulesForAngularTS [
+
+	"Types"
+
+	FylgjaRuleInstaller new
+		atLanguageNamed: #angular;
+		whenIsReferenceWithCandidates: { 
+				self accessDbMemoType.
+				self accessDbTextType };
+		bindRewriteTo: self tsString;
+		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		atLanguageNamed: #angular;
+		whenIsReferenceWithCandidate: self accessDbAttachment;
+		bindRewriteTo: self tsBlob;
+		installInto: fylgja.
+
+
+]
+
+{ #category : #initialization }
 FylgjaMigrateFormWithCasinoTest >> installRulesForJavaSpring [
 
 	"Types"
@@ -215,26 +237,26 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToAngularComponent [
 
 	| provenance destination result |
 	provenance := self employeeDetails.
-	destination := self angularPackage .
-	
-	
+	destination := self angularPackage.
+
+
 	self installRulesFor: destination.
-	
-	
+
+
 	FylgjaRuleInstaller new
 		context: destination;
-		anyAlceForm ;
+		anyAlceForm;
 		formToAngularComponent;
 		installInto: fylgja.
-	
-	
+
+
 
 	result := fylgja produce: provenance into: destination.
 	result forceMap.
-
 	self
-		assert: (JavaParser parse: result result produceCode)
-		isKindOf: JavaProgramFileNode
+		assert: (TypeScriptParser parse: result result produceCode)
+		isKindOf: JSTSSourceFileNode.
+	self assert: result result template isKindOf: XMLDocument
 ]
 
 { #category : #initialization }
@@ -246,7 +268,7 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToAngularModel [
 	
 	
 	self installRulesFor: destination.
-	
+	self installRulesForAngularTS.
 	
 	FylgjaRuleInstaller new
 		context: destination;
@@ -259,8 +281,8 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToAngularModel [
 	result forceMap.
 
 	self
-		assert: (JavaParser parse: result result produceCode)
-		isKindOf: JavaProgramFileNode
+		assert: (TypeScriptParser parse: result result produceCode)
+		isKindOf: JSTSSourceFileNode
 ]
 
 { #category : #initialization }
@@ -268,25 +290,25 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToAngularService [
 
 	| provenance destination result |
 	provenance := self employeeDetails.
-	destination := self angularPackage .
-	
-	
+	destination := self angularPackage.
+
+
 	self installRulesFor: destination.
-	
-	
+
+
 	FylgjaRuleInstaller new
 		context: destination;
-		anyAlceForm ;
+		anyAlceForm;
 		formToAngularService;
 		installInto: fylgja.
-	
+
 
 	result := fylgja produce: provenance into: destination.
 	result forceMap.
 
 	self
-		assert: (JavaParser parse: result result produceCode)
-		isKindOf: JavaProgramFileNode
+		assert: (TypeScriptParser parse: result result produceCode)
+		isKindOf: JSTSSourceFileNode
 ]
 
 { #category : #initialization }

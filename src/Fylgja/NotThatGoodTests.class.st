@@ -285,6 +285,19 @@ NotThatGoodTests >> statementDataSourceConfigClassConfigPackage [
 ]
 
 { #category : #'as yet unclassified' }
+NotThatGoodTests >> tsBlob [
+
+	^ self tsString 
+]
+
+{ #category : #'as yet unclassified' }
+NotThatGoodTests >> tsString [
+
+	^ (angular entities detect: [ :a | 
+		   a isType and: [ a name = 'string' ] ]) 
+]
+
+{ #category : #'as yet unclassified' }
 NotThatGoodTests >> vbCrlf [
 
 	^ northwind entities detect: [ :a | 

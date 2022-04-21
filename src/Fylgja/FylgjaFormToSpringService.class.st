@@ -1,13 +1,13 @@
 Class {
 	#name : #FylgjaFormToSpringService,
-	#superclass : #FylgjaToSpring,
+	#superclass : #FylgjaFormToSpring,
 	#category : #'Fylgja-Rule-Operations'
 }
 
 { #category : #adding }
 FylgjaFormToSpringService >> addDeleteModelMethodService: class for: aMOAlceForm using: aMOAttribute [
 
-	^ FylgjaAddDelegateMethod new
+	^ FylgjaAddDelegateAndTransmitParametersMethod new
 		  attributeReference:
 			  (self variableReferenceTo: aMOAttribute using: class);
 		  returnTypeReference: (self booleanTypeReference: class);
@@ -20,7 +20,7 @@ FylgjaFormToSpringService >> addDeleteModelMethodService: class for: aMOAlceForm
 { #category : #adding }
 FylgjaFormToSpringService >> addGetAllMethodService: class for: aMOAlceForm using: aMOAttribute [
 
-	^ FylgjaAddDelegateMethod new
+	^ FylgjaAddDelegateAndTransmitParametersMethod new
 		  attributeReference:
 			  (self variableReferenceTo: aMOAttribute using: class);
 		  returnTypeReference: (self
@@ -34,7 +34,7 @@ FylgjaFormToSpringService >> addGetAllMethodService: class for: aMOAlceForm usin
 { #category : #adding }
 FylgjaFormToSpringService >> addSaveModelMethodService: class for: aMOAlceForm using: aMOAttribute [
 
-	^ FylgjaAddDelegateMethod new
+	^ FylgjaAddDelegateAndTransmitParametersMethod new
 		  attributeReference:
 			  (self variableReferenceTo: aMOAttribute using: class);
 		  returnTypeReference: (self booleanTypeReference: class);
@@ -83,7 +83,7 @@ FylgjaFormToSpringService >> applyTo: aRelatedProvenanceEntity croppingRelations
 { #category : #'as yet unclassified' }
 FylgjaFormToSpringService >> updateModelMethodService: class for: aMOAlceForm using: aMOAttribute [
 
-	^ FylgjaAddDelegateMethod new
+	^ FylgjaAddDelegateAndTransmitParametersMethod new
 		  attributeReference:
 			  (self variableReferenceTo: aMOAttribute using: class);
 		  returnTypeReference: (self booleanTypeReference: class);
