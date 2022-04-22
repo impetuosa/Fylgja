@@ -27,29 +27,30 @@ FylgjaFormToAngularModel >> applyTo: aRelatedProvenanceEntity croppingRelationsW
 		              collectAllDatabaseBindings: object
 		              marringWith: dataBoundableAttributes.
 
-	
-		self assert:
+
+	self assert:
 		(self
 			 hasId: aRelatedProvenanceEntity to
 			 using: aFylgjaDerivativeModel) not.
-	
 
-	^ aDestinationWriter writeDeclarationUnit: [ :unit | 
-		  cls := unit writeTypescriptClass: [ :class | 
-			         class visibility: #public.
-						class addModifier: #export. 
-			         class name:
-				         (self modelNameFor: aRelatedProvenanceEntity to).
-			         attributes keysAndValuesDo: [ :instance :attr | 
-				         | new |
-				         new := self
-					                addAttribute: attr
-					                boundAs: instance
-					                croppingRelationsWith: aBlock
-					                destinationWriter: class
-					                lookUp: aFylgjaLookUpContext
-					                using: aFylgjaDerivativeModel ] ].
 
-		  (self importableDependencies: cls) do: [ :type | 
-			  unit writeImport: [ :import | import importingTypeOrTypeReference: type ] ] ]
+	aDestinationWriter writeDeclarationUnit: [ :unit | 
+		cls := unit writeTypescriptClass: [ :class | 
+			       class visibility: #public.
+			       class addModifier: #export.
+			       class name: (self modelNameFor: aRelatedProvenanceEntity to).
+			       attributes keysAndValuesDo: [ :instance :attr | 
+				       | new |
+				       new := self
+					              addAttribute: attr
+					              boundAs: instance
+					              croppingRelationsWith: aBlock
+					              destinationWriter: class
+					              lookUp: aFylgjaLookUpContext
+					              using: aFylgjaDerivativeModel ] ].
+
+		(self importableDependencies: cls) do: [ :type | 
+			unit writeImport: [ :import | 
+				import importingTypeOrTypeReference: type ] ] ].
+	^ cls
 ]

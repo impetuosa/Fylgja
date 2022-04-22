@@ -42,34 +42,37 @@ FylgjaFormToSpringDAO >> applyTo: aRelatedProvenanceEntity croppingRelationsWith
 		(self
 			 hasId: aRelatedProvenanceEntity to
 			 using: aFylgjaDerivativeModel) not.
-	^ aDestinationWriter writeDeclarationUnit: [ :unit | 
-		  cls := unit writeClass: [ :class | 
-			         class visibility: #public.
-			         class name: (self daoNameFor: aRelatedProvenanceEntity to).
-			         self annotateAsRepository: class.
-			         sessionFactory := self
-				                           addSessionFactoryAttribute: class
-				                           for: aRelatedProvenanceEntity to.
+	aDestinationWriter writeDeclarationUnit: [ :unit | 
+		cls := unit writeClass: [ :class | 
+			       class visibility: #public.
+			       class name: (self daoNameFor: aRelatedProvenanceEntity to).
+			       self annotateAsRepository: class.
+			       sessionFactory := self
+				                         addSessionFactoryAttribute: class
+				                         for: aRelatedProvenanceEntity to.
 
-			         self
-				         addSaveModelMethod: class
-				         for: aRelatedProvenanceEntity to
-				         using: sessionFactory.
-			         self
-				         addGetAllMethod: class
-				         for: aRelatedProvenanceEntity to
-				         using: sessionFactory.
-			         self
-				         addDeleteModelMethod: class
-				         for: aRelatedProvenanceEntity to
-				         using: sessionFactory.
-			         self
-				         updateModelMethod: class
-				         for: aRelatedProvenanceEntity to
-				         using: sessionFactory ].
+			       self
+				       addSaveModelMethod: class
+				       for: aRelatedProvenanceEntity to
+				       using: sessionFactory.
+			       self
+				       addGetAllMethod: class
+				       for: aRelatedProvenanceEntity to
+				       using: sessionFactory.
+			       self
+				       addDeleteModelMethod: class
+				       for: aRelatedProvenanceEntity to
+				       using: sessionFactory.
+			       self
+				       updateModelMethod: class
+				       for: aRelatedProvenanceEntity to
+				       using: sessionFactory ].
 
-		  (self importableDependencies: cls) do: [ :type | 
-			  unit writeImport: [ :import | import importingTypeOrTypeReference: type ] ] ]
+		(self importableDependencies: cls) do: [ :type | 
+			unit writeImport: [ :import | 
+				import importingTypeOrTypeReference: type ] ] ].
+
+	^ cls
 ]
 
 { #category : #'as yet unclassified' }

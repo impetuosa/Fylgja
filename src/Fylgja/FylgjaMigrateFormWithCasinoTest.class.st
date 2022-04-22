@@ -197,7 +197,7 @@ FylgjaMigrateFormWithCasinoTest >> installRulesForJavaSpring [
 
 
 	" Model "
- 
+
 	FylgjaRuleInstaller new
 		context: self javaModelPackage;
 		anyAlceForm;
@@ -387,19 +387,14 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToJavaSpringProject [
 	provenance := self employeeDetails.
 	destination := self javaControllerPackage.
 
-	" THE MULTIPLICATION DISPATCHER RULE SHOULD WORKFINE, BUT OUR JAVA PACKAGES DO NOT HAVE A COMPLETE ANCHOR, AS MUCH AS THE SUBINSTANCES. 
-	  SINCE PACKAGE PARENT IS NIL, THEIR ANCHOR PATH IS ROOT! THIS IS WRONG.
- 	  PARENT SHOULD BE THE OR SOMETHING ELSE LIKE A PROJECT . 
-	  ANCHOR SHOULD BE / PACKAGE / PNAME 
-	
-	"
+
 	self installRulesFor: destination.
 	self installRulesForJavaSpring.
 
 
 	FylgjaRuleInstaller new
 		atLanguageNamed: #java;
-		 anyAlceForm;
+		anyAlceForm;
 		dispatchToSubPackages: { 
 				self javaModelPackage.
 				self javaDaoPackage.
@@ -408,12 +403,16 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToJavaSpringProject [
 		installInto: fylgja.
 
 
-	result := fylgja produce: provenance into: destination.
+	result := fylgja produce: provenance into: java root.
 	result forceMap.
-
-	self
-		assert: (JavaParser parse: result result produceCode)
-		isKindOf: JavaProgramFileNode
+	result result allSatisfy: [ :res | 
+		[ 
+		self
+			assert: (JavaParser parse: res produceCode)
+			isKindOf: JavaProgramFileNode.
+		true ]
+			on: Error
+			do: [ false ] ]
 ]
 
 { #category : #initialization }

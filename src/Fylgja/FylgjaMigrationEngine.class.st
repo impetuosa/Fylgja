@@ -109,17 +109,35 @@ FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity [
 
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aModifiedFylgjaMigrationEngine [
-  | context |
-  self assert: aProvenanceEntity isDeclaration.
-  self assert: aDestinationEntity isDeclaration.
-  aModifiedFylgjaMigrationEngine setExplicitMapping: aProvenanceEntity to: aDestinationEntity.
-  context := aModifiedFylgjaMigrationEngine selectDerivativeModelFor: aDestinationEntity.
-  FylgjaRuleInstaller new
-     context: context;
-     whenIsReferenceWithCandidate: aProvenanceEntity;
-     bindRewriteTo: aDestinationEntity;
-     installInto: aModifiedFylgjaMigrationEngine.
-  ^aModifiedFylgjaMigrationEngine
+
+	^ self
+		  map: aProvenanceEntity
+		  to: aDestinationEntity
+		  using: aModifiedFylgjaMigrationEngine
+		  or: [ 
+			  aModifiedFylgjaMigrationEngine
+				  addDeferredMapping: aProvenanceEntity
+				  to: aDestinationEntity ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aModifiedFylgjaMigrationEngine or: aBlock [
+
+	self assert: aProvenanceEntity isDeclaration.
+	self assert: aDestinationEntity isDeclaration.
+
+	aDestinationEntity parentForContext
+		ifNil: [ aBlock value ]
+		ifNotNil: [ :context | 
+			FylgjaRuleInstaller new
+				context: context;
+				whenIsReferenceWithCandidate: aProvenanceEntity;
+				bindRewriteTo: aDestinationEntity;
+				installInto: aModifiedFylgjaMigrationEngine ].
+
+
+
+	^ aModifiedFylgjaMigrationEngine
 ]
 
 { #category : #'as yet unclassified' }
@@ -141,6 +159,16 @@ FylgjaMigrationEngine >> mapEntity: aDestinationEntity as: aCandidateRelation cr
 		                 using: aModifiedFylgjaMigrationEngine.
 
 	^ partialResult
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> mapOrFail: aProvenanceEntity to: aDestinationEntity using: aModifiedFylgjaMigrationEngine [
+
+	^ self
+		  map: aProvenanceEntity
+		  to: aDestinationEntity
+		  using: aModifiedFylgjaMigrationEngine
+		  or: [ self error: ' Cannot map' ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -220,7 +248,8 @@ FylgjaMigrationEngine >> produce: aProvenanceEntity croppingRelationsWith: aBloc
 		          into: aDestinationContext
 		          using: derivative.
 
-	
+	derivative processDeferredMappings.
+
 	^ FylgjaDerivationResult new
 		  derivative: derivative;
 		  result: result;
@@ -270,6 +299,35 @@ FylgjaMigrationEngine >> produce: aProvenanceEntity into: aDestinationContext [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> produceWithContextualizedProvenance: elementRelation croppingRelationsWith: aBlock into: aDestinationContext using: aModifiedFylgjaMigrationEngine [
+
+	| destinationContextRelation resultingRelation lookup destinationModel |
+	destinationContextRelation := aModifiedFylgjaMigrationEngine 
+		                              readEntitysContextualizingRelation:
+		                              aDestinationContext.
+	destinationModel := aModifiedFylgjaMigrationEngine 
+		                    selectDerivativeModelFor: aDestinationContext.
+	lookup := self
+		          lookupContextFor: elementRelation
+		          toContext: destinationContextRelation
+		          model: destinationModel.
+
+
+	resultingRelation := destinationModel writer
+		                     updaterFor: destinationContextRelation
+		                     with: elementRelation
+		                     do: [ :elem :destinationWriter | 
+			                     self
+				                     produce: elementRelation
+				                     croppingRelationsWith: aBlock
+				                     destinationWriter: destinationWriter
+				                     lookUp: lookup
+				                     using: aModifiedFylgjaMigrationEngine ].
+
+	^ resultingRelation
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> selectDerivativeModelFor: aDestinationContext [
 
 	^ models detect: [ :d | d includes: aDestinationContext ]
@@ -279,7 +337,7 @@ FylgjaMigrationEngine >> selectDerivativeModelFor: aDestinationContext [
 FylgjaMigrationEngine >> trace: aProvenanceEntity to: aRule produced: partialResult using: aModifiedFylgjaMigrationEngine [
 
 	tracing trace: aProvenanceEntity to: aRule produced: partialResult.
-
+	
 	partialResult isDeclaration ifTrue: [ 
 		self
 			map: aProvenanceEntity to

@@ -4,10 +4,18 @@ Class {
 	#instVars : [
 		'fylgja',
 		'derivativeModels',
-		'explicitMapping'
+		'deferredMapping'
 	],
 	#category : #'Fylgja-Model'
 }
+
+{ #category : #initialization }
+FylgjaDerivativeModel >> addDeferredMapping: aMOStClass to: aMOStClass2 [
+	self processDeferredMappings. 
+	(self deferredMapping
+		 at: aMOStClass
+		 ifAbsentPut: [ OrderedCollection new ]) add: aMOStClass2.
+]
 
 { #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> allNewEntities [
@@ -20,13 +28,13 @@ FylgjaDerivativeModel >> bind: aMOObjectObjectRelation croppingRelationsWith: aF
 ]
 
 { #category : #accessing }
-FylgjaDerivativeModel >> derivativeModels [
-	^ derivativeModels
+FylgjaDerivativeModel >> deferredMapping [
+	^ deferredMapping ifNil: [ deferredMapping := Dictionary new  ]
 ]
 
 { #category : #accessing }
-FylgjaDerivativeModel >> explicitMapping [
-	^ explicitMapping ifNil: [ explicitMapping := Dictionary new  ]
+FylgjaDerivativeModel >> derivativeModels [
+	^ derivativeModels
 ]
 
 { #category : #'as yet unclassified' }
@@ -90,6 +98,24 @@ FylgjaDerivativeModel >> migrationRuleSpace [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> processDeferredMappings [
+
+	| ready |
+	ready := OrderedCollection new.
+
+	self deferredMapping associationsDo: [ :assoc | 
+		assoc value do: [ :dest | 
+			dest parentForContext ifNotNil: [ ready add: assoc key -> dest ] ] ].
+
+	ready do: [ :re | 
+		[ 
+		fylgja mapOrFail: re key to: re value using: self.
+		(self deferredMapping at: ready first key) remove:  re value ]
+			on: Error
+			do: [ :e | self halt ] ]
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> produce: aProvenanceEntity croppingRelationsWith: aFullBlockClosure into: aDestinationContext [
 
 	^ fylgja
@@ -110,6 +136,16 @@ FylgjaDerivativeModel >> produce: aProvenanceEntity into: aContextDestinationEnt
 				   into: aContextDestinationEntity
 				   using: self);
 		  yourself
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> produceWithContextualizedProvenance: aProvenanceEntity croppingRelationsWith: aFullBlockClosure into: aDestinationContext [
+
+	^ fylgja
+		  produceWithContextualizedProvenance: aProvenanceEntity
+		  croppingRelationsWith: aFullBlockClosure
+		  into: aDestinationContext
+		  using: self
 ]
 
 { #category : #'as yet unclassified' }
@@ -169,28 +205,12 @@ FylgjaDerivativeModel >> selectDerivativeModelFor: aDestinationContext ifNone: a
 		  ifNone: [ aBlock value ]
 ]
 
-{ #category : #initialization }
-FylgjaDerivativeModel >> setExplicitMapping: aMOStClass to: aMOStClass2 [ 
-	
-	self explicitMapping at: aMOStClass put: aMOStClass2
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> stubReferencesTo: aMOClassFunction [ 
-	self shouldBeImplemented.
-]
-
 { #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> stubReferencesTo: aProvenanceEntity from: aDestinationModel [
 
 	^ aDestinationModel entities select: [ :a | 
 		  (a isKindOf: FylgjaCandidateStub) and: [ 
 			  a candidate = aProvenanceEntity ] ]
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> trace: aProvenanceEntity to: aRule produced: partialResult [ 
-	fylgja trace: aProvenanceEntity to: aRule produced: partialResult using: self 
 ]
 
 { #category : #'as yet unclassified' }

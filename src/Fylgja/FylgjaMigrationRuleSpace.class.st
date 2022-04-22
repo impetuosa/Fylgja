@@ -213,7 +213,7 @@ FylgjaMigrationRuleSpace >> printOn: aStream [
 		ifNil: [ 
 			aStream
 				nextPutAll: 'MRS ';
-				nextPutAll: (name ifNil: '/root') ]
+				nextPutAll: (name ifNil: '/mrs') ]
 		ifNotNil: [ 
 			parent printOn: aStream.
 			aStream

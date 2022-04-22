@@ -48,41 +48,40 @@ FylgjaFormToSpringService >> addSaveModelMethodService: class for: aMOAlceForm u
 FylgjaFormToSpringService >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgja [
 
 	| dao cls |
-	
 	self assert:
-		(self
-			 hasId: aRelatedProvenanceEntity to
-			 using: aFylgja) not.
-	^ aDestinationWriter writeDeclarationUnit: [ :unit | 
-		  cls := unit writeClass: [ :class | 
-			         class visibility: #public.
-			         class name:
-				         (self serviceNameFor: aRelatedProvenanceEntity to).
-			         self annotateAsService: class.
-			         self annotateAsTransactional: class.
-			         dao := self
-				                addDaoDelegate: class
-				                for: aRelatedProvenanceEntity to.
+		(self hasId: aRelatedProvenanceEntity to using: aFylgja) not.
+	aDestinationWriter writeDeclarationUnit: [ :unit | 
+		cls := unit writeClass: [ :class | 
+			       class visibility: #public.
+			       class name:
+				       (self serviceNameFor: aRelatedProvenanceEntity to).
+			       self annotateAsService: class.
+			       self annotateAsTransactional: class.
+			       dao := self
+				              addDaoDelegate: class
+				              for: aRelatedProvenanceEntity to.
 
-			         self
-				         addSaveModelMethodService: class
-				         for: aRelatedProvenanceEntity to
-				         using: dao.
-			         self
-				         addGetAllMethodService: class
-				         for: aRelatedProvenanceEntity to
-				         using: dao.
-			         self
-				         addDeleteModelMethodService: class
-				         for: aRelatedProvenanceEntity to
-				         using: dao.
-			         self
-				         updateModelMethodService: class
-				         for: aRelatedProvenanceEntity to
-				         using: dao ].
+			       self
+				       addSaveModelMethodService: class
+				       for: aRelatedProvenanceEntity to
+				       using: dao.
+			       self
+				       addGetAllMethodService: class
+				       for: aRelatedProvenanceEntity to
+				       using: dao.
+			       self
+				       addDeleteModelMethodService: class
+				       for: aRelatedProvenanceEntity to
+				       using: dao.
+			       self
+				       updateModelMethodService: class
+				       for: aRelatedProvenanceEntity to
+				       using: dao ].
 
-		  (self importableDependencies: cls) do: [ :type | 
-			  unit writeImport: [ :import | import importingTypeOrTypeReference: type ] ] ]
+		(self importableDependencies: cls) do: [ :type | 
+			unit writeImport: [ :import | 
+				import importingTypeOrTypeReference: type ] ] ].
+	^ cls
 ]
 
 { #category : #'as yet unclassified' }

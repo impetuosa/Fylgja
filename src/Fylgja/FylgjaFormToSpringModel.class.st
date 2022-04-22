@@ -32,25 +32,26 @@ FylgjaFormToSpringModel >> applyTo: aRelatedProvenanceEntity croppingRelationsWi
 			 hasId: aRelatedProvenanceEntity to
 			 using: aFylgjaDerivativeModel) not.
 
-	^ aDestinationWriter writeDeclarationUnit: [ :unit | 
-		  cls := unit writeClass: [ :class | 
-			         class visibility: #public.
-			         self annotateAsEntity: class.
-			         self annotate: class asTableNamed: tableName.
+	aDestinationWriter writeDeclarationUnit: [ :unit | 
+		cls := unit writeClass: [ :class | 
+			       class visibility: #public.
+			       self annotateAsEntity: class.
+			       self annotate: class asTableNamed: tableName.
 
-			         class name:
-				         (self modelNameFor: aRelatedProvenanceEntity to).
-			         attributes keysAndValuesDo: [ :instance :attr | 
-				         | new |
-				         new := self
-					                addAttribute: attr
-					                boundAs: instance
-					                croppingRelationsWith: aBlock
-					                destinationWriter: class
-					                lookUp: aFylgjaLookUpContext
-					                using: aFylgjaDerivativeModel.
-				         self addSetterAndGetter: new into: class ] ].
+			       class name: (self modelNameFor: aRelatedProvenanceEntity to).
+			       attributes keysAndValuesDo: [ :instance :attr | 
+				       | new |
+				       new := self
+					              addAttribute: attr
+					              boundAs: instance
+					              croppingRelationsWith: aBlock
+					              destinationWriter: class
+					              lookUp: aFylgjaLookUpContext
+					              using: aFylgjaDerivativeModel.
+				       self addSetterAndGetter: new into: class ] ].
 
-		  (self importableDependencies: cls) do: [ :type | 
-			  unit writeImport: [ :import | import importingTypeOrTypeReference: type ] ] ]
+		(self importableDependencies: cls) do: [ :type | 
+			unit writeImport: [ :import | 
+				import importingTypeOrTypeReference: type ] ] ].
+	^ cls
 ]

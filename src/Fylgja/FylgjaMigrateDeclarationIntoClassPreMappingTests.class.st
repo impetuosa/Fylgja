@@ -8,7 +8,7 @@ Class {
 FylgjaMigrateDeclarationIntoClassPreMappingTests >> allReferencesFrom: aFylgjaDerivationResult [
 
 	^ aFylgjaDerivationResult derivative derivativeModels second entities 
-		  select: [ :a | a isReference ]
+		  select: [ :a | a isReference and: [ a respondsTo: #candidate ] ]
 ]
 
 { #category : #'as yet unclassified' }

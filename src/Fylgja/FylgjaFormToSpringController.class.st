@@ -46,46 +46,48 @@ FylgjaFormToSpringController >> applyTo: aRelatedProvenanceEntity croppingRelati
 	| dao cls |
 	self assert:
 		(self hasId: aRelatedProvenanceEntity to using: aFylgja) not.
-	^ aDestinationWriter writeDeclarationUnit: [ :unit | 
-		  cls := unit writeClass: [ :class | 
-			         class visibility: #public.
-			         class name:
-				         (self controllerNameFor: aRelatedProvenanceEntity to).
-			         self annotateAsRestController: class.
-			         self
-				         annotateAsCrossOrigin: class
-				         withOriginAt: self originURL.
-			         self
-				         annotateAsRequestMapping: class
-				         mappingTo: self apiURLExtention.
+	aDestinationWriter writeDeclarationUnit: [ :unit | 
+		cls := unit writeClass: [ :class | 
+			       class visibility: #public.
+			       class name:
+				       (self controllerNameFor: aRelatedProvenanceEntity to).
+			       self annotateAsRestController: class.
+			       self
+				       annotateAsCrossOrigin: class
+				       withOriginAt: self originURL.
+			       self
+				       annotateAsRequestMapping: class
+				       mappingTo: self apiURLExtention.
 
 
-			         dao := self
-				                addServiceDelegate: class
-				                for: aRelatedProvenanceEntity to.
+			       dao := self
+				              addServiceDelegate: class
+				              for: aRelatedProvenanceEntity to.
 
-			         (self hasId: aRelatedProvenanceEntity to using: aFylgja) 
-				         ifTrue: [ 
-					         self
-						         addSaveModelMethodController: class
-						         for: aRelatedProvenanceEntity to
-						         using: dao.
+			       (self hasId: aRelatedProvenanceEntity to using: aFylgja) 
+				       ifTrue: [ 
+					       self
+						       addSaveModelMethodController: class
+						       for: aRelatedProvenanceEntity to
+						       using: dao.
 
-					         self
-						         addDeleteModelMethodController: class
-						         for: aRelatedProvenanceEntity to
-						         using: dao.
-					         self
-						         updateModelMethodController: class
-						         for: aRelatedProvenanceEntity to
-						         using: dao ].
-			         self
-				         addGetAllMethodController: class
-				         for: aRelatedProvenanceEntity to
-				         using: dao ].
+					       self
+						       addDeleteModelMethodController: class
+						       for: aRelatedProvenanceEntity to
+						       using: dao.
+					       self
+						       updateModelMethodController: class
+						       for: aRelatedProvenanceEntity to
+						       using: dao ].
+			       self
+				       addGetAllMethodController: class
+				       for: aRelatedProvenanceEntity to
+				       using: dao ].
 
-		  (self importableDependencies: cls) do: [ :type | 
-			  unit writeImport: [ :import | import importingTypeOrTypeReference: type ] ] ]
+		(self importableDependencies: cls) do: [ :type | 
+			unit writeImport: [ :import | 
+				import importingTypeOrTypeReference: type ] ] ].
+	^ cls
 ]
 
 { #category : #'as yet unclassified' }

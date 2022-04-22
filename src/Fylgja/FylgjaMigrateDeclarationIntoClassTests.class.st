@@ -594,7 +594,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 	installer installInto: fylgja.
 
 	result := fylgja produce: provenance into: destination.
-
+result result parent produceCode inspect.
 	self
 		assert: (JavaParser parse: result result parent produceCode)
 		isKindOf: JavaProgramFileNode
