@@ -4,6 +4,13 @@ Class {
 	#category : #'Fylgja-ReadersWriters'
 }
 
+{ #category : #visiting }
+FylgjaCandidateStubWriter >> acceptWritingVisitor: aVisitor [
+	^ aVisitor visitStubWriter: self 
+
+
+]
+
 { #category : #accessing }
 FylgjaCandidateStubWriter >> candidate: aMOPrimitiveType [ 
 	writeBuilder candidate: aMOPrimitiveType 

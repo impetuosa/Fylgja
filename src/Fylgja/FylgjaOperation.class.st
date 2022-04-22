@@ -65,9 +65,64 @@ FylgjaOperation >> calculateTypeReference: aString packageName: aPackName using:
 	^ typeRef
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaOperation >> calculateTypeReference: aString using: aWriter [
+
+	| typeRef candidate parametrizable packRef |
+	parametrizable := false.
+	candidate := (aWriter model allEntitiesSelect: [ :a | 
+		              a isType and: [ a name = aString ] ]) ifEmpty: [ 
+		             aWriter model catalogEntitiesSelect: [ :a | 
+			             a isType and: [ a name = aString ] ] ].
+	candidate := candidate ifEmpty: [ nil ] ifNotEmpty: [ 
+		             self assert: candidate size = 1.
+		             parametrizable := candidate first isParametrizable.
+		             packRef := aWriter packageReferenceNamed:
+			                        candidate first packageReference name.
+		             candidate first ].
+	typeRef := parametrizable
+		           ifTrue: [ 
+		           aWriter
+			           parametrizedTypeReferenceNamed: aString
+			           arguments: {  } ]
+		           ifFalse: [ aWriter typeReferenceNamed: aString ].
+	typeRef candidate: candidate.
+	typeRef packageReference: packRef.
+	^ typeRef
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaOperation >> defaultInstanceFor: aProvenanceEntity withIn: model [
+
+	| object |
+	object := model objectsSelect: [ :a | 
+		          a type class = aProvenanceEntity class and: [ 
+			          a type name = aProvenanceEntity name ] ].
+
+	self assert: object size = 1.
+	^ object first
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaOperation >> importableDependencies: aMOClass [
+
+	^ aMOClass dependencies select: [ :a | 
+		  a packageReference isNotNil and: [ 
+			  a packageReference name ~= 'java.lang' and: [ 
+				  a packageReference name ~= 'typescript' ] ] ]
+]
+
 { #category : #testing }
 FylgjaOperation >> isBinding [ 
 	^ false. 
+]
+
+{ #category : #'instance creation' }
+FylgjaOperation >> typeReferenceTo: aDeclaration using: aWriter [
+
+	^ (aWriter typeReferenceNamed: aDeclaration name)
+		  candidate: aDeclaration;
+		  yourself
 ]
 
 { #category : #'instance creation' }

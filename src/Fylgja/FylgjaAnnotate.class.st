@@ -4,15 +4,23 @@ Class {
 	#instVars : [
 		'packageName',
 		'annotationName',
-		'namedParameters'
+		'namedArguments',
+		'arguments'
 	],
 	#category : #'Fylgja-Rule-Operations'
 }
 
 { #category : #adding }
-FylgjaAnnotate >> addNamedParameter: anAssociation [
+FylgjaAnnotate >> addArgument: anArgument [
 
-	(namedParameters ifNil: [ namedParameters := OrderedCollection new ]) 
+	(arguments ifNil: [ arguments := OrderedCollection new ]) add:
+		anArgument
+]
+
+{ #category : #adding }
+FylgjaAnnotate >> addNamedArgument: anAssociation [
+
+	(namedArguments ifNil: [ namedArguments := OrderedCollection new ]) 
 		add: anAssociation
 ]
 
@@ -37,19 +45,17 @@ FylgjaAnnotate >> applyOn: aWriter [
 			annotation arguments: (self calculateArguments: annotation) ] ]
 ]
 
-{ #category : #querying }
-FylgjaAnnotate >> calculateArguments [
-	self shouldBeImplemented.
-]
-
 { #category : #'as yet unclassified' }
 FylgjaAnnotate >> calculateArguments: aWriter [
 
-	^ namedParameters collect: [ :keyValue | 
-		  aWriter writeUnregisteredExpression: [ :exp | 
-			  exp
-				  argumentNamed: keyValue key
-				  expression: [ :e | { (self literal: keyValue value with: exp) } ] ] ]
+	^ ((namedArguments ifNil: [ {  } ]) collect: [ :keyValue | 
+		   aWriter writeUnregisteredExpression: [ :exp | 
+			   exp
+				   argumentNamed: keyValue key
+				   expression: [ :e | 
+				   { (self literal: keyValue value with: exp) } ] ] ])
+	  , ((arguments ifNil: [ {  } ]) collect: [ :d | 
+			   self literal: d with: aWriter ])
 ]
 
 { #category : #'as yet unclassified' }
@@ -68,17 +74,13 @@ FylgjaAnnotate >> findCandidate: aWriter [
 { #category : #testing }
 FylgjaAnnotate >> hasArguments [
 
-	^ namedParameters isEmptyOrNil not
+	^ namedArguments isEmptyOrNil not or: [ arguments isEmptyOrNil not ]
 ]
 
 { #category : #'as yet unclassified' }
 FylgjaAnnotate >> literal: aValue with: aMOExpressionWriter [
 
-	aValue isString ifTrue: [ 
-		^ aMOExpressionWriter stringLiteral: aValue ].
-	aValue isNumber ifTrue: [ 
-		^ aMOExpressionWriter numericLiteral: aValue ].
-	self error: 'Literal not yet implemented'
+	^ aMOExpressionWriter literalForValue: aValue
 ]
 
 { #category : #accessing }

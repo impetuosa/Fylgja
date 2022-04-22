@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaFormToSpringModel,
-	#superclass : #FylgjaToSpring,
+	#superclass : #FylgjaFormToSpring,
 	#category : #'Fylgja-Rule-Operations'
 }
 
