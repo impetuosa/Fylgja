@@ -256,7 +256,7 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToAngularComponent [
 	self
 		assert: (TypeScriptParser parse: result result produceCode)
 		isKindOf: JSTSSourceFileNode.
-	self assert: result result template isKindOf: XMLDocument
+	self assert: result result template document isKindOf: XMLDocument
 ]
 
 { #category : #initialization }

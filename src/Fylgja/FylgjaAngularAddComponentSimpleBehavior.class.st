@@ -7,7 +7,9 @@ Class {
 		'modelClassReference',
 		'serviceClassReference',
 		'bindings',
-		'model'
+		'model',
+		'cssName',
+		'templateName'
 	],
 	#category : #'Fylgja-Rule-Operations'
 }
@@ -82,7 +84,11 @@ FylgjaAngularAddComponentSimpleBehavior >> applyOn: component [
 			         class addModifier: #export.
 			         class visibility: #public.
 			         self addOnInitSupertype: class.
-			         self addAngularComponentDecorator: class.
+			         self
+				         addAngularComponentDecorator: class
+				         name: name
+				         templateName: templateName
+				         cssName: cssName.
 
 
 			         model := self addModelAttribute: class.
@@ -114,6 +120,12 @@ FylgjaAngularAddComponentSimpleBehavior >> applyOn: component [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaAngularAddComponentSimpleBehavior >> cssName: aString [
+
+	cssName := aString
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaAngularAddComponentSimpleBehavior >> informUsageOf: aCSNUIInputText [
 
 	aCSNUIInputText isBoundToData ifTrue: [ 
@@ -136,6 +148,12 @@ FylgjaAngularAddComponentSimpleBehavior >> name: aString [
 FylgjaAngularAddComponentSimpleBehavior >> serviceClassReference: aMOTypeReference [
 
 	serviceClassReference := aMOTypeReference
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaAngularAddComponentSimpleBehavior >> templateName: aString [
+
+	templateName := aString
 ]
 
 { #category : #'as yet unclassified' }

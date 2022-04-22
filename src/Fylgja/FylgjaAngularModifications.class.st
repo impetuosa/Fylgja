@@ -5,15 +5,17 @@ Class {
 }
 
 { #category : #adding }
-FylgjaAngularModifications >> addAngularComponentDecorator: class [
-	self halt: 'should rename properly '.
+FylgjaAngularModifications >> addAngularComponentDecorator: class name: name templateName: templateName cssName: cssName [
+
 	^ FylgjaDecorate new
 		  packageName: '@angular/core';
 		  decoratorName: 'Component';
 		  addArgument: { 
-				  (#selector -> 'app-add-student').
-				  (#templateUrl -> './add-student.component.html').
-				  (#styleUrls -> { './add-student.component.css' }) } asDictionary;
+				  (#selector -> name).
+				  (#templateUrl
+				   -> ('./{1}.component.html' format: { templateName })).
+				  (#styleUrls -> { ('./{1}.component.css' format: { cssName }) }) }
+				  asDictionary;
 		  applyOn: class
 ]
 

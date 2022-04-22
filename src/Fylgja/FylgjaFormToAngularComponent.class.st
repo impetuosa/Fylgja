@@ -8,13 +8,11 @@ Class {
 FylgjaFormToAngularComponent >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	| formObject importer pivot entity |
-	
-	
-		self assert:
+	self assert:
 		(self
 			 hasId: aRelatedProvenanceEntity to
 			 using: aFylgjaDerivativeModel) not.
-	
+
 	formObject := (aFylgjaDerivativeModel selectDerivativeModelFor:
 		               aRelatedProvenanceEntity to) objects detect: [ :a | 
 		              a type name = aRelatedProvenanceEntity to name ].
@@ -32,6 +30,8 @@ FylgjaFormToAngularComponent >> applyTo: aRelatedProvenanceEntity croppingRelati
 
 	^ CGWidgetExporter new
 		  writer: aDestinationWriter;
+		  cssName: (self cssNameFor: aRelatedProvenanceEntity to);
+		  templateName: (self templateNameFor: aRelatedProvenanceEntity to);
 		  modelClassReference: (self
 				   resolveModelClassReferenceFor: aRelatedProvenanceEntity
 				   using: aDestinationWriter);
@@ -39,4 +39,16 @@ FylgjaFormToAngularComponent >> applyTo: aRelatedProvenanceEntity croppingRelati
 				   resolveServiceClassReferenceFor: aRelatedProvenanceEntity
 				   using: aDestinationWriter);
 		  export: entity
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaFormToAngularComponent >> cssNameFor: aMOAlceForm [
+
+	^ (self modelNameFor: aMOAlceForm) asLowercase
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaFormToAngularComponent >> templateNameFor: aMOAlceForm [
+
+	^ self cssNameFor: aMOAlceForm
 ]
