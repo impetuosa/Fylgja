@@ -24,5 +24,12 @@ FylgjaProduction >> applyBindTo: aDestinationEntity withCandidateFrom: aProvenan
 { #category : #'as yet unclassified' }
 FylgjaProduction >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgja [
 
-	self subclassResponsibility
+  ^aDestinationWriter writeComment: [:comment |  
+		FylgjaTranslateCopy new 
+					applyTo: aRelatedProvenanceEntity 
+					croppingRelationsWith: aBlock 
+					destinationWriter: comment 
+					lookUp: aFylgjaLookUpContext 
+					using: aFylgja 
+		]
 ]

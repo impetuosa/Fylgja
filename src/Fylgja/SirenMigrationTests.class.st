@@ -50,6 +50,14 @@ SirenMigrationTests >> installRulesFor: s [
      copyAsSelfFFiInvocation;
      installInto: fylgja.
 
+
+FylgjaRuleInstaller new
+     atLanguageNamed: #phiren;
+	  anyReturnInvocationTo: #externalAccessFailedWith:;
+     comment;
+     installInto: fylgja.
+
+
   FylgjaRuleInstaller new
      atLanguageNamed: #phiren;
      referenceNamed: #ExternalInterface;

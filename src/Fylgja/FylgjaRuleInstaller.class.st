@@ -111,6 +111,14 @@ FylgjaRuleInstaller >> anyReferenceWithCandidate [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> anyReturnInvocationTo: aString [
+
+	^ self condition: (FylgjaConditionInvocationSelectorIsInReturn new
+			   selector: aString;
+			   yourself) increasePriority
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> anyTypeReferenceNamed: aString [
 
 	^ self condition: (FylgjaConditionTypeReferenceIs new
@@ -147,6 +155,11 @@ FylgjaRuleInstaller >> build [
 		  condition: condition;
 		  operation: operation;
 		  yourself
+]
+
+{ #category : #accessing }
+FylgjaRuleInstaller >> comment [
+	self operation: FylgjaTranslateCopyAsComment new .
 ]
 
 { #category : #accessing }
