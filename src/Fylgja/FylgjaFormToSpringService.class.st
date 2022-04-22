@@ -48,6 +48,11 @@ FylgjaFormToSpringService >> addSaveModelMethodService: class for: aMOAlceForm u
 FylgjaFormToSpringService >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgja [
 
 	| dao cls |
+	
+	self assert:
+		(self
+			 hasId: aRelatedProvenanceEntity to
+			 using: aFylgja) not.
 	^ aDestinationWriter writeDeclarationUnit: [ :unit | 
 		  cls := unit writeClass: [ :class | 
 			         class visibility: #public.
@@ -77,7 +82,7 @@ FylgjaFormToSpringService >> applyTo: aRelatedProvenanceEntity croppingRelations
 				         using: dao ].
 
 		  (self importableDependencies: cls) do: [ :type | 
-			  unit writeImport: [ :import | import importType: type ] ] ]
+			  unit writeImport: [ :import | import importingTypeOrTypeReference: type ] ] ]
 ]
 
 { #category : #'as yet unclassified' }

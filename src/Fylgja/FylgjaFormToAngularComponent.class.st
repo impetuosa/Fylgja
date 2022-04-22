@@ -8,6 +8,13 @@ Class {
 FylgjaFormToAngularComponent >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	| formObject importer pivot entity |
+	
+	
+		self assert:
+		(self
+			 hasId: aRelatedProvenanceEntity to
+			 using: aFylgjaDerivativeModel) not.
+	
 	formObject := (aFylgjaDerivativeModel selectDerivativeModelFor:
 		               aRelatedProvenanceEntity to) objects detect: [ :a | 
 		              a type name = aRelatedProvenanceEntity to name ].

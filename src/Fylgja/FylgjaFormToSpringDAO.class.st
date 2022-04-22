@@ -38,6 +38,10 @@ FylgjaFormToSpringDAO >> addSaveModelMethod: class for: aFormOrReport using: aSe
 FylgjaFormToSpringDAO >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	| sessionFactory cls |
+	self assert:
+		(self
+			 hasId: aRelatedProvenanceEntity to
+			 using: aFylgjaDerivativeModel) not.
 	^ aDestinationWriter writeDeclarationUnit: [ :unit | 
 		  cls := unit writeClass: [ :class | 
 			         class visibility: #public.
@@ -65,7 +69,7 @@ FylgjaFormToSpringDAO >> applyTo: aRelatedProvenanceEntity croppingRelationsWith
 				         using: sessionFactory ].
 
 		  (self importableDependencies: cls) do: [ :type | 
-			  unit writeImport: [ :import | import importType: type ] ] ]
+			  unit writeImport: [ :import | import importingTypeOrTypeReference: type ] ] ]
 ]
 
 { #category : #'as yet unclassified' }

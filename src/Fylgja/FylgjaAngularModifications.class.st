@@ -6,7 +6,7 @@ Class {
 
 { #category : #adding }
 FylgjaAngularModifications >> addAngularComponentDecorator: class [
-
+	self halt: 'should rename properly '.
 	^ FylgjaDecorate new
 		  packageName: '@angular/core';
 		  decoratorName: 'Component';

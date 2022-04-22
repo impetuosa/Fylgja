@@ -79,8 +79,8 @@ FylgjaAngularAddComponentSimpleBehavior >> applyOn: component [
 	^ component writeDeclarationUnit: [ :unit | 
 		  cls := unit writeTypescriptClass: [ :class | 
 			         class name: name.
-						class addModifier: #export. 
-						class visibility: #public. 
+			         class addModifier: #export.
+			         class visibility: #public.
 			         self addOnInitSupertype: class.
 			         self addAngularComponentDecorator: class.
 
@@ -110,9 +110,7 @@ FylgjaAngularAddComponentSimpleBehavior >> applyOn: component [
 
 		  (self importableDependencies: cls) do: [ :type | 
 			  unit writeImport: [ :import | 
-				  type isReference
-					  ifTrue: [ import importingTypeReference: type ]
-					  ifFalse: [ import importType: type ] ] ] ]
+				  import importingTypeOrTypeReference: type ] ] ]
 ]
 
 { #category : #'as yet unclassified' }

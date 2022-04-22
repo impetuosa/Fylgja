@@ -27,7 +27,10 @@ FylgjaFormToSpringModel >> applyTo: aRelatedProvenanceEntity croppingRelationsWi
 		              collectAllDatabaseBindings: object
 		              marringWith: dataBoundableAttributes.
 
-
+	self assert:
+		(self
+			 hasId: aRelatedProvenanceEntity to
+			 using: aFylgjaDerivativeModel) not.
 
 	^ aDestinationWriter writeDeclarationUnit: [ :unit | 
 		  cls := unit writeClass: [ :class | 
@@ -49,5 +52,5 @@ FylgjaFormToSpringModel >> applyTo: aRelatedProvenanceEntity croppingRelationsWi
 				         self addSetterAndGetter: new into: class ] ].
 
 		  (self importableDependencies: cls) do: [ :type | 
-			  unit writeImport: [ :import | import importType: type ] ] ]
+			  unit writeImport: [ :import | import importingTypeOrTypeReference: type ] ] ]
 ]

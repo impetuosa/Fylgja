@@ -1,46 +1,66 @@
 Class {
 	#name : #FylgjaFormToAngular,
-	#superclass : #FylgjaGeneration,
+	#superclass : #FylgjaFromAccess,
 	#category : #'Fylgja-Rule-Operations'
 }
 
-{ #category : #'as yet unclassified' }
-FylgjaFormToAngular >> allDataBoundableAttributes: object model: model [
+{ #category : #adding }
+FylgjaFormToAngular >> addBaseUrlVariable: class [
 
-	| tableName |
-	tableName := object state at: #RecordSource.
-	self assert:
-		(tableName includesSubstring: #select caseSensitive: false) not.
-	^ (model entities select: [ :a | 
-		   ((a isKindOf: MOAlceTable) or: [ a isKindOf: MOAlceQuery ]) and: [ 
-			   a compareName: tableName ] ]) flatCollect: #attributes
+	^ FylgjaAddAttribute new
+		  name: #baseUrl;
+		  typeReference:
+			  (self calculateTypeReference: 'string' using: class);
+		  initializer: (class stringLiteral: 'http://localhost:8080/api/');
+		  applyOn: class
+]
+
+{ #category : #adding }
+FylgjaFormToAngular >> addConstructor: class initializing: aMOAttribute [
+
+	^ FylgjaAddAttributeInitializingConstructor new
+		  attributes: { aMOAttribute };
+		  applyOn: class
+]
+
+{ #category : #adding }
+FylgjaFormToAngular >> addHttpClientVariable: class [
+
+	^ FylgjaAddAttribute new
+		  name: #http;
+		  typeReference: (self
+				   calculateTypeReference: 'HttpClient'
+				   packageName: '@angular/common/http'
+				   using: class);
+		  applyOn: class
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaFormToAngular >> collectAllDatabaseBindings: aMOObject marringWith: dbAttrs [
-
-	^ (aMOObject state values
-		   select: [ :val | 
-			   (val isKindOf: MOObject) and: [ 
-				   (val state includesKey: #ControlSource) and: [ 
-					   (val state at: #ControlSource) isNotEmpty and: [ 
-						   (val state at: #ControlSource) first ~= $= ] ] ] ]
-		   thenCollect: [ :val | 
-			   val -> (dbAttrs detect: [ :db | 
-				    db compareName: (val state at: #ControlSource) ]) ])
-		  asDictionary
+FylgjaFormToAngular >> calculateReferenceToAnObservable: aString [ 
+	self shouldBeImplemented.
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaFormToAngular >> databaseSourceName: object [
+FylgjaFormToAngular >> calculateReferenceToAnObservable: aString using: class [
 
-	^ object state at: #RecordSource
+	| observable |
+	observable := self
+		              calculateParametrizableTypeReference: 'Observable'
+		              packageName: 'rxjs'
+		              using: class.
+	observable argumentTypeReferences:
+		{ (self calculateTypeReference: aString using: class) }.
+	^ observable
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaFormToAngular >> modelNameFor: aFormOrReport [
+FylgjaFormToAngular >> decorateAsInjectableIn: aString into: class [
 
-	^ (self saniteName: aFormOrReport) , '_Model'
+	^ FylgjaDecorate new
+		  packageName: '@angular/core';
+		  decoratorName: 'Injectable';
+		  addArgument: { (#providedIn -> aString) } asDictionary;
+		  applyOn: class
 ]
 
 { #category : #'as yet unclassified' }
@@ -59,18 +79,4 @@ FylgjaFormToAngular >> resolveServiceClassReferenceFor: aRelatedProvenanceEntity
 		  calculateTypeReference:
 		  (self serviceNameFor: aRelatedProvenanceEntity to name)
 		  using: writer
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaFormToAngular >> saniteName: aFormOrReport [
-
-	^ (aFormOrReport name copyReplaceAll: 'Form_' with: '')
-		  copyReplaceAll: 'Report_'
-		  with: ''
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaFormToAngular >> serviceNameFor: aFormOrReport [
-
-	^ (self saniteName: aFormOrReport) , '_Service'
 ]
