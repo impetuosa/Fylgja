@@ -76,8 +76,16 @@ FylgjaRuleInstaller new
      copyRenameMethod: #props;
      installInto: fylgja.
 	
+	
  FylgjaRuleInstaller new
-	  context: (self pharoSequenciableCollection );
+     atLanguageNamed: #phiren;
+     anyClassNamed: {#Duration . #'Duration class'}; 
+     copyRename: #SirenDuration;
+     installInto: fylgja.
+	
+
+ FylgjaRuleInstaller new
+     atLanguageNamed: #phiren;
      anyMethodNamed: {#atRandom: . #atRandom};
      copyRenameMethod: { #atRandom:-> #randomValue: . #atRandom -> #randomValue} ;
      installInto: fylgja.
@@ -265,6 +273,22 @@ SirenMigrationTests >> testMovePortMidiInterfaceToPhSiren [
 ]
 
 { #category : #initialization }
+SirenMigrationTests >> testMoveSirenDurationToPhSiren [
+  | destination provenance result tonel |
+  destination := self pharoSirenPackage.
+  provenance := self vwDurationClass .
+  self installRulesFor: destination.
+  result := fylgja produce: provenance into: destination.
+result result produceCode inspect.
+  tonel := TonelParser parseString: result result produceCode.
+  self assert: tonel size equals: 10.
+
+  self assert: (tonel first isKindOf: MCClassDefinition).
+  self assert: (tonel allButFirst allSatisfy: [:a |  a isKindOf: MCMethodDefinition ]).
+
+]
+
+{ #category : #initialization }
 SirenMigrationTests >> testMoveSirenExternalInterfaceToPhSiren [
   | destination provenance result tonel |
   destination := self pharoSirenPackage.
@@ -296,6 +320,11 @@ SirenMigrationTests >> testMoveSirenZpointToPhSiren [
 { #category : #'as yet unclassified' }
 SirenMigrationTests >> vwColorValue [
   ^vw entities detect: [:a |  a isType and: [ a name = #ColorValue ] ]
+]
+
+{ #category : #'as yet unclassified' }
+SirenMigrationTests >> vwDurationClass [
+  ^vw entities detect: [:a |  a isType and: [ a name = #Duration ] ]
 ]
 
 { #category : #initialization }

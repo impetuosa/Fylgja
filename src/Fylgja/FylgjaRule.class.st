@@ -20,8 +20,18 @@ FylgjaRule >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock de
 ]
 
 { #category : #accessing }
+FylgjaRule >> condition [
+	^ condition
+]
+
+{ #category : #accessing }
 FylgjaRule >> condition: aFylgjaConditionAll [ 
 	condition := aFylgjaConditionAll
+]
+
+{ #category : #accessing }
+FylgjaRule >> operation [
+	^ operation
 ]
 
 { #category : #accessing }

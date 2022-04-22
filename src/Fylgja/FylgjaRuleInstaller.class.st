@@ -39,6 +39,17 @@ FylgjaRuleInstaller >> anyBindableEntity [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> anyClassNamed: aNames [
+  ^self condition: (FylgjaConditionModelTypeIsAndNamed new
+           types: {MOStClass . 
+              MOClass . 
+              MOClassType . 
+              MOMetaClass};
+           names: aNames;
+           yourself)
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> anyEntity [
 
 	^ self condition: FylgjaConditionAll new
@@ -77,7 +88,7 @@ FylgjaRuleInstaller >> anyMetaclassMethodNamed: aString [
 
 { #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> anyMethodNamed: aCollection [
-  ^self operation: (FylgjaConditionAnyMethodNamed new
+  ^self condition: (FylgjaConditionAnyMethodNamed new
            names: aCollection;
            yourself)
 ]
@@ -217,6 +228,13 @@ FylgjaRuleInstaller >> copyRecategorizeMethods [
 ]
 
 { #category : #copying }
+FylgjaRuleInstaller >> copyRename: aString [
+  self operation: (FylgjaCopyRename new
+           name: aString;
+           yourself)
+]
+
+{ #category : #copying }
 FylgjaRuleInstaller >> copyRenameMethod: aString [
   self operation: (FylgjaCopyRenameMethod new
            name: aString;
@@ -309,6 +327,8 @@ FylgjaRuleInstaller >> installInto: aFylgja [
 						         ensureNamespace: context
 						         model: (self modelFor: aFylgja) ] ].
 	rule := self build.
+	self assert: rule condition isNotNil.
+		self assert: rule operation isNotNil.
 	self isBinding
 		ifTrue: [ space installMappingRule: rule ]
 		ifFalse: [ space installProducingRule: rule ]

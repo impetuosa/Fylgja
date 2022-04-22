@@ -9,7 +9,7 @@ Class {
 
 { #category : #testing }
 FylgjaConditionAnyMethodNamed >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
-self halt 
+  ^(aProvenanceEntityRelation to isKindOf: MOMethod) and: [ names includes: aProvenanceEntityRelation to selector ]
 ]
 
 { #category : #accessing }
