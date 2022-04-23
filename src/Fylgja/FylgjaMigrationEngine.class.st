@@ -126,9 +126,9 @@ FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aM
 	self assert: aProvenanceEntity isDeclaration.
 	self assert: aDestinationEntity isDeclaration.
 
-	aDestinationEntity parentForContext
-		ifNil: [ aBlock value ]
-		ifNotNil: [ :context | 
+	(aDestinationEntity parentForContext isNil or: [ aDestinationEntity anchor isNotNil ])
+		ifTrue:  [ aBlock value ]
+		ifFalse: [ :context | 
 			FylgjaRuleInstaller new
 				context: context;
 				whenIsReferenceWithCandidate: aProvenanceEntity;

@@ -112,7 +112,7 @@ FylgjaDerivativeModel >> processDeferredMappings [
 		fylgja mapOrFail: re key to: re value using: self.
 		(self deferredMapping at: ready first key) remove:  re value ]
 			on: Error
-			do: [ :e | self halt ] ]
+			do: [ :e |" self halt" ] ]
 ]
 
 { #category : #'as yet unclassified' }

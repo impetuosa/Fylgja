@@ -225,7 +225,6 @@ FylgjaMigrationRuleSpace >> printOn: aStream [
 FylgjaMigrationRuleSpace >> registerSpace: aName [
 
 	| entry |
-	subspaces at: aName ifPresent: [ self halt ].
 	entry := self class new
 		         name: aName;
 		         parent: self;
