@@ -24,6 +24,6 @@ FylgjaCandidateStub >> printOn: aStream [
 FylgjaCandidateStub >> refersToObjectsLike: aMOPrimitiveType [
 
 	^ aMOPrimitiveType isCollection
-		  ifTrue: [ aMOPrimitiveType allSatisfy: [ : a | self refersToObjectsLike: a ]  ]
+		  ifTrue: [ aMOPrimitiveType allSatisfy: [ : a | self refersToObjectsLikeOrStonRef: a ]  ]
 		  ifFalse: [ aMOPrimitiveType isDeclaration ]
 ]
