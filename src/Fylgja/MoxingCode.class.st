@@ -8,11 +8,18 @@ Class {
 	#category : #'Fylgja-UI'
 }
 
-{ #category : #specs }
-MoxingCode class >> defaultSpec [
-	^ super defaultSpec
-		add: #viewport;
-		yourself
+{ #category : #layout }
+MoxingCode class >> defaultLayout [
+
+	^ SpBoxLayout newTopToBottom
+		  add: #viewport;
+		  yourself
+]
+
+{ #category : #initialization }
+MoxingCode >> iconFor: anEntry [
+
+	^ MoxingIcons iconFor: anEntry
 ]
 
 { #category : #initialization }
@@ -57,9 +64,9 @@ MoxingCode >> visualizeSourcecode: aCodeObject [
 	viewport pages: { page }.
 	viewport selectPage: page.
 
-	text text: (AlceTextComposer new
+	text text: (MoxingTextComposer new
 			 compose: aCodeObject produceCode
-			 ast: aCodeObject ast
+			 parser: aCodeObject language parser
 			 model: aCodeObject
 			 style: aCodeObject language style
 			 browsingWith: self)

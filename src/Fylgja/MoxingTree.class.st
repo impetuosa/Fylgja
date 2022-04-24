@@ -15,26 +15,17 @@ MoxingTree class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #specs }
-MoxingTree class >> isAbstract [
-
-	^ self = MoxingTree 
-]
-
 { #category : #initialization }
 MoxingTree >> childrenFor: anEntry [
 
-	| entity  |
+	| entity |
 	entity := anEntry isAssociation
 		          ifTrue: [ anEntry value ]
 		          ifFalse: [ anEntry ].
-	entity isCollection ifTrue: [  .^ {} ].
+	entity isCollection ifTrue: [ ^ {  } ].
 	^ (entity isKindOf: MOModel)
 		  ifTrue: [ { entity root } ]
-		  ifFalse: [ 
-				entity allContainments 
-			"  (entity allContainmentRelations groupedBy: #relationName)
-				  associations collect: [ :a | a key -> (a value collect: #to) ]" ]
+		  ifFalse: [ entity allContainments reject: [ :a | a isKindOf: MOEmptyBlock  ] ]
 ]
 
 { #category : #initialization }
@@ -57,7 +48,6 @@ MoxingTree >> initializePresenters [
 	super initializePresenters.
 
 	tree := self newTreeTable.
-	tree beMultipleSelection.
 
 	tree
 		addColumn: (SpCompositeTableColumn new
@@ -76,4 +66,10 @@ MoxingTree >> initializePresenters [
 MoxingTree >> selectEntity: anEntity [
 
 	tree items: (self childrenFor: anEntity)
+]
+
+{ #category : #enumerating }
+MoxingTree >> whenSelectionChangedDo: aFullBlockClosure [
+
+	^ tree whenSelectionChangedDo: aFullBlockClosure
 ]
