@@ -1,0 +1,79 @@
+Class {
+	#name : #MoxingTree,
+	#superclass : #SpPresenter,
+	#instVars : [
+		'tree'
+	],
+	#category : #'Fylgja-UI'
+}
+
+{ #category : #layout }
+MoxingTree class >> defaultLayout [
+
+	^ SpBoxLayout newTopToBottom
+		  add: #tree;
+		  yourself
+]
+
+{ #category : #specs }
+MoxingTree class >> isAbstract [
+
+	^ self = MoxingTree 
+]
+
+{ #category : #initialization }
+MoxingTree >> childrenFor: anEntry [
+
+	| entity  |
+	entity := anEntry isAssociation
+		          ifTrue: [ anEntry value ]
+		          ifFalse: [ anEntry ].
+	entity isCollection ifTrue: [  .^ {} ].
+	^ (entity isKindOf: MOModel)
+		  ifTrue: [ { entity root } ]
+		  ifFalse: [ 
+				entity allContainments 
+			"  (entity allContainmentRelations groupedBy: #relationName)
+				  associations collect: [ :a | a key -> (a value collect: #to) ]" ]
+]
+
+{ #category : #initialization }
+MoxingTree >> iconFor: anEntry [
+
+	^ (anEntry isKindOf: Association)
+		  ifTrue: [ MoxingIcons iconForEntryName: anEntry key ]
+		  ifFalse: [ MoxingIcons iconFor: anEntry ]
+]
+
+{ #category : #initialization }
+MoxingTree >> imageRepresentationFor: each [
+
+	^ (MOElementToUIString new toString: each) asStringMorph
+]
+
+{ #category : #initialization }
+MoxingTree >> initializePresenters [
+
+	super initializePresenters.
+
+	tree := self newTreeTable.
+	tree beMultipleSelection.
+
+	tree
+		addColumn: (SpCompositeTableColumn new
+				 title: '';
+				 addColumn:
+					 ((SpImageTableColumn evaluated: [ :each | self iconFor: each ])
+						  width: 20;
+						  yourself);
+				 addColumn: (SpImageTableColumn evaluated: [ :each | 
+						  self imageRepresentationFor: each ]);
+				 yourself);
+		children: [ :entry | self childrenFor: entry ]
+]
+
+{ #category : #initialization }
+MoxingTree >> selectEntity: anEntity [
+
+	tree items: (self childrenFor: anEntity)
+]
