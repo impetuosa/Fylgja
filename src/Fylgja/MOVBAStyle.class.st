@@ -32,6 +32,11 @@ MOVBAStyle >> case [
 ]
 
 { #category : #'as yet unclassified' }
+MOVBAStyle >> classStyle [
+	 ^ self keyword
+]
+
+{ #category : #'as yet unclassified' }
 MOVBAStyle >> color: aColor [ 
 	^ TextColor color: aColor 
 ]
@@ -98,6 +103,11 @@ MOVBAStyle >> explicit [
 ]
 
 { #category : #'as yet unclassified' }
+MOVBAStyle >> extends [
+	 ^ self keyword
+]
+
+{ #category : #'as yet unclassified' }
 MOVBAStyle >> functionKeyword [
 
 	^ self keyword 
@@ -111,6 +121,11 @@ MOVBAStyle >> goto [
 { #category : #generated }
 MOVBAStyle >> if [
 	^ self keyword
+]
+
+{ #category : #'as yet unclassified' }
+MOVBAStyle >> implements [
+	 ^ self keyword
 ]
 
 { #category : #accessing }

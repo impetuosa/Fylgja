@@ -63,45 +63,7 @@ MoxingIcons class >> gtInspectorIconsIn: composite [
 
 { #category : #'GT-InspectorExtensions' }
 MoxingIcons class >> iconFor: anElement [
-
-	| aClass |
-	aClass := anElement class.
-
-
-
-	aClass = MODeclarationUnit ifTrue: [ ^ self iconNamed: #group ].
-	aClass = MOProject ifTrue: [ ^ self iconNamed: #package ].
-	aClass = MOAlceForm ifTrue: [ ^ self iconFormIcon ].
-	aClass = MOAlceTable ifTrue: [ ^ self iconTableIcon ].
-	aClass = MOAlceReport ifTrue: [ ^ self iconReportIcon ].
-	aClass = MOAlceQuery ifTrue: [ ^ self iconQueryIcon ].
-	"	aClass = AlcixMacro ifTrue: [ ^ self iconMacroIcon ]."
-	aClass = MOModule ifTrue: [ ^ self iconModuleIcon ].
-	 
-
-	aClass = MOLibrary ifTrue: [ ^ self iconNamed: #smallRedo ].
-	aClass = MOAlias ifTrue: [ ^ 'A=>B' asMorph asForm ].
-
-	aClass = MOStructure ifTrue: [ ^ self structIcon ].
-	aClass = MOEnum ifTrue: [ ^ self enumIcon ].
-	aClass = MOEnumEntry ifTrue: [ ^ self fieldIcon ].
-	aClass = MOIfElse ifTrue: [ ^ self iconNamed:#hierarchy ].
-	
-	aClass = MOLocalVariable ifTrue: [ ^ self iconNamed: #glamorousDown ].
-	aClass = MOParameter ifTrue: [ ^ self iconNamed: #glamorousRight ].
-	aClass = MOGlobalVariable ifTrue: [ ^ self iconNamed: #glamorousUp ].
-
-	(anElement isKindOf: MOAbstractVariable) ifTrue: [ ^ self fieldIcon ].
-	aClass = MOPackage ifTrue: [ ^ self iconNamed: #package ].
-	aClass = MOEvent ifTrue: [ ^ self iconNamed: #announcement ].
-	(anElement isKindOf: MOInvocable) ifTrue: [ ^ self methodIcon ].
-
-	(anElement isKindOf: MOType) ifTrue: [ 
-		anElement language isJava ifTrue: [ ^ self iconNamed: #class ].
-		anElement language isMicrosoftAccess ifTrue: [ 
-			^ self iconModuleIcon ].
-		anElement language isTypescript ifTrue: [ ^ self typescriptIcon ] ].
-	^  self iconNamed:#changeUpdate
+	^ (self selectIconFor: anElement ) scaledToSize: 16@16
 ]
 
 { #category : #'GT-InspectorExtensions' }
@@ -269,6 +231,53 @@ MoxingIcons class >> packageIconContents [
 MoxingIcons class >> resetIcons [
 	<script>
 	^ icons := nil
+]
+
+{ #category : #'GT-InspectorExtensions' }
+MoxingIcons class >> selectIconFor: anElement [
+
+	| aClass |
+	aClass := anElement class.
+
+	aClass = MOAngularClass ifTrue: [ ^ self typescriptIcon ].
+	aClass = MOAngularComponent ifTrue: [ ^ self angularIcon ].
+	aClass = MOAngularProject ifTrue: [ ^ self angularIcon ].
+	aClass = MOAngularScheme ifTrue: [ ^  self iconNamed: #package ].
+	
+	
+	aClass = MODeclarationUnit ifTrue: [ ^ self iconNamed: #group ].
+	aClass = MOProject ifTrue: [ ^ self iconNamed: #package ].
+	aClass = MOAlceForm ifTrue: [ ^ self iconFormIcon ].
+	aClass = MOAlceTable ifTrue: [ ^ self iconTableIcon ].
+	aClass = MOAlceReport ifTrue: [ ^ self iconReportIcon ].
+	aClass = MOAlceQuery ifTrue: [ ^ self iconQueryIcon ].
+	"	aClass = AlcixMacro ifTrue: [ ^ self iconMacroIcon ]."
+	aClass = MOModule ifTrue: [ ^ self iconModuleIcon ].
+
+
+	aClass = MOLibrary ifTrue: [ ^ self iconNamed: #smallRedo ].
+	aClass = MOAlias ifTrue: [ ^ 'A=>B' asMorph asForm ].
+
+	aClass = MOStructure ifTrue: [ ^ self structIcon ].
+	aClass = MOEnum ifTrue: [ ^ self enumIcon ].
+	aClass = MOEnumEntry ifTrue: [ ^ self fieldIcon ].
+	aClass = MOIfElse ifTrue: [ ^ self iconNamed: #hierarchy ].
+
+	aClass = MOLocalVariable ifTrue: [ ^ self iconNamed: #glamorousDown ].
+	aClass = MOParameter ifTrue: [ ^ self iconNamed: #glamorousRight ].
+	aClass = MOGlobalVariable ifTrue: [ ^ self iconNamed: #glamorousUp ].
+
+	(anElement isKindOf: MOAbstractVariable) ifTrue: [ ^ self fieldIcon ].
+	aClass = MOPackage ifTrue: [ ^ self iconNamed: #package ].
+	aClass = MOEvent ifTrue: [ ^ self iconNamed: #announcement ].
+	(anElement isKindOf: MOInvocable) ifTrue: [ ^ self methodIcon ].
+
+	(anElement isKindOf: MOType) ifTrue: [ 
+		anElement language isJava ifTrue: [ ^ self iconNamed: #class ].
+		anElement language isMicrosoftAccess ifTrue: [ 
+			^ self iconModuleIcon ].
+		anElement language isTypescript ifTrue: [ ^ self typescriptIcon ] ].
+	^ self iconNamed: #changeUpdate
 ]
 
 { #category : #'accessing - icons' }

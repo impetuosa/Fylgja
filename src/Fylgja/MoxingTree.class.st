@@ -48,7 +48,13 @@ MoxingTree >> initializePresenters [
 	super initializePresenters.
 
 	tree := self newTreeTable.
-
+	tree dragEnabled: true.
+	tree dropEnabled: true.
+	tree
+		wantsDrop: [ :transfer | 
+			transfer passenger allSatisfy: #isDeclaration ];
+		acceptDrop: [ :transfer | 
+			tree items: tree items , transfer passenger ].
 	tree
 		addColumn: (SpCompositeTableColumn new
 				 title: '';

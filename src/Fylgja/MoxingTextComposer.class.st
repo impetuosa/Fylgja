@@ -39,6 +39,12 @@ MoxingTextComposer >> addAttributeCase: aSmaCCCaseInsensitiveToken [
 ]
 
 { #category : #adding }
+MoxingTextComposer >> addAttributeClass: aSmaCCToken [
+
+	^ self addStyle: style classStyle forToken: aSmaCCToken
+]
+
+{ #category : #adding }
 MoxingTextComposer >> addAttributeColor: aVBToken [
 
 	^ self addStyle: (style colorForToken: aVBToken) forToken: aVBToken
@@ -106,6 +112,11 @@ MoxingTextComposer >> addAttributeExplicit: aSmaCCCaseInsensitiveToken [
 ]
 
 { #category : #adding }
+MoxingTextComposer >> addAttributeExtends: anUndefinedObject [ 
+	self addStyle: style extends forToken: anUndefinedObject
+]
+
+{ #category : #adding }
 MoxingTextComposer >> addAttributeFunction: aSmaCCCaseInsensitiveToken [
 
 	^ self
@@ -123,6 +134,18 @@ MoxingTextComposer >> addAttributeGoTo: aSmaCCCaseInsensitiveToken [
 MoxingTextComposer >> addAttributeIf: aSmaCCCaseInsensitiveToken [
 
 	^ self addStyle: style if forToken: aSmaCCCaseInsensitiveToken
+]
+
+{ #category : #adding }
+MoxingTextComposer >> addAttributeImplements: anUndefinedObject [
+
+	self addStyle: style implements forToken: anUndefinedObject
+]
+
+{ #category : #adding }
+MoxingTextComposer >> addAttributeImport: aSmaCCToken [ 
+	
+	self addStyle: style keyword forToken: aSmaCCToken
 ]
 
 { #category : #adding }
