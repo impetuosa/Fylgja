@@ -7,7 +7,7 @@ Class {
 		'model',
 		'style'
 	],
-	#category : #'Fylgja-UI'
+	#category : #'Fylgja-UI-Text'
 }
 
 { #category : #adding }
@@ -16,6 +16,11 @@ MoxingTextComposer >> addAttributeAccessorKind: aSmaCCCaseInsensitiveToken [
 	^ self
 		  addStyle: style accessorKind
 		  forToken: aSmaCCCaseInsensitiveToken
+]
+
+{ #category : #adding }
+MoxingTextComposer >> addAttributeAnnotation: aSmaCCToken [ 
+	^ self addStyle: style annotation forToken: aSmaCCToken
 ]
 
 { #category : #adding }
@@ -167,6 +172,11 @@ MoxingTextComposer >> addAttributeLiteral: aSmaCCCaseInsensitiveToken [
 ]
 
 { #category : #adding }
+MoxingTextComposer >> addAttributeModifier: aJavaModifierNode [ 
+	^ self addStyle: style modifier forToken: aJavaModifierNode
+]
+
+{ #category : #adding }
 MoxingTextComposer >> addAttributeNew: aSmaCCCaseInsensitiveToken [
 
 	^ self addStyle: style new forToken: aSmaCCCaseInsensitiveToken
@@ -198,6 +208,12 @@ MoxingTextComposer >> addAttributeOption: aSmaCCCaseInsensitiveToken [
 ]
 
 { #category : #adding }
+MoxingTextComposer >> addAttributePackage: aSmaCCToken [
+
+	self addStyle: style package forToken: aSmaCCToken
+]
+
+{ #category : #adding }
 MoxingTextComposer >> addAttributeProperty: aSmaCCCaseInsensitiveToken [
 
 	^ self addStyle: style property forToken: aSmaCCCaseInsensitiveToken
@@ -207,6 +223,11 @@ MoxingTextComposer >> addAttributeProperty: aSmaCCCaseInsensitiveToken [
 MoxingTextComposer >> addAttributeResume: aSmaCCCaseInsensitiveToken [
 
 	^ self addStyle: style resume forToken: aSmaCCCaseInsensitiveToken
+]
+
+{ #category : #adding }
+MoxingTextComposer >> addAttributeReturn: aSmaCCToken [ 
+	^ self addStyle: style return forToken: aSmaCCToken
 ]
 
 { #category : #enumerating }

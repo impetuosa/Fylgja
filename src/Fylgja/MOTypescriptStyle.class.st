@@ -1,5 +1,5 @@
 Class {
-	#name : #MOVBAStyle,
+	#name : #MOTypescriptStyle,
 	#superclass : #MOAstStyle,
 	#category : #'Fylgja-UI-Text'
 }

@@ -3,7 +3,7 @@ Class {
 	#superclass : #MoxingTextComposer,
 	#traits : 'TJSProgramNodeVisitor',
 	#classTraits : 'TJSProgramNodeVisitor classTrait',
-	#category : #'Fylgja-UI'
+	#category : #'Fylgja-UI-Text'
 }
 
 { #category : #generated }

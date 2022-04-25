@@ -12,6 +12,50 @@ Class {
 	#category : #'Fylgja-MRS'
 }
 
+{ #category : #'as yet unclassified' }
+FylgjaMigrationRuleSpace >> allPossibleDelegatingRules [
+
+	| thisLevelRules |
+	thisLevelRules := (delegatingRules sorted: #priority) collect: [ :r | 
+		                  self -> r ].
+
+
+
+	^ thisLevelRules , (parent
+		   ifNil: [ {  } ]
+		   ifNotNil: [ parent allPossibleDelegatingRules ])
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationRuleSpace >> allPossibleMappingRules [
+
+	| thisLevelRules |
+	thisLevelRules := (mappingRules sorted: #priority) collect: [ :r | 
+		                  self -> r ].
+
+
+	^ thisLevelRules
+	  ,
+	  (parent
+		   ifNil: [ {  } ]
+		   ifNotNil: [ parent allPossibleMappingRules ])
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationRuleSpace >> allPossibleProducingRules [
+
+	| thisLevelRules |
+	thisLevelRules := (producingRules sorted: #priority) collect: [ :r | 
+		                  self -> r ].
+
+
+	^ thisLevelRules
+	  ,
+	  (parent
+		   ifNil: [ {  } ]
+		   ifNotNil: [ parent allPossibleProducingRules ])
+]
+
 { #category : #'public-entity-creation' }
 FylgjaMigrationRuleSpace >> ensureNamespace: anEntity [
 

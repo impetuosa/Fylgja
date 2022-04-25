@@ -70,9 +70,9 @@ MOElementToUIString >> toString: anAssociation [
 
 { #category : #visiting }
 MOElementToUIString >> visitAttribute: anAttribute [
-
+	
 	^ anAttribute name , ' : ' ,( anAttribute typeReference
-		  ifNotNil: [ :r | r name ]
+		  ifNotNil: [ :r | r name ifNil: [ #unknown ] ]
 		  ifNil: [ #unknwon ])
 ]
 

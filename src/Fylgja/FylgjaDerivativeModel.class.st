@@ -32,6 +32,18 @@ FylgjaDerivativeModel >> deferredMapping [
 	^ deferredMapping ifNil: [ deferredMapping := Dictionary new  ]
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> derivativeModelFor: aMOModel [
+
+	^ self derivativeModels
+		  detect: [ :dm | dm isDerivedFrom: aMOModel ]
+		  ifNone: [ 
+			  | dm |
+			  dm := aMOModel derivative.
+			  self derivativeModels add: dm.
+			  dm ]
+]
+
 { #category : #accessing }
 FylgjaDerivativeModel >> derivativeModels [
 	^ derivativeModels
@@ -61,6 +73,12 @@ FylgjaDerivativeModel >> isDerivativeEntity: anEntity [
 	model := self selectDerivativeModelFor: anEntity ifNone: [ ^ false ].
 	^ model exclusivelyincludes: anEntity 
 
+]
+
+{ #category : #accessing }
+FylgjaDerivativeModel >> lookUpContext: anEntity [
+
+	^ fylgja lookUpContext: anEntity using: self
 ]
 
 { #category : #accessing }

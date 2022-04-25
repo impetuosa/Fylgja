@@ -9,6 +9,24 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+FylgjaLookUpContext >> allPossibleDelegatingRules [
+
+	^ mrs allPossibleDelegatingRules
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaLookUpContext >> allPossibleMappingRules [
+
+	^ mrs allPossibleMappingRules
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaLookUpContext >> allPossibleProducingRules [
+
+	^ mrs allPossibleProducingRules
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaLookUpContext >> ensureNotDuplicated: rules [
 
 	[ 

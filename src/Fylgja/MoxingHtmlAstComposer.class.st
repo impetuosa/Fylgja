@@ -1,7 +1,7 @@
 Class {
 	#name : #MoxingHtmlAstComposer,
 	#superclass : #MoxingTextComposer,
-	#category : #'Fylgja-UI'
+	#category : #'Fylgja-UI-Text'
 }
 
 { #category : #visiting }

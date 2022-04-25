@@ -30,6 +30,12 @@ FylgjaRule >> condition: aFylgjaConditionAll [
 ]
 
 { #category : #accessing }
+FylgjaRule >> isRule [
+
+	^ true
+]
+
+{ #category : #accessing }
 FylgjaRule >> operation [
 	^ operation
 ]

@@ -2,10 +2,26 @@ Class {
 	#name : #MoxingTree,
 	#superclass : #SpPresenter,
 	#instVars : [
-		'tree'
+		'tree',
+		'model',
+		'whenSelected',
+		'bundle'
 	],
 	#category : #'Fylgja-UI'
 }
+
+{ #category : #layout }
+MoxingTree class >> buildCommandsGroupWith: presenterInstance forRoot: rootCommandGroup [
+
+	super
+		buildCommandsGroupWith: presenterInstance
+		forRoot: rootCommandGroup.
+	rootCommandGroup register:
+		(FylgjaUIInspect forSpecContext: presenterInstance).
+
+	rootCommandGroup register:
+		(FylgjaUIInstallRule forSpecContext: presenterInstance)
+]
 
 { #category : #layout }
 MoxingTree class >> defaultLayout [
@@ -16,6 +32,12 @@ MoxingTree class >> defaultLayout [
 ]
 
 { #category : #initialization }
+MoxingTree >> bundle: aBundle [
+
+	bundle := aBundle
+]
+
+{ #category : #initialization }
 MoxingTree >> childrenFor: anEntry [
 
 	| entity |
@@ -23,9 +45,12 @@ MoxingTree >> childrenFor: anEntry [
 		          ifTrue: [ anEntry value ]
 		          ifFalse: [ anEntry ].
 	entity isCollection ifTrue: [ ^ {  } ].
-	^ (entity isKindOf: MOModel)
+	^ entity isModelOrDerivative
 		  ifTrue: [ { entity root } ]
-		  ifFalse: [ entity allContainments reject: [ :a | a isKindOf: MOEmptyBlock  ] ]
+		  ifFalse: [ 
+			  entity allContainments
+				  reject: [ :a | a isKindOf: MOEmptyBlock ]
+				  thenCollect: [ :m | model entityFor: m ] ]
 ]
 
 { #category : #initialization }
@@ -48,6 +73,7 @@ MoxingTree >> initializePresenters [
 	super initializePresenters.
 
 	tree := self newTreeTable.
+	tree contextMenu: [ self rootCommandsGroup asMenuPresenter ].
 	tree dragEnabled: true.
 	tree dropEnabled: true.
 	tree
@@ -68,14 +94,38 @@ MoxingTree >> initializePresenters [
 		children: [ :entry | self childrenFor: entry ]
 ]
 
+{ #category : #accessing }
+MoxingTree >> installRule [
+
+	bundle ifNotNil: [ bundle installRuleOn: self selectedItem ]
+]
+
+{ #category : #initialization }
+MoxingTree >> model: aModel [
+
+	model := aModel.
+	self selectEntity: model
+]
+
 { #category : #initialization }
 MoxingTree >> selectEntity: anEntity [
 
 	tree items: (self childrenFor: anEntity)
 ]
 
+{ #category : #accessing }
+MoxingTree >> selectedItem [
+	^ tree selectedItem
+]
+
 { #category : #enumerating }
 MoxingTree >> whenSelectionChangedDo: aFullBlockClosure [
 
 	^ tree whenSelectionChangedDo: aFullBlockClosure
+]
+
+{ #category : #initialization }
+MoxingTree >> whenTransferring: aFullBlockClosure [
+
+	tree acceptDrop: aFullBlockClosure
 ]

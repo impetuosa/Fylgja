@@ -3,7 +3,7 @@ Class {
 	#superclass : #MoxingTextComposer,
 	#traits : 'TVBProgramNodeVisitor',
 	#classTraits : 'TVBProgramNodeVisitor classTrait',
-	#category : #'Fylgja-UI'
+	#category : #'Fylgja-UI-Text'
 }
 
 { #category : #visiting }

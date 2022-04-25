@@ -77,6 +77,21 @@ FylgjaMigrationEngine >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> lookUpContext: aDestinationContext using: aModifiedFylgjaMigrationEngine [
+
+	| destinationContextRelation destinationModel |
+	destinationContextRelation := aModifiedFylgjaMigrationEngine 
+		                              readEntitysContextualizingRelation:
+		                              aDestinationContext.
+	destinationModel := aModifiedFylgjaMigrationEngine 
+		                    selectDerivativeModelFor: aDestinationContext.
+	^ self
+		  lookupContextFor: nil
+		  toContext: destinationContextRelation
+		  model: destinationModel
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> lookupContextFor: aProvenanceEntity toContext: aDestinationContext model: aMOModel [
 
 	^ migrationRuleSpace
