@@ -2,7 +2,6 @@ Class {
 	#name : #FylgjaMRSViewer,
 	#superclass : #SpPresenter,
 	#instVars : [
-		'mapping',
 		'producing',
 		'delegating',
 		'selectedItem'
@@ -25,8 +24,7 @@ FylgjaMRSViewer class >> buildCommandsGroupWith: presenterInstance forRoot: root
 { #category : #layout }
 FylgjaMRSViewer class >> defaultLayout [
 
-	^ SpBoxLayout newTopToBottom
-		  add: #mapping;
+	^ SpPanedLayout newLeftToRight 
 		  add: #producing;
 		  add: #delegating;
 		  yourself
@@ -36,7 +34,7 @@ FylgjaMRSViewer class >> defaultLayout [
 FylgjaMRSViewer >> initializePresenters [
 
 	super initializePresenters.
-	mapping := self newMrsTable. 
+	
 	producing := self newMrsTable. 
 	delegating := self newMrsTable.
 ]
@@ -44,7 +42,7 @@ FylgjaMRSViewer >> initializePresenters [
 { #category : #accessing }
 FylgjaMRSViewer >> model: aFylgjaLookUpContext [
 
-	mapping items: aFylgjaLookUpContext allPossibleMappingRules.
+	
 	delegating items: aFylgjaLookUpContext allPossibleDelegatingRules.
 	producing items: aFylgjaLookUpContext allPossibleProducingRules
 ]
@@ -64,10 +62,16 @@ FylgjaMRSViewer >> newMrsTable [
 				 yourself);
 		addColumn: (SpStringTableColumn new
 				 title: 'Priority';
-				 evaluated: [ :each | each value priority asString ]);
+				 evaluated: [ :each | each value priority asString ];
+				 beNotExpandable;
+				 width: 20;
+				 yourself);
 		addColumn: (SpStringTableColumn new
 				 title: 'Origin';
-				 evaluated: [ :each | each key name ]);
+				 evaluated: [ :each | each key name ];
+				 beNotExpandable;
+				 width: 50;
+				 yourself);
 		addColumn: (SpStringTableColumn new
 				 title: 'Rule ';
 				 evaluated: [ :each | each value printString ]);

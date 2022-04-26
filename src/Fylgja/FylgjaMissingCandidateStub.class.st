@@ -19,6 +19,6 @@ FylgjaMissingCandidateStub >> isFylgjaMissingCandidateStub [
 FylgjaMissingCandidateStub >> printOn: aStream [
 
 	aStream
-		nextPutAll: 'Fylgja: MISSING CANDIDATE';
-		print: candidate
+		nextPutAll: 'MissingCandidate:';
+		nextPutAll: self parent printString
 ]

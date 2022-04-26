@@ -5,7 +5,8 @@ Class {
 		'tree',
 		'model',
 		'whenSelected',
-		'bundle'
+		'bundle',
+		'manageTransfer'
 	],
 	#category : #'Fylgja-UI'
 }
@@ -78,9 +79,9 @@ MoxingTree >> initializePresenters [
 	tree dropEnabled: true.
 	tree
 		wantsDrop: [ :transfer | 
-			transfer passenger allSatisfy: #isDeclaration ];
-		acceptDrop: [ :transfer | 
-			tree items: tree items , transfer passenger ].
+			transfer target isNotNil and: [ 
+					transfer passenger allSatisfy: [ :a | a isKindOf: MODeclaration ] ] ];
+		acceptDrop: [ :transfer | self manageTransfer: transfer ].
 	tree
 		addColumn: (SpCompositeTableColumn new
 				 title: '';
@@ -101,6 +102,13 @@ MoxingTree >> installRule [
 ]
 
 { #category : #initialization }
+MoxingTree >> manageTransfer: aTransfer [
+
+	manageTransfer ifNil: [ ^ self ].
+	(manageTransfer value: aTransfer) ifTrue: [ self selectEntity: model ]
+]
+
+{ #category : #initialization }
 MoxingTree >> model: aModel [
 
 	model := aModel.
@@ -118,6 +126,12 @@ MoxingTree >> selectedItem [
 	^ tree selectedItem
 ]
 
+{ #category : #accessing }
+MoxingTree >> selectedItems [
+
+	^ { self selectedItem }
+]
+
 { #category : #enumerating }
 MoxingTree >> whenSelectionChangedDo: aFullBlockClosure [
 
@@ -127,5 +141,5 @@ MoxingTree >> whenSelectionChangedDo: aFullBlockClosure [
 { #category : #initialization }
 MoxingTree >> whenTransferring: aFullBlockClosure [
 
-	tree acceptDrop: aFullBlockClosure
+	manageTransfer := aFullBlockClosure
 ]

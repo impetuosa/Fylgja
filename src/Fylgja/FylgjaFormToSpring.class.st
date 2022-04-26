@@ -163,13 +163,13 @@ FylgjaFormToSpring >> annotatingProductionColumn: columnName [
 { #category : #'as yet unclassified' }
 FylgjaFormToSpring >> controllerNameFor: aFormOrReport [
 
-	^ (self saniteName: aFormOrReport) , '_Controller'
+	^ (self sanitizeName: aFormOrReport) , '_Controller'
 ]
 
 { #category : #'as yet unclassified' }
 FylgjaFormToSpring >> daoNameFor: aFormOrReport [
 
-	^ (self saniteName: aFormOrReport) , '_DAO'
+	^ (self sanitizeName: aFormOrReport) , '_DAO'
 ]
 
 { #category : #'instance creation' }

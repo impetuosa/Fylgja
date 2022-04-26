@@ -8,7 +8,7 @@ Class {
 FylgjaFormToSpringModel >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	| object tableName cls dataBoundableAttributes model attributes |
-	self assert: aRelatedProvenanceEntity to methods isEmpty.
+"	self assert: aRelatedProvenanceEntity to methods isEmpty."
 
 	model := (aFylgjaDerivativeModel selectDerivativeModelFor:
 		          aRelatedProvenanceEntity to) model.

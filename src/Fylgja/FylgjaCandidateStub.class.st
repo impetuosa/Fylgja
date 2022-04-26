@@ -14,9 +14,9 @@ FylgjaCandidateStub >> acceptVisitor: aMOJavaCodeGenerator [
 FylgjaCandidateStub >> printOn: aStream [
 
 	aStream
-		nextPutAll: 'Fylgja STUB: ';
-		nextPutAll: (self parent name ifNil: [ self parent className ]);
-		nextPutAll: 'Should Point To: ';
+		nextPutAll: 'Stub: ';
+		nextPutAll: self parent printString;
+		nextPutAll: ' Should Point To: ';
 		print: candidate
 ]
 

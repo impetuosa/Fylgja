@@ -44,28 +44,35 @@ FylgjaMigrationEngine >> forceMapStubs: aModifiedFylgjaMigrationEngine [
 FylgjaMigrationEngine >> forceReMappingRuleOverStubs: aCollection contextModel: contextModel using: aModifiedFylgjaMigrationEngine [
 
 	| newElement |
-	aCollection do: [ :stub | 
-		| elementRelation destinationContextRelation lookup |
-		elementRelation := stub provenance.
+	aCollection
+		reject: [ :stub | stub provenance to isNil ]
+		thenDo: [ :stub | 
+			| elementRelation destinationContextRelation lookup |
+			elementRelation := stub provenance.
 
-		destinationContextRelation := aModifiedFylgjaMigrationEngine 
-			                              readEntitysContextualizingRelation:
-			                              stub parent.
+			destinationContextRelation := aModifiedFylgjaMigrationEngine 
+				                              readEntitysContextualizingRelation:
+				                              stub parent.
 
-		lookup := self
-			          lookupContextFor: elementRelation
-			          toContext: destinationContextRelation
-			          model: contextModel.
+			lookup := self
+				          lookupContextFor: elementRelation
+				          toContext: destinationContextRelation
+				          model: contextModel.
 
-		newElement := aModifiedFylgjaMigrationEngine
-			              mapEntity: stub parent
-			              as: stub provenance
-			              croppingRelationsWith: [ :a | a ]
-			              usingWriter: contextModel writer
-			              lookUp: lookup.
+			newElement := aModifiedFylgjaMigrationEngine
+				              mapEntity: stub parent
+				              as: stub provenance
+				              croppingRelationsWith: [ :a | a ]
+				              usingWriter: contextModel writer
+				              lookUp: lookup.
 
+			(stub parent allCandidateRelations anySatisfy: [ :a | a to = stub ]) 
+				ifFalse: [ contextModel removeStub: stub ].
 
-		self model: contextModel swap: stub with: newElement ]
+			self
+				model: contextModel
+				swap: destinationContextRelation to
+				with: newElement ]
 ]
 
 { #category : #accessing }
@@ -136,19 +143,30 @@ FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aM
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aModifiedFylgjaMigrationEngine atContext: context [
+
+	FylgjaRuleInstaller new
+		context: context;
+		whenIsReferenceWithCandidate: aProvenanceEntity;
+		bindRewriteTo: aDestinationEntity;
+		installInto: aModifiedFylgjaMigrationEngine
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aModifiedFylgjaMigrationEngine or: aBlock [
 
 	self assert: aProvenanceEntity isDeclaration.
 	self assert: aDestinationEntity isDeclaration.
 
-	(aDestinationEntity parentForContext isNil or: [ aDestinationEntity anchor isNotNil ])
-		ifTrue:  [ aBlock value ]
-		ifFalse: [ :context | 
-			FylgjaRuleInstaller new
-				context: context;
-				whenIsReferenceWithCandidate: aProvenanceEntity;
-				bindRewriteTo: aDestinationEntity;
-				installInto: aModifiedFylgjaMigrationEngine ].
+	(aDestinationEntity parentForContext isNil or: [ 
+		 aDestinationEntity anchor isNil ])
+		ifTrue: [ aBlock value ]
+		ifFalse: [ 
+			self
+				map: aProvenanceEntity
+				to: aDestinationEntity
+				using: aModifiedFylgjaMigrationEngine
+				atContext: aDestinationEntity parentForContext ].
 
 
 
@@ -183,7 +201,7 @@ FylgjaMigrationEngine >> mapOrFail: aProvenanceEntity to: aDestinationEntity usi
 		  map: aProvenanceEntity
 		  to: aDestinationEntity
 		  using: aModifiedFylgjaMigrationEngine
-		  or: [ self error: ' Cannot map' ]
+		  or: [ FylgjaMapError signal: ' Cannot map' ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -205,11 +223,10 @@ FylgjaMigrationEngine >> migrationRuleSpace [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> model: aMOModelDerivative swap: aFylgjaCandidateStub with: aMOVariableReference [
-	aMOModelDerivative
-		swap: aFylgjaCandidateStub
-		with: aMOVariableReference.
-	tracing swap: aFylgjaCandidateStub with: aMOVariableReference
+FylgjaMigrationEngine >> model: aMOModelDerivative swap: anOriginalReference with: aBoundedReference [
+
+	aMOModelDerivative swap: anOriginalReference with: aBoundedReference.
+	tracing swap: anOriginalReference with: aBoundedReference
 ]
 
 { #category : #'as yet unclassified' }
@@ -265,10 +282,7 @@ FylgjaMigrationEngine >> produce: aProvenanceEntity croppingRelationsWith: aBloc
 
 	derivative processDeferredMappings.
 
-	^ FylgjaDerivationResult new
-		  derivative: derivative;
-		  result: result;
-		  yourself
+	^ derivative produceResult: result
 ]
 
 { #category : #'as yet unclassified' }

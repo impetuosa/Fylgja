@@ -30,7 +30,7 @@ FylgjaMigrationRuleSpace >> allPossibleDelegatingRules [
 FylgjaMigrationRuleSpace >> allPossibleMappingRules [
 
 	| thisLevelRules |
-	thisLevelRules := (mappingRules sorted: #priority) collect: [ :r | 
+	thisLevelRules := (mappingRules sort: #priority descending ) collect: [ :r | 
 		                  self -> r ].
 
 
@@ -45,7 +45,7 @@ FylgjaMigrationRuleSpace >> allPossibleMappingRules [
 FylgjaMigrationRuleSpace >> allPossibleProducingRules [
 
 	| thisLevelRules |
-	thisLevelRules := (producingRules sorted: #priority) collect: [ :r | 
+	thisLevelRules := (producingRules sorted: #priority descending ) collect: [ :r | 
 		                  self -> r ].
 
 
@@ -103,6 +103,17 @@ FylgjaMigrationRuleSpace >> initialize [
 	producingRules := OrderedCollection new.
 	mappingRules := OrderedCollection new.
 	delegatingRules := OrderedCollection new.
+]
+
+{ #category : #initialization }
+FylgjaMigrationRuleSpace >> install: aFylgjaBindingRule [
+
+	aFylgjaBindingRule isBindingRule ifTrue: [ 
+		self installMappingRule: aFylgjaBindingRule ].
+	aFylgjaBindingRule isProductionRule ifTrue: [ 
+		self installProducingRule: aFylgjaBindingRule ].
+	aFylgjaBindingRule isDelegatingRule ifTrue: [ 
+		self installDelegatingRule: aFylgjaBindingRule ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -246,8 +257,25 @@ FylgjaMigrationRuleSpace >> name: aString [
 ]
 
 { #category : #accessing }
+FylgjaMigrationRuleSpace >> parent [
+	^ parent
+]
+
+{ #category : #accessing }
 FylgjaMigrationRuleSpace >> parent: aFylgjaMapSpace [ 
 	parent := aFylgjaMapSpace
+]
+
+{ #category : #accessing }
+FylgjaMigrationRuleSpace >> parents [
+
+	| parents current |
+	parents := OrderedCollection new.
+	current := self.
+	[ current parent isNil ] whileFalse: [ 
+		current := current parent.
+		parents add: current ].
+	^ parents
 ]
 
 { #category : #'as yet unclassified' }
@@ -266,6 +294,19 @@ FylgjaMigrationRuleSpace >> printOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaMigrationRuleSpace >> pullUp: aCollection to: aFylgjaMigrationRuleSpace [
+
+	aCollection do: [ :r | 
+		self uninstall: r.
+		aFylgjaMigrationRuleSpace install: r ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationRuleSpace >> pullUpTo: aFylgjaMigrationRuleSpace [ 
+	self shouldBeImplemented.
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaMigrationRuleSpace >> registerSpace: aName [
 
 	| entry |
@@ -281,4 +322,15 @@ FylgjaMigrationRuleSpace >> registerSpace: aName [
 FylgjaMigrationRuleSpace >> subspaces [
 
 	^ subspaces values
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationRuleSpace >> uninstall: aFylgjaBindingRule [
+
+	aFylgjaBindingRule isBindingRule ifTrue: [ 
+		^ mappingRules remove: aFylgjaBindingRule ].
+	aFylgjaBindingRule isProductionRule ifTrue: [ 
+		producingRules remove: aFylgjaBindingRule ].
+	aFylgjaBindingRule isDelegatingRule ifTrue: [ 
+		delegatingRules remove: aFylgjaBindingRule ]
 ]

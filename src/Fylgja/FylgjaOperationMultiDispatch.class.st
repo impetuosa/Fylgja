@@ -1,5 +1,5 @@
 Class {
-	#name : #FylgjaOperationMultiply,
+	#name : #FylgjaOperationMultiDispatch,
 	#superclass : #FylgjaOperation,
 	#instVars : [
 		'subdestinations',
@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaOperationMultiply >> applyTo: aMODeclarationStructuralRelation croppingRelationsWith: aFullBlockClosure destinationWriter: aMORootDeclarationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+FylgjaOperationMultiDispatch >> applyTo: aMODeclarationStructuralRelation croppingRelationsWith: aFullBlockClosure destinationWriter: aMORootDeclarationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	| results |
 
@@ -23,7 +23,7 @@ FylgjaOperationMultiply >> applyTo: aMODeclarationStructuralRelation croppingRel
 ]
 
 { #category : #accessing }
-FylgjaOperationMultiply >> destinations: aCollection [
+FylgjaOperationMultiDispatch >> destinations: aCollection [
 
 	destinations := aCollection
 ]

@@ -77,8 +77,8 @@ FylgjaOperation >> calculateTypeReference: aString using: aWriter [
 	candidate := candidate ifEmpty: [ nil ] ifNotEmpty: [ 
 		             self assert: candidate size = 1.
 		             parametrizable := candidate first isParametrizable.
-		             packRef := aWriter packageReferenceNamed:
-			                        candidate first packageReference name.
+		             packRef := candidate first packageReference ifNotNil: [ 
+			                        :r | aWriter packageReferenceNamed: r name ].
 		             candidate first ].
 	typeRef := parametrizable
 		           ifTrue: [ 

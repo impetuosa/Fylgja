@@ -47,6 +47,39 @@ FylgjaBindNameBasedRewriter >> adaptPrimitiveTypeReferenceToPrimitiveTypeReferen
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaBindNameBasedRewriter >> adaptVariableReferenceToVariableReferenceToPointToAttribute [
+
+	^ toBindElement isStaticBinding
+		  ifTrue: [ 
+			  ^ self
+				    adaptVariableReferenceToVariableReferenceToPointToStaticAttribute ]
+		  ifFalse: [ 
+			  self
+				  adaptVariableReferenceToVariableReferenceToPointToObjectAttribute ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaBindNameBasedRewriter >> adaptVariableReferenceToVariableReferenceToPointToLocalVariable [
+
+	^ self trivialAdaptation
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaBindNameBasedRewriter >> adaptVariableReferenceToVariableReferenceToPointToStaticAttribute [
+	self halt.
+	self assert: toBindElement parent isType.
+	^ destinationWriter writeUnregisteredExpression: [ :expression | 
+		  (expression
+			   accessAttribute: toBindElement name
+			   receiver: [ :exp | 
+				   (exp typeReferenceNamedForRebinding: toBindElement parent name)
+					   candidate: toBindElement parent;
+					   yourself ])
+			  candidate: toBindElement;
+			  yourself ]
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaBindNameBasedRewriter >> bind: aDestinationEntity to: aToBindElement semanticallyEquivalentTo: aCandidateRelation destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgja [
 
 	destinationEntity := aDestinationEntity.
@@ -69,21 +102,6 @@ FylgjaBindNameBasedRewriter >> bind: aDestinationEntity to: aToBindElement seman
 	aCandidateRelation write: destinationEntity to: aDestinationEntity.
 	
 	^ aDestinationEntity"
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaBindNameBasedRewriter >> invokeAdaptationFrom: aReferenceFrom to: aReferenceTo [
-
-	^ aReferenceFrom class = aReferenceTo class
-		  ifTrue: [ self trivialAdaptation ]
-		  ifFalse: [ 
-			  self perform: ('adapt{1}To{2}' format: { 
-						   (aReferenceFrom className
-							    copyFrom: 3
-							    to: aReferenceFrom className size).
-						   (aReferenceTo className
-							    copyFrom: 3
-							    to: aReferenceTo className size) }) asSymbol ]
 ]
 
 { #category : #'as yet unclassified' }

@@ -60,11 +60,11 @@ FylgjaFromAccess >> hasId: aMOAlceForm using: aFylgjaDerivativeModel [
 { #category : #'as yet unclassified' }
 FylgjaFromAccess >> modelNameFor: aFormOrReport [
 
-	^ (self saniteName: aFormOrReport) , '_Model'
+	^ (self sanitizeName: aFormOrReport) , '_Model'
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaFromAccess >> saniteName: aFormOrReport [
+FylgjaFromAccess >> sanitizeName: aFormOrReport [
 
 	^ (aFormOrReport name copyReplaceAll: 'Form_' with: '')
 		  copyReplaceAll: 'Report_'
@@ -74,5 +74,5 @@ FylgjaFromAccess >> saniteName: aFormOrReport [
 { #category : #'as yet unclassified' }
 FylgjaFromAccess >> serviceNameFor: aFormOrReport [
 
-	^ (self saniteName: aFormOrReport) , '_Service'
+	^ (self sanitizeName: aFormOrReport) , '_Service'
 ]

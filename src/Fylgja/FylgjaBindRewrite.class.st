@@ -11,6 +11,7 @@ Class {
 FylgjaBindRewrite >> bind: aDestinationEntity as: aCandidateRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgja [
 
 	| currentCandidate |
+
 	currentCandidate := aCandidateRelation read: aDestinationEntity.
 	^ self rewriter
 		  bind: aDestinationEntity
@@ -25,6 +26,15 @@ FylgjaBindRewrite >> bind: aDestinationEntity as: aCandidateRelation croppingRel
 FylgjaBindRewrite >> destinationEntity: aDestinationEntity [
 
 	destinationEntity := aDestinationEntity
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaBindRewrite >> printOn: aStream [
+
+	aStream
+		nextPutAll: 'Bind-Rewrite(';
+		print: destinationEntity;
+		nextPutAll: ')'
 ]
 
 { #category : #accessing }

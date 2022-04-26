@@ -127,30 +127,27 @@ FylgjaAbstractMigratorUI >> errorHandlingClass [
 		  (a isKindOf: MOClass) and: [ a name = 'ErrorHandling' ] ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #general }
+FylgjaAbstractMigratorUI >> installAngularTx [
+
+	| installer |
+	FylgjaRuleInstaller new
+		atLanguageNamed: #angular;
+		anyAlceForm;
+		applyAllOperations: [ :i | 
+			{ 
+				i formToAngularModel.
+				i formToAngularService.
+				i formToAngularComponent } ];
+		installInto: fylgja
+]
+
+{ #category : #general }
 FylgjaAbstractMigratorUI >> installJavaLanguageTx [
 
 	|  installer |
 
-	" By default in the system we copy"
-	FylgjaRuleInstaller new
-		topLevel;
-		anyEntity;
-		copy;
-		installInto: fylgja.
 
-
-	FylgjaRuleInstaller new
-		topLevel;
-		anyReferenceWithCandidate;
-		returnSameBinding;
-		installInto: fylgja.
-
-	FylgjaRuleInstaller new
-		topLevel;
-		anyEntity;
-		mappingStubInstall;
-		installInto: fylgja.
 
 	FylgjaRuleInstaller new
 		context: java root;
@@ -277,7 +274,7 @@ FylgjaAbstractMigratorUI >> installJavaLanguageTx [
 	installer installInto: fylgja
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #general }
 FylgjaAbstractMigratorUI >> installJavaSpring [
 
 	"Types"
@@ -330,15 +327,33 @@ FylgjaAbstractMigratorUI >> installJavaSpring [
 		anyAlceForm;
 		formToSpringController: 'http://localhost:4200'
 		apiURLExtention: '/api';
+		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		atLanguageNamed: #java;
+		anyAlceForm;
+		dispatchToSubPackages: { 
+				self javaModelPackage.
+				self javaDaoPackage.
+				self javaServicePackage.
+				self javaControllerPackage };
 		installInto: fylgja
 ]
 
-{ #category : #'as yet unclassified' }
-FylgjaAbstractMigratorUI >> installTsLanguageTx [
+{ #category : #general }
+FylgjaAbstractMigratorUI >> installRules [
+	self installSystemDefaults.
+	self installJavaLanguageTx.
+	self installJavaSpring.
+	self installTsLanguageTx.
+	self installAngularTx
+]
 
-	|  installer |
+{ #category : #general }
+FylgjaAbstractMigratorUI >> installSystemDefaults [
 
 	" By default in the system we copy"
+
 	FylgjaRuleInstaller new
 		topLevel;
 		anyEntity;
@@ -358,10 +373,17 @@ FylgjaAbstractMigratorUI >> installTsLanguageTx [
 		topLevel;
 		anyEntity;
 		mappingStubInstall;
-		installInto: fylgja.
+		installInto: fylgja
+]
+
+{ #category : #general }
+FylgjaAbstractMigratorUI >> installTsLanguageTx [
+
+	| installer |
+
 
 	FylgjaRuleInstaller new
-		context: angular  root;
+		context: angular root;
 		prefixUnaryOperator: #Not;
 		replacePrefixUnaryOperatorWith: #!;
 		installInto: fylgja.
@@ -620,6 +642,7 @@ FylgjaAbstractMigratorUI >> openNorthwind [
 		addModel: northwind;
 		addModel: angular;
 		addModel: java.
+	self installRules.
 	fylgja := fylgja derivative.
 	
 ]

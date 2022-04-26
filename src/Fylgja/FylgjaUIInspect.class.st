@@ -25,5 +25,5 @@ FylgjaUIInspect >> canBeExecuted [
 { #category : #executing }
 FylgjaUIInspect >> execute [
 
-	^ self context selectedItem inspect 
+	^ self context selectedItems inspect 
 ]

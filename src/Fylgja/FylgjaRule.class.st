@@ -30,6 +30,23 @@ FylgjaRule >> condition: aFylgjaConditionAll [
 ]
 
 { #category : #accessing }
+FylgjaRule >> isBindingRule [
+
+	^ false
+]
+
+{ #category : #testing }
+FylgjaRule >> isDelegatingRule [
+	^ false
+]
+
+{ #category : #accessing }
+FylgjaRule >> isProductionRule [
+
+	^ false
+]
+
+{ #category : #accessing }
 FylgjaRule >> isRule [
 
 	^ true

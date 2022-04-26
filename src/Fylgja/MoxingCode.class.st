@@ -38,7 +38,7 @@ MoxingCode >> newNotebookPageFor: aModule [
 
 	| p |
 	p := self newNotebookPage.
-	pagesObjectsMap at: p put: aModule.
+
 	^ p
 ]
 
@@ -46,11 +46,7 @@ MoxingCode >> newNotebookPageFor: aModule [
 MoxingCode >> visualizeSourcecode: aCodeObject [
 
 	| text page |
-	viewport pages
-		detect: [ :p | p title = aCodeObject name ]
-		ifFound: [ :p | 
-			viewport selectPage: p.
-			^ p ].
+
 
 	text := self newText.
 

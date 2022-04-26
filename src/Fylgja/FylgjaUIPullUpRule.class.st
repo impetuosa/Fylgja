@@ -1,24 +1,24 @@
 Class {
-	#name : #FylgjaUIInstallRule,
+	#name : #FylgjaUIPullUpRule,
 	#superclass : #FylgjaUICommand,
 	#category : #'Fylgja-UI-Commands'
 }
 
 { #category : #'accessing - defaults' }
-FylgjaUIInstallRule class >> defaultName [
+FylgjaUIPullUpRule class >> defaultName [
 
-	^ 'Install Rule'
+	^ 'Pull up rule'
 ]
 
-{ #category : #executing }
-FylgjaUIInstallRule >> canBeExecuted [
+{ #category : #testing }
+FylgjaUIPullUpRule >> canBeExecuted [
 
 	^ self context selectedItems isEmptyOrNil not and: [ 
 		  self context selectedItems allSatisfy: [ :a | a isRule ] ]
 ]
 
 { #category : #executing }
-FylgjaUIInstallRule >> execute [
+FylgjaUIPullUpRule >> execute [
 
-	^ self context installRule. 
+	self context pullUpSelectedRules
 ]

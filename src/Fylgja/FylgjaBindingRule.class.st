@@ -17,6 +17,12 @@ FylgjaBindingRule >> bind: aDestinationEntity as: aCandidateRelation croppingRel
 ]
 
 { #category : #testing }
+FylgjaBindingRule >> isBindingRule [
+
+	^ true
+]
+
+{ #category : #testing }
 FylgjaBindingRule >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation [
 
 	^ condition

@@ -11,7 +11,7 @@ Class {
 
 { #category : #initialization }
 FylgjaDerivativeModel >> addDeferredMapping: aMOStClass to: aMOStClass2 [
-	self processDeferredMappings. 
+ 
 	(self deferredMapping
 		 at: aMOStClass
 		 ifAbsentPut: [ OrderedCollection new ]) add: aMOStClass2.
@@ -55,6 +55,20 @@ FylgjaDerivativeModel >> forceMap [
 	^ fylgja forceMapStubs: self
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> forceMapReferences: aCollection [
+
+	| refModel |
+	refModel := (aCollection select: [ :a | a isFylgjaStub ]) groupedBy: [ 
+		            :a | self selectDerivativeModelFor: a ].
+
+	refModel keysAndValuesDo: [ :model :references | 
+		fylgja
+			forceReMappingRuleOverStubs: references
+			contextModel: model
+			using: self ]
+]
+
 { #category : #accessing }
 FylgjaDerivativeModel >> fylgja: aFylgjaModel [ 
 	fylgja := aFylgjaModel
@@ -85,6 +99,16 @@ FylgjaDerivativeModel >> lookUpContext: anEntity [
 FylgjaDerivativeModel >> map: aProvenanceEntity to: aDestinationEntity [
 
 	^ fylgja map: aProvenanceEntity to: aDestinationEntity using: self
+]
+
+{ #category : #accessing }
+FylgjaDerivativeModel >> map: aProvenanceEntity to: aDestinationEntity context: aContext [
+
+	^ fylgja
+		  map: aProvenanceEntity
+		  to: aDestinationEntity
+		  using: self
+		  atContext: aContext
 ]
 
 { #category : #'as yet unclassified' }
@@ -128,9 +152,9 @@ FylgjaDerivativeModel >> processDeferredMappings [
 	ready do: [ :re | 
 		[ 
 		fylgja mapOrFail: re key to: re value using: self.
-		(self deferredMapping at: ready first key) remove:  re value ]
-			on: Error
-			do: [ :e |" self halt" ] ]
+		(self deferredMapping at: re key) remove: re value ]
+			on: FylgjaMapError
+			do: [ :e | " self halt" ] ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -146,13 +170,26 @@ FylgjaDerivativeModel >> produce: aProvenanceEntity croppingRelationsWith: aFull
 { #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> produce: aProvenanceEntity into: aContextDestinationEntity [
 
+	| result |
+	result := fylgja
+		          produce: aProvenanceEntity
+		          croppingRelationsWith: [ :a | a ]
+		          into: aContextDestinationEntity
+		          using: self.
+
+	^ self produceResult: result
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> produceResult: anObject [
+	" 
+		Once a result is produced, means that a chain of migration has finished. 
+		Time to process bindings 
+	"
+	self processDeferredMappings.
 	^ FylgjaDerivationResult new
 		  derivative: self;
-		  result: (fylgja
-				   produce: aProvenanceEntity
-				   croppingRelationsWith: [ :a | a ]
-				   into: aContextDestinationEntity
-				   using: self);
+		  result: anObject;
 		  yourself
 ]
 
@@ -180,11 +217,20 @@ FylgjaDerivativeModel >> readEntitysContextualizingRelation: anEntity [
 	^ (self isDerivativeEntity: anEntity)
 		  ifTrue: [ 
 			  | relation |
-			" This code should not be here :( "
+			  " This code should not be here :( "
+			  anEntity parent ifNil: [ 
+				  ^ self readRelation:
+					    (MODeclarationStructuralRelation nullRelationTo: anEntity) ].
 			  relation := anEntity parent allRelations select: [ :a | 
 				              a to = anEntity ].
-			  self assert: relation size = 1.
-			  self readRelation: relation first ]
+			  self assert: relation size <= 1.
+			  relation := relation
+				              ifEmpty: [ 
+				              MODeclarationStructuralRelation nullRelationTo:
+					              anEntity ]
+				              ifNotEmpty: [ relation first ].
+
+			  self readRelation: relation ]
 		  ifFalse: [ 
 			  (self readerFor: anEntity) readEntitysContextualizingRelation:
 				  anEntity ]

@@ -4,6 +4,12 @@ Class {
 	#category : #'Fylgja-Rules'
 }
 
+{ #category : #'as yet unclassified' }
+FylgjaProductionRule >> isProductionRule [
+
+	^ true
+]
+
 { #category : #testing }
 FylgjaProductionRule >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
 

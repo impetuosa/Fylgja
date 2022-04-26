@@ -22,7 +22,7 @@ FylgjaConditionReferenceCandidateIs >> matches: aProvenanceEntityRelation contex
 { #category : #testing }
 FylgjaConditionReferenceCandidateIs >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation [
 
-	^ candidate = aCandidateRelation to
+	^ candidate isSameEntity: aCandidateRelation to
 ]
 
 { #category : #testing }

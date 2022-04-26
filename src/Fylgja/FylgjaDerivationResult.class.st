@@ -57,11 +57,8 @@ FylgjaDerivationResult >> produce: aProvenanceEntity [
 { #category : #'as yet unclassified' }
 FylgjaDerivationResult >> produce: aProvenanceEntity into: aDestinationContext [
 
-	^ FylgjaDerivationResult new
-		  derivative: derivative;
-		  result:
-			  (derivative produce: aProvenanceEntity into: aDestinationContext);
-		  yourself
+	^ derivative produceResult:
+		  (derivative produce: aProvenanceEntity into: aDestinationContext)
 ]
 
 { #category : #'as yet unclassified' }

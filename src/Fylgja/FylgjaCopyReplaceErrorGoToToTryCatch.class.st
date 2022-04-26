@@ -8,7 +8,6 @@ Class {
 FylgjaCopyReplaceErrorGoToToTryCatch >> applyTo: aProvenanceEntityRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	| statmentRelations blockStatements tryStatements catchStatements indexOfLabel onErrorGoTo |
-
 	statmentRelations := aProvenanceEntityRelation to relationsNamed:
 		                     #statements.
 
@@ -35,6 +34,14 @@ FylgjaCopyReplaceErrorGoToToTryCatch >> applyTo: aProvenanceEntityRelation cropp
 			                    aProvenanceEntityRelation to statements size).
 
 	^ aDestinationWriter writeBlock: [ :block | 
+		  blockStatements do: [ :s | 
+			  aFylgjaDerivativeModel
+				  migrate: s
+				  croppingRelationsWith: aBlock
+				  intoDestinationWriter: block
+				  lookUp: aFylgjaLookUpContext ].
+			
+			
 		  block writeTryCatch: [ :tryCatch | 
 			  tryCatch writeTry: [ :try | 
 				  tryStatements do: [ :s | 

@@ -137,6 +137,16 @@ FylgjaRuleInstaller >> anyTypeReferenceNamed: aString [
 			   yourself)
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> applyAllOperations: aFullBlockClosure [
+
+	| operations |
+	operations := aFullBlockClosure value: self.
+	^ self operation: (FylgjaOperationMultipleRules new
+			   operations: operations;
+			   yourself)
+]
+
 { #category : #accessing }
 FylgjaRuleInstaller >> atLanguageNamed: aString [ 
 	installAtLanguageLevel := aString
@@ -249,7 +259,7 @@ FylgjaRuleInstaller >> copyReplaceCategoryWithDestinationPackage [
 { #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> dispatchToSubPackages: aCollection [
 
-	^ self operation: (FylgjaOperationMultiply new
+	^ self operation: (FylgjaOperationMultiDispatch new
 			   destinations: aCollection;
 			   yourself)
 ]
@@ -400,7 +410,8 @@ FylgjaRuleInstaller >> operation [
 { #category : #accessing }
 FylgjaRuleInstaller >> operation: anOperation [
 
-	operation := anOperation
+	operation := anOperation.
+	^ operation
 ]
 
 { #category : #'as yet unclassified' }
