@@ -1,13 +1,12 @@
 Class {
 	#name : #MoxingBundle,
-	#superclass : #SpPresenter,
+	#superclass : #FylgjaAbstractUI,
 	#instVars : [
 		'code',
 		'projectTree',
-		'selectionChanged',
-		'fylUi'
+		'shouldInformSelection'
 	],
-	#category : #'Fylgja-UI'
+	#category : #'Fylgja-UI-Widgets'
 }
 
 { #category : #layout }
@@ -20,21 +19,29 @@ MoxingBundle class >> defaultLayout [
 ]
 
 { #category : #initialization }
-MoxingBundle >> fylUi: aFylU [
+MoxingBundle >> informSelection: item [
 
-	fylUi := aFylU
+	shouldInformSelection ifTrue: [ self controller informSelection: item from: self ]
+]
+
+{ #category : #initialization }
+MoxingBundle >> initialize [
+
+	super initialize.
+	shouldInformSelection := true
 ]
 
 { #category : #initialization }
 MoxingBundle >> initializePresenters [
 
 	super initializePresenters.
+
 	code := self instantiate: MoxingCode.
 	projectTree := self instantiate: MoxingTree.
-	projectTree bundle: self .
+	projectTree bundle: self.
 	projectTree whenSelectionChangedDo: [ :e | 
 		e selectedItem ifNotNil: [ :item | 
-			selectionChanged ifNotNil: [ selectionChanged value: item ].
+			self informSelection: item .
 			item producesParseableCode ifTrue: [ 
 				code visualizeSourcecode: item ] ] ]
 ]
@@ -42,7 +49,11 @@ MoxingBundle >> initializePresenters [
 { #category : #initialization }
 MoxingBundle >> installRuleOn: anEntity [
 
-	fylUi ifNotNil: [ :p | p installRuleOn: anEntity ]
+	self controller installRuleOn: anEntity
+]
+
+{ #category : #initialization }
+MoxingBundle >> interestedInRuleApplication [
 ]
 
 { #category : #initialization }
@@ -52,13 +63,19 @@ MoxingBundle >> model: aModel [
 ]
 
 { #category : #initialization }
-MoxingBundle >> whenSelectionChangedDo: aBlock [
-	 selectionChanged := aBlock. 
-	
+MoxingBundle >> ruleHasBeenAppliedSuccessfully [
+
+	projectTree refreshWidget
+]
+
+{ #category : #initialization }
+MoxingBundle >> shouldInformSelection: aBool [
+ 	 shouldInformSelection := aBool
 ]
 
 { #category : #initialization }
 MoxingBundle >> whenTransferring: aBlock [
 
-	projectTree whenTransferring: aBlock
+	projectTree whenTransferring: [ :transfer | 
+		aBlock value: transfer value: self ]
 ]

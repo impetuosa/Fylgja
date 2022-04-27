@@ -1,15 +1,15 @@
 Class {
 	#name : #FylgjaMigratorUI,
-	#superclass : #FylgjaAbstractMigratorUI,
+	#superclass : #FylgjaAbstractUI,
 	#instVars : [
-		'mrs',
 		'errorLog',
 		'unboundReferences',
-		'control',
-		'accessBundle',
-		'javaBundle',
-		'tsBundle',
-		'lastChoice'
+		'lastChoice',
+		'originBundle',
+		'firstDestinationBundle',
+		'secondDestinationBundle',
+		'controlNotebook',
+		'mrsViewer'
 	],
 	#category : #'Fylgja-UI'
 }
@@ -23,58 +23,38 @@ FylgjaMigratorUI class >> defaultLayout [
 				   positionOfSlider: 50 percent;
 				   add: (SpPanedLayout newTopToBottom
 						    positionOfSlider: 70 percent;
-						    add: #accessBundle;
-						    add: #control);
+						    add: #originBundle;
+						    add: #controlNotebook);
 				   add: (SpPanedLayout newTopToBottom
 						    positionOfSlider: 50 percent;
-						    add: #javaBundle;
-						    add: #tsBundle));
+						    add: #firstDestinationBundle;
+						    add: #secondDestinationBundle));
 		  add: #errorLog
-]
-
-{ #category : #initialization }
-FylgjaMigratorUI >> autoBind [
-
-	self halt.
-	fylgja forceMap.
-	self refreshWidgets
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaMigratorUI >> autoBind: aCollection [
-
-	fylgja forceMapReferences: aCollection
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaMigratorUI >> doOrLog: aFullBlockClosure [
-
-	^ [ 
-	  aFullBlockClosure value.
-	  true ]
-		  on: Error
-		  do: [ :e | 
-			  self logError: e.
-			  false.
-			  e pass ]
 ]
 
 { #category : #initialization }
 FylgjaMigratorUI >> initializePresenters [
 
 	super initializePresenters.
-	accessBundle := self newAccessMoxingBundle.
-	javaBundle := self newMoxingBundle.
-	tsBundle := self newMoxingBundle.
-	control := self newNotebook.
-	errorLog := self instantiate: FylgjaErrorLog.
+	originBundle := self newAccessMoxingBundle.
+	firstDestinationBundle := self newMoxingBundle.
+	secondDestinationBundle := self newMoxingBundle.
+	controlNotebook := self newNotebook.
+	errorLog := self instantiate: FylgjaLoggingWidget.
 
 
-	mrs := self instantiate: FylgjaMRSViewer.
+	mrsViewer := self instantiate: FylgjaMRSViewer.
 	unboundReferences := self instantiate: MoxingReferencesAndMappings.
-	unboundReferences fylUi: self .
-	control addPageTitle: 'Produce & Delegate' provider: [ mrs ].
-	control addPageTitle: 'Binding & References' provider: [ unboundReferences ]
+
+	controlNotebook
+		addPageTitle: 'Produce & Delegate'
+		provider: [ mrsViewer ].
+	controlNotebook
+		addPageTitle: 'Binding & References'
+		provider: [ unboundReferences ].
+	originBundle model: self controller origin.
+	firstDestinationBundle model: self controller destinations first.
+	secondDestinationBundle model: self controller destinations second
 ]
 
 { #category : #initialization }
@@ -84,63 +64,39 @@ FylgjaMigratorUI >> installRuleOn: anEntity [
 ]
 
 { #category : #initialization }
-FylgjaMigratorUI >> logError: anError [
+FylgjaMigratorUI >> manageTransfer: aTransfer for: aWidget [
 
-	errorLog log: anError
+	^ (UIManager default
+		   chooseFrom: #( Produce Map )
+		   values: { 
+				   [ self produceUsing: aTransfer for: aWidget ].
+				   [ self mapUsing: aTransfer for: aWidget ] }
+		   title: 'Fylgja') ifNotNil: [ :block | block value ]
 ]
 
 { #category : #initialization }
-FylgjaMigratorUI >> manageTransfer: aTransfer [
-
-	| prov dest |
-	prov := aTransfer passenger first.
-	dest := aTransfer target.
-
-	^ self doOrLog: [ 
-		  self
-			  assert: prov isNotNil
-			  description: ' Cannot resolve provenance entity .'.
-		  self
-			  assert: prov isNotNil
-			  description: ' Cannot resolve destination .'.
-		  (UIManager default
-			   chooseFrom: #( Produce Map )
-			   values: { 
-					   [ self produceUsing: aTransfer ].
-					   [ self mapUsing: aTransfer ] }
-			   title: 'Fylgja') ifNotNil: [ :block | block value ] ]
-]
-
-{ #category : #initialization }
-FylgjaMigratorUI >> mapUsing: aTransfer [
+FylgjaMigratorUI >> mapUsing: aTransfer for: aWidget [
 
 	| contexts context |
 	contexts := aTransfer target parents.
 	context := UIManager default
-		           chooseFrom:
-		           (contexts collect: [ :c | 
-			            c name , String tab, '(' , c anchor printString , ')' ])
+		           chooseFrom: (contexts collect: [ :c | 
+				            c name , String tab , '(' , c anchor printString , ')' ])
 		           values: contexts
 		           title: 'Context of validity'.
 	context ifNil: [ ^ self ].
-	fylgja
+	self controller
 		map: aTransfer passenger first
 		to: aTransfer target
-		context: context.
-
-
-	self logError: (Notification new
-			 messageText:
-				 aTransfer passenger first printString , '  mapped to  '
-				 , aTransfer target printString;
-			 yourself)
+		context: context
+		informing: aWidget
 ]
 
 { #category : #initialization }
 FylgjaMigratorUI >> newAccessMoxingBundle [
 
 	^ (self instantiate: MoxingBundle)
-		  fylUi: self;
+		  shouldInformSelection: false;
 		  yourself
 ]
 
@@ -148,31 +104,18 @@ FylgjaMigratorUI >> newAccessMoxingBundle [
 FylgjaMigratorUI >> newMoxingBundle [
 
 	^ (self instantiate: MoxingBundle)
-		  fylUi: self;
-		  whenSelectionChangedDo: [ :a | self updateWidgets: a ];
-		  whenTransferring: [ :transfer | self manageTransfer: transfer ];
+		  whenTransferring: [ :transfer : widget | self manageTransfer: transfer for: widget ];
 		  yourself
 ]
 
-{ #category : #'as yet unclassified' }
-FylgjaMigratorUI >> openNorthwind [
-
-	super openNorthwind.
-	accessBundle model: (fylgja derivativeModelFor: northwind).
-	javaBundle model: (fylgja derivativeModelFor: java).
-	tsBundle model: (fylgja derivativeModelFor: angular)
-]
-
 { #category : #initialization }
-FylgjaMigratorUI >> produceUsing: aTransfer [
+FylgjaMigratorUI >> produceUsing: aTransfer for: aWidget [
 
 	| produced |
-	produced := fylgja
+	produced := self controller
 		            produce: aTransfer passenger first
-		            into: aTransfer target.
-	self logError: (Notification new
-			 messageText: produced realResult printString , '  produced ';
-			 yourself)
+		            into: aTransfer target
+		            informing: aWidget
 ]
 
 { #category : #'as yet unclassified' }
@@ -182,19 +125,13 @@ FylgjaMigratorUI >> refreshWidgets [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigratorUI >> stubsFor: aMORootDeclaration [
-
-	^ FylgjaReachableStubs new stubsFor: aMORootDeclaration
-]
-
-{ #category : #'as yet unclassified' }
 FylgjaMigratorUI >> updateWidgets: aMORootDeclaration [
 
 	| lookup |
 	lastChoice := aMORootDeclaration.
-	lookup := fylgja lookUpContext: aMORootDeclaration.
-	mrs model: lookup.
+	lookup := self controller mrsFor: aMORootDeclaration.
+	mrsViewer model: lookup.
 	unboundReferences
-		references: (self stubsFor: aMORootDeclaration)
+		references: (self controller stubsFor: aMORootDeclaration)
 		and: lookup
 ]

@@ -8,7 +8,7 @@ Class {
 		'bundle',
 		'manageTransfer'
 	],
-	#category : #'Fylgja-UI'
+	#category : #'Fylgja-UI-Widgets'
 }
 
 { #category : #layout }
@@ -104,21 +104,28 @@ MoxingTree >> installRule [
 { #category : #initialization }
 MoxingTree >> manageTransfer: aTransfer [
 
+	tree selectItem: aTransfer target.
 	manageTransfer ifNil: [ ^ self ].
-	(manageTransfer value: aTransfer) ifTrue: [ self selectEntity: model ]
+	manageTransfer value: aTransfer
 ]
 
 { #category : #initialization }
 MoxingTree >> model: aModel [
 
 	model := aModel.
-	self selectEntity: model
+	tree items: (self childrenFor: aModel).
 ]
 
-{ #category : #initialization }
-MoxingTree >> selectEntity: anEntity [
+{ #category : #enumerating }
+MoxingTree >> refreshWidget [
 
-	tree items: (self childrenFor: anEntity)
+	| path |
+	tree selectedItem
+		ifNotNil: [ 
+			path := tree selectionMode selectedPath.
+			self model: model.
+			tree selectPath: path , { 1 } scrollToSelection: true ]
+		ifNil: [ self model: model ]
 ]
 
 { #category : #accessing }

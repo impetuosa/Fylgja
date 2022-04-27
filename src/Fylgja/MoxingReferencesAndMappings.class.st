@@ -1,16 +1,15 @@
 Class {
 	#name : #MoxingReferencesAndMappings,
-	#superclass : #SpPresenter,
+	#superclass : #FylgjaAbstractUI,
 	#instVars : [
 		'references',
-		'fylUi',
 		'autoBind',
 		'mappings',
 		'refTitle',
 		'mapTitle',
 		'selectedItems'
 	],
-	#category : #'Fylgja-UI'
+	#category : #'Fylgja-UI-Widgets'
 }
 
 { #category : #layout }
@@ -49,19 +48,13 @@ MoxingReferencesAndMappings class >> defaultLayout [
 { #category : #accessing }
 MoxingReferencesAndMappings >> autoBind [
 
-	^ fylUi autoBind: references items
+	^ self controller autoBind: references items
 ]
 
 { #category : #'as yet unclassified' }
 MoxingReferencesAndMappings >> autoBindSelection [
 
-	fylUi autoBind: references selectedItems
-]
-
-{ #category : #accessing }
-MoxingReferencesAndMappings >> fylUi: aFylUI [
-
-	fylUi := aFylUI
+	self controller autoBind: references selectedItems
 ]
 
 { #category : #initialization }
@@ -144,7 +137,7 @@ MoxingReferencesAndMappings >> references: aCollection and: aFylgjaLookUpContext
 
 	| mapCol |
 	references items: (aCollection sort: #printString descending).
-	mapCol := aFylgjaLookUpContext allPossibleMappingRules.
+	mapCol := aFylgjaLookUpContext allPossibleBindingRules.
 	mappings items: mapCol.
 	refTitle label:
 		(' References ({1}' format: { aCollection size asString }).
@@ -153,6 +146,20 @@ MoxingReferencesAndMappings >> references: aCollection and: aFylgjaLookUpContext
 ]
 
 { #category : #accessing }
+MoxingReferencesAndMappings >> registerToController [
+
+	self controller registerForEntitySelected: self
+]
+
+{ #category : #accessing }
 MoxingReferencesAndMappings >> selectedItems [
 	^ selectedItems
+]
+
+{ #category : #accessing }
+MoxingReferencesAndMappings >> updateSelectionTo: aSelection [
+
+	self
+		references: (self controller stubsFor: aSelection)
+		and: (self controller mrsFor: aSelection)
 ]

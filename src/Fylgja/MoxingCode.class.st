@@ -5,7 +5,7 @@ Class {
 		'pagesObjectsMap',
 		'viewport'
 	],
-	#category : #'Fylgja-UI'
+	#category : #'Fylgja-UI-Widgets'
 }
 
 { #category : #layout }

@@ -1,12 +1,12 @@
 Class {
 	#name : #FylgjaMRSViewer,
-	#superclass : #SpPresenter,
+	#superclass : #FylgjaAbstractUI,
 	#instVars : [
 		'producing',
 		'delegating',
 		'selectedItem'
 	],
-	#category : #'Fylgja-UI'
+	#category : #'Fylgja-UI-Widgets'
 }
 
 { #category : #layout }
@@ -80,7 +80,19 @@ FylgjaMRSViewer >> newMrsTable [
 ]
 
 { #category : #initialization }
+FylgjaMRSViewer >> registerToController [
+
+	self controller registerForEntitySelected: self
+]
+
+{ #category : #initialization }
 FylgjaMRSViewer >> selectedItem [
 
 	^ selectedItem
+]
+
+{ #category : #accessing }
+FylgjaMRSViewer >> updateSelectionTo: aSelection [
+
+	self model: (self controller mrsFor: aSelection)
 ]

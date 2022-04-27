@@ -9,15 +9,15 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaLookUpContext >> allPossibleDelegatingRules [
+FylgjaLookUpContext >> allPossibleBindingRules [
 
-	^ mrs allPossibleDelegatingRules
+	^ mrs allPossibleBindingRules
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaLookUpContext >> allPossibleMappingRules [
+FylgjaLookUpContext >> allPossibleDelegatingRules [
 
-	^ mrs allPossibleMappingRules
+	^ mrs allPossibleDelegatingRules
 ]
 
 { #category : #'as yet unclassified' }

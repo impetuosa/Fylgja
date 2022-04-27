@@ -5,7 +5,7 @@ Class {
 		'stubs',
 		'traversed'
 	],
-	#category : #'Fylgja-UI'
+	#category : #'Fylgja-UI-Model'
 }
 
 { #category : #initialization }

@@ -90,12 +90,6 @@ FylgjaDerivativeModel >> isDerivativeEntity: anEntity [
 ]
 
 { #category : #accessing }
-FylgjaDerivativeModel >> lookUpContext: anEntity [
-
-	^ fylgja lookUpContext: anEntity using: self
-]
-
-{ #category : #accessing }
 FylgjaDerivativeModel >> map: aProvenanceEntity to: aDestinationEntity [
 
 	^ fylgja map: aProvenanceEntity to: aDestinationEntity using: self
@@ -140,6 +134,12 @@ FylgjaDerivativeModel >> migrationRuleSpace [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> mrsFor: aDestinationContext [
+
+	^ fylgja mrsFor: aDestinationContext using: self
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> processDeferredMappings [
 
 	| ready |
@@ -171,6 +171,7 @@ FylgjaDerivativeModel >> produce: aProvenanceEntity croppingRelationsWith: aFull
 FylgjaDerivativeModel >> produce: aProvenanceEntity into: aContextDestinationEntity [
 
 	| result |
+
 	result := fylgja
 		          produce: aProvenanceEntity
 		          croppingRelationsWith: [ :a | a ]

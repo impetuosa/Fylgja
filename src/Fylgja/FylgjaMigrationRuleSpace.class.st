@@ -13,6 +13,21 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+FylgjaMigrationRuleSpace >> allPossibleBindingRules [
+
+	| thisLevelRules |
+	thisLevelRules := (mappingRules sort: #priority descending ) collect: [ :r | 
+		                  self -> r ].
+
+
+	^ thisLevelRules
+	  ,
+	  (parent
+		   ifNil: [ {  } ]
+		   ifNotNil: [ parent allPossibleBindingRules ])
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaMigrationRuleSpace >> allPossibleDelegatingRules [
 
 	| thisLevelRules |
@@ -24,21 +39,6 @@ FylgjaMigrationRuleSpace >> allPossibleDelegatingRules [
 	^ thisLevelRules , (parent
 		   ifNil: [ {  } ]
 		   ifNotNil: [ parent allPossibleDelegatingRules ])
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaMigrationRuleSpace >> allPossibleMappingRules [
-
-	| thisLevelRules |
-	thisLevelRules := (mappingRules sort: #priority descending ) collect: [ :r | 
-		                  self -> r ].
-
-
-	^ thisLevelRules
-	  ,
-	  (parent
-		   ifNil: [ {  } ]
-		   ifNotNil: [ parent allPossibleMappingRules ])
 ]
 
 { #category : #'as yet unclassified' }
@@ -138,9 +138,8 @@ FylgjaMigrationRuleSpace >> installProducingRule: aFylgjaProductionRule [
 FylgjaMigrationRuleSpace >> lookupContextFor: aProvenanceEntityRelation toContext: aDestinationContextRelation model: aMOModel [
 
 	^ FylgjaLookUpContext new
-		  mrs: ((self migrationRuleSpaceForModel: aMOModel) 
-				   migrationRuleSpaceForAnchor:
-					   aDestinationContextRelation to anchor)
+		  mrs:
+			  (self mrsAt: aDestinationContextRelation to anchor for: aMOModel)
 		  destination: aDestinationContextRelation;
 		  yourself
 ]
@@ -243,6 +242,13 @@ FylgjaMigrationRuleSpace >> migrationRuleSpaceForModel: aMOModel [
 		  mapspaceForName: aMOModel name
 		  ifAbsent: [ 
 		  self error: 'The context model is not part of the mapping space' ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationRuleSpace >> mrsAt: anAnchor for: aMOModel [
+
+	^ (self migrationRuleSpaceForModel: aMOModel) 
+		  migrationRuleSpaceForAnchor: anAnchor
 ]
 
 { #category : #accessing }

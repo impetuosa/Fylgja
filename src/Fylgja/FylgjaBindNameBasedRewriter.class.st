@@ -66,7 +66,7 @@ FylgjaBindNameBasedRewriter >> adaptVariableReferenceToVariableReferenceToPointT
 
 { #category : #'as yet unclassified' }
 FylgjaBindNameBasedRewriter >> adaptVariableReferenceToVariableReferenceToPointToStaticAttribute [
-	self halt.
+
 	self assert: toBindElement parent isType.
 	^ destinationWriter writeUnregisteredExpression: [ :expression | 
 		  (expression

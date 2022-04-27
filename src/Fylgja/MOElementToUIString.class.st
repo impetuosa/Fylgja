@@ -1,7 +1,7 @@
 Class {
 	#name : #MOElementToUIString,
 	#superclass : #Object,
-	#category : #'Fylgja-UI'
+	#category : #'Fylgja-UI-Model'
 }
 
 { #category : #'instance creation' }
