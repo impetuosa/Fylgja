@@ -18,3 +18,8 @@ FylgjaWarningEntry >> messageText [
 
 	^ messageText
 ]
+
+{ #category : #accessing }
+FylgjaWarningEntry >> messageText: aString [ 
+	messageText := aString
+]

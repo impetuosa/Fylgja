@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'code',
 		'projectTree',
-		'shouldInformSelection'
+		'shouldInformSelection',
+		'modelAccessor'
 	],
 	#category : #'Fylgja-UI-Widgets'
 }
@@ -57,15 +58,21 @@ MoxingBundle >> interestedInRuleApplication [
 ]
 
 { #category : #initialization }
-MoxingBundle >> model: aModel [
+MoxingBundle >> model [
 
-	projectTree model: aModel
+	^ modelAccessor value: self controller
+]
+
+{ #category : #initialization }
+MoxingBundle >> modelAccessor: anAccessor [
+	modelAccessor := anAccessor.
+	projectTree model: self model
 ]
 
 { #category : #initialization }
 MoxingBundle >> ruleHasBeenAppliedSuccessfully [
 
-	projectTree refreshWidget
+	projectTree refreshWidgetWith: self model
 ]
 
 { #category : #initialization }

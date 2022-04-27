@@ -50,7 +50,7 @@ FylgjaLoggingWidget >> initializePresenters [
 
 { #category : #initialization }
 FylgjaLoggingWidget >> log: aLog [
- 	logs add: aLog. 
+ 	logs addFirst: aLog. 
 	table items: logs. 
 ]
 

@@ -7,7 +7,8 @@ Class {
 		'destinations',
 		'interestedInSelection',
 		'interestedInLogging',
-		'lookupContext'
+		'lookupContext',
+		'projectName'
 	],
 	#category : #'Fylgja-UI'
 }
@@ -33,13 +34,15 @@ FylgjaMigrationUIController class >> northwindController [
 			java: java;
 			angular: angular;
 			installRules ].
-	fylgja := fylgja derivative.
+	fylgja := fylgja derivative
+		          installAllDerivativeModels;
+		          yourself.
 	^ self new
 		  fylgja: fylgja;
-		  origin: (fylgja derivativeModelFor: northwind);
+		  origin: northwind;
 		  destinations: { 
-				  (fylgja derivativeModelFor: java).
-				  (fylgja derivativeModelFor: angular) };
+				  java.
+				  angular };
 		  yourself
 ]
 
@@ -53,13 +56,33 @@ FylgjaMigrationUIController class >> ruleInstallers [
 FylgjaMigrationUIController >> autoBind: aCollection [
 
 	self doOrLog: [ 
-		fylgja forceMapReferences: aCollection.
-		self logOperation: #AutoBind ]
+		self fylgja forceMapReferences: aCollection.
+		self logSuccess: #Succeed operation: #AutoBind ]
+]
+
+{ #category : #accessing }
+FylgjaMigrationUIController >> createCheckpointFor: aWidget [
+
+	self
+		doOrLog: [ 
+			fylgja push: (fylgja top derivative
+					 installAllDerivativeModels;
+					 yourself).
+			self
+				logSuccess:
+				'Successfull checkpoint. Version: ' , fylgja size asString
+				operation: #CheckPoint.
+			aWidget ruleHasBeenAppliedSuccessfully ]
+		forOperation: #CheckPoint
+		ifFailReturn: [ nil ]
 ]
 
 { #category : #accessing }
 FylgjaMigrationUIController >> destinations [
-	^ destinations
+
+	^ destinations collect: [ :original | 
+		  self fylgja derivativeModels detect: [ :derivative | 
+			  derivative isDerivedFrom: original ] ]
 ]
 
 { #category : #accessing }
@@ -80,9 +103,41 @@ FylgjaMigrationUIController >> doOrLog: aFullBlockClosure forOperation: aOperati
 				  ifFalse: [ aBlock value ] ]
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaMigrationUIController >> dropAllChangesWith: aWidget [
+
+	| fylgjaModel stackCopy |
+	self
+		doOrLog: [ 
+			stackCopy := fylgja shallowCopy.
+			fylgjaModel := stackCopy last originalModel derivative.
+			fylgjaModel installAllDerivativeModels.
+			stackCopy removeAll.
+			stackCopy push: fylgjaModel.
+			fylgja := stackCopy.
+			self
+				logSuccess:
+				'Successfull drop all changes. Version: ' , fylgja size asString
+				operation: #DropAllChanges.
+			aWidget ruleHasBeenAppliedSuccessfully ]
+		forOperation: #DropAllChanges
+		ifFailReturn: [ nil ]
+]
+
 { #category : #accessing }
-FylgjaMigrationUIController >> fylgja: aFylgjaDerivativeModel [ 
-	fylgja := aFylgjaDerivativeModel
+FylgjaMigrationUIController >> fylgja [
+
+	^ fylgja top
+]
+
+{ #category : #accessing }
+FylgjaMigrationUIController >> fylgja: aFylgjaDerivativeModel [
+
+	self
+		assert: fylgja isNil
+		description: 'Fylgja can be set only once !'.
+	fylgja := Stack new.
+	fylgja push: aFylgjaDerivativeModel
 ]
 
 { #category : #accessing }
@@ -147,6 +202,18 @@ FylgjaMigrationUIController >> logSuccess: result operation: anOperationName [
 ]
 
 { #category : #accessing }
+FylgjaMigrationUIController >> logWarning: result operation: anOperationName [
+
+	| entry |
+	entry := FylgjaWarningEntry new
+		         operation: anOperationName;
+		         messageText: result printString;
+		         yourself.
+	self interestedInLogging do: [ :subscriber | 
+		subscriber first ifNotNil: [ :f | f log: entry ] ]
+]
+
+{ #category : #accessing }
 FylgjaMigrationUIController >> map: anEntity to: other context: context informing: aWidget [
 
 	| result |
@@ -158,7 +225,7 @@ FylgjaMigrationUIController >> map: anEntity to: other context: context informin
 			  self
 				  assert: other isNotNil
 				  description: ' Cannot resolve destination .'.
-			  result := fylgja map: anEntity to: other context: context.
+			  result := self fylgja map: anEntity to: other context: context.
 			  self logSuccess: result operation: #Map.
 			  aWidget ruleHasBeenAppliedSuccessfully.
 			  result ]
@@ -171,14 +238,16 @@ FylgjaMigrationUIController >> mrsFor: aDeclaration [
 
 	lookupContext ifNotNil: [ ^ lookupContext ].
 	^ self
-		  doOrLog: [ lookupContext := fylgja mrsFor: aDeclaration ]
+		  doOrLog: [ lookupContext := self fylgja mrsFor: aDeclaration ]
 		  forOperation: #Lookup
 		  ifFailReturn: [ nil ]
 ]
 
 { #category : #accessing }
 FylgjaMigrationUIController >> origin [
-	^ origin
+
+	^ self fylgja derivativeModels detect: [ :derivative | 
+		  derivative isDerivedFrom: origin ]
 ]
 
 { #category : #accessing }
@@ -199,12 +268,34 @@ FylgjaMigrationUIController >> produce: aProvenance into: aDestination informing
 			  self
 				  assert: aDestination isNotNil
 				  description: ' Cannot resolve destination .'.
-			  result := fylgja produce: aProvenance into: aDestination.
+			  result := self fylgja produce: aProvenance into: aDestination.
 			  self logSuccess: result operation: #Produce.
 			  aWidget ruleHasBeenAppliedSuccessfully.
 			  result ]
 		  forOperation: #Produce
 		  ifFailReturn: [ nil ]
+]
+
+{ #category : #accessing }
+FylgjaMigrationUIController >> projectName [
+
+	^ projectName ifNil: [ 
+		  projectName := 'Migration from: {1} to: {2} and {3} ' format: { 
+				                 origin name.
+				                 (',' join:
+					                  (destinations allButLast collect: [ :a | 
+						                   a name ])).
+				                 destinations last name } ]
+]
+
+{ #category : #accessing }
+FylgjaMigrationUIController >> pushFylgja [
+	
+	fylgja push: (fylgja top derivative
+			 installAllDerivativeModels;
+			 yourself).
+
+	^ fylgja top
 ]
 
 { #category : #accessing }
@@ -220,7 +311,31 @@ FylgjaMigrationUIController >> registerForEventLogging: aLoggingWidget [
 ]
 
 { #category : #accessing }
+FylgjaMigrationUIController >> rollbackFor: aWidget [
+
+	self
+		doOrLog: [ 
+			self
+				assert: fylgja size > 1
+				description: 'No earlier version found'.
+			fylgja pop.
+			self
+				logSuccess:
+				'Successifull rollback. Version: ' , fylgja size asString
+				operation: #Rollback.
+			aWidget ruleHasBeenAppliedSuccessfully ]
+		forOperation: #Rollback
+		ifFailReturn: [ nil ]
+]
+
+{ #category : #accessing }
 FylgjaMigrationUIController >> stubsFor: aDeclaration [
 
 	^ FylgjaReachableStubs new stubsFor: aDeclaration
+]
+
+{ #category : #accessing }
+FylgjaMigrationUIController >> versionNumber [
+
+	^ fylgja size
 ]

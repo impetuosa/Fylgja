@@ -9,7 +9,9 @@ Class {
 		'firstDestinationBundle',
 		'secondDestinationBundle',
 		'controlNotebook',
-		'mrsViewer'
+		'mrsViewer',
+		'toolbar',
+		'version'
 	],
 	#category : #'Fylgja-UI'
 }
@@ -17,25 +19,86 @@ Class {
 { #category : #layout }
 FylgjaMigratorUI class >> defaultLayout [
 
-	^ SpPanedLayout newTopToBottom
-		  positionOfSlider: 80 percent;
-		  add: (SpPanedLayout newLeftToRight
-				   positionOfSlider: 50 percent;
-				   add: (SpPanedLayout newTopToBottom
-						    positionOfSlider: 70 percent;
-						    add: #originBundle;
-						    add: #controlNotebook);
-				   add: (SpPanedLayout newTopToBottom
+	^ SpBoxLayout newTopToBottom
+		  add: (SpBoxLayout newLeftToRight
+				   add: #toolbar;
+				   add: #version width: 100;
+				   yourself)
+		  height: self toolbarHeight + 10;
+		  add: (SpPanedLayout newTopToBottom
+				   positionOfSlider: 80 percent;
+				   add: (SpPanedLayout newLeftToRight
 						    positionOfSlider: 50 percent;
-						    add: #firstDestinationBundle;
-						    add: #secondDestinationBundle));
-		  add: #errorLog
+						    add: (SpPanedLayout newTopToBottom
+								     positionOfSlider: 70 percent;
+								     add: #originBundle;
+								     add: #controlNotebook);
+						    add: (SpPanedLayout newTopToBottom
+								     positionOfSlider: 50 percent;
+								     add: #firstDestinationBundle;
+								     add: #secondDestinationBundle));
+				   add: #errorLog)
+]
+
+{ #category : #initialization }
+FylgjaMigratorUI >> createCheckpoint [
+
+	self controller createCheckpointFor: self.
+	self updateVersionLabel
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigratorUI >> dropAllChanges [
+
+	| anw |
+	anw := UIManager default
+		       questionWithoutCancel:
+		       'This action cannot be undone. Are you sure to continue? '
+		       title: 'DROPPING ALL CHANGES.'.
+	anw := anw ifNil: [ false ].
+	^ anw ifTrue: [ self controller dropAllChangesWith: self ]
 ]
 
 { #category : #initialization }
 FylgjaMigratorUI >> initializePresenters [
 
 	super initializePresenters.
+	version := self newLabel.
+
+	toolbar := self newToolbar.
+	toolbar
+		addItemLeft: (self newToolbarButton
+				 label: 'Create Checkpoint';
+				 icon: (self iconNamed: #edit);
+				 action: [ self createCheckpoint ]);
+		addItemLeft: (self newToolbarButton
+				 label: 'Rollback ';
+				 icon: (self iconNamed: #smallUndo);
+				 action: [ self rollback ]);
+		addItemLeft: (self newToolbarButton
+				 label: 'Export Draft ';
+				 icon: (self iconNamed: #smallExport);
+				 action: [ self exportDraft ]);
+		addItemRight: (self newToolbarButton
+				 label: 'Save into Model ';
+				 action: [ 
+					 self controller
+						 logWarning: 'Save into model is not yet implemented '
+						 operation: #Save ]);
+		addItemRight: (self newToolbarButton
+				 label: 'Drop All Changes ';
+				 icon: (self iconNamed: #halt);
+				 action: [ self dropAllChanges ]).
+
+
+
+	originBundle := self newAccessMoxingBundle.
+	firstDestinationBundle := self newMoxingBundle.
+	secondDestinationBundle := self newMoxingBundle.
+	controlNotebook := self newNotebook.
+
+
+
 	originBundle := self newAccessMoxingBundle.
 	firstDestinationBundle := self newMoxingBundle.
 	secondDestinationBundle := self newMoxingBundle.
@@ -52,9 +115,19 @@ FylgjaMigratorUI >> initializePresenters [
 	controlNotebook
 		addPageTitle: 'Binding & References'
 		provider: [ unboundReferences ].
-	originBundle model: self controller origin.
-	firstDestinationBundle model: self controller destinations first.
-	secondDestinationBundle model: self controller destinations second
+	originBundle modelAccessor: #origin.
+	firstDestinationBundle modelAccessor: [ :controller | 
+		controller destinations first ].
+	secondDestinationBundle modelAccessor: [ :controller | 
+		controller destinations second ].
+
+]
+
+{ #category : #initialization }
+FylgjaMigratorUI >> initializeWindow: aWindow [
+
+	super initializeWindow: aWindow.
+	self updateVersionLabel
 ]
 
 { #category : #initialization }
@@ -118,20 +191,29 @@ FylgjaMigratorUI >> produceUsing: aTransfer for: aWidget [
 		            informing: aWidget
 ]
 
-{ #category : #'as yet unclassified' }
-FylgjaMigratorUI >> refreshWidgets [
+{ #category : #initialization }
+FylgjaMigratorUI >> rollback [
 
-	lastChoice ifNotNil: [ self updateWidgets: lastChoice ]
+	self controller rollbackFor: self.
+	self updateVersionLabel
 ]
 
-{ #category : #'as yet unclassified' }
-FylgjaMigratorUI >> updateWidgets: aMORootDeclaration [
+{ #category : #initialization }
+FylgjaMigratorUI >> ruleHasBeenAppliedSuccessfully [
 
-	| lookup |
-	lastChoice := aMORootDeclaration.
-	lookup := self controller mrsFor: aMORootDeclaration.
-	mrsViewer model: lookup.
-	unboundReferences
-		references: (self controller stubsFor: aMORootDeclaration)
-		and: lookup
+	" Should be refreshing all "
+
+	originBundle ruleHasBeenAppliedSuccessfully.
+	firstDestinationBundle ruleHasBeenAppliedSuccessfully.
+	secondDestinationBundle ruleHasBeenAppliedSuccessfully.
+	self updateVersionLabel
+]
+
+{ #category : #initialization }
+FylgjaMigratorUI >> updateVersionLabel [
+
+	self withWindowDo: [ :window | 
+		window title: ('{1} Version: {2}' format: { 
+					 self controller projectName.
+					 self controller versionNumber }) ]
 ]

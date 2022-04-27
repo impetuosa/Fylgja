@@ -3,10 +3,10 @@ Class {
 	#superclass : #SpPresenter,
 	#instVars : [
 		'tree',
-		'model',
 		'whenSelected',
 		'bundle',
-		'manageTransfer'
+		'manageTransfer',
+		'model'
 	],
 	#category : #'Fylgja-UI-Widgets'
 }
@@ -112,18 +112,18 @@ MoxingTree >> manageTransfer: aTransfer [
 { #category : #initialization }
 MoxingTree >> model: aModel [
 
-	model := aModel.
+	model := aModel. 
 	tree items: (self childrenFor: aModel).
 ]
 
 { #category : #enumerating }
-MoxingTree >> refreshWidget [
+MoxingTree >> refreshWidgetWith: aModel [ 
 
 	| path |
 	tree selectedItem
 		ifNotNil: [ 
 			path := tree selectionMode selectedPath.
-			self model: model.
+			self model: aModel.
 			tree selectPath: path , { 1 } scrollToSelection: true ]
 		ifNil: [ self model: model ]
 ]

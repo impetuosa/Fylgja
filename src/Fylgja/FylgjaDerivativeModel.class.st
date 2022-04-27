@@ -4,7 +4,9 @@ Class {
 	#instVars : [
 		'fylgja',
 		'derivativeModels',
-		'deferredMapping'
+		'deferredMapping',
+		'mrs',
+		'migrationRuleSpace'
 	],
 	#category : #'Fylgja-Model'
 }
@@ -30,6 +32,14 @@ FylgjaDerivativeModel >> bind: aMOObjectObjectRelation croppingRelationsWith: aF
 { #category : #accessing }
 FylgjaDerivativeModel >> deferredMapping [
 	^ deferredMapping ifNil: [ deferredMapping := Dictionary new  ]
+]
+
+{ #category : #initialization }
+FylgjaDerivativeModel >> derivative [
+
+	^ FylgjaDerivativeModel new
+		  fylgja: self;
+		  yourself
 ]
 
 { #category : #'as yet unclassified' }
@@ -70,8 +80,10 @@ FylgjaDerivativeModel >> forceMapReferences: aCollection [
 ]
 
 { #category : #accessing }
-FylgjaDerivativeModel >> fylgja: aFylgjaModel [ 
-	fylgja := aFylgjaModel
+FylgjaDerivativeModel >> fylgja: aFylgjaModel [
+
+	fylgja := aFylgjaModel.
+	migrationRuleSpace := aFylgjaModel migrationRuleSpace copySpace
 ]
 
 { #category : #'as yet unclassified' }
@@ -79,6 +91,12 @@ FylgjaDerivativeModel >> initialize [
 
 	super initialize.
 	derivativeModels := OrderedCollection new
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> installAllDerivativeModels [
+
+	^ fylgja models collect: [ :m | self derivativeModelFor: m ]
 ]
 
 { #category : #testing }
@@ -118,6 +136,27 @@ FylgjaDerivativeModel >> mapEntity: aDestinationEntity as: aCandidateRelation cr
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> mapEntity: aMOTypeReference as: aMODeclarationStructuralRelation croppingRelationsWith: aFullBlockClosure usingWriter: aMOExpressionWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+
+	^ fylgja
+		  mapEntity: aMOTypeReference
+		  as: aMODeclarationStructuralRelation
+		  croppingRelationsWith: aFullBlockClosure
+		  usingWriter: aMOExpressionWriter
+		  lookUp: aFylgjaLookUpContext
+		  using: aFylgjaDerivativeModel
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> mapOrFail: aMOAttributeAccessor to: aMOAttributeAccessor2 using: aFylgjaDerivativeModel [
+
+	^ fylgja
+		  mapOrFail: aMOAttributeAccessor
+		  to: aMOAttributeAccessor2
+		  using: aFylgjaDerivativeModel
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> migrate: aProvenanceEntityRelation croppingRelationsWith: aBlock intoDestinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext [
 
 	^ fylgja
@@ -128,15 +167,44 @@ FylgjaDerivativeModel >> migrate: aProvenanceEntityRelation croppingRelationsWit
 		  using: self
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> migrate: aMODeclarationStructuralRelation croppingRelationsWith: aFullBlockClosure intoDestinationWriter: aMODeclarationUnitWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+
+	^ fylgja
+		  migrate: aMODeclarationStructuralRelation
+		  croppingRelationsWith: aFullBlockClosure
+		  intoDestinationWriter: aMODeclarationUnitWriter
+		  lookUp: aFylgjaLookUpContext
+		  using: aFylgjaDerivativeModel
+]
+
 { #category : #accessing }
 FylgjaDerivativeModel >> migrationRuleSpace [
-	^ fylgja migrationRuleSpace
+	^ migrationRuleSpace
+]
+
+{ #category : #accessing }
+FylgjaDerivativeModel >> models [
+
+	^ self derivativeModels
 ]
 
 { #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> mrsFor: aDestinationContext [
 
 	^ fylgja mrsFor: aDestinationContext using: self
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> mrsFor: aMODeclarationUnit using: aFylgjaDerivativeModel [
+
+	^ fylgja mrsFor: aMODeclarationUnit using: aFylgjaDerivativeModel
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> originalModel [
+
+	^ fylgja originalModel
 ]
 
 { #category : #'as yet unclassified' }
@@ -165,6 +233,16 @@ FylgjaDerivativeModel >> produce: aProvenanceEntity croppingRelationsWith: aFull
 		  croppingRelationsWith: aFullBlockClosure
 		  into: aDestinationContext
 		  using: self
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> produce: aMODeclarationUnit croppingRelationsWith: aFullBlockClosure into: aMOPackage using: aFylgjaDerivativeModel [
+
+	^ fylgja
+		  produce: aMODeclarationUnit
+		  croppingRelationsWith: aFullBlockClosure
+		  into: aMOPackage
+		  using: aFylgjaDerivativeModel
 ]
 
 { #category : #'as yet unclassified' }

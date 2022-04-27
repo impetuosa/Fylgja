@@ -237,6 +237,12 @@ FylgjaMigrationEngine >> noTracing [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> originalModel [
+
+	^ self
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> produce: aProvenanceEntityRelation croppingRelationsWith: aBlock destinationWriter: aWriter lookUp: aLookupContext using: aModifiedFylgjaMigrationEngine [
 
 	| rules relation partialResult rule |

@@ -56,6 +56,17 @@ FylgjaMigrationRuleSpace >> allPossibleProducingRules [
 		   ifNotNil: [ parent allPossibleProducingRules ])
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaMigrationRuleSpace >> copySpace [
+
+	| kids copy |
+	copy := self shallowCopy.
+
+	kids := subspaces collect: [ :s | s copySpace ].
+	kids do: [ :k | k parent: copy ].
+	^ copy
+]
+
 { #category : #'public-entity-creation' }
 FylgjaMigrationRuleSpace >> ensureNamespace: anEntity [
 
