@@ -40,7 +40,6 @@ FylgjaFromAccess >> databaseSourceName: object [
 FylgjaFromAccess >> hasId: aMOAlceForm using: aFylgjaDerivativeModel [
 
 	| model object tableName table |
-	self assert: aMOAlceForm methods isEmpty.
 
 	model := aFylgjaDerivativeModel selectDerivativeModelFor: aMOAlceForm.
 	object := self defaultInstanceFor: aMOAlceForm withIn: model.

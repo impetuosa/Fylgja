@@ -9,6 +9,7 @@ FylgjaAddLocalVariable >> applyOn: aWriter [
 
 	^ aWriter writeVariable: [ :attr | 
 		  attr
+			  writeOnTop;
 			  name: name;
 			  typeReference: typeReference;
 			  initializer: initializer ]

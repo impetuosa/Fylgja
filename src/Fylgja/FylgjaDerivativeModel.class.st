@@ -161,7 +161,7 @@ FylgjaDerivativeModel >> lookupContextFor: aMODeclarationStructuralRelation toCo
 { #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> manageApplicationCycleAndProduceResult: aBlock [
 
-	| result |
+	| result changes amountChanges |
 	" 
 	The application of rules happens *allways* in a derivative model. 
 	The derivative model represents a transactional state. 
@@ -176,9 +176,20 @@ FylgjaDerivativeModel >> manageApplicationCycleAndProduceResult: aBlock [
 	"
 	[ 
 	result := aBlock value.
-	self processDeferredMappings.
-	self processBindings.
-	self processLinking.
+	
+	[
+		self processDeferredMappings.
+		amountChanges := self deferredMapping size. 
+		self processBindings.
+		self processLinking.
+ 		amountChanges = self deferredMapping size ifFalse: [ self halt ].
+	] doWhileFalse: [ 
+		" fixed point ".
+		
+		amountChanges = self deferredMapping size
+		
+	].
+
 	self noteSuccess ]
 		on: Error
 		do: [ :e | 
@@ -320,7 +331,6 @@ FylgjaDerivativeModel >> originalModel [
 
 { #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> processBindings [
-	self halt .
 	self bindCandidateless. 
 	self forceMap.	
 

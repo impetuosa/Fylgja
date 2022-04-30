@@ -9,7 +9,7 @@ FylgjaFormToAngularModel >> applyTo: aRelatedProvenanceEntity croppingRelationsW
 
 	| object cls dataBoundableAttributes model attributes |
 
-	self assert: aRelatedProvenanceEntity to methods isEmpty.
+	aRelatedProvenanceEntity to methods isEmpty ifFalse: [self halt].
 
 	model := (aFylgjaDerivativeModel selectDerivativeModelFor:
 		          aRelatedProvenanceEntity to) model.
