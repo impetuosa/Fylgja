@@ -55,9 +55,12 @@ FylgjaMigrationUIController class >> ruleInstallers [
 { #category : #accessing }
 FylgjaMigrationUIController >> autoBind: aCollection [
 
-	self doOrLog: [ 
-		self fylgja forceMapReferences: aCollection.
-		self logSuccess: #Succeed operation: #AutoBind ]
+	^ self
+		  doOrLog: [ 
+			  self fylgja forceMapReferences: aCollection.
+			  self logSuccess: #Succeed operation: #AutoBind ]
+		  forOperation: #AutoBind
+		  ifFailReturn: [ nil ]
 ]
 
 { #category : #accessing }
@@ -122,6 +125,26 @@ FylgjaMigrationUIController >> dropAllChangesWith: aWidget [
 			aWidget ruleHasBeenAppliedSuccessfully ]
 		forOperation: #DropAllChanges
 		ifFailReturn: [ nil ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationUIController >> exportDraft: aFileReference informTo: aWidget [
+
+	| result |
+	^ self
+		  doOrLog: [ 
+			  self
+				  assert: aFileReference isDirectory
+				  description: 'Directory was expected'.
+			  result := self destinations collect: [ :a | 
+				            a exportAsDraftIntoDirectory:
+					            (aFileReference / a name) ensureCreateDirectory ].
+
+			  self logSuccess: result operation: #ExportAsDraft.
+			  aWidget ruleHasBeenAppliedSuccessfully.
+			  result ]
+		  forOperation: #ExportAsDraft
+		  ifFailReturn: [ nil ]
 ]
 
 { #category : #accessing }
@@ -235,10 +258,8 @@ FylgjaMigrationUIController >> map: anEntity to: other context: context informin
 
 { #category : #accessing }
 FylgjaMigrationUIController >> mrsFor: aDeclaration [
-
-	lookupContext ifNotNil: [ ^ lookupContext ].
 	^ self
-		  doOrLog: [ lookupContext := self fylgja mrsFor: aDeclaration ]
+		  doOrLog: [ self fylgja mrsFor: aDeclaration ]
 		  forOperation: #Lookup
 		  ifFailReturn: [ nil ]
 ]
@@ -274,6 +295,13 @@ FylgjaMigrationUIController >> produce: aProvenance into: aDestination informing
 			  result ]
 		  forOperation: #Produce
 		  ifFailReturn: [ nil ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationUIController >> produceCode: aMODeclarationUnit [
+
+	^ (self fylgja selectDerivativeModelFor: aMODeclarationUnit) 
+		  produceCode: aMODeclarationUnit
 ]
 
 { #category : #accessing }
@@ -332,6 +360,44 @@ FylgjaMigrationUIController >> rollbackFor: aWidget [
 FylgjaMigrationUIController >> stubsFor: aDeclaration [
 
 	^ FylgjaReachableStubs new stubsFor: aDeclaration
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationUIController >> undoUpdateDestinationSourceProjectsInformTo: aWidget [
+
+	| result |
+	^ self
+		  doOrLog: [ 
+			  self assert:
+				  (self destinations allSatisfy: #sourceCodeIsAvailable).
+
+			  result := self destinations collect: [ :a | 
+				            a undoUpdateDestinationSourceProjects ].
+
+			  self logSuccess: result operation: #UndoUpdateSourceCode.
+			  aWidget ruleHasBeenAppliedSuccessfully.
+			  result ]
+		  forOperation: #UndoUpdateSourceCode
+		  ifFailReturn: [ nil ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationUIController >> updateDestinationSourceProjectsInformTo: aWidget [
+
+	| result |
+	^ self
+		  doOrLog: [ 
+			  self assert:
+				  (self destinations allSatisfy: #sourceCodeIsAvailable).
+
+			  result := self destinations collect: [ :a | 
+				            a updateDestinationSourceProjects ].
+
+			  self logSuccess: result operation: #UpdateSourceCode.
+			  aWidget ruleHasBeenAppliedSuccessfully.
+			  result ]
+		  forOperation: #UpdateSourceCode
+		  ifFailReturn: [ nil ]
 ]
 
 { #category : #accessing }

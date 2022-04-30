@@ -253,6 +253,8 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToAngularComponent [
 
 	result := fylgja produce: provenance into: destination.
 	result forceMap.
+
+
 	self
 		assert: (TypeScriptParser parse: result result produceCode)
 		isKindOf: JSTSSourceFileNode.
@@ -279,7 +281,6 @@ FylgjaMigrateFormWithCasinoTest >> testEmployeeDetailsFormToAngularModel [
 
 	result := fylgja produce: provenance into: destination.
 	result forceMap.
-
 	self
 		assert: (TypeScriptParser parse: result result produceCode)
 		isKindOf: JSTSSourceFileNode

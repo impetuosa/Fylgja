@@ -7,7 +7,8 @@ Class {
 { #category : #'as yet unclassified' }
 FylgjaFormToAngularModel >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
-	| object tableName cls dataBoundableAttributes model attributes |
+	| object cls dataBoundableAttributes model attributes |
+
 	self assert: aRelatedProvenanceEntity to methods isEmpty.
 
 	model := (aFylgjaDerivativeModel selectDerivativeModelFor:
@@ -15,9 +16,6 @@ FylgjaFormToAngularModel >> applyTo: aRelatedProvenanceEntity croppingRelationsW
 	object := self
 		          defaultInstanceFor: aRelatedProvenanceEntity to
 		          withIn: model.
-
-	tableName := self databaseSourceName: object.
-
 
 	dataBoundableAttributes := self
 		                           allDataBoundableAttributes: object

@@ -1,5 +1,5 @@
 Class {
-	#name : #FylgjaTranslateCopyAsClass,
+	#name : #FylgjaTranslateCopyAsTypescriptClass,
 	#superclass : #FylgjaTranslation,
 	#instVars : [
 		'provenanceEntityRelation',
@@ -11,37 +11,34 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-FylgjaTranslateCopyAsClass >> applyTo: aProvenanceEntityRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
+FylgjaTranslateCopyAsTypescriptClass >> applyTo: aProvenanceEntityRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
-	| resp |
+	| result |
 	provenanceEntityRelation := aProvenanceEntityRelation.
 	croppingRelationsWith := aBlock.
 	lookUp := aFylgjaLookUpContext.
 	using := aFylgjaDerivativeModel.
-
-	resp := aDestinationWriter acceptWritingVisitor: self.
-
-
-
-
+	
+	result := aDestinationWriter acceptWritingVisitor: self.
+	
 	provenanceEntityRelation := nil.
 	croppingRelationsWith := nil.
 	lookUp := nil.
 	using := nil.
-	^ resp
+	^ result
 ]
 
 { #category : #visiting }
-FylgjaTranslateCopyAsClass >> visitPackageWriter: aMOPackageWriter [
+FylgjaTranslateCopyAsTypescriptClass >> visitAngularModuleWriter: aMOAngularModuleWriter [
 
-	^ aMOPackageWriter writeDeclarationUnit: [ :unit | 
+	^ aMOAngularModuleWriter writeDeclarationUnit: [ :unit | 
 		  unit acceptWritingVisitor: self ]
 ]
 
 { #category : #visiting }
-FylgjaTranslateCopyAsClass >> visitUnitWriter: unit [
+FylgjaTranslateCopyAsTypescriptClass >> visitUnitWriter: unit [
 
-	^ unit writeClass: [ :class | 
+	^ unit writeTypescriptClass: [ :class | 
 		  class visibility: #public.
 		  class name: provenanceEntityRelation name.
 		  FylgjaCopy new

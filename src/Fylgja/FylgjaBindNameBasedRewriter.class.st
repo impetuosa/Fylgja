@@ -13,8 +13,33 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+FylgjaBindNameBasedRewriter >> adaptInvocationToInvocationToPointToMethod [
+
+	^ toBindElement isStaticBinding
+		  ifTrue: [ self adaptInvocationToInvocationToPointToStaticMethod ]
+		  ifFalse: [ self adaptInvocationToInvocationToPointToObjectMethod ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaBindNameBasedRewriter >> adaptInvocationToInvocationToPointToStaticMethod [
+
+	self assert: toBindElement parent isType.
+	^ destinationWriter writeUnregisteredExpression: [ :expression | 
+		  (expression
+			   invokeMethodNamed: toBindElement selector
+			   receiver: [ :exp | 
+				   (exp typeReferenceNamedForRebinding: toBindElement parent name)
+					   candidate: toBindElement parent;
+					   yourself ]
+			   arguments: [ :exp | destinationEntity arguments ])
+			  candidate: toBindElement;
+			  yourself ]
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaBindNameBasedRewriter >> adaptInvocationToMethodInvocation [
 
+	self halt.
 	self assert: (destinationEntity refersToObjectsLike: toBindElement).
 	self assert: destinationEntity name = toBindElement name.
 	self assert: (toBindElement parameters collect: #name)

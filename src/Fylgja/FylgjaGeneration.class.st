@@ -23,11 +23,3 @@ FylgjaGeneration >> addAttribute: attr boundAs: instance croppingRelationsWith: 
 		  typeReference: typeReference;
 		  applyOn: class
 ]
-
-{ #category : #'as yet unclassified' }
-FylgjaGeneration >> importableDependencies: aMOClass [
-
-	^ aMOClass dependencies select: [ :a | 
-		  a packageReference isNotNil and: [ 
-			  a packageReference name ~= 'java.lang' ] ]
-]

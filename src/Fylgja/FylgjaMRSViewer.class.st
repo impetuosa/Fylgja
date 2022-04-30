@@ -18,7 +18,9 @@ FylgjaMRSViewer class >> buildCommandsGroupWith: presenterInstance forRoot: root
 	rootCommandGroup register:
 		(FylgjaUIInspect forSpecContext: presenterInstance).
 	rootCommandGroup register:
-		(FylgjaUIUnInstallRule forSpecContext: presenterInstance)
+		(FylgjaUIUnInstallRule forSpecContext: presenterInstance).
+	rootCommandGroup register:
+		(FylgjaUIPullUpRule forSpecContext: presenterInstance)
 ]
 
 { #category : #layout }
@@ -79,6 +81,11 @@ FylgjaMRSViewer >> newMrsTable [
 	^ table
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaMRSViewer >> pullUpSelectedRules [
+	self shouldBeImplemented.
+]
+
 { #category : #initialization }
 FylgjaMRSViewer >> registerToController [
 
@@ -89,6 +96,12 @@ FylgjaMRSViewer >> registerToController [
 FylgjaMRSViewer >> selectedItem [
 
 	^ selectedItem
+]
+
+{ #category : #accessing }
+FylgjaMRSViewer >> selectedItems [
+
+	^ { selectedItem }
 ]
 
 { #category : #accessing }

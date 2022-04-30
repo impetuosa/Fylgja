@@ -1,6 +1,6 @@
 Class {
 	#name : #MoxingCode,
-	#superclass : #SpPresenter,
+	#superclass : #FylgjaAbstractUI,
 	#instVars : [
 		'pagesObjectsMap',
 		'viewport'
@@ -46,8 +46,6 @@ MoxingCode >> newNotebookPageFor: aModule [
 MoxingCode >> visualizeSourcecode: aCodeObject [
 
 	| text page |
-
-
 	text := self newText.
 
 	page := (self newNotebookPageFor: aCodeObject)
@@ -61,7 +59,7 @@ MoxingCode >> visualizeSourcecode: aCodeObject [
 	viewport selectPage: page.
 
 	text text: (MoxingTextComposer new
-			 compose: aCodeObject produceCode
+			 compose: (self controller produceCode: aCodeObject)
 			 parser: aCodeObject language parser
 			 model: aCodeObject
 			 style: aCodeObject language style

@@ -6,7 +6,9 @@ Class {
 		'derivativeModels',
 		'deferredMapping',
 		'mrs',
-		'migrationRuleSpace'
+		'migrationRuleSpace',
+		'state',
+		'errors'
 	],
 	#category : #'Fylgja-Model'
 }
@@ -25,8 +27,9 @@ FylgjaDerivativeModel >> allNewEntities [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> bind: aMOObjectObjectRelation croppingRelationsWith: aFullBlockClosure intoDestinationWriter: aMOExpressionWriter lookUp: aFylgjaLookUpContext [ 
-	self shouldBeImplemented.
+FylgjaDerivativeModel >> bindCandidateless [
+
+	fylgja bindCandidateless: self
 ]
 
 { #category : #accessing }
@@ -60,6 +63,12 @@ FylgjaDerivativeModel >> derivativeModels [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> errors [
+
+	^ errors ifNil: [ errors := OrderedCollection new ]
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> forceMap [
 
 	^ fylgja forceMapStubs: self
@@ -79,6 +88,15 @@ FylgjaDerivativeModel >> forceMapReferences: aCollection [
 			using: self ]
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> forceReMappingRuleOverStubs: aCollection contextModel: aMOModelDerivative using: aFylgjaDerivativeModel [
+
+	^ fylgja
+		  forceReMappingRuleOverStubs: aCollection
+		  contextModel: aMOModelDerivative
+		  using: aFylgjaDerivativeModel
+]
+
 { #category : #accessing }
 FylgjaDerivativeModel >> fylgja: aFylgjaModel [
 
@@ -90,7 +108,8 @@ FylgjaDerivativeModel >> fylgja: aFylgjaModel [
 FylgjaDerivativeModel >> initialize [
 
 	super initialize.
-	derivativeModels := OrderedCollection new
+	derivativeModels := OrderedCollection new.
+	state := #Success
 ]
 
 { #category : #'as yet unclassified' }
@@ -105,6 +124,71 @@ FylgjaDerivativeModel >> isDerivativeEntity: anEntity [
 	model := self selectDerivativeModelFor: anEntity ifNone: [ ^ false ].
 	^ model exclusivelyincludes: anEntity 
 
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> isFailure [
+
+	^ self isSuccessful not
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> isSuccessful [
+
+	^ state = #Success
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> lookupContextFor: aMODeclarationStructuralRelation toContext: aMODeclarationStructuralRelation2 model: aMOModelDerivative [
+
+	^ fylgja
+		  lookupContextFor: aMODeclarationStructuralRelation
+		  toContext: aMODeclarationStructuralRelation2
+		  model: aMOModelDerivative
+		  using: self
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> lookupContextFor: aMODeclarationStructuralRelation toContext: aMODeclarationStructuralRelation2 model: aMOModelDerivative using: aFylgjaDerivativeModel [
+
+	^ fylgja
+		  lookupContextFor: aMODeclarationStructuralRelation
+		  toContext: aMODeclarationStructuralRelation2
+		  model: aMOModelDerivative
+		  using: aFylgjaDerivativeModel
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> manageApplicationCycleAndProduceResult: aBlock [
+
+	| result |
+	" 
+	The application of rules happens *allways* in a derivative model. 
+	The derivative model represents a transactional state. 
+	The application of the production directive responds to the following steps: 
+	
+	1- Apply the production directive
+	2- Process deferredMapping rules
+	3- Apply the binding directive over all the freshly produced bindable elements.
+	4- Inform the models that the cycle has been accepted. 
+	5- Produce a result object with the main produced entity.
+	 
+	"
+	[ 
+	result := aBlock value.
+	self processDeferredMappings.
+	self processBindings.
+	self processLinking.
+	self noteSuccess ]
+		on: Error
+		do: [ :e | 
+			self noteError: e.
+			e pass ].
+
+	^ FylgjaDerivationResult new
+		  derivative: self;
+		  result: result;
+		  yourself
 ]
 
 { #category : #accessing }
@@ -124,15 +208,30 @@ FylgjaDerivativeModel >> map: aProvenanceEntity to: aDestinationEntity context: 
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> mapEntity: aDestinationEntity as: aCandidateRelation croppingRelationsWith: aFullBlockClosure usingWriter: aWriter lookUp: aFylgjaLookUpContext [
+FylgjaDerivativeModel >> map: aMOPrimitiveType to: aMOClass using: aFylgjaDerivativeModel atContext: aMORootDeclaration [
 
 	^ fylgja
-		  mapEntity: aDestinationEntity
-		  as: aCandidateRelation
-		  croppingRelationsWith: aFullBlockClosure
-		  usingWriter: aWriter
-		  lookUp: aFylgjaLookUpContext
-		  using: self
+		  map: aMOPrimitiveType
+		  to: aMOClass
+		  using: aFylgjaDerivativeModel
+		  atContext: aMORootDeclaration
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> mapEntity: aDestinationEntity as: aCandidateRelation croppingRelationsWith: aFullBlockClosure usingWriter: aWriter lookUp: aFylgjaLookUpContext [
+
+	| resp |
+	resp := fylgja
+		        mapEntity: aDestinationEntity
+		        as: aCandidateRelation
+		        croppingRelationsWith: aFullBlockClosure
+		        usingWriter: aWriter
+		        lookUp: aFylgjaLookUpContext
+		        using: self.
+	((aCandidateRelation read: aDestinationEntity) isFylgjaStub or: [ 
+		 resp isPrimitiveType ]) ifFalse: [ 
+		aWriter updateDeclarationUnitDependencies: aDestinationEntity ].
+	^ resp
 ]
 
 { #category : #'as yet unclassified' }
@@ -202,9 +301,30 @@ FylgjaDerivativeModel >> mrsFor: aMODeclarationUnit using: aFylgjaDerivativeMode
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> noteError: e [
+
+	state := #Failure.
+	self errors add: e
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> noteSuccess [
+	" By default the model is a successfull model. "
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> originalModel [
 
 	^ fylgja originalModel
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> processBindings [
+	self halt .
+	self bindCandidateless. 
+	self forceMap.	
+
+
 ]
 
 { #category : #'as yet unclassified' }
@@ -223,6 +343,12 @@ FylgjaDerivativeModel >> processDeferredMappings [
 		(self deferredMapping at: re key) remove: re value ]
 			on: FylgjaMapError
 			do: [ :e | " self halt" ] ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> processLinking [
+
+	^ self derivativeModels do: [ :a | a link ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -247,29 +373,12 @@ FylgjaDerivativeModel >> produce: aMODeclarationUnit croppingRelationsWith: aFul
 
 { #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> produce: aProvenanceEntity into: aContextDestinationEntity [
-
-	| result |
-
-	result := fylgja
-		          produce: aProvenanceEntity
-		          croppingRelationsWith: [ :a | a ]
-		          into: aContextDestinationEntity
-		          using: self.
-
-	^ self produceResult: result
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> produceResult: anObject [
-	" 
-		Once a result is produced, means that a chain of migration has finished. 
-		Time to process bindings 
-	"
-	self processDeferredMappings.
-	^ FylgjaDerivationResult new
-		  derivative: self;
-		  result: anObject;
-		  yourself
+	^ self manageApplicationCycleAndProduceResult: [ 
+		  fylgja
+			  produce: aProvenanceEntity
+			  croppingRelationsWith: [ :a | a ]
+			  into: aContextDestinationEntity
+			  using: self ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -280,6 +389,17 @@ FylgjaDerivativeModel >> produceWithContextualizedProvenance: aProvenanceEntity 
 		  croppingRelationsWith: aFullBlockClosure
 		  into: aDestinationContext
 		  using: self
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> produceWithContextualizedProvenance: aMODeclarationStructuralRelation croppingRelationsWith: aFullBlockClosure into: aMOPackage using: aFylgjaDerivativeModel [
+
+	^ fylgja
+		  produceWithContextualizedProvenance:
+		  aMODeclarationStructuralRelation
+		  croppingRelationsWith: aFullBlockClosure
+		  into: aMOPackage
+		  using: aFylgjaDerivativeModel
 ]
 
 { #category : #'as yet unclassified' }

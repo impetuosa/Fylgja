@@ -100,13 +100,13 @@ FylgjaJavaSpringRuleInstaller >> installJavaLanguageTx [
 		installInto: fylgja.
 
 
-
+"
 
 	FylgjaRuleInstaller new
 		atLanguageNamed: java name;
 		anyInvocation;
 		invocationToMessageSendToSelf;
-		installInto: fylgja.
+		installInto: fylgja."
 
 	" By default when going to java "
 	FylgjaRuleInstaller new

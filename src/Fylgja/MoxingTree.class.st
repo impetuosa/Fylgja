@@ -42,16 +42,20 @@ MoxingTree >> bundle: aBundle [
 MoxingTree >> childrenFor: anEntry [
 
 	| entity |
-	entity := anEntry isAssociation
-		          ifTrue: [ anEntry value ]
-		          ifFalse: [ anEntry ].
+	entity := self entityFor: anEntry.
 	entity isCollection ifTrue: [ ^ {  } ].
 	^ entity isModelOrDerivative
-		  ifTrue: [ { entity root } ]
+		  ifTrue: [ { (self entityFor: entity root) } ]
 		  ifFalse: [ 
 			  entity allContainments
-				  reject: [ :a | a isKindOf: MOEmptyBlock ]
-				  thenCollect: [ :m | model entityFor: m ] ]
+				  reject: [ :a | a species = MOEmptyBlock ]
+				  thenCollect: [ :m | self entityFor: m ] ]
+]
+
+{ #category : #initialization }
+MoxingTree >> entityFor: anEntry [
+
+	^ model entityFor: anEntry
 ]
 
 { #category : #initialization }

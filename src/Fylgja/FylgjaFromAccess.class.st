@@ -11,9 +11,8 @@ FylgjaFromAccess >> allDataBoundableAttributes: object model: model [
 	tableName := object state at: #RecordSource.
 	self assert:
 		(tableName includesSubstring: #select caseSensitive: false) not.
-	^ (model entities select: [ :a | 
-		   ((a isKindOf: MOAlceTable) or: [ a isKindOf: MOAlceQuery ]) and: [ 
-			   a compareName: tableName ] ]) flatCollect: #attributes
+	^ (self tablesRespondingTo: tableName within: model) flatCollect:
+		  #attributes
 ]
 
 { #category : #'as yet unclassified' }
@@ -48,10 +47,7 @@ FylgjaFromAccess >> hasId: aMOAlceForm using: aFylgjaDerivativeModel [
 
 	tableName := self databaseSourceName: object.
 
-	table := (model allEntitiesSelect: [ :a | 
-		         a isDatasource and: [ 
-			         a name = tableName or: [ 
-				         a sanitizedName = (a sanitize: tableName) ] ] ]) first.
+	table := (self tablesRespondingTo: tableName within: model) first.
 
 
 	^ table hasIdColumns
@@ -75,4 +71,12 @@ FylgjaFromAccess >> sanitizeName: aFormOrReport [
 FylgjaFromAccess >> serviceNameFor: aFormOrReport [
 
 	^ (self sanitizeName: aFormOrReport) , '_Service'
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaFromAccess >> tablesRespondingTo: aName within: aModel [
+
+	^ aModel allEntitiesSelect: [ :a | 
+		  ((a isKindOf: MOAlceTable) or: [ a isKindOf: MOAlceQuery ]) and: [ 
+			  a compareName: aName ] ]
 ]

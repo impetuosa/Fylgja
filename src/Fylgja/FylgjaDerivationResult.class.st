@@ -36,6 +36,18 @@ FylgjaDerivationResult >> forceMap [
 ]
 
 { #category : #accessing }
+FylgjaDerivationResult >> isFailure [
+
+	^ derivative isFailure
+]
+
+{ #category : #accessing }
+FylgjaDerivationResult >> isSuccessful [
+
+	^ derivative isSuccessful
+]
+
+{ #category : #accessing }
 FylgjaDerivationResult >> map: aProvenanceEntity to: aDestinationEntity [
 
 	derivative map: aProvenanceEntity to: aDestinationEntity
@@ -57,13 +69,7 @@ FylgjaDerivationResult >> produce: aProvenanceEntity [
 { #category : #'as yet unclassified' }
 FylgjaDerivationResult >> produce: aProvenanceEntity into: aDestinationContext [
 
-	^ derivative produceResult:
-		  (derivative produce: aProvenanceEntity into: aDestinationContext)
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaDerivationResult >> produceResultsCode [
-	 ^ (result isKindOf: self class ) ifTrue: [ result  produceResultsCode ] ifFalse: [ result produceCode  ]
+	^ derivative produce: aProvenanceEntity into: aDestinationContext
 ]
 
 { #category : #'as yet unclassified' }

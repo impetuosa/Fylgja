@@ -7,7 +7,8 @@ Class {
 		'mappings',
 		'refTitle',
 		'mapTitle',
-		'selectedItems'
+		'selectedItems',
+		'lastSelection'
 	],
 	#category : #'Fylgja-UI-Widgets'
 }
@@ -48,13 +49,15 @@ MoxingReferencesAndMappings class >> defaultLayout [
 { #category : #accessing }
 MoxingReferencesAndMappings >> autoBind [
 
-	^ self controller autoBind: references items
+	self controller autoBind: references items.
+	self refreshWidget
 ]
 
 { #category : #'as yet unclassified' }
 MoxingReferencesAndMappings >> autoBindSelection [
 
-	self controller autoBind: references selectedItems
+	self controller autoBind: references selectedItems.
+	self refreshWidget
 ]
 
 { #category : #initialization }
@@ -129,7 +132,9 @@ MoxingReferencesAndMappings >> pullUpSelectedRules [
 		               chooseFrom: parents
 		               values: parents
 		               title: 'Pull up rule'.
-	destination ifNotNil: [ source pullUp: rules to: destination ]
+	destination ifNotNil: [ 
+		source pullUp: rules to: destination.
+		self refreshWidget ]
 ]
 
 { #category : #accessing }
@@ -146,6 +151,12 @@ MoxingReferencesAndMappings >> references: aCollection and: aFylgjaLookUpContext
 ]
 
 { #category : #accessing }
+MoxingReferencesAndMappings >> refreshWidget [
+
+	lastSelection ifNotNil: [ self updateSelectionTo: lastSelection ]
+]
+
+{ #category : #accessing }
 MoxingReferencesAndMappings >> registerToController [
 
 	self controller registerForEntitySelected: self
@@ -158,7 +169,7 @@ MoxingReferencesAndMappings >> selectedItems [
 
 { #category : #accessing }
 MoxingReferencesAndMappings >> updateSelectionTo: aSelection [
-
+	lastSelection := aSelection. 
 	self
 		references: (self controller stubsFor: aSelection)
 		and: (self controller mrsFor: aSelection)

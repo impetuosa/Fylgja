@@ -22,7 +22,9 @@ FylgjaConditionModelTypeIsAndContextIs >> contextTypes: aCollection [
 { #category : #testing }
 FylgjaConditionModelTypeIsAndContextIs >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
 
-	^ (contextTypes anySatisfy: [ :t | aType = t ]) and: [ 
+	aType ifNil: [ ^ false ].
+	^ (contextTypes anySatisfy: [ :t | 
+		   aType = t or: [ aType inheritsFrom: t ] ]) and: [ 
 		  super
 			  matches: aProvenanceEntityRelation
 			  context: aDestinationContextRelation

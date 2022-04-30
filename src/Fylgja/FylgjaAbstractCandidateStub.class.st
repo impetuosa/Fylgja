@@ -2,7 +2,7 @@ Class {
 	#name : #FylgjaAbstractCandidateStub,
 	#superclass : #MOReference,
 	#instVars : [
-		'provenance'
+		'#provenance => MOPropertySlot'
 	],
 	#category : #'Fylgja-ReadersWriters'
 }

@@ -23,6 +23,38 @@ FylgjaMigrationEngine >> addModel: aMOHeterogeneousAbstractSemanticGraph [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> bind: aCollection contextModel: aMOModelDerivative using: aFylgjaDerivativeModel [
+
+	| lookup destinationContext |
+	(aCollection select: [ :a | a parent isNotNil ]) do: [ :e | 
+		destinationContext := aFylgjaDerivativeModel 
+			                      readEntitysContextualizingRelation: e parent.
+		lookup := aFylgjaDerivativeModel
+			          lookupContextFor: e
+			          toContext: destinationContext
+			          model: aMOModelDerivative.
+		self
+			mapEntity: e
+			as: (MODeclarationStructuralRelation nullCandidateRelationTo: nil)
+			croppingRelationsWith: [ :a | a ]
+			usingWriter: aMOModelDerivative writer
+			lookUp: lookup
+			using: aFylgjaDerivativeModel ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> bindCandidateless: aFylgjaDerivativeModel [
+
+	aFylgjaDerivativeModel derivativeModels
+		select: [ :a | a hasBeenModified ]
+		thenDo: [ :contextModel | 
+			self
+				bind: contextModel candidatelessEntities
+				contextModel: contextModel
+				using: aFylgjaDerivativeModel ]
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> derivative [
 
 	^ FylgjaDerivativeModel new
@@ -34,16 +66,18 @@ FylgjaMigrationEngine >> derivative [
 FylgjaMigrationEngine >> forceMapStubs: aModifiedFylgjaMigrationEngine [
 
 	^ aModifiedFylgjaMigrationEngine derivativeModels do: [ :contextModel | 
-		  self
-			  forceReMappingRuleOverStubs: contextModel allStubs
-			  contextModel: contextModel
-			  using: aModifiedFylgjaMigrationEngine ]
+		  contextModel hasBeenModified ifTrue: [ 
+			  self
+				  forceReMappingRuleOverStubs: contextModel allStubs
+				  contextModel: contextModel
+				  using: aModifiedFylgjaMigrationEngine ] ]
 ]
 
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> forceReMappingRuleOverStubs: aCollection contextModel: contextModel using: aModifiedFylgjaMigrationEngine [
 
 	| newElement |
+
 	aCollection
 		reject: [ :stub | stub provenance to isNil ]
 		thenDo: [ :stub | 
@@ -54,7 +88,7 @@ FylgjaMigrationEngine >> forceReMappingRuleOverStubs: aCollection contextModel: 
 				                              readEntitysContextualizingRelation:
 				                              stub parent.
 
-			lookup := self
+			lookup := aModifiedFylgjaMigrationEngine
 				          lookupContextFor: elementRelation
 				          toContext: destinationContextRelation
 				          model: contextModel.
@@ -84,9 +118,9 @@ FylgjaMigrationEngine >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigrationEngine >> lookupContextFor: aProvenanceEntity toContext: aDestinationContext model: aMOModel [
+FylgjaMigrationEngine >> lookupContextFor: aProvenanceEntity toContext: aDestinationContext model: aMOModel using: aMOModelDerivative [
 
-	^ migrationRuleSpace
+	^ aMOModelDerivative migrationRuleSpace
 		  lookupContextFor: aProvenanceEntity
 		  toContext: aDestinationContext
 		  model: aMOModel
@@ -134,7 +168,8 @@ FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aM
 		context: context;
 		whenIsReferenceWithCandidate: aProvenanceEntity;
 		bindRewriteTo: aDestinationEntity;
-		installInto: aModifiedFylgjaMigrationEngine
+		installInto: aModifiedFylgjaMigrationEngine.
+	^ aModifiedFylgjaMigrationEngine
 ]
 
 { #category : #'as yet unclassified' }
@@ -226,7 +261,7 @@ FylgjaMigrationEngine >> mrsFor: aDestinationContext using: aModifiedFylgjaMigra
 	| destinationModel |
 	destinationModel := aModifiedFylgjaMigrationEngine 
 		                    selectDerivativeModelFor: aDestinationContext.
-	^ migrationRuleSpace
+	^ aModifiedFylgjaMigrationEngine migrationRuleSpace
 		  mrsAt: aDestinationContext anchor
 		  for: destinationModel
 ]
@@ -273,18 +308,15 @@ FylgjaMigrationEngine >> produce: aProvenanceEntityRelation croppingRelationsWit
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> produce: aProvenanceEntity croppingRelationsWith: aBlock into: aDestinationContext [
 
-	| result derivative |
+	| derivative |
 	derivative := self derivative.
-
-	result := self
-		          produce: aProvenanceEntity
-		          croppingRelationsWith: aBlock
-		          into: aDestinationContext
-		          using: derivative.
-
-	derivative processDeferredMappings.
-
-	^ derivative produceResult: result
+	
+	^ derivative manageApplicationCycleAndProduceResult: [ 
+		  self
+			  produce: aProvenanceEntity
+			  croppingRelationsWith: aBlock
+			  into: aDestinationContext
+			  using: derivative ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -300,7 +332,7 @@ FylgjaMigrationEngine >> produce: aProvenanceEntity croppingRelationsWith: aBloc
 		                              aDestinationContext.
 	destinationModel := aModifiedFylgjaMigrationEngine 
 		                    selectDerivativeModelFor: aDestinationContext.
-	lookup := self
+	lookup := aModifiedFylgjaMigrationEngine
 		          lookupContextFor: elementRelation
 		          toContext: destinationContextRelation
 		          model: destinationModel.
@@ -341,7 +373,8 @@ FylgjaMigrationEngine >> produceWithContextualizedProvenance: elementRelation cr
 	lookup := self
 		          lookupContextFor: elementRelation
 		          toContext: destinationContextRelation
-		          model: destinationModel.
+		          model: destinationModel
+		          using: aModifiedFylgjaMigrationEngine.
 
 
 	resultingRelation := destinationModel writer

@@ -242,9 +242,9 @@ MoxingIcons class >> selectIconFor: anElement [
 	aClass = MOAngularClass ifTrue: [ ^ self typescriptIcon ].
 	aClass = MOAngularComponent ifTrue: [ ^ self angularIcon ].
 	aClass = MOAngularProject ifTrue: [ ^ self angularIcon ].
-	aClass = MOAngularScheme ifTrue: [ ^  self iconNamed: #package ].
-	
-	
+	aClass = MOAngularScheme ifTrue: [ ^ self iconNamed: #package ].
+
+
 	aClass = MODeclarationUnit ifTrue: [ ^ self iconNamed: #group ].
 	aClass = MOProject ifTrue: [ ^ self iconNamed: #package ].
 	aClass = MOAlceForm ifTrue: [ ^ self iconFormIcon ].
@@ -268,7 +268,10 @@ MoxingIcons class >> selectIconFor: anElement [
 	aClass = MOGlobalVariable ifTrue: [ ^ self iconNamed: #glamorousUp ].
 
 	(anElement isKindOf: MOAbstractVariable) ifTrue: [ ^ self fieldIcon ].
-	aClass = MOPackage ifTrue: [ ^ self iconNamed: #package ].
+	aClass = MOPackage ifTrue: [ 
+		^ anElement isDefinedInLibrary
+			  ifTrue: [ self iconNamed: #smallRedo ]
+			  ifFalse: [ self iconNamed: #package ] ].
 	aClass = MOEvent ifTrue: [ ^ self iconNamed: #announcement ].
 	(anElement isKindOf: MOInvocable) ifTrue: [ ^ self methodIcon ].
 

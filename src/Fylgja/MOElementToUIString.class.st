@@ -43,7 +43,7 @@ MOElementToUIString >> signatureFunction: aMethod [
 			  nextPutAll: ':';
 			  nextPutAll: (aMethod returnTypeReference
 					   ifNil: [ #unknown ]
-					   ifNotNil: [ :a | a name ]) ]
+					   ifNotNil: [ :a | a acceptVisitor: self ]) ]
 ]
 
 { #category : #visiting }
@@ -65,7 +65,16 @@ MOElementToUIString >> toString: anAssociation [
 	toVisit := anAssociation isAssociation
 		           ifTrue: [ anAssociation value ]
 		           ifFalse: [ anAssociation ].
-	^ toVisit acceptVisitor: self 
+	[ ^ toVisit acceptVisitor: self ] 
+		on: Error
+		do: [ self haltOnce ]
+]
+
+{ #category : #visiting }
+MOElementToUIString >> visitArrayTypeReference: anArrayTypeReference [
+
+	^ (anArrayTypeReference argumentTypeReferences first acceptVisitor:
+		   self) , '[]'
 ]
 
 { #category : #visiting }
@@ -120,4 +129,10 @@ MOElementToUIString >> visitRootDeclaration: aMORootDeclaration [
 { #category : #visiting }
 MOElementToUIString >> visitStatementExpression: aStatement [
 	^ aStatement expression acceptVisitor: self
+]
+
+{ #category : #visiting }
+MOElementToUIString >> visitTypeReference: aTypeReference [
+
+	^ aTypeReference name ifNil: [ #Unknown ]
 ]

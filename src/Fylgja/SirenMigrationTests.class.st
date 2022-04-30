@@ -246,7 +246,7 @@ SirenMigrationTests >> testMoveAllClassesToPhSiren [
 	results := provenance collect: [ :prov | 
 		           result := result produce: prov into: destination ].
 
-	codes := results collect: [ :e | e produceResultsCode ].
+	codes := results collect: [ :e | e realResult produceCode ].
 	tonels := codes collect: [ :cod | 
 		          cod -> ([ TonelParser parseString: cod ]
 			           on: Error

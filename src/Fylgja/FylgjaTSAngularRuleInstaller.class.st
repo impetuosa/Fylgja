@@ -23,8 +23,8 @@ FylgjaTSAngularRuleInstaller >> angularPackage [
 FylgjaTSAngularRuleInstaller >> installAngularTx [
 
 	FylgjaRuleInstaller new
-		atLanguageNamed: angular name;
-		anyAlceForm;
+		context: angular root;
+		any: MOAlceForm migratingTo: MOAngularModule;
 		applyAllOperations: [ :i | 
 			{ 
 				i formToAngularModel.
@@ -44,7 +44,6 @@ FylgjaTSAngularRuleInstaller >> installRules [
 { #category : #general }
 FylgjaTSAngularRuleInstaller >> installTsLanguageTx [
 
-
 	FylgjaRuleInstaller new
 		context: angular root;
 		prefixUnaryOperator: #Not;
@@ -63,13 +62,11 @@ FylgjaTSAngularRuleInstaller >> installTsLanguageTx [
 		replaceOperatorWith: #&&;
 		installInto: fylgja.
 
-
 	FylgjaRuleInstaller new
 		context: angular root;
 		binaryOperator: #Or;
 		replaceOperatorWith: #'||';
 		installInto: fylgja.
-
 
 
 	FylgjaRuleInstaller new
@@ -108,6 +105,14 @@ FylgjaTSAngularRuleInstaller >> installTsLanguageTx [
 		copyAsPublicClass;
 		installInto: fylgja.
 
+
+
+	FylgjaRuleInstaller new
+		atLanguageNamed: angular name;
+		anyKindOfClass;
+		copyAsPublicTypescriptClass;
+		installInto: fylgja.
+
 	FylgjaRuleInstaller new
 		context: angular root;
 		anyOnErrorGoToBlockTransformableToTryCatch;
@@ -127,8 +132,6 @@ FylgjaTSAngularRuleInstaller >> installTsLanguageTx [
 		installInto: fylgja.
 
 
-
-
 	FylgjaRuleInstaller new
 		atLanguageNamed: #angular;
 		anyInvocation;
@@ -146,14 +149,12 @@ FylgjaTSAngularRuleInstaller >> installTsLanguageTx [
 		copyAsMethod;
 		installInto: fylgja.
 	" By default when going to java "
-	
+
 	FylgjaRuleInstaller new
 		context: angular root;
 		anyModelEntityOfTypesWhenGoingClass: { 
 				MOGlobalVariable.
 				MOGlobalConstant };
 		copyAsAttribute;
-		installInto: fylgja.
-
-
+		installInto: fylgja
 ]

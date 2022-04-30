@@ -30,6 +30,7 @@ FylgjaCandidateStubWriter >> parent: aMOPrimitiveTypeReference [
 { #category : #writing }
 FylgjaCandidateStubWriter >> privateWriteToSurface: anEntity [
 
+	surface addFylgjaStub: anEntity
 ]
 
 { #category : #'as yet unclassified' }

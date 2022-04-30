@@ -57,12 +57,28 @@ FylgjaMigrationRuleSpace >> allPossibleProducingRules [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaMigrationRuleSpace >> copyAllButSubspaces [
+
+	| e |
+	e := self class basicNew.
+	e class allSlots
+		reject: [ :a | { #subspaces. #parent } includes: a name ]
+		thenDo: [ :slot | 
+			(slot read: self) isCollection ifTrue: [ 
+				slot write: (slot read: self) copy to: e ] ].
+	e class allSlots
+		select: [ :a | { #subspaces. #parent } includes: a name ]
+		thenDo: [ :slot | slot write: nil to: e ].
+	^ e
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaMigrationRuleSpace >> copySpace [
 
 	| kids copy |
-	copy := self shallowCopy.
-
+	copy := self copyAllButSubspaces.
 	kids := subspaces collect: [ :s | s copySpace ].
+	(copy class slotNamed: #subspaces) write: kids to: copy.
 	kids do: [ :k | k parent: copy ].
 	^ copy
 ]
@@ -147,7 +163,6 @@ FylgjaMigrationRuleSpace >> installProducingRule: aFylgjaProductionRule [
 
 { #category : #'as yet unclassified' }
 FylgjaMigrationRuleSpace >> lookupContextFor: aProvenanceEntityRelation toContext: aDestinationContextRelation model: aMOModel [
-
 	^ FylgjaLookUpContext new
 		  mrs:
 			  (self mrsAt: aDestinationContextRelation to anchor for: aMOModel)
@@ -194,6 +209,7 @@ FylgjaMigrationRuleSpace >> lookupRulesForDelegating: aProvenanceEntity toContex
 FylgjaMigrationRuleSpace >> lookupRulesForProducing: aProvenanceEntityRelation toContext: aDestinationContextRelation [
 
 	| thisLevelRules max |
+
 	thisLevelRules := producingRules select: [ :mr | 
 		                  mr
 			                  matches: aProvenanceEntityRelation
@@ -219,6 +235,7 @@ FylgjaMigrationRuleSpace >> lookupRulesForProducing: aProvenanceEntityRelation t
 			                  matches: aProvenanceEntityRelation
 			                  context: aDestinationContextRelation
 			                  forWriting: aType ].
+
 	thisLevelRules size > 1 ifTrue: [ 
 		max := thisLevelRules max: #priority.
 		thisLevelRules := thisLevelRules select: [ :a | a priority = max ] ].

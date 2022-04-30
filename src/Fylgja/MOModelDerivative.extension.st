@@ -2,7 +2,7 @@ Extension { #name : #MOModelDerivative }
 
 { #category : #'*Fylgja' }
 MOModelDerivative >> allStubs [
-	^ entities select: [ : a | a isFylgjaStub ]
+	^ self entities select: [ : a | a isFylgjaStub ]
 ]
 
 { #category : #'*Fylgja' }

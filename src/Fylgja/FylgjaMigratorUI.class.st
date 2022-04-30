@@ -59,6 +59,17 @@ FylgjaMigratorUI >> dropAllChanges [
 	^ anw ifTrue: [ self controller dropAllChangesWith: self ]
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaMigratorUI >> exportDraft [
+
+	| directory |
+	directory := UIManager default
+		             chooseDirectory: 'Choose an exporting directory'
+		             from: FileLocator workingDirectory.
+
+	^ self controller exportDraft: directory informTo: self
+]
+
 { #category : #initialization }
 FylgjaMigratorUI >> initializePresenters [
 
@@ -69,7 +80,7 @@ FylgjaMigratorUI >> initializePresenters [
 	toolbar
 		addItemLeft: (self newToolbarButton
 				 label: 'Create Checkpoint';
-				 icon: (self iconNamed: #edit);
+				 icon: (self iconNamed: #smallNew);
 				 action: [ self createCheckpoint ]);
 		addItemLeft: (self newToolbarButton
 				 label: 'Rollback ';
@@ -80,7 +91,19 @@ FylgjaMigratorUI >> initializePresenters [
 				 icon: (self iconNamed: #smallExport);
 				 action: [ self exportDraft ]);
 		addItemRight: (self newToolbarButton
+				 label: ' Update Project';
+				 icon: (self iconNamed: #edit);
+				 action: [ 
+					 self controller updateDestinationSourceProjectsInformTo: self ]);
+		addItemRight: (self newToolbarButton
+				 label: ' Undo Update Project';
+				 icon: (self iconNamed: #smallUndo);
+				 action: [ 
+					 self controller undoUpdateDestinationSourceProjectsInformTo:
+							 self ]);
+		addItemRight: (self newToolbarButton
 				 label: 'Save into Model ';
+				 icon: (self iconNamed: #smallSave);
 				 action: [ 
 					 self controller
 						 logWarning: 'Save into model is not yet implemented '
@@ -119,8 +142,7 @@ FylgjaMigratorUI >> initializePresenters [
 	firstDestinationBundle modelAccessor: [ :controller | 
 		controller destinations first ].
 	secondDestinationBundle modelAccessor: [ :controller | 
-		controller destinations second ].
-
+		controller destinations second ]
 ]
 
 { #category : #initialization }
@@ -206,6 +228,7 @@ FylgjaMigratorUI >> ruleHasBeenAppliedSuccessfully [
 	originBundle ruleHasBeenAppliedSuccessfully.
 	firstDestinationBundle ruleHasBeenAppliedSuccessfully.
 	secondDestinationBundle ruleHasBeenAppliedSuccessfully.
+
 	self updateVersionLabel
 ]
 

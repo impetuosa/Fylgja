@@ -18,6 +18,15 @@ FylgjaRuleInstaller >> all [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> any: aType migratingTo: anOtherType [
+
+	^ self condition: (FylgjaConditionModelTypeIsAndDestinationIs new
+			   type: MOAlceForm;
+			   destination: anOtherType;
+			   yourself)
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> anyAlceForm [
 
 	^ self condition: (FylgjaConditionModelTypeIs new
@@ -77,6 +86,13 @@ FylgjaRuleInstaller >> anyInvocationTo: aString [
 	^ self condition: (FylgjaConditionInvocationSelectorIs new
 			   selector: aString;
 			   yourself) increasePriority
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> anyKindOfClass [
+
+	^ self condition:
+		  (FylgjaConditionModelTypeIsKindOf new type: MOClass)
 ]
 
 { #category : #'as yet unclassified' }
@@ -217,6 +233,12 @@ FylgjaRuleInstaller >> copyAsMethod [
 FylgjaRuleInstaller >> copyAsPublicClass [
 
 	^ self operation: FylgjaTranslateCopyAsClass new
+]
+
+{ #category : #copying }
+FylgjaRuleInstaller >> copyAsPublicTypescriptClass [
+
+	^ self operation: FylgjaTranslateCopyAsTypescriptClass new
 ]
 
 { #category : #copying }
