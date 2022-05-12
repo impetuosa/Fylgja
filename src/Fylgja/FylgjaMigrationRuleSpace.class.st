@@ -7,12 +7,13 @@ Class {
 		'mappingRules',
 		'subspaces',
 		'producingRules',
-		'delegatingRules'
+		'delegatingRules',
+		'lookupStrategy'
 	],
 	#category : #'Fylgja-MRS'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #query }
 FylgjaMigrationRuleSpace >> allPossibleBindingRules [
 
 	| thisLevelRules |
@@ -27,7 +28,7 @@ FylgjaMigrationRuleSpace >> allPossibleBindingRules [
 		   ifNotNil: [ parent allPossibleBindingRules ])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #query }
 FylgjaMigrationRuleSpace >> allPossibleDelegatingRules [
 
 	| thisLevelRules |
@@ -41,7 +42,7 @@ FylgjaMigrationRuleSpace >> allPossibleDelegatingRules [
 		   ifNotNil: [ parent allPossibleDelegatingRules ])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #query }
 FylgjaMigrationRuleSpace >> allPossibleProducingRules [
 
 	| thisLevelRules |
@@ -56,7 +57,7 @@ FylgjaMigrationRuleSpace >> allPossibleProducingRules [
 		   ifNotNil: [ parent allPossibleProducingRules ])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #copy }
 FylgjaMigrationRuleSpace >> copyAllButSubspaces [
 
 	| e |
@@ -72,7 +73,7 @@ FylgjaMigrationRuleSpace >> copyAllButSubspaces [
 	^ e
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #copy }
 FylgjaMigrationRuleSpace >> copySpace [
 
 	| kids copy |
@@ -92,37 +93,13 @@ FylgjaMigrationRuleSpace >> ensureNamespace: anEntity [
 			  ifAbsent: [ space registerSpace: entry ] ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FylgjaMigrationRuleSpace >> ensureNamespace: anEntity model: aMOModel [
 
 	^ (self migrationRuleSpaceForModel: aMOModel) ensureNamespace: anEntity
 ]
 
-{ #category : #public }
-FylgjaMigrationRuleSpace >> get: anAlcixFunction [
-
-	^ self get: anAlcixFunction ifAbsent: [ 
-		  NotFound signal:
-			  'Cannotfind a suitable mapping entity for '
-			  , anAlcixFunction asString ]
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaMigrationRuleSpace >> get: anAlcixFunction ifAbsent: aFullBlockClosure [
-
-	^ subspaces at: anAlcixFunction ifAbsent: [ aFullBlockClosure value ]
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaMigrationRuleSpace >> getOrCreateMapspaceFor: aMOAnchor [
-
-	^ aMOAnchor names inject: self into: [ :space :entry | 
-		  space
-			  mapspaceForName: entry
-			  ifAbsent: [ space registerSpace: entry ] ]
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 FylgjaMigrationRuleSpace >> initialize [
 
 	super initialize.
@@ -132,7 +109,7 @@ FylgjaMigrationRuleSpace >> initialize [
 	delegatingRules := OrderedCollection new.
 ]
 
-{ #category : #initialization }
+{ #category : #operations }
 FylgjaMigrationRuleSpace >> install: aFylgjaBindingRule [
 
 	aFylgjaBindingRule isBindingRule ifTrue: [ 
@@ -143,34 +120,52 @@ FylgjaMigrationRuleSpace >> install: aFylgjaBindingRule [
 		self installDelegatingRule: aFylgjaBindingRule ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #operations }
 FylgjaMigrationRuleSpace >> installDelegatingRule: aFylgjaProductionRule [
 
 	delegatingRules add: aFylgjaProductionRule
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #operations }
 FylgjaMigrationRuleSpace >> installMappingRule: aFylgjaProductionRule [
 
 	mappingRules add: aFylgjaProductionRule
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #operations }
 FylgjaMigrationRuleSpace >> installProducingRule: aFylgjaProductionRule [
 
 	producingRules add: aFylgjaProductionRule
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #lookup }
+FylgjaMigrationRuleSpace >> lookupAllRulesForProducing: aProvenanceEntityRelation toContext: aDestinationContextRelation with: aWriter [
+
+	| thisLevelRules |
+	thisLevelRules := producingRules select: [ :mr | 
+		                  mr
+			                  matches: aProvenanceEntityRelation
+			                  context: aDestinationContextRelation
+			                  forWriting: MOType
+			                  with: aWriter ].
+	^ (thisLevelRules collect: [ :mr | self -> mr ])
+	  , (parent ifNil: [ {  } ] ifNotNil: [ 
+			   parent
+				   lookupAllRulesForProducing: aProvenanceEntityRelation
+				   toContext: aDestinationContextRelation
+				   with: aWriter ])
+]
+
+{ #category : #lookup }
 FylgjaMigrationRuleSpace >> lookupContextFor: aProvenanceEntityRelation toContext: aDestinationContextRelation model: aMOModel [
-	^ FylgjaLookUpContext new
+	^ self lookupStrategy
 		  mrs:
 			  (self mrsAt: aDestinationContextRelation to anchor for: aMOModel)
 		  destination: aDestinationContextRelation;
 		  yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #lookup }
 FylgjaMigrationRuleSpace >> lookupRulesForBinding: aDestinationEntity with: aCandidateRelation inTheContextOf: aDestinationContextRelation [
 
 	| thisLevelRules max |
@@ -192,49 +187,31 @@ FylgjaMigrationRuleSpace >> lookupRulesForBinding: aDestinationEntity with: aCan
 				   inTheContextOf: aDestinationContextRelation ])
 ]
 
-{ #category : #'as yet unclassified' }
-FylgjaMigrationRuleSpace >> lookupRulesForDelegating: aProvenanceEntity toContext: aDestinationContext [
+{ #category : #lookup }
+FylgjaMigrationRuleSpace >> lookupRulesForDelegating: aProvenanceEntity toContext: aDestinationContext with: aWriter [
 
 	^ (delegatingRules select: [ :mr | 
 		   mr
 			   matches: aProvenanceEntity
 			   context: aDestinationContext
-			   forWriting: MOType ]) , (parent ifNil: [ {  } ] ifNotNil: [ 
+			   forWriting: MOType
+			   with: aWriter ]) , (parent ifNil: [ {  } ] ifNotNil: [ 
 		   parent
 			   lookupRulesForDelegating: aProvenanceEntity
-			   toContext: aDestinationContext ])
+			   toContext: aDestinationContext
+			   with: aWriter ])
 ]
 
-{ #category : #'as yet unclassified' }
-FylgjaMigrationRuleSpace >> lookupRulesForProducing: aProvenanceEntityRelation toContext: aDestinationContextRelation [
-
-	| thisLevelRules max |
-
-	thisLevelRules := producingRules select: [ :mr | 
-		                  mr
-			                  matches: aProvenanceEntityRelation
-			                  context: aDestinationContextRelation
-			                  forWriting: MOType ].
-	thisLevelRules size > 1 ifTrue: [ 
-		max := thisLevelRules max: #priority.
-		thisLevelRules := thisLevelRules select: [ :a | a priority = max ] ].
-
-	^ (thisLevelRules collect: [ :mr | self -> mr ])
-	  , (parent ifNil: [ {  } ] ifNotNil: [ 
-			   parent
-				   lookupRulesForProducing: aProvenanceEntityRelation
-				   toContext: aDestinationContextRelation ])
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaMigrationRuleSpace >> lookupRulesForProducing: aProvenanceEntityRelation toContext: aDestinationContextRelation forWriting: aType [
+{ #category : #lookup }
+FylgjaMigrationRuleSpace >> lookupRulesForProducing: aProvenanceEntityRelation toContext: aDestinationContextRelation forWriting: aType with: aWriter [
 
 	| thisLevelRules max |
 	thisLevelRules := producingRules select: [ :mr | 
 		                  mr
 			                  matches: aProvenanceEntityRelation
 			                  context: aDestinationContextRelation
-			                  forWriting: aType ].
+			                  forWriting: aType
+			                  with: aWriter ].
 
 	thisLevelRules size > 1 ifTrue: [ 
 		max := thisLevelRules max: #priority.
@@ -245,16 +222,51 @@ FylgjaMigrationRuleSpace >> lookupRulesForProducing: aProvenanceEntityRelation t
 			   parent
 				   lookupRulesForProducing: aProvenanceEntityRelation
 				   toContext: aDestinationContextRelation
-				   forWriting: aType ])
+				   forWriting: aType
+				   with: aWriter ])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #lookup }
+FylgjaMigrationRuleSpace >> lookupRulesForProducing: aProvenanceEntityRelation toContext: aDestinationContextRelation with: aWriter [
+
+	| thisLevelRules max |
+	thisLevelRules := producingRules select: [ :mr | 
+		                  mr
+			                  matches: aProvenanceEntityRelation
+			                  context: aDestinationContextRelation
+			                  forWriting: MOType
+			                  with: aWriter ].
+	thisLevelRules size > 1 ifTrue: [ 
+		max := thisLevelRules max: #priority.
+		thisLevelRules := thisLevelRules select: [ :a | a priority = max ] ].
+
+	^ (thisLevelRules collect: [ :mr | self -> mr ])
+	  , (parent ifNil: [ {  } ] ifNotNil: [ 
+			   parent
+				   lookupRulesForProducing: aProvenanceEntityRelation
+				   toContext: aDestinationContextRelation
+				   with: aWriter ])
+]
+
+{ #category : #accessing }
+FylgjaMigrationRuleSpace >> lookupStrategy [
+
+	^ lookupStrategy ifNil: [ FylgjaLookUpContext new ]
+]
+
+{ #category : #accessing }
+FylgjaMigrationRuleSpace >> lookupStrategy: aStrategy [
+
+	lookupStrategy := aStrategy
+]
+
+{ #category : #accessing }
 FylgjaMigrationRuleSpace >> mapspaceForName: aString ifAbsent: aFullBlockClosure [
 
 	^ subspaces at: aString ifAbsent: [ aFullBlockClosure value ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FylgjaMigrationRuleSpace >> migrationRuleSpaceForAnchor: aMOAnchor [
 
 	^ aMOAnchor names
@@ -263,7 +275,7 @@ FylgjaMigrationRuleSpace >> migrationRuleSpaceForAnchor: aMOAnchor [
 		  space mapspaceForName: entry ifAbsent: [ ^ space ] ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FylgjaMigrationRuleSpace >> migrationRuleSpaceForModel: aMOModel [
 
 	^ self
@@ -272,7 +284,7 @@ FylgjaMigrationRuleSpace >> migrationRuleSpaceForModel: aMOModel [
 		  self error: 'The context model is not part of the mapping space' ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FylgjaMigrationRuleSpace >> mrsAt: anAnchor for: aMOModel [
 
 	^ (self migrationRuleSpaceForModel: aMOModel) 
@@ -312,7 +324,7 @@ FylgjaMigrationRuleSpace >> parents [
 	^ parents
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 FylgjaMigrationRuleSpace >> printOn: aStream [
 
 	parent
@@ -327,7 +339,7 @@ FylgjaMigrationRuleSpace >> printOn: aStream [
 				nextPutAll: name ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #operations }
 FylgjaMigrationRuleSpace >> pullUp: aCollection to: aFylgjaMigrationRuleSpace [
 
 	aCollection do: [ :r | 
@@ -335,12 +347,7 @@ FylgjaMigrationRuleSpace >> pullUp: aCollection to: aFylgjaMigrationRuleSpace [
 		aFylgjaMigrationRuleSpace install: r ]
 ]
 
-{ #category : #'as yet unclassified' }
-FylgjaMigrationRuleSpace >> pullUpTo: aFylgjaMigrationRuleSpace [ 
-	self shouldBeImplemented.
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #operations }
 FylgjaMigrationRuleSpace >> registerSpace: aName [
 
 	| entry |
@@ -352,13 +359,13 @@ FylgjaMigrationRuleSpace >> registerSpace: aName [
 	^ entry
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FylgjaMigrationRuleSpace >> subspaces [
 
 	^ subspaces values
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #operations }
 FylgjaMigrationRuleSpace >> uninstall: aFylgjaBindingRule [
 
 	aFylgjaBindingRule isBindingRule ifTrue: [ 

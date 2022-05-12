@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-FylgjaIsMethodNamedInMetaclass >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
+FylgjaIsMethodNamedInMetaclass >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType with: aWriter [
   ^ aProvenanceEntityRelation from class = MOMetaClass and: [ 
 	aProvenanceEntityRelation to class = MOStMethod and: 
 	[ names includes: aProvenanceEntityRelation to selector ] ]

@@ -362,6 +362,18 @@ FylgjaDerivativeModel >> processLinking [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> produce: aProvenanceEntity applying: aRule into: aContextDestinationEntity [
+
+	^ self manageApplicationCycleAndProduceResult: [ 
+		  fylgja
+			  produce: aProvenanceEntity
+			  applying: aRule
+			  croppingRelationsWith: [ :a | a ]
+			  into: aContextDestinationEntity
+			  using: self ]
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> produce: aProvenanceEntity croppingRelationsWith: aFullBlockClosure into: aDestinationContext [
 
 	^ fylgja

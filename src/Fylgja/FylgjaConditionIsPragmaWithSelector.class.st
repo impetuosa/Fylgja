@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #testing }
-FylgjaConditionIsPragmaWithSelector >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
+FylgjaConditionIsPragmaWithSelector >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType with: aWriter [
   ^(aProvenanceEntityRelation to isKindOf: MOStatementExpression) 
 		and: [ (aProvenanceEntityRelation to expression isKindOf: MOStPragma) 
 		and: [ aProvenanceEntityRelation to expression selector = selector ] ]

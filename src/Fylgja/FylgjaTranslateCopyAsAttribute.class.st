@@ -35,7 +35,7 @@ FylgjaTranslateCopyAsAttribute >> keepCopyingWith: aWriter [
 
 { #category : #printing }
 FylgjaTranslateCopyAsAttribute >> printOn: aStream [
- 	aStream nextPutAll: 'CopyAsAttribute'
+ 	aStream nextPutAll: 'Transform into Attribute'
 ]
 
 { #category : #visiting }

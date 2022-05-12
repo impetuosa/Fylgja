@@ -52,3 +52,8 @@ FylgjaFormToAngularModel >> applyTo: aRelatedProvenanceEntity croppingRelationsW
 				import importingTypeOrTypeReference: type ] ] ].
 	^ cls
 ]
+
+{ #category : #'as yet unclassified' }
+FylgjaFormToAngularModel >> printOn: aStream [
+ 	aStream nextPutAll: 'Produce Angular Component based on Form usage'
+]

@@ -13,7 +13,7 @@ FylgjaConditionReferenceCandidateIsAny >> candidates: anArray [
 ]
 
 { #category : #accessing }
-FylgjaConditionReferenceCandidateIsAny >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
+FylgjaConditionReferenceCandidateIsAny >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType with: aWriter [
 
 	^ candidates anySatisfy: [ :c | 
 		  aProvenanceEntityRelation isReference and: [ 

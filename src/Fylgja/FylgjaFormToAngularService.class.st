@@ -101,3 +101,8 @@ FylgjaFormToAngularService >> applyTo: aRelatedProvenanceEntity croppingRelation
 				import importingTypeOrTypeReference: type ] ] ].
 	^ cls
 ]
+
+{ #category : #adding }
+FylgjaFormToAngularService >> printOn: aStream [
+ 	aStream nextPutAll: 'Produce Angular Component based on Forms usage'
+]

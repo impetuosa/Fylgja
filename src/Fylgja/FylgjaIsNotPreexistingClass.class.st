@@ -5,6 +5,6 @@ Class {
 }
 
 { #category : #testing }
-FylgjaIsNotPreexistingClass >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
+FylgjaIsNotPreexistingClass >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType with: aWriter [
 	^ (aProvenanceEntityRelation to isKindOf:MOStClass ) and:[ aProvenanceEntityRelation to isPreexisting not ]
 ]

@@ -8,25 +8,25 @@ Class {
 	#category : #'Fylgja-MRS'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #query }
 FylgjaLookUpContext >> allPossibleBindingRules [
 
 	^ mrs allPossibleBindingRules
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #query }
 FylgjaLookUpContext >> allPossibleDelegatingRules [
 
 	^ mrs allPossibleDelegatingRules
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #query }
 FylgjaLookUpContext >> allPossibleProducingRules [
 
 	^ mrs allPossibleProducingRules
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #convenience }
 FylgjaLookUpContext >> ensureNotDuplicated: rules [
 
 	[ 
@@ -38,8 +38,17 @@ FylgjaLookUpContext >> ensureNotDuplicated: rules [
 				'Rule selection collision: More than one rule applies on the same map space for the given entity! ' ]
 ]
 
-{ #category : #'as yet unclassified' }
-FylgjaLookUpContext >> lookupRulesForBinding: aDestinationEntity with: aCandidateRelation [
+{ #category : #query }
+FylgjaLookUpContext >> lookupAllRulesForProducing: aMODeclarationStructuralRelation with: aWriter [
+
+	^ mrs
+		  lookupRulesForProducing: aMODeclarationStructuralRelation
+		  toContext: destinationContextRelation
+		  with: aWriter
+]
+
+{ #category : #'single response query' }
+FylgjaLookUpContext >> lookupRulesForBinding: aDestinationEntity with: aCandidateRelation using: aWriter [
 
 	^ self ensureNotDuplicated: (mrs
 			   lookupRulesForBinding: aDestinationEntity
@@ -47,33 +56,26 @@ FylgjaLookUpContext >> lookupRulesForBinding: aDestinationEntity with: aCandidat
 			   inTheContextOf: destinationContextRelation)
 ]
 
-{ #category : #'as yet unclassified' }
-FylgjaLookUpContext >> lookupRulesForDelegating: aProvenanceEntityRelation [
+{ #category : #'single response query' }
+FylgjaLookUpContext >> lookupRulesForDelegating: aProvenanceEntityRelation with: aWriter [
 
 	^ self ensureNotDuplicated: (mrs
 			   lookupRulesForDelegating: aProvenanceEntityRelation
-			   toContext: destinationContextRelation)
+			   toContext: destinationContextRelation
+			   with: aWriter)
 ]
 
-{ #category : #'as yet unclassified' }
-FylgjaLookUpContext >> lookupRulesForProducing: aProvenanceEntityRelation [
-
-	^ self ensureNotDuplicated:
-		  (mrs
-			   lookupRulesForProducing: aProvenanceEntityRelation
-			   toContext: destinationContextRelation)
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaLookUpContext >> lookupRulesForProducing: aProvenanceEntityRelation forWriting: aType [
+{ #category : #'single response query' }
+FylgjaLookUpContext >> lookupRulesForProducing: aProvenanceEntityRelation forWriting: aType with: aWriter [
 
 	^ self ensureNotDuplicated: (mrs
 			   lookupRulesForProducing: aProvenanceEntityRelation
 			   toContext: destinationContextRelation
-			   forWriting: aType)
+			   forWriting: aType
+			   with: aWriter)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FylgjaLookUpContext >> mrs: aMrs destination: aDestinationContextRelation [ 
 	mrs := aMrs .
 	destinationContextRelation := aDestinationContextRelation

@@ -63,3 +63,8 @@ FylgjaCopyReplaceErrorGoToToTryCatch >> applyTo: aProvenanceEntityRelation cropp
 							  intoDestinationWriter: catchBlock
 							  lookUp: aFylgjaLookUpContext ] ] ] ] ]
 ]
+
+{ #category : #'as yet unclassified' }
+FylgjaCopyReplaceErrorGoToToTryCatch >> printOn: aStream [
+ 	aStream nextPutAll: 'Replace On Error with Try catch'
+]

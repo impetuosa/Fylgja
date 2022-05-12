@@ -14,7 +14,7 @@ FylgjaConditionInvocationSelectorIs class >> priority [
 ]
 
 { #category : #testing }
-FylgjaConditionInvocationSelectorIs >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
+FylgjaConditionInvocationSelectorIs >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType with: aWriter [
 
 	^ aProvenanceEntityRelation to isInvocation and: [ aProvenanceEntityRelation to selector = selector ]
 ]

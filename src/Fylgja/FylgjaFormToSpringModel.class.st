@@ -9,13 +9,13 @@ FylgjaFormToSpringModel >> applyTo: aRelatedProvenanceEntity croppingRelationsWi
 
 	| object tableName cls dataBoundableAttributes model attributes |
 "	self assert: aRelatedProvenanceEntity to methods isEmpty."
-
+	self halt.
 	model := (aFylgjaDerivativeModel selectDerivativeModelFor:
 		          aRelatedProvenanceEntity to) model.
 	object := self
 		          defaultInstanceFor: aRelatedProvenanceEntity to
 		          withIn: model.
-
+	
 	tableName := self databaseSourceName: object.
 
 
@@ -54,4 +54,9 @@ FylgjaFormToSpringModel >> applyTo: aRelatedProvenanceEntity croppingRelationsWi
 			unit writeImport: [ :import | 
 				import importingTypeOrTypeReference: type ] ] ].
 	^ cls
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaFormToSpringModel >> printOn: aStream [
+ 	aStream nextPutAll: 'Produce Model based on Access Form usage '
 ]

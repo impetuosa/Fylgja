@@ -48,6 +48,11 @@ FylgjaFormToAngularComponent >> cssNameFor: aMOAlceForm [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaFormToAngularComponent >> printOn: aStream [
+ 	aStream nextPutAll: 'Produce Angular Component based on Casino for Forms'
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaFormToAngularComponent >> templateNameFor: aMOAlceForm [
 
 	^ self cssNameFor: aMOAlceForm

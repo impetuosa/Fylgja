@@ -24,24 +24,23 @@ FylgjaTranslateCopyAsMethod >> applyTo: aProvenanceEntityRelation croppingRelati
 			          cropping: aBlock;
 			          applyOn: methodWriter ].
 
-	aDestinationWriter updateBlock: method block with: [ :block | 
-		| variable |
-		variable := FylgjaAddLocalVariable new
-			            name: method selector;
-			            typeReference: method returnTypeReference;
-			            applyOn: block.
-		method block statements last isReturn ifFalse: [ 
-			FylgjaAddReturn new
-				expression: (self variableReferenceTo: variable using: block);
-				applyOn: block ] ].
-
+	method block isEmptyOrNil ifFalse: [ 
+		aDestinationWriter updateBlock: method block with: [ :block | 
+			| variable |
+			variable := FylgjaAddLocalVariable new
+				            name: method selector;
+				            typeReference: method returnTypeReference;
+				            applyOn: block.
+			method block statements last isReturn ifFalse: [ 
+				FylgjaAddReturn new
+					expression: (self variableReferenceTo: variable using: block);
+					applyOn: block ] ] ].
 	^ method
 ]
 
-{ #category : #printing }
+{ #category : #visiting }
 FylgjaTranslateCopyAsMethod >> printOn: aStream [
-
- 	aStream nextPutAll: 'CopyAsMethod'
+ 	aStream nextPutAll: 'Transform into Method'
 ]
 
 { #category : #visiting }

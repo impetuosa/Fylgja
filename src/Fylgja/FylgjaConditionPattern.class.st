@@ -76,7 +76,7 @@ FylgjaConditionPattern >> matchValue: anUndefinedObject with: anUndefinedObject2
 ]
 
 { #category : #testing }
-FylgjaConditionPattern >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
+FylgjaConditionPattern >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType with: aWriter [
 self halt .
 	^ self matchPattern: node with: aProvenanceEntityRelation to
 ]

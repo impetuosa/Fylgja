@@ -61,7 +61,7 @@ MOElementToUIString >> signatureProcedure: aMethod [
 { #category : #'instance creation' }
 MOElementToUIString >> toString: anAssociation [
 
-	| toVisit |
+	| toVisit | 
 	toVisit := anAssociation isAssociation
 		           ifTrue: [ anAssociation value ]
 		           ifFalse: [ anAssociation ].
@@ -86,6 +86,12 @@ MOElementToUIString >> visitAttribute: anAttribute [
 ]
 
 { #category : #visiting }
+MOElementToUIString >> visitAttributeAccess: anAttributeAccess [
+
+	^ anAttributeAccess printString
+]
+
+{ #category : #visiting }
 MOElementToUIString >> visitClassFunction: aMethod [
 
 	^ self signatureFunction: aMethod
@@ -95,6 +101,20 @@ MOElementToUIString >> visitClassFunction: aMethod [
 MOElementToUIString >> visitClassProcedure: aMethod [
 
 	^ self signatureProcedure: aMethod
+]
+
+{ #category : #visiting }
+MOElementToUIString >> visitForeignRelation: aMatch [
+	self haltOnce. 
+	^ '(PK)' , aMatch tableFrom printString , '=> (FK)'
+	  , aMatch tableTo printString
+]
+
+{ #category : #visiting }
+MOElementToUIString >> visitForeignRelationMatch: aMatch [
+
+	^ aMatch primaryKey printString , ' => '
+	  , aMatch foreignKey printString
 ]
 
 { #category : #visiting }

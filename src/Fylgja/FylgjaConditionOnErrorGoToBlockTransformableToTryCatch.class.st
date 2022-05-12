@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #testing }
-FylgjaConditionOnErrorGoToBlockTransformableToTryCatch >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
+FylgjaConditionOnErrorGoToBlockTransformableToTryCatch >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType with: aWriter [
 
 	| stmt onErrorGoTo |
 	

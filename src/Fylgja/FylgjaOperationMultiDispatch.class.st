@@ -27,3 +27,13 @@ FylgjaOperationMultiDispatch >> destinations: aCollection [
 
 	destinations := aCollection
 ]
+
+{ #category : #accessing }
+FylgjaOperationMultiDispatch >> printOn: aStream [
+
+	aStream nextPutAll: 'Re-Dispatch to targets: '.
+	destinations do: [ :d | 
+		aStream
+			print: d;
+			nextPutAll: ', ' ]
+]

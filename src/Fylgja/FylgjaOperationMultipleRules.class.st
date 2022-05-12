@@ -23,3 +23,13 @@ FylgjaOperationMultipleRules >> applyTo: aMODeclarationStructuralRelation croppi
 FylgjaOperationMultipleRules >> operations: aCollection [ 
 	operations := aCollection
 ]
+
+{ #category : #accessing }
+FylgjaOperationMultipleRules >> printOn: aStream [
+
+	aStream nextPutAll: 'Apply Ops : '.
+	operations do: [ :d | 
+		aStream
+			print: d;
+			nextPutAll: ', ' ]
+]

@@ -31,6 +31,11 @@ FylgjaTranslateCopyAsClass >> applyTo: aProvenanceEntityRelation croppingRelatio
 	^ resp
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaTranslateCopyAsClass >> printOn: aStream [
+ 	aStream nextPutAll: 'Transform into Class'
+]
+
 { #category : #visiting }
 FylgjaTranslateCopyAsClass >> visitPackageWriter: aMOPackageWriter [
 

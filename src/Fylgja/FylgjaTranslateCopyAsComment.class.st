@@ -16,3 +16,8 @@ FylgjaTranslateCopyAsComment >> applyTo: aRelatedProvenanceEntity croppingRelati
 					using: aFylgja 
 		]
 ]
+
+{ #category : #'as yet unclassified' }
+FylgjaTranslateCopyAsComment >> printOn: aStream [
+ 	aStream nextPutAll: 'Transform into Comment'
+]

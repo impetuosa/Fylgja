@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #testing }
-FylgjaConditionAnyMethodNamed >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
+FylgjaConditionAnyMethodNamed >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType with: aWriter [
   ^(aProvenanceEntityRelation to isKindOf: MOMethod) and: [ names includes: aProvenanceEntityRelation to selector ]
 ]
 

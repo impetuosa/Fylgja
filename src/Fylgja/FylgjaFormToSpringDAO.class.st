@@ -37,7 +37,15 @@ FylgjaFormToSpringDAO >> addSaveModelMethod: class for: aFormOrReport using: aSe
 { #category : #'as yet unclassified' }
 FylgjaFormToSpringDAO >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
-	| sessionFactory cls |
+	| sessionFactory cls model object |
+	
+		model := (aFylgjaDerivativeModel selectDerivativeModelFor:
+		          aRelatedProvenanceEntity to) model.
+	object := self
+		          defaultInstanceFor: aRelatedProvenanceEntity to
+		          withIn: model.
+
+	self halt .	
 	self assert:
 		(self
 			 hasId: aRelatedProvenanceEntity to
@@ -73,6 +81,11 @@ FylgjaFormToSpringDAO >> applyTo: aRelatedProvenanceEntity croppingRelationsWith
 				import importingTypeOrTypeReference: type ] ] ].
 
 	^ cls
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaFormToSpringDAO >> printOn: aStream [
+ 	aStream nextPutAll: 'Produce Spring DAO based on Access Form Usage'
 ]
 
 { #category : #'as yet unclassified' }

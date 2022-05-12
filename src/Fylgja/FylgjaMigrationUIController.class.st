@@ -236,6 +236,47 @@ FylgjaMigrationUIController >> logWarning: result operation: anOperationName [
 		subscriber first ifNotNil: [ :f | f log: entry ] ]
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaMigrationUIController >> lookupAllRulesForProducing: aProvenanceEntity toContext: aDestinationContext [
+
+	| elementRelation destinationContextRelation destinationModel writer |
+	elementRelation := self fylgja readEntitysContextualizingRelation:
+		                   aProvenanceEntity.
+	destinationContextRelation := self fylgja 
+		                              readEntitysContextualizingRelation:
+		                              aDestinationContext.
+	destinationModel := self fylgja selectDerivativeModelFor:
+		                    aDestinationContext.
+
+	writer := destinationModel writer
+		          updaterFor: destinationContextRelation
+		          with: elementRelation.
+
+	^ (self fylgja
+		   lookupContextFor: elementRelation
+		   toContext: destinationContextRelation
+		   model: destinationModel)
+		  lookupAllRulesForProducing: elementRelation
+		  with: writer
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationUIController >> lookupContextFor: aProvenanceEntity toContext: aDestinationContext [
+
+	| elementRelation destinationContextRelation destinationModel |
+	elementRelation := self fylgja readEntitysContextualizingRelation:
+		                   aProvenanceEntity.
+	destinationContextRelation := self fylgja 
+		                              readEntitysContextualizingRelation:
+		                              aDestinationContext.
+	destinationModel := self fylgja selectDerivativeModelFor:
+		                    aDestinationContext.
+	^ self fylgja
+		  lookupContextFor: elementRelation
+		  toContext: destinationContextRelation
+		  model: destinationModel
+]
+
 { #category : #accessing }
 FylgjaMigrationUIController >> map: anEntity to: other context: context informing: aWidget [
 
@@ -278,7 +319,7 @@ FylgjaMigrationUIController >> origin: aMOModelDerivative [
 ]
 
 { #category : #accessing }
-FylgjaMigrationUIController >> produce: aProvenance into: aDestination informing: aWidget [
+FylgjaMigrationUIController >> produce: aProvenance applying: aRule into: aDestination informing: aWidget [
 
 	| result |
 	^ self
@@ -289,7 +330,11 @@ FylgjaMigrationUIController >> produce: aProvenance into: aDestination informing
 			  self
 				  assert: aDestination isNotNil
 				  description: ' Cannot resolve destination .'.
-			  result := self fylgja produce: aProvenance into: aDestination.
+				self
+				  assert: aRule isNotNil
+				  description: ' Not rule has been chosen.'.
+				
+			  result := self fylgja produce: aProvenance  applying: aRule into: aDestination.
 			  self logSuccess: result operation: #Produce.
 			  aWidget ruleHasBeenAppliedSuccessfully.
 			  result ]

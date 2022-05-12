@@ -26,3 +26,9 @@ FylgjaProduction >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBl
 
 	self subclassResponsibility
 ]
+
+{ #category : #'as yet unclassified' }
+FylgjaProduction >> canBeAppliedTo: aProvenanceEntityRelation context: aDestinationContextRelation forProducing: aType with: aWriter [
+
+	self subclassResponsibility
+]

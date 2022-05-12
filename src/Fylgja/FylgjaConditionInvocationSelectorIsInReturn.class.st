@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #testing }
-FylgjaConditionInvocationSelectorIsInReturn >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
+FylgjaConditionInvocationSelectorIsInReturn >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType with: aWriter [
   ^ (aProvenanceEntityRelation to isKindOf: MOReturn) 
 		and: [ aProvenanceEntityRelation to expression isInvocation 
 		and: [ aProvenanceEntityRelation to expression selector = selector ] 

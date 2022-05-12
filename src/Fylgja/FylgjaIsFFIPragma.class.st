@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #testing }
-FylgjaIsFFIPragma >> matches: aProvenanceEntity context: aDestinationContext forWriting: aType [
+FylgjaIsFFIPragma >> matches: aProvenanceEntity context: aDestinationContext forWriting: aType with: aWriter [
   ^(aProvenanceEntity isKindOf: MOStPragma) and: [ aProvenanceEntity selector literal = #C: ]
 ]
 

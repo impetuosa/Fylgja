@@ -85,6 +85,11 @@ FylgjaFormToSpringService >> applyTo: aRelatedProvenanceEntity croppingRelations
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaFormToSpringService >> printOn: aStream [
+ 	aStream nextPutAll: 'Produce Spring Service based on Access Form Usage'
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaFormToSpringService >> updateModelMethodService: class for: aMOAlceForm using: aMOAttribute [
 
 	^ FylgjaAddDelegateAndTransmitParametersMethod new

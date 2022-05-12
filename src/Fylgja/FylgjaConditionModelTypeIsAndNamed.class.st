@@ -8,8 +8,14 @@ Class {
 }
 
 { #category : #testing }
-FylgjaConditionModelTypeIsAndNamed >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
-  ^(super matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType) and: [ names includes: aProvenanceEntityRelation to name ]
+FylgjaConditionModelTypeIsAndNamed >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType with: aWriter [
+
+	^ (super
+		   matches: aProvenanceEntityRelation
+		   context: aDestinationContextRelation
+		   forWriting: aType
+		   with: aWriter) and: [ 
+		  names includes: aProvenanceEntityRelation to name ]
 ]
 
 { #category : #testing }

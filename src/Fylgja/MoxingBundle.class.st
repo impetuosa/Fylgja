@@ -5,7 +5,8 @@ Class {
 		'code',
 		'projectTree',
 		'shouldInformSelection',
-		'modelAccessor'
+		'modelAccessor',
+		'popover'
 	],
 	#category : #'Fylgja-UI-Widgets'
 }
@@ -67,6 +68,40 @@ MoxingBundle >> model [
 MoxingBundle >> modelAccessor: anAccessor [
 	modelAccessor := anAccessor.
 	projectTree model: self model
+]
+
+{ #category : #initialization }
+MoxingBundle >> newRuleChosing [
+
+	^ self instantiate: FylgjaChooseRule
+]
+
+{ #category : #enumerating }
+MoxingBundle >> promptUser: aTitle forChosingRule: aCollection thenDo: aBlock [
+
+	popover ifNotNil: [ popover dismiss ].
+	(popover := self newPopover)
+		relativeTo: projectTree;
+		position: SpPopoverPosition left;
+		presenter: (SpPresenter new
+				 layout: (SpBoxLayout newLeftToRight
+						  add: (SpBoxLayout newTopToBottom
+								   borderWidth: 10;
+								   spacing: 5;
+								   add: (self newRuleChosing
+										    rules: aCollection;
+										    title: aTitle;
+										    acceptRuleWith: [ :r | 
+											    popover dismiss.
+											    aBlock value: r value: self model ];
+										    cancelWith: [ popover dismiss ];
+										    yourself)
+								   height: 400;
+								   yourself)
+						  width: 800;
+						  yourself);
+				 yourself);
+		popup
 ]
 
 { #category : #initialization }

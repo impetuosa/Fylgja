@@ -90,6 +90,10 @@ FylgjaMigratorUI >> initializePresenters [
 				 label: 'Export Draft ';
 				 icon: (self iconNamed: #smallExport);
 				 action: [ self exportDraft ]);
+		addItemLeft: (self newToolbarButton
+				 label: 'Inspect Controller  ';
+				 icon: (self iconNamed: #smallInspect);
+				 action: [ self controller inspect ]);
 		addItemRight: (self newToolbarButton
 				 label: ' Update Project';
 				 icon: (self iconNamed: #edit);
@@ -206,11 +210,22 @@ FylgjaMigratorUI >> newMoxingBundle [
 { #category : #initialization }
 FylgjaMigratorUI >> produceUsing: aTransfer for: aWidget [
 
-	| produced |
-	produced := self controller
-		            produce: aTransfer passenger first
-		            into: aTransfer target
-		            informing: aWidget
+	| rules title |
+	rules := self controller
+		         lookupAllRulesForProducing: aTransfer passenger first
+		         toContext: aTransfer target.
+
+	title := aTransfer passenger first printString , ' Into: '
+	         , aTransfer target printString.
+	aWidget
+		promptUser: title
+		forChosingRule: rules
+		thenDo: [ :rule :model | 
+			self controller
+				produce: aTransfer passenger first
+				applying: rule
+				into: (model entityFor: aTransfer target)
+				informing: aWidget ]
 ]
 
 { #category : #initialization }

@@ -67,6 +67,12 @@ FylgjaDerivationResult >> produce: aProvenanceEntity [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaDerivationResult >> produce: aProvenanceEntity applying: aRule into: aDestinationContext [
+
+	^ derivative produce: aProvenanceEntity applying: aRule into: aDestinationContext
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaDerivationResult >> produce: aProvenanceEntity into: aDestinationContext [
 
 	^ derivative produce: aProvenanceEntity into: aDestinationContext

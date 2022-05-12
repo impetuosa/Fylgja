@@ -29,6 +29,11 @@ FylgjaTranslateCopyAsTypescriptClass >> applyTo: aProvenanceEntityRelation cropp
 ]
 
 { #category : #visiting }
+FylgjaTranslateCopyAsTypescriptClass >> printOn: aStream [
+ 	aStream nextPutAll: 'Transform into TS Class'
+]
+
+{ #category : #visiting }
 FylgjaTranslateCopyAsTypescriptClass >> visitAngularModuleWriter: aMOAngularModuleWriter [
 
 	^ aMOAngularModuleWriter writeDeclarationUnit: [ :unit | 

@@ -20,7 +20,7 @@ FylgjaConditionModelTypeIsAndContextIs >> contextTypes: aCollection [
 ]
 
 { #category : #testing }
-FylgjaConditionModelTypeIsAndContextIs >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
+FylgjaConditionModelTypeIsAndContextIs >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType with: aWriter [
 
 	aType ifNil: [ ^ false ].
 	^ (contextTypes anySatisfy: [ :t | 
@@ -28,5 +28,6 @@ FylgjaConditionModelTypeIsAndContextIs >> matches: aProvenanceEntityRelation con
 		  super
 			  matches: aProvenanceEntityRelation
 			  context: aDestinationContextRelation
-			  forWriting: aType ]
+			  forWriting: aType
+			  with: aWriter ]
 ]

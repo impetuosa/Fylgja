@@ -11,12 +11,17 @@ FylgjaProductionRule >> isProductionRule [
 ]
 
 { #category : #testing }
-FylgjaProductionRule >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType [
+FylgjaProductionRule >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType with: aWriter [
 
-	^ condition
-		  matches: aProvenanceEntityRelation
-		  context: aDestinationContextRelation
-		  forWriting: aType
+	^ (operation
+		   canBeAppliedTo: aProvenanceEntityRelation
+		   context: aDestinationContextRelation
+		   forProducing: aType
+		   with: aWriter) and: (condition
+			   matches: aProvenanceEntityRelation
+			   context: aDestinationContextRelation
+			   forWriting: aType
+			   with: aWriter)
 ]
 
 { #category : #'as yet unclassified' }

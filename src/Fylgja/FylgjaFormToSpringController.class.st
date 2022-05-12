@@ -99,3 +99,8 @@ FylgjaFormToSpringController >> originURL [
 FylgjaFormToSpringController >> originURL: aString [ 
 	originURL := aString
 ]
+
+{ #category : #'as yet unclassified' }
+FylgjaFormToSpringController >> printOn: aStream [
+ 	aStream nextPutAll: 'Produce Spring Controller based on Access Form Usage'
+]

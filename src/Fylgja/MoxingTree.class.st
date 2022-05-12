@@ -47,9 +47,12 @@ MoxingTree >> childrenFor: anEntry [
 	^ entity isModelOrDerivative
 		  ifTrue: [ { (self entityFor: entity root) } ]
 		  ifFalse: [ 
-			  entity allContainments
+			  [ 
+			  entity childrenForTree
 				  reject: [ :a | a species = MOEmptyBlock ]
 				  thenCollect: [ :m | self entityFor: m ] ]
+				  on: Error
+				  do: [ :e | e haltOnce ] ]
 ]
 
 { #category : #initialization }
