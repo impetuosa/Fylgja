@@ -14,6 +14,39 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+FylgjaMigrationUIController class >> egrcController [
+
+	| fylgja northwind java angular |
+	fylgja := FylgjaMigrationEngine new.
+	northwind := MOJinDAMImporter egrc.
+	angular := MOAngularLoader egrc.
+	java := MOJavaMavenProjectLoader egrc.
+
+
+	fylgja
+		addModel: northwind;
+		addModel: angular;
+		addModel: java.
+	self ruleInstallers do: [ :a | 
+		a
+			fylgja: fylgja;
+			northwind: northwind;
+			java: java;
+			angular: angular;
+			installRules ].
+	fylgja := fylgja derivative
+		          installAllDerivativeModels;
+		          yourself.
+	^ self new
+		  fylgja: fylgja;
+		  origin: northwind;
+		  destinations: { 
+				  java.
+				  angular };
+		  yourself
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaMigrationUIController class >> northwindController [
 
 	| fylgja northwind java angular |
