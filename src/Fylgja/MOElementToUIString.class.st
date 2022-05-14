@@ -64,7 +64,7 @@ MOElementToUIString >> toString: anAssociation [
 	| toVisit | 
 	toVisit := anAssociation isAssociation
 		           ifTrue: [ anAssociation value ]
-		           ifFalse: [ anAssociation ].
+		           ifFalse: [ anAssociation ]. 
 	[ ^ toVisit acceptVisitor: self ] 
 		on: Error
 		do: [ self haltOnce ]

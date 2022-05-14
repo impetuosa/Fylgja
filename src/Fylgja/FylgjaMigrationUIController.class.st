@@ -22,11 +22,12 @@ FylgjaMigrationUIController class >> egrcController [
 	angular := MOAngularLoader egrc.
 	java := MOJavaMavenProjectLoader egrc.
 
-
 	fylgja
 		addModel: northwind;
 		addModel: angular;
 		addModel: java.
+		
+		
 	self ruleInstallers do: [ :a | 
 		a
 			fylgja: fylgja;
