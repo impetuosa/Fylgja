@@ -7,6 +7,12 @@ Class {
 	#category : #'Fylgja-Rule-Operations'
 }
 
+{ #category : #'instance creation' }
+FylgjaAddAccessor class >> possibleWritingMessages [
+
+	^ { #writeMethod: }
+]
+
 { #category : #accessing }
 FylgjaAddAccessor >> attribute: aMOAttribute [ 
 	attribute := aMOAttribute

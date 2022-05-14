@@ -9,6 +9,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+FylgjaCopyReplaceUnaryOperator class >> possibleWritingMessages [
+
+	^ { #yourself }
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaCopyReplaceUnaryOperator >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	^ (self
@@ -20,6 +26,13 @@ FylgjaCopyReplaceUnaryOperator >> applyTo: aRelatedProvenanceEntity croppingRela
 		  operator: operator;
 		  order: order;
 		  yourself
+]
+
+{ #category : #testing }
+FylgjaCopyReplaceUnaryOperator >> canBeAppliedTo: aProvenanceEntityRelation context: aDestinationContextRelation forProducing: aType with: aWriter [
+
+	^ aProvenanceEntityRelation to isUnaryOperation and: [ 
+		  self canWriteOver: aWriter ]
 ]
 
 { #category : #'as yet unclassified' }

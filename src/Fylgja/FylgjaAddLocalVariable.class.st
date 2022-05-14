@@ -5,7 +5,13 @@ Class {
 }
 
 { #category : #'instance creation' }
-FylgjaAddLocalVariable >> applyOn: aWriter [
+FylgjaAddLocalVariable class >> possibleWritingMessages [
+
+	^ { #writeVariable: }
+]
+
+{ #category : #'instance creation' }
+FylgjaAddLocalVariable >> privateApplyOn: aWriter [
 
 	^ aWriter writeVariable: [ :attr | 
 		  attr

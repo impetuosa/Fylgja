@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-FylgjaAddSetter >> applyOn: aWriter [
+FylgjaAddSetter >> privateApplyOn: aWriter [
 
 	^ aWriter writeMethod: [ :setter | 
 		  | parameter |
@@ -22,5 +22,5 @@ FylgjaAddSetter >> applyOn: aWriter [
 			  FylgjaAddAssignment new
 				  read: (self referenceToVarLike: parameter using: block);
 				  write: (self attributeReference: block);
-				  applyOn: block ] ]
+				  privateApplyOn: block ] ]
 ]

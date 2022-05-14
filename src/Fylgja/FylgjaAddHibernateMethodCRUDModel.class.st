@@ -5,7 +5,13 @@ Class {
 }
 
 { #category : #'instance creation' }
-FylgjaAddHibernateMethodCRUDModel >> applyOn: class [
+FylgjaAddHibernateMethodCRUDModel >> crudSelector [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'instance creation' }
+FylgjaAddHibernateMethodCRUDModel >> privateApplyOn: class [
 
 	^ class writeMethod: [ :method | 
 		  | parameter |
@@ -25,7 +31,7 @@ FylgjaAddHibernateMethodCRUDModel >> applyOn: class [
 				            name: #status;
 				            typeReference: (self booleanTypeReference: class);
 				            initializer: (block booleanLiteral: false);
-				            applyOn: block.
+				            privateApplyOn: block.
 
 			  block writeTryCatch: [ :tryCatch | 
 				  tryCatch writeTry: [ :tryBlock | 
@@ -38,15 +44,9 @@ FylgjaAddHibernateMethodCRUDModel >> applyOn: class [
 					  FylgjaAddAssignment new
 						  read: (block booleanLiteral: true);
 						  write: (self variableReferenceTo: status using: tryBlock);
-						  applyOn: tryBlock ].
-				  FylgjaAddCatchExceptionPrintStacktrace new applyOn: tryCatch ].
+						  privateApplyOn: tryBlock ].
+				  FylgjaAddCatchExceptionPrintStacktrace new privateApplyOn: tryCatch ].
 			  FylgjaAddReturn new
 				  expression: (self variableReferenceTo: status using: block);
-				  applyOn: block ] ]
-]
-
-{ #category : #'instance creation' }
-FylgjaAddHibernateMethodCRUDModel >> crudSelector [
-
-	^ self subclassResponsibility
+				  privateApplyOn: block ] ]
 ]

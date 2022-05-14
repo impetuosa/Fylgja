@@ -9,6 +9,12 @@ Class {
 	#category : #'Fylgja-Rule-Operations'
 }
 
+{ #category : #'instance creation' }
+FylgjaAddMethod class >> possibleWritingMessages [
+
+	^ { #writeMethod: }
+]
+
 { #category : #accessing }
 FylgjaAddMethod >> parameters [
 

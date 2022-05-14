@@ -16,6 +16,12 @@ FylgjaTranslateCopy >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: 
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaTranslateCopy >> canBeAppliedTo: aProvenanceEntityRelation context: aDestinationContextRelation forProducing: aType with: aWriter [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaTranslateCopy >> isWrittenInContext: aProvenanceEntity context: aDestinationContext [
 	^ (aProvenanceEntity isTypeReference ) not
 ]

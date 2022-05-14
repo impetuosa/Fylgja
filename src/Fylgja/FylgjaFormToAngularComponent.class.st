@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+FylgjaFormToAngularComponent class >> possibleWritingMessages [
+
+	^ { #writeAngularComponent: }
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaFormToAngularComponent >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	| formObject importer pivot entity |

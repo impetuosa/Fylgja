@@ -14,11 +14,18 @@ FylgjaAddAnnotatedDelegateMethod >> addAnnotationProduction: aFylgjaAnnotate [
 ]
 
 { #category : #initialization }
-FylgjaAddAnnotatedDelegateMethod >> applyOn: aMOClassWriter [
+FylgjaAddAnnotatedDelegateMethod >> initialize [
+
+	super initialize.
+	annotationProductions := OrderedCollection new
+]
+
+{ #category : #initialization }
+FylgjaAddAnnotatedDelegateMethod >> privateApplyOn: aMOClassWriter [
 
 	| rp |
 	^ aMOClassWriter writeMethod: [ :method | 
-		  annotationProductions do: [ :a | a applyOn: method ].
+		  annotationProductions do: [ :a | a privateApplyOn: method ].
 		  method selector: selector.
 		  method returnTypeReference: returnTypeReference.
 		  rp := self parameters collect: [ :kv | 
@@ -35,11 +42,4 @@ FylgjaAddAnnotatedDelegateMethod >> applyOn: aMOClassWriter [
 						  receiver: [ :e | attributeReference ]
 						  arguments: [ :e | 
 						  rp collect: [ :pa | self variableReferenceTo: pa using: e ] ] ] ] ] ]
-]
-
-{ #category : #initialization }
-FylgjaAddAnnotatedDelegateMethod >> initialize [
-
-	super initialize.
-	annotationProductions := OrderedCollection new
 ]

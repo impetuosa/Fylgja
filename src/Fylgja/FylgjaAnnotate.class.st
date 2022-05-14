@@ -10,6 +10,12 @@ Class {
 	#category : #'Fylgja-Rule-Operations'
 }
 
+{ #category : #'instance creation' }
+FylgjaAnnotate class >> possibleWritingMessages [
+
+	^ { #writeAnnotation: }
+]
+
 { #category : #adding }
 FylgjaAnnotate >> addArgument: anArgument [
 
@@ -27,22 +33,6 @@ FylgjaAnnotate >> addNamedArgument: anAssociation [
 { #category : #accessing }
 FylgjaAnnotate >> annotationName: aString [ 
 	annotationName := aString
-]
-
-{ #category : #'instance creation' }
-FylgjaAnnotate >> applyOn: aWriter [
-
-	| candidate |
-	candidate := self findCandidate: aWriter.
-
-	aWriter writeAnnotation: [ :annotation | 
-		annotation annotationTypeReference:
-			((annotation typeReferenceNamed: candidate name)
-				 candidate: candidate;
-				 yourself).
-
-		self hasArguments ifTrue: [ 
-			annotation arguments: (self calculateArguments: annotation) ] ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -86,4 +76,20 @@ FylgjaAnnotate >> literal: aValue with: aMOExpressionWriter [
 { #category : #accessing }
 FylgjaAnnotate >> packageName: aString [ 
 	packageName := aString
+]
+
+{ #category : #'instance creation' }
+FylgjaAnnotate >> privateApplyOn: aWriter [
+
+	| candidate |
+	candidate := self findCandidate: aWriter.
+
+	aWriter writeAnnotation: [ :annotation | 
+		annotation annotationTypeReference:
+			((annotation typeReferenceNamed: candidate name)
+				 candidate: candidate;
+				 yourself).
+
+		self hasArguments ifTrue: [ 
+			annotation arguments: (self calculateArguments: annotation) ] ]
 ]

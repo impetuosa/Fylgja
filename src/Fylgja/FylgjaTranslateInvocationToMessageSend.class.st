@@ -52,6 +52,13 @@ FylgjaTranslateInvocationToMessageSend >> applyTo: aProvenanceEntityRelation cro
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaTranslateInvocationToMessageSend >> canBeAppliedTo: aProvenanceEntityRelation context: aDestinationContextRelation forProducing: aType with: aWriter [
+
+	^ aProvenanceEntityRelation to isInvocation and: [ 
+		  aProvenanceEntityRelation to isFunctionInvocation ]
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaTranslateInvocationToMessageSend >> initialize [
 
 	super initialize.

@@ -8,6 +8,12 @@ Class {
 	#category : #'Fylgja-Rule-Operations'
 }
 
+{ #category : #'instance creation' }
+FylgjaAddHibernateMethod class >> possibleWritingMessages [
+
+	^ { #writeMethod: }
+]
+
 { #category : #accessing }
 FylgjaAddHibernateMethod >> modelTypeReference: aMOTypeReference [ 
 	modelTypeReference := aMOTypeReference

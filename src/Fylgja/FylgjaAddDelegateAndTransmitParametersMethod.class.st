@@ -8,8 +8,13 @@ Class {
 	#category : #'Fylgja-Rule-Operations'
 }
 
+{ #category : #accessing }
+FylgjaAddDelegateAndTransmitParametersMethod >> attributeReference: aMOVariableReference [ 
+	attributeReference := aMOVariableReference
+]
+
 { #category : #'instance creation' }
-FylgjaAddDelegateAndTransmitParametersMethod >> applyOn: aMOClassWriter [
+FylgjaAddDelegateAndTransmitParametersMethod >> privateApplyOn: aMOClassWriter [
 
 	| rp |
 	^ aMOClassWriter writeMethod: [ :method | 
@@ -29,11 +34,6 @@ FylgjaAddDelegateAndTransmitParametersMethod >> applyOn: aMOClassWriter [
 						  receiver: [ :e | attributeReference ]
 						  arguments: [ :e | 
 						  rp collect: [ :pa | self variableReferenceTo: pa using: e ] ] ] ] ] ]
-]
-
-{ #category : #accessing }
-FylgjaAddDelegateAndTransmitParametersMethod >> attributeReference: aMOVariableReference [ 
-	attributeReference := aMOVariableReference
 ]
 
 { #category : #accessing }

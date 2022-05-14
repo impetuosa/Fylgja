@@ -10,6 +10,12 @@ Class {
 	#category : #'Fylgja-Rule-Operations'
 }
 
+{ #category : #visiting }
+FylgjaTranslateCopyAsTypescriptClass class >> possibleWritingMessages [
+
+	^ { #visitUnitWriter:. #writeDeclarationUnit: }
+]
+
 { #category : #'as yet unclassified' }
 FylgjaTranslateCopyAsTypescriptClass >> applyTo: aProvenanceEntityRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
@@ -26,6 +32,13 @@ FylgjaTranslateCopyAsTypescriptClass >> applyTo: aProvenanceEntityRelation cropp
 	lookUp := nil.
 	using := nil.
 	^ result
+]
+
+{ #category : #visiting }
+FylgjaTranslateCopyAsTypescriptClass >> canBeAppliedTo: aProvenanceEntityRelation context: aDestinationContextRelation forProducing: aType with: aWriter [
+
+	^ aProvenanceEntityRelation to isType and: [ 
+		  self canWriteOver: aWriter ]
 ]
 
 { #category : #visiting }

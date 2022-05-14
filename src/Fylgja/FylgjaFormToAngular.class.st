@@ -4,6 +4,12 @@ Class {
 	#category : #'Fylgja-Rule-Operations'
 }
 
+{ #category : #'as yet unclassified' }
+FylgjaFormToAngular class >> possibleWritingMessages [
+
+	^ { #writeDeclarationUnit: }
+]
+
 { #category : #adding }
 FylgjaFormToAngular >> addBaseUrlVariable: class [
 
@@ -51,6 +57,13 @@ FylgjaFormToAngular >> calculateReferenceToAnObservable: aString using: class [
 	observable argumentTypeReferences:
 		{ (self calculateTypeReference: aString using: class) }.
 	^ observable
+]
+
+{ #category : #testing }
+FylgjaFormToAngular >> canBeAppliedTo: aProvenanceEntityRelation context: aDestinationContextRelation forProducing: aType with: aWriter [
+
+	^ aProvenanceEntityRelation to isWidget and: [ 
+		  self canWriteOver: aWriter ]
 ]
 
 { #category : #'as yet unclassified' }

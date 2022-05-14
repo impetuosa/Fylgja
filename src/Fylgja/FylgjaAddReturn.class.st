@@ -8,13 +8,19 @@ Class {
 }
 
 { #category : #'instance creation' }
-FylgjaAddReturn >> applyOn: aWriter [
+FylgjaAddReturn class >> possibleWritingMessages [
 
-	^ aWriter writeReturn: [ :return | 
-		  return writeExpression: [ :e | expression ] ]
+	^ { #writeReturn: }
 ]
 
 { #category : #accessing }
 FylgjaAddReturn >> expression: anExpression [ 
 	expression := anExpression
+]
+
+{ #category : #'instance creation' }
+FylgjaAddReturn >> privateApplyOn: aWriter [
+
+	^ aWriter writeReturn: [ :return | 
+		  return writeExpression: [ :e | expression ] ]
 ]

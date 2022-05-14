@@ -9,7 +9,13 @@ Class {
 }
 
 { #category : #'instance creation' }
-FylgjaAddAssignment >> applyOn: block [
+FylgjaAddAssignment class >> possibleWritingMessages [
+
+	^ { #writeExpressionStatement: }
+]
+
+{ #category : #'instance creation' }
+FylgjaAddAssignment >> privateApplyOn: block [
 
 	^ block writeExpressionStatement: [ :stmt | 
 		  stmt writeExpression: [ :exp | 

@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-FylgjaAddEmptyMethod >> applyOn: aMOClassWriter [
+FylgjaAddEmptyMethod >> privateApplyOn: aMOClassWriter [
 
 	| rp |
 	^ aMOClassWriter writeMethod: [ :method | 

@@ -12,7 +12,12 @@ Class {
 }
 
 { #category : #'instance creation' }
-FylgjaBind >> applyOn: aWriter [
+FylgjaBind >> canBeAppliedTo: aWriter [ 
+	 self halt .
+]
+
+{ #category : #'instance creation' }
+FylgjaBind >> privateApplyOn: aWriter [
 
 	^ fylgja
 		  mapEntity: destinationEntity

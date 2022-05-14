@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+FylgjaCopyReplaceErrorGoToToTryCatch class >> possibleWritingMessages [
+
+	^ { #writeBlock: }
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaCopyReplaceErrorGoToToTryCatch >> applyTo: aProvenanceEntityRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	| statmentRelations blockStatements tryStatements catchStatements indexOfLabel onErrorGoTo |
@@ -62,6 +68,13 @@ FylgjaCopyReplaceErrorGoToToTryCatch >> applyTo: aProvenanceEntityRelation cropp
 							  croppingRelationsWith: aBlock
 							  intoDestinationWriter: catchBlock
 							  lookUp: aFylgjaLookUpContext ] ] ] ] ]
+]
+
+{ #category : #testing }
+FylgjaCopyReplaceErrorGoToToTryCatch >> canBeAppliedTo: aProvenanceEntityRelation context: aDestinationContextRelation forProducing: aType with: aWriter [
+
+	^ aProvenanceEntityRelation to isMOBlock and: [ 
+		  self canWriteOver: aWriter ]
 ]
 
 { #category : #'as yet unclassified' }

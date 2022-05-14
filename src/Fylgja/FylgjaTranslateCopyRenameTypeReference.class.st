@@ -9,6 +9,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+FylgjaTranslateCopyRenameTypeReference class >> possibleWritingMessages [
+
+	^ { #primitiveTypeReferenceNamed:. #typeReferenceNamed: }
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaTranslateCopyRenameTypeReference >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	| entity |
@@ -21,6 +27,13 @@ FylgjaTranslateCopyRenameTypeReference >> applyTo: aRelatedProvenanceEntity crop
 		  writer: aDestinationWriter
 		  lookup: aFylgjaLookUpContext
 		  using: aFylgjaDerivativeModel
+]
+
+{ #category : #testing }
+FylgjaTranslateCopyRenameTypeReference >> canBeAppliedTo: aProvenanceEntityRelation context: aDestinationContextRelation forProducing: aType with: aWriter [
+
+	^ aProvenanceEntityRelation to isTypeReference and: [ 
+		  self canWriteOver: aWriter ]
 ]
 
 { #category : #accessing }

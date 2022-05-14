@@ -11,7 +11,28 @@ Class {
 }
 
 { #category : #'instance creation' }
-FylgjaCopy >> applyOn: aWriter [
+FylgjaCopy >> canBeAppliedTo: aWriter [
+
+	^ true
+]
+
+{ #category : #accessing }
+FylgjaCopy >> cropping: aFullBlockClosure [ 
+	cropping := aFullBlockClosure
+]
+
+{ #category : #accessing }
+FylgjaCopy >> fylgja: aFylgjaDerivativeModel [ 
+	fylgja := aFylgjaDerivativeModel
+]
+
+{ #category : #accessing }
+FylgjaCopy >> lookUp: aFylgjaLookUpContext [ 
+	lookUp := aFylgjaLookUpContext
+]
+
+{ #category : #'instance creation' }
+FylgjaCopy >> privateApplyOn: aWriter [
 
 	^ aWriter
 		  writeCopyOf: provenanceRelation
@@ -32,21 +53,6 @@ FylgjaCopy >> applyOn: aWriter [
 				  croppingRelationsWith: cropping
 				  usingWriter: contextWriter
 				  lookUp: lookUp ]
-]
-
-{ #category : #accessing }
-FylgjaCopy >> cropping: aFullBlockClosure [ 
-	cropping := aFullBlockClosure
-]
-
-{ #category : #accessing }
-FylgjaCopy >> fylgja: aFylgjaDerivativeModel [ 
-	fylgja := aFylgjaDerivativeModel
-]
-
-{ #category : #accessing }
-FylgjaCopy >> lookUp: aFylgjaLookUpContext [ 
-	lookUp := aFylgjaLookUpContext
 ]
 
 { #category : #accessing }

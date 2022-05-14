@@ -22,6 +22,12 @@ FylgjaOperationMultiDispatch >> applyTo: aMODeclarationStructuralRelation croppi
 	^ results
 ]
 
+{ #category : #testing }
+FylgjaOperationMultiDispatch >> canBeAppliedTo: aMODeclarationStructuralRelation context: aMONullDeclarationRelation forProducing: aClass with: aMORootDeclarationWriter [
+
+	^ true
+]
+
 { #category : #accessing }
 FylgjaOperationMultiDispatch >> destinations: aCollection [
 

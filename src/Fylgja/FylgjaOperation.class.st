@@ -4,6 +4,12 @@ Class {
 	#category : #'Fylgja-Rule-Operations'
 }
 
+{ #category : #'instance creation' }
+FylgjaOperation class >> possibleWritingMessages [
+
+	self subclassResponsibility
+]
+
 { #category : #'as yet unclassified' }
 FylgjaOperation >> booleanTypeReference: aMOClassWriter [
 
@@ -91,6 +97,13 @@ FylgjaOperation >> calculateTypeReference: aString using: aWriter [
 	^ typeRef
 ]
 
+{ #category : #testing }
+FylgjaOperation >> canWriteOver: aMOPackageWriter [
+
+	^ self possibleWritingMessages anySatisfy: [ :m | 
+		  aMOPackageWriter respondsTo: m ]
+]
+
 { #category : #'as yet unclassified' }
 FylgjaOperation >> defaultInstanceFor: aProvenanceEntity withIn: model [
 
@@ -115,6 +128,12 @@ FylgjaOperation >> importableDependencies: aMOClass [
 { #category : #testing }
 FylgjaOperation >> isBinding [ 
 	^ false. 
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaOperation >> possibleWritingMessages [
+
+	^ self class possibleWritingMessages
 ]
 
 { #category : #'instance creation' }

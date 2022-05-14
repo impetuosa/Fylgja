@@ -11,9 +11,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-FylgjaAddMethodInvocation >> applyOn: aWriter [
+FylgjaAddMethodInvocation class >> possibleWritingMessages [
 
-	^ aWriter acceptWritingVisitor: self
+	^ { #writeStatement:. #writeBlock:. #writenExpression:.
+	  #invokeMethodNamed:receiver:arguments: }
 ]
 
 { #category : #'instance creation' }
@@ -31,6 +32,12 @@ FylgjaAddMethodInvocation >> arguments: aCollection [
 FylgjaAddMethodInvocation >> method: aMethod [
 	method := aMethod.
 	self selector: aMethod selector
+]
+
+{ #category : #'instance creation' }
+FylgjaAddMethodInvocation >> privateApplyOn: aWriter [
+
+	^ aWriter acceptWritingVisitor: self
 ]
 
 { #category : #accessing }

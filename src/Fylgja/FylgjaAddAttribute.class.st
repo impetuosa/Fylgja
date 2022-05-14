@@ -11,14 +11,9 @@ Class {
 }
 
 { #category : #'instance creation' }
-FylgjaAddAttribute >> applyOn: aWriter [
+FylgjaAddAttribute class >> possibleWritingMessages [
 
-	^ aWriter writeAttribute: [ :attr | 
-		  attr
-			  name: name;
-			  typeReference: typeReference;
-			  visibility: self visibility;
-			  initializer: initializer ]
+	^ { #writeAttribute: }
 ]
 
 { #category : #accessing }
@@ -30,6 +25,17 @@ FylgjaAddAttribute >> initializer: anInitializer [
 { #category : #accessing }
 FylgjaAddAttribute >> name: aString [ 
 	name := aString .
+]
+
+{ #category : #'instance creation' }
+FylgjaAddAttribute >> privateApplyOn: aWriter [
+
+	^ aWriter writeAttribute: [ :attr | 
+		  attr
+			  name: name;
+			  typeReference: typeReference;
+			  visibility: self visibility;
+			  initializer: initializer ]
 ]
 
 { #category : #accessing }

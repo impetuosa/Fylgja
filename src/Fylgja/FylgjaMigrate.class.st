@@ -10,14 +10,10 @@ Class {
 	#category : #'Fylgja-Rule-Operations'
 }
 
-{ #category : #'instance creation' }
-FylgjaMigrate >> applyOn: aWriter [
+{ #category : #'as yet unclassified' }
+FylgjaMigrate >> canBeAppliedTo: aWriter [
 
-	^ fylgja
-		  migrate: provenanceRelation
-		  croppingRelationsWith: cropping
-		  intoDestinationWriter: aWriter
-		  lookUp: lookUp
+	^ true
 ]
 
 { #category : #accessing }
@@ -33,6 +29,16 @@ FylgjaMigrate >> fylgja: aFylgjaDerivativeModel [
 { #category : #accessing }
 FylgjaMigrate >> lookUp: aFylgjaLookUpContext [ 
 	lookUp := aFylgjaLookUpContext
+]
+
+{ #category : #'instance creation' }
+FylgjaMigrate >> privateApplyOn: aWriter [
+
+	^ fylgja
+		  migrate: provenanceRelation
+		  croppingRelationsWith: cropping
+		  intoDestinationWriter: aWriter
+		  lookUp: lookUp
 ]
 
 { #category : #'as yet unclassified' }

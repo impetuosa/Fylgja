@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+FylgjaCopyReplaceBinaryOperator class >> possibleWritingMessages [
+
+	^ { #yourself }
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaCopyReplaceBinaryOperator >> applyTo: aProvenanceEntityRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	^ (self
@@ -18,6 +24,13 @@ FylgjaCopyReplaceBinaryOperator >> applyTo: aProvenanceEntityRelation croppingRe
 		   using: aFylgjaDerivativeModel)
 		  operator: operator;
 		  yourself
+]
+
+{ #category : #testing }
+FylgjaCopyReplaceBinaryOperator >> canBeAppliedTo: aProvenanceEntityRelation context: aDestinationContextRelation forProducing: aType with: aWriter [
+
+	^ aProvenanceEntityRelation to isBinaryOperation and: [ 
+		  self canWriteOver: aWriter ]
 ]
 
 { #category : #'as yet unclassified' }

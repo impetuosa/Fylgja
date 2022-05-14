@@ -12,6 +12,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+FylgjaTranslateCopyAsAttribute class >> possibleWritingMessages [
+
+	^ { #writeConstantAttribute:. #writeAttribute: }
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaTranslateCopyAsAttribute >> applyTo: aProvenanceEntityRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	writer := aDestinationWriter.
@@ -20,6 +26,13 @@ FylgjaTranslateCopyAsAttribute >> applyTo: aProvenanceEntityRelation croppingRel
 	using := aFylgjaDerivativeModel.
 	croppingBlock := aBlock.
 	^ aProvenanceEntityRelation to acceptVisitor: self
+]
+
+{ #category : #testing }
+FylgjaTranslateCopyAsAttribute >> canBeAppliedTo: aProvenanceEntityRelation context: aDestinationContextRelation forProducing: aType with: aWriter [
+
+	^ aProvenanceEntityRelation to isVariable and: [ 
+		  self canWriteOver: aWriter ]
 ]
 
 { #category : #visiting }

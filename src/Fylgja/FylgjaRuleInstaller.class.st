@@ -158,7 +158,7 @@ FylgjaRuleInstaller >> applyAllOperations: aFullBlockClosure [
 
 	| operations |
 	operations := aFullBlockClosure value: self.
-	^ self operation: (FylgjaOperationMultipleRules new
+	^ self operation: (FylgjaOperationMultipleProductions new
 			   operations: operations;
 			   yourself)
 ]
@@ -268,7 +268,7 @@ FylgjaRuleInstaller >> copyRename: aString [
 
 { #category : #copying }
 FylgjaRuleInstaller >> copyRenameMethod: aString [
-  self operation: (FylgjaCopyRenameMethod new
+  self operation: (FylgjaCopyRenameSelector new
            name: aString;
            yourself)
 ]

@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-FylgjaAddGetter >> applyOn: aWriter [
+FylgjaAddGetter >> privateApplyOn: aWriter [
 
 	^ aWriter writeMethod: [ :getter | 
 		  getter returnTypeReference: attribute typeReference.
@@ -15,5 +15,5 @@ FylgjaAddGetter >> applyOn: aWriter [
 		  getter writeBlock: [ :block | 
 			  FylgjaAddReturn new
 				  expression: (self attributeReference: block);
-				  applyOn: block ] ]
+				  privateApplyOn: block ] ]
 ]

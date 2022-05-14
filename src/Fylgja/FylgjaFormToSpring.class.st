@@ -4,6 +4,12 @@ Class {
 	#category : #'Fylgja-Rule-Operations'
 }
 
+{ #category : #'as yet unclassified' }
+FylgjaFormToSpring class >> possibleWritingMessages [
+
+	^ { #writeDeclarationUnit: }
+]
+
 { #category : #adding }
 FylgjaFormToSpring >> addDaoDelegate: class for: aMOFormOrReport [
 
@@ -158,6 +164,13 @@ FylgjaFormToSpring >> annotatingProductionColumn: columnName [
 		  packageName: 'javax.persistence';
 		  annotationName: 'Column';
 		  addNamedArgument: #name -> columnName
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaFormToSpring >> canBeAppliedTo: aProvenanceEntityRelation context: aDestinationContextRelation forProducing: aType with: aWriter [
+
+	^ aProvenanceEntityRelation to isWidget and: [ 
+		  self canWriteOver: aWriter ]
 ]
 
 { #category : #'as yet unclassified' }

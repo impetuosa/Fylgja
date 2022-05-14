@@ -6,7 +6,24 @@ Class {
 
 { #category : #'instance creation' }
 FylgjaModification >> applyOn: aWriter [
-	self subclassResponsibility 
+
+	self
+		assert: (self canBeAppliedTo: aWriter)
+		description:
+		'Impossible to apply this transformation to the given writer '.
+	^ self privateApplyOn: aWriter
+]
+
+{ #category : #'instance creation' }
+FylgjaModification >> canBeAppliedTo: aWriter [
+
+	^ self canWriteOver: aWriter
+]
+
+{ #category : #'instance creation' }
+FylgjaModification >> privateApplyOn: aWriter [
+
+	self subclassResponsibility
 ]
 
 { #category : #'instance creation' }

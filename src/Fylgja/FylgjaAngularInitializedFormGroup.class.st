@@ -9,24 +9,10 @@ Class {
 	#category : #'Fylgja-Rule-Operations'
 }
 
-{ #category : #writing }
-FylgjaAngularInitializedFormGroup >> applyOn: class [
+{ #category : #'instance creation' }
+FylgjaAngularInitializedFormGroup class >> possibleWritingMessages [
 
-	| method |
-	method := self
-		          writeInitializingFormGroup:
-		          self initializingMethodSelector
-		          for: bindings
-		          into: class.
-	^ FylgjaAddAttribute new
-		  name: name;
-		  typeReference: (self formGroupReference: class);
-		  initializer: (class writeUnregisteredExpression: [ :ex | 
-					   FylgjaAddMethodInvocation new
-						   method: method;
-						   receiver: ex referenceToSelf;
-						   applyOn: ex ]);
-		  applyOn: class
+	^ FylgjaAddAttribute possibleWritingMessages
 ]
 
 { #category : #accessing }
@@ -44,6 +30,26 @@ FylgjaAngularInitializedFormGroup >> initializingMethodSelector [
 { #category : #accessing }
 FylgjaAngularInitializedFormGroup >> name: aString [ 
 	name := aString
+]
+
+{ #category : #writing }
+FylgjaAngularInitializedFormGroup >> privateApplyOn: class [
+
+	| method |
+	method := self
+		          writeInitializingFormGroup:
+		          self initializingMethodSelector
+		          for: bindings
+		          into: class.
+	^ FylgjaAddAttribute new
+		  name: name;
+		  typeReference: (self formGroupReference: class);
+		  initializer: (class writeUnregisteredExpression: [ :ex | 
+					   FylgjaAddMethodInvocation new
+						   method: method;
+						   receiver: ex referenceToSelf;
+						   privateApplyOn: ex ]);
+		  privateApplyOn: class
 ]
 
 { #category : #writing }

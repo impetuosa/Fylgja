@@ -60,7 +60,7 @@ FylgjaAddHibernateMethodGetAllModel >> addQueryVariable: aName queryModel: aMode
 ]
 
 { #category : #'instance creation' }
-FylgjaAddHibernateMethodGetAllModel >> applyOn: aClassWriter [
+FylgjaAddHibernateMethodGetAllModel >> privateApplyOn: aClassWriter [
 
 	^ aClassWriter writeMethod: [ :method | 
 		  method selector: ('getAll{1}' format: { modelTypeReference name  }).
@@ -87,5 +87,5 @@ FylgjaAddHibernateMethodGetAllModel >> applyOn: aClassWriter [
 				          into: block.
 			  FylgjaAddReturn new
 				  expression: (self variableReferenceTo: list using: block);
-				  applyOn: block ] ]
+				  privateApplyOn: block ] ]
 ]

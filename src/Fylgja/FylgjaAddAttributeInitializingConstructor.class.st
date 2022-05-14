@@ -7,8 +7,13 @@ Class {
 	#category : #'Fylgja-Rule-Operations'
 }
 
+{ #category : #accessing }
+FylgjaAddAttributeInitializingConstructor >> attributes: aCollection [ 
+	attributes := aCollection
+]
+
 { #category : #'instance creation' }
-FylgjaAddAttributeInitializingConstructor >> applyOn: aMOClassWriter [
+FylgjaAddAttributeInitializingConstructor >> privateApplyOn: aMOClassWriter [
 
 	| parameters |
 	^ aMOClassWriter writeConstructor: [ :constructor | 
@@ -26,9 +31,4 @@ FylgjaAddAttributeInitializingConstructor >> applyOn: aMOClassWriter [
 							  let: [ :var | self variableReferenceTo: a using: var ]
 							  beAssignedWith: [ :var | 
 							  self variableReferenceTo: p using: var ] ] ] ] ] ]
-]
-
-{ #category : #accessing }
-FylgjaAddAttributeInitializingConstructor >> attributes: aCollection [ 
-	attributes := aCollection
 ]

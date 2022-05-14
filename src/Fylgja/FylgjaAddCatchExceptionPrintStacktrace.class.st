@@ -5,23 +5,9 @@ Class {
 }
 
 { #category : #'instance creation' }
-FylgjaAddCatchExceptionPrintStacktrace >> applyOn: aTryCatchWriter [
+FylgjaAddCatchExceptionPrintStacktrace class >> possibleWritingMessages [
 
-	aTryCatchWriter writeCatch: [ :catch | 
-		| errorParameter |
-		errorParameter := catch writeParameter: [ :error | 
-			                  error
-				                  typeReference:
-					                  (self exceptionReferenceUsing: error);
-				                  name: 'e' ].
-		catch writeBlock: [ :b | 
-			b writeExpressionStatement: [ :stmt | 
-				stmt writeExpression: [ :exp | 
-					FylgjaAddMethodInvocation new
-						selector: #printStackTrace;
-						arguments: #(  );
-						receiver: (self variableReferenceTo: errorParameter using: b);
-						applyOn: exp ] ] ] ]
+	^ { #writeCatch: }
 ]
 
 { #category : #'as yet unclassified' }
@@ -40,4 +26,24 @@ FylgjaAddCatchExceptionPrintStacktrace >> exceptionReferenceUsing: aWriter [
 		  packageReference: (aWriter packageReferenceNamed: #'java.lang');
 		  candidate: candidate;
 		  yourself
+]
+
+{ #category : #'instance creation' }
+FylgjaAddCatchExceptionPrintStacktrace >> privateApplyOn: aTryCatchWriter [
+
+	aTryCatchWriter writeCatch: [ :catch | 
+		| errorParameter |
+		errorParameter := catch writeParameter: [ :error | 
+			                  error
+				                  typeReference:
+					                  (self exceptionReferenceUsing: error);
+				                  name: 'e' ].
+		catch writeBlock: [ :b | 
+			b writeExpressionStatement: [ :stmt | 
+				stmt writeExpression: [ :exp | 
+					FylgjaAddMethodInvocation new
+						selector: #printStackTrace;
+						arguments: #(  );
+						receiver: (self variableReferenceTo: errorParameter using: b);
+						privateApplyOn: exp ] ] ] ]
 ]

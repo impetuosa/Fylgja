@@ -20,6 +20,12 @@ FylgjaCopyRename >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBl
 		  yourself
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaCopyRename >> canBeAppliedTo: aProvenanceEntityRelation context: aDestinationContextRelation forProducing: aType with: aWriter [
+
+	^ aType isRenamable
+]
+
 { #category : #accessing }
 FylgjaCopyRename >> name: aString [ 
 	name := aString

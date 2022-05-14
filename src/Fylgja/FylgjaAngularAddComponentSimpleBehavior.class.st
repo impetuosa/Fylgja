@@ -14,6 +14,12 @@ Class {
 	#category : #'Fylgja-Rule-Operations'
 }
 
+{ #category : #'instance creation' }
+FylgjaAngularAddComponentSimpleBehavior class >> possibleWritingMessages [
+
+	^ { #writeDeclarationUnit: }
+]
+
 { #category : #adding }
 FylgjaAngularAddComponentSimpleBehavior >> addFormDelegateGetters: aMOAttribute [ 
 	self assert: bindings isEmpty. 
@@ -71,8 +77,33 @@ FylgjaAngularAddComponentSimpleBehavior >> addServiceAttribute: class [
 		  applyOn: class
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaAngularAddComponentSimpleBehavior >> cssName: aString [
+
+	cssName := aString
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaAngularAddComponentSimpleBehavior >> informUsageOf: aCSNUIInputText [
+
+	aCSNUIInputText isBoundToData ifTrue: [ 
+		bindings at: aCSNUIInputText name put: aCSNUIInputText dataBinding ]
+]
+
+{ #category : #accessing }
+FylgjaAngularAddComponentSimpleBehavior >> modelClassReference: aMOTypeReference [
+
+	modelClassReference := aMOTypeReference
+]
+
+{ #category : #accessing }
+FylgjaAngularAddComponentSimpleBehavior >> name: aString [
+
+	name := aString
+]
+
 { #category : #'instance creation' }
-FylgjaAngularAddComponentSimpleBehavior >> applyOn: component [
+FylgjaAngularAddComponentSimpleBehavior >> privateApplyOn: component [
 
 	| service form save cls |
 	bindings := Dictionary new.
@@ -117,31 +148,6 @@ FylgjaAngularAddComponentSimpleBehavior >> applyOn: component [
 		  (self importableDependencies: cls) do: [ :type | 
 			  unit writeImport: [ :import | 
 				  import importingTypeOrTypeReference: type ] ] ]
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaAngularAddComponentSimpleBehavior >> cssName: aString [
-
-	cssName := aString
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaAngularAddComponentSimpleBehavior >> informUsageOf: aCSNUIInputText [
-
-	aCSNUIInputText isBoundToData ifTrue: [ 
-		bindings at: aCSNUIInputText name put: aCSNUIInputText dataBinding ]
-]
-
-{ #category : #accessing }
-FylgjaAngularAddComponentSimpleBehavior >> modelClassReference: aMOTypeReference [
-
-	modelClassReference := aMOTypeReference
-]
-
-{ #category : #accessing }
-FylgjaAngularAddComponentSimpleBehavior >> name: aString [
-
-	name := aString
 ]
 
 { #category : #accessing }

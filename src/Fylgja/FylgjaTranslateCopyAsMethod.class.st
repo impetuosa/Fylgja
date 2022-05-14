@@ -9,6 +9,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+FylgjaTranslateCopyAsMethod class >> possibleWritingMessages [
+
+	^ { #writeMethod: }
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaTranslateCopyAsMethod >> applyTo: aProvenanceEntityRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	| method |
@@ -36,6 +42,15 @@ FylgjaTranslateCopyAsMethod >> applyTo: aProvenanceEntityRelation croppingRelati
 					expression: (self variableReferenceTo: variable using: block);
 					applyOn: block ] ] ].
 	^ method
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaTranslateCopyAsMethod >> canBeAppliedTo: aProvenanceEntityRelation context: aDestinationContextRelation forProducing: aType with: aWriter [
+
+	^ aProvenanceEntityRelation to isInvocable and: [ 
+		  (aProvenanceEntityRelation to isFunction or: [ 
+			   aProvenanceEntityRelation to isProcedure ]) and: [ 
+			  self canWriteOver: aWriter ] ]
 ]
 
 { #category : #visiting }

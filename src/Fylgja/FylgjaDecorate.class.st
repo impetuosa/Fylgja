@@ -5,20 +5,9 @@ Class {
 }
 
 { #category : #'instance creation' }
-FylgjaDecorate >> applyOn: aWriter [
+FylgjaDecorate class >> possibleWritingMessages [
 
-	| candidate |
-	candidate := self findCandidate: aWriter.
-
-	^ aWriter writeDecorator: [ :annotation | 
-		  annotation decoratorTypeReference:
-			  ((annotation typeReferenceNamed: annotationName)
-				   packageReference:
-					   (annotation packageReferenceNamed: packageName);
-				   candidate: candidate;
-				   yourself).
-		  self hasArguments ifTrue: [ 
-			  annotation arguments: (self calculateArguments: annotation) ] ]
+	^ { #writeDecorator: }
 ]
 
 { #category : #'as yet unclassified' }
@@ -41,4 +30,21 @@ FylgjaDecorate >> findCandidate: aWriter [
 					              a name = annotationName and: [ 
 						              a packageReference name = packageName ] ] ] ].
 	^ candidates ifEmpty: [ nil ] ifNotEmpty: [ candidates first ]
+]
+
+{ #category : #'instance creation' }
+FylgjaDecorate >> privateApplyOn: aWriter [
+
+	| candidate |
+	candidate := self findCandidate: aWriter.
+
+	^ aWriter writeDecorator: [ :annotation | 
+		  annotation decoratorTypeReference:
+			  ((annotation typeReferenceNamed: annotationName)
+				   packageReference:
+					   (annotation packageReferenceNamed: packageName);
+				   candidate: candidate;
+				   yourself).
+		  self hasArguments ifTrue: [ 
+			  annotation arguments: (self calculateArguments: annotation) ] ]
 ]

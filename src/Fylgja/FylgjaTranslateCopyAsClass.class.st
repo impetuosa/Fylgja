@@ -31,6 +31,13 @@ FylgjaTranslateCopyAsClass >> applyTo: aProvenanceEntityRelation croppingRelatio
 	^ resp
 ]
 
+{ #category : #testing }
+FylgjaTranslateCopyAsClass >> canBeAppliedTo: aProvenanceEntityRelation context: aDestinationContextRelation forProducing: aType with: aWriter [
+
+	^ aProvenanceEntityRelation to isModule and: [ 
+		  self canWriteOver: aWriter ]
+]
+
 { #category : #'as yet unclassified' }
 FylgjaTranslateCopyAsClass >> printOn: aStream [
  	aStream nextPutAll: 'Transform into Class'

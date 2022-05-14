@@ -105,7 +105,7 @@ MOElementToUIString >> visitClassProcedure: aMethod [
 
 { #category : #visiting }
 MOElementToUIString >> visitForeignRelation: aMatch [
-	self haltOnce. 
+
 	^ '(PK)' , aMatch tableFrom printString , '=> (FK)'
 	  , aMatch tableTo printString
 ]
