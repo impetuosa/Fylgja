@@ -8,6 +8,14 @@ Class {
 }
 
 { #category : #accessing }
+FylgjaApplication class >> egrc [
+
+	^ self new
+		  controller: FylgjaMigrationUIController egrcController;
+		  yourself
+]
+
+{ #category : #accessing }
 FylgjaApplication class >> northwind [
 
 	^ self new
