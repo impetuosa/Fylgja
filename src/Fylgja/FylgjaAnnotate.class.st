@@ -41,7 +41,7 @@ FylgjaAnnotate >> calculateArguments: aWriter [
 	^ ((namedArguments ifNil: [ {  } ]) collect: [ :keyValue | 
 		   aWriter writeUnregisteredExpression: [ :exp | 
 			   exp
-				   argumentNamed: keyValue key
+				   singleArgumentNamed: keyValue key
 				   expression: [ :e | 
 				   { (self literal: keyValue value with: exp) } ] ] ])
 	  , ((arguments ifNil: [ {  } ]) collect: [ :d | 
