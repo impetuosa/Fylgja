@@ -80,7 +80,7 @@ MoxingTree >> initializePresenters [
 
 	super initializePresenters.
 
-	tree := self instantiate: SpFilteringTreePresenter.
+	tree := self instantiate: SpTreeTablePresenter .
 	tree contextMenu: [ self rootCommandsGroup asMenuPresenter ].
 	tree dragEnabled: true.
 	tree dropEnabled: true.
@@ -90,7 +90,7 @@ MoxingTree >> initializePresenters [
 					transfer passenger allSatisfy: [ :a | a isKindOf: MODeclaration ] ] ];
 		acceptDrop: [ :transfer | self manageTransfer: transfer ].
 	tree
-		filteringValue: [ :f | MOElementToUIString new toString: f ];
+
 		addColumn: (SpCompositeTableColumn new
 				 title: '';
 				 addColumn:

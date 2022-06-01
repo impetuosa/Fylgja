@@ -38,6 +38,12 @@ FylgjaTranslateCopyAsClass >> canBeAppliedTo: aProvenanceEntityRelation context:
 		  self canWriteOver: aWriter ]
 ]
 
+{ #category : #visiting }
+FylgjaTranslateCopyAsClass >> possibleWritingMessages [ 
+
+	^{ #writeDeclarationUnit: . #writeClass:}
+]
+
 { #category : #'as yet unclassified' }
 FylgjaTranslateCopyAsClass >> printOn: aStream [
  	aStream nextPutAll: 'Transform into Class'
