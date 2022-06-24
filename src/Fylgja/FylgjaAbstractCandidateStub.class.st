@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #testing }
+FylgjaAbstractCandidateStub >> canBeReferredAsArrayAccess [
+
+	^ true
+]
+
+{ #category : #testing }
 FylgjaAbstractCandidateStub >> canBeReferredAsAttribute [
 
 	^ true
