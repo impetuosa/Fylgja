@@ -19,7 +19,7 @@ FylgjaMigrateDeclarationIntoClassPreMappingTests >> installRulesFor: destination
 	FylgjaRuleInstaller new
 		topLevel;
 		anyBindableEntity;
-		mappingStubInstall;
+		mappingLinkedStubInstall;
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new

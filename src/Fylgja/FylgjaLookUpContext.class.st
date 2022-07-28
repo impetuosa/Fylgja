@@ -22,7 +22,6 @@ FylgjaLookUpContext >> allPossibleDelegatingRules [
 
 { #category : #query }
 FylgjaLookUpContext >> allPossibleProducingRules [
-
 	^ mrs allPossibleProducingRules
 ]
 

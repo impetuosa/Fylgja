@@ -25,5 +25,7 @@ FylgjaUIInspect >> canBeExecuted [
 { #category : #executing }
 FylgjaUIInspect >> execute [
 
-	^ self context selectedItems inspect 
+	^ self context selectedItems size = 1
+		  ifTrue: [ self context selectedItems first inspect ]
+		  ifFalse: [ self context selectedItems inspect ]
 ]

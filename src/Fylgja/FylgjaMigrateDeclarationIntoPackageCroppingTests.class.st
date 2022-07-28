@@ -13,7 +13,7 @@ FylgjaMigrateDeclarationIntoPackageCroppingTests >> installRulesFor: destination
 	FylgjaRuleInstaller new
 		topLevel;
 		anyEntity;
-		mappingStubInstall;
+		mappingLinkedStubInstall;
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new

@@ -1,7 +1,7 @@
 Class {
 	#name : #FylgjaUIInstallRule,
-	#superclass : #FylgjaUICommand,
-	#category : #'Fylgja-UI-Commands'
+	#superclass : #FylgjaUIRuleCommand,
+	#category : #'Fylgja-UI-Commands-Rules'
 }
 
 { #category : #'accessing - defaults' }

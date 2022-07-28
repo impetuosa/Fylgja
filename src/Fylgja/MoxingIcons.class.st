@@ -238,7 +238,9 @@ MoxingIcons class >> selectIconFor: anElement [
 
 	| aClass |
 	aClass := anElement class.
-
+	aClass = MORemovedStatement ifTrue: [ 
+		^ self iconNamed: #changeRemove ].
+	aClass = MOReplacedStatement ifTrue: [ ^ self iconNamed: #branch ].
 	aClass = MOAngularClass ifTrue: [ ^ self typescriptIcon ].
 	aClass = MOAngularComponent ifTrue: [ ^ self angularIcon ].
 	aClass = MOAngularProject ifTrue: [ ^ self angularIcon ].

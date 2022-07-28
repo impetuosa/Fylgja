@@ -19,7 +19,7 @@ FylgjaMigrateStatementIntoBlockTests >> testProduceVariableIntoMethodByCopyNodeT
 	FylgjaRuleInstaller new
 		topLevel;
 		anyEntity;
-		mappingStubInstall;
+		mappingLinkedStubInstall;
 		installInto: fylgja.
 	result := fylgja produce: variable into: destinationContext.
 	self assert: (result result isKindOf: MOLocalVariable).

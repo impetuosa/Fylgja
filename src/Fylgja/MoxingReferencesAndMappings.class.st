@@ -19,12 +19,25 @@ MoxingReferencesAndMappings class >> buildCommandsGroupWith: presenterInstance f
 	super
 		buildCommandsGroupWith: presenterInstance
 		forRoot: rootCommandGroup.
-	rootCommandGroup register:
-		(FylgjaUIAutoBind forSpecContext: presenterInstance).
-	rootCommandGroup register:
-		(FylgjaUIPullUpRule forSpecContext: presenterInstance).
-	rootCommandGroup register:
-		(FylgjaUIInspect forSpecContext: presenterInstance)
+
+	self
+		registerBasicCommands: presenterInstance
+		forGroup: rootCommandGroup.
+
+	FylgjaUIRuleCommand
+		addAsGroupNamed: 'Rules'
+		into: rootCommandGroup
+		for: presenterInstance.
+
+	FylgjaUITransformCommand
+		addAsGroupNamed: 'Transforms'
+		into: rootCommandGroup
+		for: presenterInstance.
+		
+	FylgjaUIMigrationCommand
+		addAsGroupNamed: 'Migrations'
+		into: rootCommandGroup
+		for: presenterInstance
 ]
 
 { #category : #layout }
@@ -44,6 +57,15 @@ MoxingReferencesAndMappings class >> defaultLayout [
 						    yourself);
 				   yourself);
 		  yourself
+]
+
+{ #category : #layout }
+MoxingReferencesAndMappings class >> registerBasicCommands: presenterInstance forGroup: rootCommandGroup [
+
+	rootCommandGroup register:
+		(FylgjaUIInspect forSpecContext: presenterInstance).
+	rootCommandGroup register:
+		(FylgjaUIAutoBind forSpecContext: presenterInstance)
 ]
 
 { #category : #accessing }
@@ -67,12 +89,8 @@ MoxingReferencesAndMappings >> initializePresenters [
 	autoBind := self newButton
 		            label: 'Auto Bind';
 		            action: [ self autoBind ].
-	references := self newTable
-		              beMultipleSelection;
-		              whenSelectionChangedDo: [ :a | 
-			              selectedItems := a selectedItems collect: #value ];
-		              contextMenu: [ self rootCommandsGroup asMenuPresenter ];
-		              yourself.
+	references := self newReferencesTable .
+		             
 	mappings := self newMrsTable.
 	refTitle := self newLabel
 		            label: ' References ';
@@ -80,6 +98,12 @@ MoxingReferencesAndMappings >> initializePresenters [
 	mapTitle := self newLabel
 		            label: ' Mapping Rules ';
 		            yourself
+]
+
+{ #category : #'as yet unclassified' }
+MoxingReferencesAndMappings >> migrateSelectedItem [
+	
+	
 ]
 
 { #category : #initialization }
@@ -116,6 +140,38 @@ MoxingReferencesAndMappings >> newMrsTable [
 	^ table
 ]
 
+{ #category : #initialization }
+MoxingReferencesAndMappings >> newReferencesTable [
+
+	| table |
+	table := self newTable
+		         beMultipleSelection;
+		         whenSelectionChangedDo: [ :a | 
+			         selectedItems := a selectedItems collect: #value ];
+		         contextMenu: [ self rootCommandsGroup asMenuPresenter ];
+		         yourself.
+	table
+		addColumn: (SpIndexTableColumn new
+				 title: 'Index';
+				 sortFunction: #yourself ascending;
+				 beNotExpandable;
+				 width: 20;
+				 yourself);
+		addColumn: (SpStringTableColumn new
+				 title: '#';
+				 evaluated: [ :each | each value size ];
+				 beNotExpandable;
+				 width: 20;
+				 yourself);
+		addColumn: (SpStringTableColumn new
+				 title: 'Reference';
+				 evaluated: [ :each | each key asString ];
+				 beNotExpandable;
+				 width: 50;
+				 yourself).
+	^ table
+]
+
 { #category : #'as yet unclassified' }
 MoxingReferencesAndMappings >> pullUpSelectedRules [
 
@@ -141,7 +197,11 @@ MoxingReferencesAndMappings >> pullUpSelectedRules [
 MoxingReferencesAndMappings >> references: aCollection and: aFylgjaLookUpContext [
 
 	| mapCol |
-	references items: (aCollection sort: #printString descending).
+	references items: ((aCollection groupedBy: [ :a | 
+			  a candidate
+				  ifNil: [ a parent asString ]
+				  ifNotNil: [ a candidate asString ] ]) associations sort:
+			 [ :a | a key printString ] ascending).
 	mapCol := aFylgjaLookUpContext allPossibleBindingRules.
 	mappings items: mapCol.
 	refTitle label:
@@ -164,7 +224,14 @@ MoxingReferencesAndMappings >> registerToController [
 
 { #category : #accessing }
 MoxingReferencesAndMappings >> selectedItems [
-	^ selectedItems
+
+	^ selectedItems flatCollect: #yourself
+]
+
+{ #category : #accessing }
+MoxingReferencesAndMappings >> startDraggingReference [
+
+	^ references widget startDragging
 ]
 
 { #category : #accessing }

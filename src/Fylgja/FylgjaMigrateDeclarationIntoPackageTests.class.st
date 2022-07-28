@@ -20,7 +20,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> installRulesFor: destination [
 	FylgjaRuleInstaller new
 		topLevel;
 		anyBindableEntity;
-		mappingStubInstall;
+		mappingLinkedStubInstall;
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new
@@ -188,7 +188,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testErrorHandlingToPackageOnlyCopy [
 	FylgjaRuleInstaller new
 		topLevel;
 		anyBindableEntity;
-		mappingStubInstall;
+		mappingLinkedStubInstall;
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new
@@ -233,7 +233,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleCustomerOrdersOnlyCopy [
 	FylgjaRuleInstaller new
 		topLevel;
 		anyBindableEntity;
-		mappingStubInstall;
+		mappingLinkedStubInstall;
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new
@@ -289,7 +289,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleDomainFunctionWrappersOnly
 		FylgjaRuleInstaller new
 		topLevel;
 		anyBindableEntity;
-		mappingStubInstall;
+		mappingLinkedStubInstall;
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new
@@ -344,7 +344,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleInventoryOnlyCopy [
 		FylgjaRuleInstaller new
 		topLevel;
 		anyBindableEntity;
-		mappingStubInstall;
+		mappingLinkedStubInstall;
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new
@@ -398,7 +398,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModulePrivilegesOnlyCopy [
 	FylgjaRuleInstaller new
 		topLevel;
 		anyBindableEntity;
-		mappingStubInstall;
+		mappingLinkedStubInstall;
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new
@@ -452,7 +452,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModulePurchaseOrdersOnlyCopy [
 		FylgjaRuleInstaller new
 		topLevel;
 		anyBindableEntity;
-		mappingStubInstall;
+		mappingLinkedStubInstall;
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new
@@ -504,7 +504,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleReflectiveOnlyCopy [
 		FylgjaRuleInstaller new
 		topLevel;
 		anyBindableEntity;
-		mappingStubInstall;
+		mappingLinkedStubInstall;
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new
@@ -558,7 +558,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleUtilitiesOnlyCopy [
 	FylgjaRuleInstaller new
 		topLevel;
 		anyBindableEntity;
-		mappingStubInstall;
+		mappingLinkedStubInstall;
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new
@@ -630,7 +630,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testRecordsetWrapperoPackageOnlyCopy
 	FylgjaRuleInstaller new
 		topLevel;
 		anyBindableEntity;
-		mappingStubInstall;
+		mappingLinkedStubInstall;
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new

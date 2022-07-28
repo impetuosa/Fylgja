@@ -29,7 +29,7 @@ FylgjaMigrateDeclarationIntoPackageStepByStepTests >> installRulesFor: destinati
 	FylgjaRuleInstaller new
 		topLevel;
 		anyEntity;
-		mappingStubInstall;
+		mappingLinkedStubInstall;
 		installInto: fylgja.
 	FylgjaRuleInstaller new
 		context: (fylgja selectDerivativeModelFor: destination);

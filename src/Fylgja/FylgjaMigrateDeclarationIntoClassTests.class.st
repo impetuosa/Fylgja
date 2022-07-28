@@ -14,7 +14,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 FylgjaRuleInstaller new
 		topLevel;
 		anyBindableEntity;
-		mappingStubInstall;
+		mappingLinkedStubInstall;
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new
@@ -146,7 +146,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 	FylgjaRuleInstaller new
 		topLevel;
 		anyEntity;
-		mappingStubInstall;
+		mappingLinkedStubInstall;
 		installInto: fylgja.
 
 	" By default when going to java "
@@ -257,7 +257,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 	FylgjaRuleInstaller new
 		topLevel;
 		anyEntity;
-		mappingStubInstall;
+		mappingLinkedStubInstall;
 		installInto: fylgja.
 
 	" By default when going to java "
@@ -380,7 +380,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 	FylgjaRuleInstaller new
 		topLevel;
 		anyEntity;
-		mappingStubInstall;
+		mappingLinkedStubInstall;
 		installInto: fylgja.
 
 	result := fylgja produce: variable into: destinationContext.
@@ -412,7 +412,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 	FylgjaRuleInstaller new
 		topLevel;
 		anyEntity;
-		mappingStubInstall;
+		mappingLinkedStubInstall;
 		installInto: fylgja.
 	" By default when going to java "
 	FylgjaRuleInstaller new
@@ -531,7 +531,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyNodeTr
 	FylgjaRuleInstaller new
 		topLevel;
 		anyEntity;
-		mappingStubInstall;
+		mappingLinkedStubInstall;
 		installInto: fylgja.
 
 	FylgjaRuleInstaller new
@@ -625,7 +625,7 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyOnlyPr
 	FylgjaRuleInstaller new
 		topLevel;
 		anyEntity;
-		mappingStubInstall;
+		mappingLinkedStubInstall;
 		installInto: fylgja.
 
 	result := fylgja produce: provenance into: destination.

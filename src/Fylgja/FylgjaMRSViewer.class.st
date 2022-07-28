@@ -11,16 +11,20 @@ Class {
 
 { #category : #layout }
 FylgjaMRSViewer class >> buildCommandsGroupWith: presenterInstance forRoot: rootCommandGroup [
-
 	super
 		buildCommandsGroupWith: presenterInstance
 		forRoot: rootCommandGroup.
-	rootCommandGroup register:
-		(FylgjaUIInspect forSpecContext: presenterInstance).
-	rootCommandGroup register:
-		(FylgjaUIUnInstallRule forSpecContext: presenterInstance).
-	rootCommandGroup register:
-		(FylgjaUIPullUpRule forSpecContext: presenterInstance)
+
+	self
+		registerBasicCommands: presenterInstance
+		forGroup: rootCommandGroup.
+
+	FylgjaUIRuleCommand
+		addAsGroupNamed: 'Rules'
+		into: rootCommandGroup
+		for: presenterInstance.
+		
+	
 ]
 
 { #category : #layout }
@@ -30,6 +34,14 @@ FylgjaMRSViewer class >> defaultLayout [
 		  add: #producing;
 		  add: #delegating;
 		  yourself
+]
+
+{ #category : #layout }
+FylgjaMRSViewer class >> registerBasicCommands: presenterInstance forGroup: rootCommandGroup [
+
+	rootCommandGroup register:
+		(FylgjaUIInspect forSpecContext: presenterInstance).
+	
 ]
 
 { #category : #initialization }
@@ -79,11 +91,6 @@ FylgjaMRSViewer >> newMrsTable [
 				 evaluated: [ :each | each value printString ]);
 		whenSelectionChangedDo: [ :a | selectedItem := a selectedItem value ].
 	^ table
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaMRSViewer >> pullUpSelectedRules [
-	self shouldBeImplemented.
 ]
 
 { #category : #initialization }

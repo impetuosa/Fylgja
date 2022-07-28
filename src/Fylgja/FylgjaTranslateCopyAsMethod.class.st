@@ -89,3 +89,11 @@ FylgjaTranslateCopyAsMethod >> visitProcedure: aMOProcedure [
 	writer selector: aMOProcedure selector.
 	writer returnTypeReference: (writer typeReferenceNamed: #void)
 ]
+
+{ #category : #visiting }
+FylgjaTranslateCopyAsMethod >> visitVariableAccessor: aMOVariableAccessor [
+
+	aMOVariableAccessor kind = #Get
+		ifTrue: [ self visitFunction: aMOVariableAccessor ]
+		ifFalse: [ self visitProcedure: aMOVariableAccessor ]
+]

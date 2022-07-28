@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #testing }
+FylgjaAbstractCandidateStub >> canBeReferredAsArrayAccess [
+
+	^ true
+]
+
+{ #category : #testing }
 FylgjaAbstractCandidateStub >> canBeReferredAsAttribute [
 
 	^ true
@@ -76,7 +82,7 @@ FylgjaAbstractCandidateStub >> isFylgjaStub [
 { #category : #'as yet unclassified' }
 FylgjaAbstractCandidateStub >> isTypeReference [
 
-	^ provenance to isTypeReference
+	^ provenance to isNotNil and: [ provenance to isTypeReference ]
 ]
 
 { #category : #'as yet unclassified' }

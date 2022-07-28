@@ -34,6 +34,12 @@ FylgjaApplication >> controller: aFylgjaMigrationUIController [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaApplication >> migratorSingleDestinationUi [
+
+	^ FylgjaMigratorSingleDestinationUI newApplication: self
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaApplication >> migratorUi [
 
 	^ FylgjaMigratorUI newApplication: self
@@ -43,4 +49,10 @@ FylgjaApplication >> migratorUi [
 FylgjaApplication >> openMigrator [
 
 	^ self migratorUi open
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaApplication >> openMigratorSingleDestination [
+
+	^ self migratorSingleDestinationUi open
 ]

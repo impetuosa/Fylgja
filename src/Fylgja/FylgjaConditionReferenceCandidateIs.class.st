@@ -7,6 +7,11 @@ Class {
 	#category : #'Fylgja-Rule-Conditions'
 }
 
+{ #category : #accessing }
+FylgjaConditionReferenceCandidateIs >> candidate [
+	^ candidate
+]
+
 { #category : #'\\' }
 FylgjaConditionReferenceCandidateIs >> candidate: aMOClassFunction [ 
 	candidate := aMOClassFunction

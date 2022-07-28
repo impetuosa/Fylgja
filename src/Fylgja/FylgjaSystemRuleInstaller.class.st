@@ -27,6 +27,6 @@ FylgjaSystemRuleInstaller >> installRules [
 	FylgjaRuleInstaller new
 		topLevel;
 		anyEntity;
-		mappingStubInstall;
+		mappingLinkedStubInstall;
 		installInto: fylgja
 ]

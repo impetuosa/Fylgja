@@ -17,6 +17,18 @@ MoxingCode class >> defaultLayout [
 ]
 
 { #category : #initialization }
+MoxingCode >> codeFor: aCodeObject [
+
+	^ pagesObjectsMap at: aCodeObject ifAbsentPut: [ 
+		  MoxingTextComposer new
+			  compose: (self controller produceCode: aCodeObject)
+			  parser: aCodeObject language parser
+			  model: aCodeObject
+			  style: aCodeObject language style
+			  browsingWith: self ]
+]
+
+{ #category : #initialization }
 MoxingCode >> iconFor: anEntry [
 
 	^ MoxingIcons iconFor: anEntry
@@ -35,11 +47,13 @@ MoxingCode >> initializePresenters [
 
 { #category : #initialization }
 MoxingCode >> newNotebookPageFor: aModule [
+	^  self newNotebookPage 
+]
 
-	| p |
-	p := self newNotebookPage.
+{ #category : #initialization }
+MoxingCode >> resetCode: anObject [
 
-	^ p
+	pagesObjectsMap removeKey: anObject ifAbsent: [  ]
 ]
 
 { #category : #initialization }
@@ -58,10 +72,5 @@ MoxingCode >> visualizeSourcecode: aCodeObject [
 	viewport pages: { page }.
 	viewport selectPage: page.
 
-	text text: (MoxingTextComposer new
-			 compose: (self controller produceCode: aCodeObject)
-			 parser: aCodeObject language parser
-			 model: aCodeObject
-			 style: aCodeObject language style
-			 browsingWith: self)
+	text text: (self codeFor: aCodeObject)
 ]

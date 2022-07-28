@@ -13,6 +13,11 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+FylgjaBindNameBasedRewriter >> adaptInvocationToInvocationToPointToAttributeAccessor [
+	self shouldBeImplemented.
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaBindNameBasedRewriter >> adaptInvocationToInvocationToPointToMethod [
 
 	^ toBindElement isStaticBinding
@@ -59,6 +64,13 @@ FylgjaBindNameBasedRewriter >> adaptPrimitiveTypeReferenceToPrimitiveTypeReferen
 
 { #category : #'as yet unclassified' }
 FylgjaBindNameBasedRewriter >> adaptPrimitiveTypeReferenceToPrimitiveTypeReferenceToPointToClassType [
+
+	^ self
+		  adaptPrimitiveTypeReferenceToPrimitiveTypeReferenceToPointToClass
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaBindNameBasedRewriter >> adaptPrimitiveTypeReferenceToPrimitiveTypeReferenceToPointToJavaClass [
 
 	^ self
 		  adaptPrimitiveTypeReferenceToPrimitiveTypeReferenceToPointToClass

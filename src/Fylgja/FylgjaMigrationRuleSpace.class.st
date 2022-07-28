@@ -234,7 +234,7 @@ FylgjaMigrationRuleSpace >> lookupRulesForProducing: aProvenanceEntityRelation t
 		                  mr
 			                  matches: aProvenanceEntityRelation
 			                  context: aDestinationContextRelation
-			                  forWriting: MOType
+			                  forWriting: aDestinationContextRelation to class
 			                  with: aWriter ].
 	thisLevelRules size > 1 ifTrue: [ 
 		max := thisLevelRules max: #priority.

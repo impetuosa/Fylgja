@@ -17,11 +17,11 @@ FylgjaProductionRule >> matches: aProvenanceEntityRelation context: aDestination
 		   canBeAppliedTo: aProvenanceEntityRelation
 		   context: aDestinationContextRelation
 		   forProducing: aType
-		   with: aWriter) and: (condition
+		   with: aWriter) and: [(condition
 			   matches: aProvenanceEntityRelation
 			   context: aDestinationContextRelation
 			   forWriting: aType
-			   with: aWriter)
+			   with: aWriter)]
 ]
 
 { #category : #'as yet unclassified' }

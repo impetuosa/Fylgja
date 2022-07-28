@@ -87,8 +87,21 @@ FylgjaMigrationUIController class >> ruleInstallers [
 ]
 
 { #category : #accessing }
-FylgjaMigrationUIController >> autoBind: aCollection [
+FylgjaMigrationUIController >> applyCommand: aCommand informing: aWidget do: aBlock [
 
+	| result |
+	^ self
+		  doOrLog: [ 
+			  result := aBlock value.
+			  self logSuccess: result operation: aCommand name.
+			  aWidget ruleHasBeenAppliedSuccessfully.
+			  result ]
+		  forOperation: #UICommand
+		  ifFailReturn: [ nil ]
+]
+
+{ #category : #accessing }
+FylgjaMigrationUIController >> autoBind: aCollection [ 
 	^ self
 		  doOrLog: [ 
 			  self fylgja forceMapReferences: aCollection.
@@ -477,6 +490,40 @@ FylgjaMigrationUIController >> updateDestinationSourceProjectsInformTo: aWidget 
 			  result ]
 		  forOperation: #UpdateSourceCode
 		  ifFailReturn: [ nil ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationUIController >> usersOrSenders: aMOMethod [
+
+	| derivative versions |
+	derivative := self fylgja selectDerivativeModelFor: aMOMethod.
+	versions := derivative allVersionsOf: aMOMethod.
+
+	aMOMethod isInvocable ifTrue: [ 
+		^ derivative allInvocations
+			  select: [ :a | versions includes: a candidate ]
+			  thenCollect: [ :a | a callingInvocable ] ].
+	aMOMethod isType ifTrue: [ 
+		| candidates referrals |
+		candidates := derivative allReferences
+			              select: [ :r | versions includes: r candidate ]
+			              thenCollect: [ :r | 
+				              | i |
+				              i := r usingDeclaration ].
+		referrals := aMOMethod symbolicName.
+		^ ((derivative allLiterals
+			    select: [ :l | 
+				    l literal isString and: [ 
+					    l literal includesSubstring: referrals caseSensitive: false ] ]
+			    thenCollect: [ :r | 
+				    | i |
+				    i := r usingDeclaration ]) , (derivative objects
+			    select: [ :o | 
+				    o holder ~= self and: [ 
+					    o state values anySatisfy: [ :v | v = referrals ] ] ]
+			    thenCollect: [ :o | o holder ]) , candidates) removeDuplicates ].
+	self halt.
+	^ {  }
 ]
 
 { #category : #accessing }

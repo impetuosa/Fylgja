@@ -169,6 +169,12 @@ FylgjaRuleInstaller >> atLanguageNamed: aString [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> autoMigrateUnbindableDependencyInstall [
+
+	self operation: FylgjaAutoMigrateUnBindableDependency new
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> binaryOperator: aString [
 
 	^ self condition: (FylgjaConditionBinaryExpression new
@@ -396,7 +402,7 @@ FylgjaRuleInstaller >> isPreexistingClass [
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaRuleInstaller >> mappingStubInstall [
+FylgjaRuleInstaller >> mappingLinkedStubInstall [
 
 	self operation: FylgjaBindToLinkedStub new
 ]

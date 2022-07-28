@@ -100,7 +100,7 @@ FylgjaJavaSpringRuleInstaller >> installJavaLanguageTx [
 		installInto: fylgja.
 
 
-"
+	"
 
 	FylgjaRuleInstaller new
 		atLanguageNamed: java name;
@@ -112,6 +112,8 @@ FylgjaJavaSpringRuleInstaller >> installJavaLanguageTx [
 	FylgjaRuleInstaller new
 		context: java root;
 		anyModelEntityOfTypesWhenGoingClass: { 
+				MOVariableAccessor.
+				MOAttributeAccessor.
 				MOClassFunction.
 				MOClassProcedure.
 				MOFunction.
@@ -133,19 +135,26 @@ FylgjaJavaSpringRuleInstaller >> installJavaSpring [
 
 	"Types"
 
-	FylgjaRuleInstaller new
-		atLanguageNamed: java name;
-		whenIsReferenceWithCandidates: { 
-				self accessDbMemoType.
-				self accessDbTextType };
-		bindRewriteTo: self javaString;
-		installInto: fylgja.
+	self accessDbMemoType ifNotNil: [ 
+		FylgjaRuleInstaller new
+			atLanguageNamed: java name;
+			whenIsReferenceWithCandidates: { 
+					self accessDbMemoType.
+					self accessDbTextType };
+			bindRewriteTo: self javaString;
+			installInto: fylgja ].
+		
+		
+	self accessDbAttachment ifNotNil: [ 
+		FylgjaRuleInstaller new
+			atLanguageNamed: java name;
+			whenIsReferenceWithCandidate: self accessDbAttachment;
+			bindRewriteTo: self javaSqlBlob;
+			installInto: fylgja ].
 
-	FylgjaRuleInstaller new
-		atLanguageNamed: java name;
-		whenIsReferenceWithCandidate: self accessDbAttachment;
-		bindRewriteTo: self javaSqlBlob;
-		installInto: fylgja.
+
+
+
 
 
 	" Model "

@@ -77,6 +77,41 @@ MoxingBundle >> newRuleChosing [
 ]
 
 { #category : #enumerating }
+MoxingBundle >> promptUser: titles forChosingRule: rulesSets for: elements thenDo: aBlock [
+
+	popover ifNotNil: [ popover dismiss ].
+	elements ifEmpty: [ ^ self ].
+	(popover := self newPopover)
+		relativeTo: projectTree;
+		position: SpPopoverPosition left;
+		presenter: (SpPresenter new
+				 layout: (SpBoxLayout newLeftToRight
+						  add: (SpBoxLayout newTopToBottom
+								   borderWidth: 10;
+								   spacing: 5;
+								   add: (self newRuleChosing
+										    rules: rulesSets first;
+										    title: titles first;
+										    acceptRuleWith: [ :r | 
+											    popover dismiss.
+											    aBlock value: r value: self model value: elements first.
+											    elements ifNotEmpty: [ 
+													    self
+														    promptUser: titles allButFirst
+														    forChosingRule: rulesSets allButFirst
+														    for: elements allButFirst
+														    thenDo: aBlock ] ];
+										    cancelWith: [ popover dismiss ];
+										    yourself)
+								   height: 400;
+								   yourself)
+						  width: 800;
+						  yourself);
+				 yourself);
+		popup
+]
+
+{ #category : #enumerating }
 MoxingBundle >> promptUser: aTitle forChosingRule: aCollection thenDo: aBlock [
 
 	popover ifNotNil: [ popover dismiss ].
@@ -102,6 +137,17 @@ MoxingBundle >> promptUser: aTitle forChosingRule: aCollection thenDo: aBlock [
 						  yourself);
 				 yourself);
 		popup
+]
+
+{ #category : #initialization }
+MoxingBundle >> resetCode: aMODeclarationUnit [
+
+	| p |
+
+	p := aMODeclarationUnit.
+	[ p isNil ] whileFalse: [ 
+		code resetCode: aMODeclarationUnit.
+		p := p parent ]
 ]
 
 { #category : #initialization }

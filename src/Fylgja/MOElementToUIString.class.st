@@ -64,7 +64,9 @@ MOElementToUIString >> toString: anAssociation [
 	| toVisit | 
 	toVisit := anAssociation isAssociation
 		           ifTrue: [ anAssociation value ]
-		           ifFalse: [ anAssociation ]. 
+		           ifFalse: [ anAssociation ].
+		 
+		
 	[ ^ toVisit acceptVisitor: self ] 
 		on: Error
 		do: [ self haltOnce ]
@@ -104,6 +106,12 @@ MOElementToUIString >> visitClassProcedure: aMethod [
 ]
 
 { #category : #visiting }
+MOElementToUIString >> visitExit: anExit [
+
+	^ 'Exit'
+]
+
+{ #category : #visiting }
 MOElementToUIString >> visitForeignRelation: aMatch [
 
 	^ '(PK)' , aMatch tableFrom printString , '=> (FK)'
@@ -124,6 +132,18 @@ MOElementToUIString >> visitFunction: aMethod [
 ]
 
 { #category : #visiting }
+MOElementToUIString >> visitGoSub: aGoTo [
+
+	^ 'GO SUB ' , aGoTo destination asString
+]
+
+{ #category : #visiting }
+MOElementToUIString >> visitGoTo: aGoTo [
+
+	^ 'GO TO ' , aGoTo destination asString
+]
+
+{ #category : #visiting }
 MOElementToUIString >> visitMethod: aMethod [
 
 	^ self signatureFunction: aMethod
@@ -139,6 +159,12 @@ MOElementToUIString >> visitParameter: anAttribute [
 MOElementToUIString >> visitProcedure: aMethod [
 
 	^ self signatureProcedure: aMethod
+]
+
+{ #category : #visiting }
+MOElementToUIString >> visitRemovedStatement: aStatement [
+
+	^ 'Removed: ' , (aStatement statement acceptVisitor: self)
 ]
 
 { #category : #visiting }

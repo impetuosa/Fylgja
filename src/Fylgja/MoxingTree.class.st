@@ -17,11 +17,25 @@ MoxingTree class >> buildCommandsGroupWith: presenterInstance forRoot: rootComma
 	super
 		buildCommandsGroupWith: presenterInstance
 		forRoot: rootCommandGroup.
-	rootCommandGroup register:
-		(FylgjaUIInspect forSpecContext: presenterInstance).
 
-	rootCommandGroup register:
-		(FylgjaUIInstallRule forSpecContext: presenterInstance)
+	self
+		registerBasicCommands: presenterInstance
+		forGroup: rootCommandGroup.
+
+	FylgjaUIRuleCommand
+		addAsGroupNamed: 'Rules'
+		into: rootCommandGroup
+		for: presenterInstance.
+
+	FylgjaUIDeclarationCommand
+		addAsGroupNamed: 'Declarations'
+		into: rootCommandGroup
+		for: presenterInstance.
+		
+	FylgjaUITransformCommand
+		addAsGroupNamed: 'Transforms'
+		into: rootCommandGroup
+		for: presenterInstance
 ]
 
 { #category : #layout }
@@ -30,6 +44,17 @@ MoxingTree class >> defaultLayout [
 	^ SpBoxLayout newTopToBottom
 		  add: #tree;
 		  yourself
+]
+
+{ #category : #layout }
+MoxingTree class >> registerBasicCommands: presenterInstance forGroup: rootCommandGroup [
+
+	rootCommandGroup register:
+		(FylgjaUIInspect forSpecContext: presenterInstance).
+	rootCommandGroup register:
+		(FylgjaUIInspectObject forSpecContext: presenterInstance).
+	rootCommandGroup register:
+		(FylgjaUIUsersAndSenders forSpecContext: presenterInstance)
 ]
 
 { #category : #initialization }
@@ -42,6 +67,7 @@ MoxingTree >> bundle: aBundle [
 MoxingTree >> childrenFor: anEntry [
 
 	| entity |
+	
 	entity := self entityFor: anEntry.
 	entity isCollection ifTrue: [ ^ {  } ].
 	^ entity isModelOrDerivative
@@ -53,6 +79,12 @@ MoxingTree >> childrenFor: anEntry [
 				  thenCollect: [ :m | self entityFor: m ] ]
 				  on: Error
 				  do: [ :e | e haltOnce ] ]
+]
+
+{ #category : #initialization }
+MoxingTree >> controller [
+
+	^ self owner controller
 ]
 
 { #category : #initialization }
@@ -80,17 +112,17 @@ MoxingTree >> initializePresenters [
 
 	super initializePresenters.
 
-	tree := self instantiate: SpTreeTablePresenter .
+	tree := self instantiate: SpTreeTablePresenter.
 	tree contextMenu: [ self rootCommandsGroup asMenuPresenter ].
 	tree dragEnabled: true.
 	tree dropEnabled: true.
 	tree
+		beMultipleSelection;
 		wantsDrop: [ :transfer | 
 			transfer target isNotNil and: [ 
 					transfer passenger allSatisfy: [ :a | a isKindOf: MODeclaration ] ] ];
 		acceptDrop: [ :transfer | self manageTransfer: transfer ].
 	tree
-
 		addColumn: (SpCompositeTableColumn new
 				 title: '';
 				 addColumn:
@@ -134,6 +166,12 @@ MoxingTree >> refreshWidgetWith: aModel [
 			self model: aModel.
 			tree selectPath: path , { 1 } scrollToSelection: true ]
 		ifNil: [ self model: model ]
+]
+
+{ #category : #initialization }
+MoxingTree >> ruleHasBeenAppliedSuccessfully [
+
+	owner ruleHasBeenAppliedSuccessfully
 ]
 
 { #category : #accessing }

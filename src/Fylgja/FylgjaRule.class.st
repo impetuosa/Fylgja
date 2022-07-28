@@ -40,6 +40,12 @@ FylgjaRule >> isDelegatingRule [
 	^ false
 ]
 
+{ #category : #testing }
+FylgjaRule >> isFylgjaStub [
+
+	^ false
+]
+
 { #category : #accessing }
 FylgjaRule >> isProductionRule [
 

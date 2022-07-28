@@ -24,7 +24,8 @@ FylgjaChooseRule class >> buildCommandsGroupWith: presenterInstance forRoot: roo
 	rootCommandGroup register:
 		(FylgjaUIPullUpRule forSpecContext: presenterInstance).
 	rootCommandGroup register:
-		(FylgjaUIInspect forSpecContext: presenterInstance)
+		(FylgjaUIInspect forSpecContext: presenterInstance).
+	
 ]
 
 { #category : #layout }

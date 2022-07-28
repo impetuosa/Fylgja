@@ -5,6 +5,17 @@ Class {
 }
 
 { #category : #default }
+FylgjaUICommand class >> addAsGroupNamed: aName into: rootCommandGroup for: presenterInstance [
+
+	| group |
+	group := (CmCommandGroup named: aName) asSpecGroup.
+	self allSubclassesDo: [ :s | 
+		group register: (s forSpecContext: presenterInstance) ].
+	rootCommandGroup register: group.
+	^ group
+]
+
+{ #category : #default }
 FylgjaUICommand class >> defaultIconName [
 
 	^ ''
@@ -35,7 +46,7 @@ FylgjaUICommand >> asSpecCommand [
 	command := super asSpecCommand
 		           iconProvider: self iconProvider;
 		           iconName: self class defaultIconName;
-		           name: self class defaultName;
+		           name: self name;
 		           yourself.
 
 	self class defaultShortcut ifNotNil: [ :keyCombination | 

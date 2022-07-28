@@ -11,15 +11,19 @@ Class {
 { #category : #'as yet unclassified' }
 FylgjaNorthwindRuleInstaller >> accessDbAttachment [
 
-	^ northwind entities detect: [ :a | 
+	^ northwind entities
+		  detect: [ :a | 
 		  (a isKindOf: MOPrimitiveType) and: [ a name = #dbAttachment ] ]
+		  ifNone: [ nil ]
 ]
 
 { #category : #'as yet unclassified' }
 FylgjaNorthwindRuleInstaller >> accessDbMemoType [
 
-	^ northwind entities detect: [ :a | 
+	^ northwind entities
+		  detect: [ :a | 
 		  (a isKindOf: MOPrimitiveType) and: [ a name = #dbMemo ] ]
+		  ifNone: [ nil ]
 ]
 
 { #category : #'as yet unclassified' }

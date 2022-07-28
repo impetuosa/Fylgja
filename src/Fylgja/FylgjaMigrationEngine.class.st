@@ -77,9 +77,10 @@ FylgjaMigrationEngine >> forceMapStubs: aModifiedFylgjaMigrationEngine [
 FylgjaMigrationEngine >> forceReMappingRuleOverStubs: aCollection contextModel: contextModel using: aModifiedFylgjaMigrationEngine [
 
 	| newElement |
-
 	aCollection
-		reject: [ :stub | stub provenance to isNil ]
+		reject: [ :stub | 
+			stub provenance to isNil or: [ 
+				stub parent parent isNil and: [ stub parent anchor isNil ] ] ]
 		thenDo: [ :stub | 
 			| elementRelation destinationContextRelation lookup |
 			elementRelation := stub provenance.
@@ -176,9 +177,9 @@ FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aM
 				map: aProvenanceEntity
 				to: aDestinationEntity
 				using: aModifiedFylgjaMigrationEngine
-				atContext:
-					(aModifiedFylgjaMigrationEngine selectDerivativeModelFor:
-						 aDestinationEntity) root ].
+				atContext: (self
+						 resolveMappingContextFor: aDestinationEntity
+						 using: aModifiedFylgjaMigrationEngine) ].
 
 
 
@@ -466,6 +467,16 @@ FylgjaMigrationEngine >> produceWithContextualizedProvenance: elementRelation cr
 				                     using: aModifiedFylgjaMigrationEngine ].
 
 	^ resultingRelation
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> resolveMappingContextFor: aDestinationEntity using: aModifiedFylgjaMigrationEngine [
+
+	^ aDestinationEntity existsOnlyInParentContext
+		  ifTrue: [ aDestinationEntity parent ]
+		  ifFalse: [ 
+			  (aModifiedFylgjaMigrationEngine selectDerivativeModelFor:
+				   aDestinationEntity) root ] 
 ]
 
 { #category : #'as yet unclassified' }

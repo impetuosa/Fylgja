@@ -198,7 +198,7 @@ MoxingMicrosoftAccessAstComposer >> visitForEach: aForEach [
 	self addAttributeKeyword: aForEach fORToken.
 	self addAttributeKeyword: aForEach eachToken.
 	self addAttributeKeyword: aForEach inToken.
-	self addAttributeNext: aForEach nextToken.
+	self addAttributeNext: aForEach nEXTToken.
 	^ self visitProgram: aForEach
 ]
 
@@ -216,7 +216,7 @@ MoxingMicrosoftAccessAstComposer >> visitForStepNext: aForStepNext [
 
 	self addAttributeKeyword: aForStepNext fORToken.
 	self addAttributeKeyword: aForStepNext toToken.
-	self addAttributeNext: aForStepNext nextToken.
+	self addAttributeNext: aForStepNext nEXTToken .
 	self addAttributeKeyword: aForStepNext stepToken .
 	self addAttributeOperator: aForStepNext equalToken .
 	
@@ -365,7 +365,7 @@ MoxingMicrosoftAccessAstComposer >> visitOnErrorResumeNext: anOnErrorResumeNext 
 	self addAttributeOn: anOnErrorResumeNext onToken.
 	self addAttributeError: anOnErrorResumeNext eRRORToken.
 	self addAttributeResume: anOnErrorResumeNext resumeToken.
-	self addAttributeNext: anOnErrorResumeNext nextToken.
+	self addAttributeNext: anOnErrorResumeNext nEXTToken .
 
 	^ self visitProgram: anOnErrorResumeNext
 ]
