@@ -1,7 +1,7 @@
 Class {
 	#name : #FylgjaAddHibernateMethodDeleteModel,
 	#superclass : #FylgjaAddHibernateMethodCRUDModel,
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Modifications'
 }
 
 { #category : #'as yet unclassified' }

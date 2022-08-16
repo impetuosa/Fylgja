@@ -28,13 +28,7 @@ FylgjaLookUpContext >> allPossibleProducingRules [
 { #category : #convenience }
 FylgjaLookUpContext >> ensureNotDuplicated: rules [
 
-	[ 
-	rules asDictionary values.
-	^ rules collect: #value ]
-		on: Error
-		do: [ 
-			self error:
-				'Rule selection collision: More than one rule applies on the same map space for the given entity! ' ]
+	^ mrs chooseRule: rules
 ]
 
 { #category : #query }

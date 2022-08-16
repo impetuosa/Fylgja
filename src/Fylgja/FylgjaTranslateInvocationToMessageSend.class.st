@@ -7,18 +7,18 @@ Class {
 		'argumentCollectionTransform',
 		'writer'
 	],
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Translation'
 }
 
 { #category : #'as yet unclassified' }
 FylgjaTranslateInvocationToMessageSend >> applyTo: aProvenanceEntityRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
+	[ 
 	^ MOModelWriteTypeBasedCopyResolver new
 		  resolveWriterFor: aProvenanceEntityRelation
 		  writingContext: aDestinationWriter
 		  do: [ :elementWriter | 
 			  | destinationEntity |
-			
 			  destinationEntity := elementWriter writeExpression: [ :stmt | 
 				                       stmt
 					                       invokeMethodNamed:
@@ -48,7 +48,11 @@ FylgjaTranslateInvocationToMessageSend >> applyTo: aProvenanceEntityRelation cro
 				  croppingRelationsWith: aBlock
 				  writer: elementWriter
 				  lookup: aFylgjaLookUpContext
-				  using: aFylgjaDerivativeModel ]
+				  using: aFylgjaDerivativeModel ] ] ensure: [ 
+		selector = nil.
+		receiverBlock = nil.
+		argumentCollectionTransform = nil.
+		writer = nil ]
 ]
 
 { #category : #'as yet unclassified' }

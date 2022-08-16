@@ -1,9 +1,6 @@
 Class {
 	#name : #FylgjaConditionReferenceWithCandidate,
 	#superclass : #FylgjaCondition,
-	#instVars : [
-		'elements'
-	],
 	#category : #'Fylgja-Rule-Conditions'
 }
 

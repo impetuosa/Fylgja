@@ -8,7 +8,8 @@ Class {
 		'subspaces',
 		'producingRules',
 		'delegatingRules',
-		'lookupStrategy'
+		'lookupStrategy',
+		'ruleChooseStrategy'
 	],
 	#category : #'Fylgja-MRS'
 }
@@ -57,6 +58,12 @@ FylgjaMigrationRuleSpace >> allPossibleProducingRules [
 		   ifNotNil: [ parent allPossibleProducingRules ])
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaMigrationRuleSpace >> chooseRule: aCollection [
+
+	^ self ruleChooseStrategy chooseRule: aCollection
+]
+
 { #category : #copy }
 FylgjaMigrationRuleSpace >> copyAllButSubspaces [
 
@@ -81,6 +88,7 @@ FylgjaMigrationRuleSpace >> copySpace [
 	kids := subspaces collect: [ :s | s copySpace ].
 	(copy class slotNamed: #subspaces) write: kids to: copy.
 	kids do: [ :k | k parent: copy ].
+	copy ruleChooseStrategy: ruleChooseStrategy.
 	^ copy
 ]
 
@@ -97,6 +105,13 @@ FylgjaMigrationRuleSpace >> ensureNamespace: anEntity [
 FylgjaMigrationRuleSpace >> ensureNamespace: anEntity model: aMOModel [
 
 	^ (self migrationRuleSpaceForModel: aMOModel) ensureNamespace: anEntity
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationRuleSpace >> finalizeFylgja [
+
+	subspaces do: #finalizeFylgja.
+	mappingRules do: [ :a | a becomeForward: {  } ]
 ]
 
 { #category : #initialization }
@@ -168,15 +183,12 @@ FylgjaMigrationRuleSpace >> lookupContextFor: aProvenanceEntityRelation toContex
 { #category : #lookup }
 FylgjaMigrationRuleSpace >> lookupRulesForBinding: aDestinationEntity with: aCandidateRelation inTheContextOf: aDestinationContextRelation [
 
-	| thisLevelRules max |
+	| thisLevelRules |
 	thisLevelRules := mappingRules select: [ :mr | 
 		                  mr
 			                  matches: aDestinationEntity
 			                  context: aDestinationContextRelation
 			                  toBindAs: aCandidateRelation ].
-	thisLevelRules size > 1 ifTrue: [ 
-		max := thisLevelRules max: #priority.
-		thisLevelRules := thisLevelRules select: [ :a | a priority = max ] ].
 
 
 	^ (thisLevelRules collect: [ :mr | self -> mr ])
@@ -213,10 +225,6 @@ FylgjaMigrationRuleSpace >> lookupRulesForProducing: aProvenanceEntityRelation t
 			                  forWriting: aType
 			                  with: aWriter ].
 
-	thisLevelRules size > 1 ifTrue: [ 
-		max := thisLevelRules max: #priority.
-		thisLevelRules := thisLevelRules select: [ :a | a priority = max ] ].
-
 	^ (thisLevelRules collect: [ :mr | self -> mr ])
 	  , (parent ifNil: [ {  } ] ifNotNil: [ 
 			   parent
@@ -229,16 +237,13 @@ FylgjaMigrationRuleSpace >> lookupRulesForProducing: aProvenanceEntityRelation t
 { #category : #lookup }
 FylgjaMigrationRuleSpace >> lookupRulesForProducing: aProvenanceEntityRelation toContext: aDestinationContextRelation with: aWriter [
 
-	| thisLevelRules max |
+	| thisLevelRules |
 	thisLevelRules := producingRules select: [ :mr | 
 		                  mr
 			                  matches: aProvenanceEntityRelation
 			                  context: aDestinationContextRelation
 			                  forWriting: aDestinationContextRelation to class
 			                  with: aWriter ].
-	thisLevelRules size > 1 ifTrue: [ 
-		max := thisLevelRules max: #priority.
-		thisLevelRules := thisLevelRules select: [ :a | a priority = max ] ].
 
 	^ (thisLevelRules collect: [ :mr | self -> mr ])
 	  , (parent ifNil: [ {  } ] ifNotNil: [ 
@@ -357,6 +362,17 @@ FylgjaMigrationRuleSpace >> registerSpace: aName [
 		         yourself.
 	subspaces at: aName put: entry.
 	^ entry
+]
+
+{ #category : #accessing }
+FylgjaMigrationRuleSpace >> ruleChooseStrategy [
+	^ ruleChooseStrategy ifNil: [ ruleChooseStrategy := FylgjaChooseRuleStrategy default  ]
+]
+
+{ #category : #accessing }
+FylgjaMigrationRuleSpace >> ruleChooseStrategy: aStrategy [
+
+	ruleChooseStrategy := aStrategy
 ]
 
 { #category : #accessing }

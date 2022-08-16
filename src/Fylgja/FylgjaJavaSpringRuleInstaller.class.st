@@ -143,8 +143,14 @@ FylgjaJavaSpringRuleInstaller >> installJavaSpring [
 					self accessDbTextType };
 			bindRewriteTo: self javaString;
 			installInto: fylgja ].
-		
-		
+
+
+	FylgjaRuleInstaller new
+		atLanguageNamed: java name;
+		whenIsReferenceWithCandidates: { self accessDbLongType };
+		bindRewriteTo: self javaLong;
+		installInto: fylgja.
+
 	self accessDbAttachment ifNotNil: [ 
 		FylgjaRuleInstaller new
 			atLanguageNamed: java name;
@@ -165,8 +171,21 @@ FylgjaJavaSpringRuleInstaller >> installJavaSpring [
 		formToSpringModel;
 		installInto: fylgja.
 
+	FylgjaRuleInstaller new
+		context: self javaModelPackage;
+		anyAlceDBEntity;
+		dbEntityToSpringModel;
+		installInto: fylgja.
+
+
 
 	" DAO "
+	FylgjaRuleInstaller new
+		context: self javaDaoPackage;
+		anyAlceDBEntity;
+		dbEntityToSpringDAO;
+		installInto: fylgja.
+
 
 	FylgjaRuleInstaller new
 		context: self javaDaoPackage;
@@ -188,7 +207,7 @@ FylgjaJavaSpringRuleInstaller >> installJavaSpring [
 	FylgjaRuleInstaller new
 		context: self javaControllerPackage;
 		anyAlceForm;
-		formToSpringController: 'http://localhost:4200'
+		formToSpringController: 'http://localhost:8081'
 		apiURLExtention: '/api';
 		installInto: fylgja.
 
@@ -200,6 +219,15 @@ FylgjaJavaSpringRuleInstaller >> installJavaSpring [
 				self javaDaoPackage.
 				self javaServicePackage.
 				self javaControllerPackage };
+		installInto: fylgja.
+
+
+	FylgjaRuleInstaller new
+		atLanguageNamed: java name;
+		anyAlceDBEntity;
+		dispatchToSubPackages: { 
+				self javaModelPackage.
+				self javaDaoPackage };
 		installInto: fylgja
 ]
 
@@ -227,6 +255,13 @@ FylgjaJavaSpringRuleInstaller >> javaControllerPackage [
 FylgjaJavaSpringRuleInstaller >> javaDaoPackage [
 
 	^ java packages detect: [ :p | p name = 'DAO' ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaJavaSpringRuleInstaller >> javaLong [
+
+	^ (java entities select: [ :a | 
+		   (a isKindOf: MOClass) and: [ a name = 'Long' ] ]) first
 ]
 
 { #category : #initialization }

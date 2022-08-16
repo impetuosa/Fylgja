@@ -32,6 +32,12 @@ FylgjaDerivativeModel >> bindCandidateless [
 	fylgja bindCandidateless: self
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> bindCandidateless: aFylgjaDerivativeModel [
+
+	^ fylgja bindCandidateless: aFylgjaDerivativeModel
+]
+
 { #category : #accessing }
 FylgjaDerivativeModel >> deferredMapping [
 	^ deferredMapping ifNil: [ deferredMapping := Dictionary new  ]
@@ -69,6 +75,13 @@ FylgjaDerivativeModel >> errors [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> finalizeFylgja [
+	derivativeModels do:#finalizeMoxing.
+	derivativeModels removeAll. 
+	migrationRuleSpace finalizeFylgja 
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> forceMap [
 
 	^ fylgja forceMapStubs: self
@@ -87,6 +100,12 @@ FylgjaDerivativeModel >> forceMapReferences: aCollection [
 			forceReMappingRuleOverStubs: references
 			contextModel: model
 			using: self ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> forceMapStubs: aFylgjaDerivativeModel [
+
+	^ fylgja forceMapStubs: aFylgjaDerivativeModel
 ]
 
 { #category : #'as yet unclassified' }
@@ -363,6 +382,17 @@ FylgjaDerivativeModel >> processLinking [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> produce: aMOAlceQuery applying: aFylgjaProductionRule croppingRelationsWith: aFullBlockClosure into: aMORootDeclaration using: aFylgjaDerivativeModel [
+
+	^ fylgja
+		  produce: aMOAlceQuery
+		  applying: aFylgjaProductionRule
+		  croppingRelationsWith: aFullBlockClosure
+		  into: aMORootDeclaration
+		  using: aFylgjaDerivativeModel
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> produce: aProvenanceEntity applying: aRule into: aContextDestinationEntity [
 
 	^ self manageApplicationCycleAndProduceResult: [ 
@@ -497,18 +527,4 @@ FylgjaDerivativeModel >> stubReferencesTo: aProvenanceEntity from: aDestinationM
 	^ aDestinationModel entities select: [ :a | 
 		  (a isKindOf: FylgjaCandidateStub) and: [ 
 			  a candidate = aProvenanceEntity ] ]
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaDerivativeModel >> writerFor: aProvenanceEntity inContextOf: aDestinationContext do: anUpdatingBlock [
-
-	| writer destinationEntity |
-	writer := (self selectDerivativeModelFor: aDestinationContext)
-		          writer.
-	destinationEntity := writer
-		                     updaterFor: aDestinationContext
-		                     with: aProvenanceEntity
-		                     do: anUpdatingBlock.
-	writer populateAnchor.
-	^ destinationEntity
 ]

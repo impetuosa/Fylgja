@@ -45,66 +45,6 @@ FylgjaMatchingRuleTests >> testAllConditionMatchesTheCase [
 ]
 
 { #category : #initialization }
-FylgjaMatchingRuleTests >> testEntityEqualsConditionMatchesTheCase [
-
-	| variable destinationContextRelation destinationContext |
-	variable := self derivative readEntitysContextualizingRelation:
-		            self logErrorFunctionVariable.
-	destinationContext := self dataSourceConfigClassConfigPackage.
-	destinationContextRelation := self derivative 
-		                              readEntitysContextualizingRelation:
-		                              destinationContext.
-
-	self assert: (fylgja
-			 lookupRulesForProducing: variable
-			 toContext: destinationContextRelation
-			 destinationModel:
-			 (fylgja selectDerivativeModelFor: destinationContext)) isEmpty.
-
-	FylgjaRuleInstaller new
-		context: destinationContext;
-		whenEntityIs: variable to;
-		copy;
-		installInto: fylgja.
-
-	self assert: (fylgja
-			 lookupRulesForProducing: variable
-			 toContext: destinationContextRelation
-			 destinationModel:
-			 (fylgja selectDerivativeModelFor: destinationContext)) size = 1
-]
-
-{ #category : #initialization }
-FylgjaMatchingRuleTests >> testEntityIdenticalConditionMatchesTheCase [
-
-	| variable destinationContextRelation destinationContext |
-	variable := self derivative readEntitysContextualizingRelation:
-		            self logErrorFunctionVariable.
-	destinationContext := self dataSourceConfigClassConfigPackage.
-	destinationContextRelation := self derivative 
-		                              readEntitysContextualizingRelation:
-		                              destinationContext.
-
-	self assert: (fylgja
-			 lookupRulesForProducing: variable
-			 toContext: destinationContextRelation
-			 destinationModel:
-			 (fylgja selectDerivativeModelFor: destinationContext)) isEmpty.
-
-	FylgjaRuleInstaller new
-		context: destinationContext;
-		whenEntityIsIdenticalTo: variable to;
-		copy;
-		installInto: fylgja.
-
-	self assert: (fylgja
-			 lookupRulesForProducing: variable
-			 toContext: destinationContextRelation
-			 destinationModel:
-			 (fylgja selectDerivativeModelFor: destinationContext)) size = 1
-]
-
-{ #category : #initialization }
 FylgjaMatchingRuleTests >> testTypeConditionMatchesTheCase [
 
 	| variable destinationContextRelation destinationContext |

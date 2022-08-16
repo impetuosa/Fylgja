@@ -2,10 +2,9 @@ Class {
 	#name : #FylgjaTranslateReplaceWithStringLiteral,
 	#superclass : #FylgjaTranslation,
 	#instVars : [
-		'writer',
 		'string'
 	],
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Translation'
 }
 
 { #category : #'as yet unclassified' }

@@ -18,6 +18,15 @@ FylgjaNorthwindRuleInstaller >> accessDbAttachment [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaNorthwindRuleInstaller >> accessDbLongType [
+
+	^ northwind entities
+		  detect: [ :a | 
+		  (a isKindOf: MOPrimitiveType) and: [ a name = #dbLong ] ]
+		  ifNone: [ nil ]
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaNorthwindRuleInstaller >> accessDbMemoType [
 
 	^ northwind entities

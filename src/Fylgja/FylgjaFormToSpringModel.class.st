@@ -1,7 +1,7 @@
 Class {
 	#name : #FylgjaFormToSpringModel,
 	#superclass : #FylgjaFormToSpring,
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Generation'
 }
 
 { #category : #'as yet unclassified' }
@@ -33,7 +33,7 @@ FylgjaFormToSpringModel >> applyTo: aRelatedProvenanceEntity croppingRelationsWi
 			 using: aFylgjaDerivativeModel) not.
 
 	aDestinationWriter writeDeclarationUnit: [ :unit | 
-		cls := unit writeClass: [ :class | 
+		cls := unit writeJavaClass: [ :class | 
 			       class visibility: #public.
 			       self annotateAsEntity: class.
 			       self annotate: class asTableNamed: tableName.

@@ -5,7 +5,7 @@ Class {
 		'writer',
 		'mustReturn'
 	],
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Translation'
 }
 
 { #category : #'as yet unclassified' }
@@ -18,18 +18,21 @@ FylgjaTranslateCopyAsMethod class >> possibleWritingMessages [
 FylgjaTranslateCopyAsMethod >> applyTo: aProvenanceEntityRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	| method |
+	[ 
 	mustReturn := false.
 	method := aDestinationWriter writeMethod: [ :methodWriter | 
 		          writer := methodWriter.
 		          aProvenanceEntityRelation to acceptVisitor: self.
-
 		          FylgjaCopy new
 			          lookUp: aFylgjaLookUpContext;
 			          fylgja: aFylgjaDerivativeModel;
 			          provenanceRelation: aProvenanceEntityRelation;
 			          cropping: aBlock;
 			          applyOn: methodWriter ].
-
+	({ 
+		 MOClassProcedure.
+		 MOProcedure } anySatisfy: [ :c | 
+		 aProvenanceEntityRelation to species = c ]) ifTrue: [ ^ self ].
 	method block isEmptyOrNil ifFalse: [ 
 		aDestinationWriter updateBlock: method block with: [ :block | 
 			| variable |
@@ -40,7 +43,7 @@ FylgjaTranslateCopyAsMethod >> applyTo: aProvenanceEntityRelation croppingRelati
 			method block statements last isReturn ifFalse: [ 
 				FylgjaAddReturn new
 					expression: (self variableReferenceTo: variable using: block);
-					applyOn: block ] ] ].
+					applyOn: block ] ] ] ] ensure: [ writer := nil ].
 	^ method
 ]
 

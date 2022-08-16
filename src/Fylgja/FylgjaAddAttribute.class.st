@@ -7,7 +7,7 @@ Class {
 		'visibility',
 		'initializer'
 	],
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Modifications'
 }
 
 { #category : #'instance creation' }

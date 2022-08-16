@@ -13,6 +13,15 @@ FylgjaCondition class >> priority [
 	^ 0
 ]
 
+{ #category : #accessing }
+FylgjaCondition >> and: anOtherCondition [
+
+	^ FylgjaConditionAnd new
+		  left: self;
+		  right: anOtherCondition;
+		  yourself
+]
+
 { #category : #'as yet unclassified' }
 FylgjaCondition >> increasePriority [
 
@@ -35,6 +44,15 @@ FylgjaCondition >> matches: aProvenanceEntityRelation context: aDestinationConte
 FylgjaCondition >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation [
 
 	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+FylgjaCondition >> or: anOtherCondition [
+
+	^ FylgjaConditionOr new
+		  left: self;
+		  right: anOtherCondition;
+		  yourself
 ]
 
 { #category : #accessing }

@@ -27,6 +27,16 @@ FylgjaRuleInstaller >> any: aType migratingTo: anOtherType [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> anyAlceDBEntity [
+
+	^ self condition: (FylgjaConditionModelTypeIs new
+			   types: { 
+					   MOAlceTable.
+					   MOAlceQuery };
+			   yourself)
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> anyAlceForm [
 
 	^ self condition: (FylgjaConditionModelTypeIs new
@@ -86,6 +96,16 @@ FylgjaRuleInstaller >> anyInvocationTo: aString [
 	^ self condition: (FylgjaConditionInvocationSelectorIs new
 			   selector: aString;
 			   yourself) increasePriority
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> anyJavaMethodAnnotatedWith: javaAnnotationNames transferredToTypescriptDecoratedWith: typescriptDecoratorNames [
+
+	^ self condition: ((FylgjaConditionAnyJavaMethodAnnotated new
+			    annotationNames: javaAnnotationNames;
+			    yourself) and: (FylgjaConditionAnyTypescriptClassDecorated new
+				    decoratorNames: typescriptDecoratorNames;
+				    yourself))
 ]
 
 { #category : #'as yet unclassified' }
@@ -166,12 +186,6 @@ FylgjaRuleInstaller >> applyAllOperations: aFullBlockClosure [
 { #category : #accessing }
 FylgjaRuleInstaller >> atLanguageNamed: aString [ 
 	installAtLanguageLevel := aString
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaRuleInstaller >> autoMigrateUnbindableDependencyInstall [
-
-	self operation: FylgjaAutoMigrateUnBindableDependency new
 ]
 
 { #category : #'as yet unclassified' }
@@ -282,6 +296,24 @@ FylgjaRuleInstaller >> copyRenameMethod: aString [
 { #category : #copying }
 FylgjaRuleInstaller >> copyReplaceCategoryWithDestinationPackage [
 	^ self operation: FylgjaTranslateCopyReplaceCategory new 
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> dbEntityToAngularModel [
+
+	^ self operation: FylgjaDBEntityToAngularModel new
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> dbEntityToSpringDAO [
+
+	^ self operation: FylgjaDBEntityToSpringDAO new
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> dbEntityToSpringModel [
+
+	^ self operation: FylgjaDBEntityToSpringModel new
 ]
 
 { #category : #'as yet unclassified' }
@@ -413,6 +445,12 @@ FylgjaRuleInstaller >> matchesPattern: aFylgjaPattern [
 	self condition: aFylgjaPattern
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> migrateAsURLCall [
+
+	^ self operation: FylgjaFromJavaControllerToAngularService new
+]
+
 { #category : #hooks }
 FylgjaRuleInstaller >> modelFor: aFylgjaMigrationEngine [
 
@@ -493,22 +531,6 @@ FylgjaRuleInstaller >> returnSameBinding [
 { #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> topLevel [
 	installAtTopLevel := true .
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaRuleInstaller >> whenEntityIs: anAlcixLocalVariable [
-
-	^ self condition: (FylgjaConditionEntityEquality new
-			   entity: anAlcixLocalVariable;
-			   yourself)
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaRuleInstaller >> whenEntityIsIdenticalTo: anAlcixLocalVariable [
-
-	^ self condition: (FylgjaConditionEntityIdentity new
-			   entity: anAlcixLocalVariable;
-			   yourself)
 ]
 
 { #category : #'as yet unclassified' }

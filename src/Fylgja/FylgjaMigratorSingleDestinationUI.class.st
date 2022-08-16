@@ -72,6 +72,10 @@ FylgjaMigratorSingleDestinationUI >> initializePresenters [
 	toolbar := self newToolbar.
 	toolbar
 		addItemLeft: (self newToolbarButton
+				 label: 'Save Rules';
+				 icon: (self iconNamed: #smallSave);
+				 action: [ self saveRules ]);
+		addItemLeft: (self newToolbarButton
 				 label: 'Create Checkpoint';
 				 icon: (self iconNamed: #smallNew);
 				 action: [ self createCheckpoint ]);
@@ -87,6 +91,9 @@ FylgjaMigratorSingleDestinationUI >> initializePresenters [
 				 label: 'Inspect Controller  ';
 				 icon: (self iconNamed: #smallInspect);
 				 action: [ self controller inspect ]);
+				
+				
+				
 		addItemRight: (self newToolbarButton
 				 label: ' Update Project';
 				 icon: (self iconNamed: #edit);

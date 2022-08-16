@@ -1,7 +1,7 @@
 Class {
 	#name : #FylgjaFormToAngularService,
 	#superclass : #FylgjaFormToAngular,
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Generation'
 }
 
 { #category : #adding }
@@ -36,28 +36,13 @@ FylgjaFormToAngularService >> addGetAllMethodService: class for: aMOAlceForm del
 								   o stringLiteral: (self modelNameFor: aMOAlceForm) , '-list' ]) } ] ] ] ] ]
 ]
 
-{ #category : #adding }
-FylgjaFormToAngularService >> addSaveModelMethodService: class for: aMOAlceForm delegateTo: httpClient url: url [ 
-
-self halt.
-	"^ FylgjaAddDelegateAndTransmitParametersMethod new
-		  attributeReference:
-			  (self variableReferenceTo: aMOAttribute using: class);
-		  returnTypeReference: (self booleanTypeReference: class);
-		  selector: #save , (self modelNameFor: aMOAlceForm);
-		  parameters: { (#model
-			   -> (class typeReferenceNamed: (self modelNameFor: aMOAlceForm))) };
-		  applyOn: class"
-]
-
 { #category : #'as yet unclassified' }
 FylgjaFormToAngularService >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
-	| http url cls |
-	self assert:
-		(self
-			 hasId: aRelatedProvenanceEntity to
-			 using: aFylgjaDerivativeModel) not.
+	| http url cls sources |
+	sources := self recogniceDataSourceAccesses:
+		           aRelatedProvenanceEntity to.
+
 	aDestinationWriter writeDeclarationUnit: [ :unit | 
 		cls := unit writeTypescriptClass: [ :class | 
 			       class visibility: #public.
@@ -72,34 +57,33 @@ FylgjaFormToAngularService >> applyTo: aRelatedProvenanceEntity croppingRelation
 			       http := self addHttpClientVariable: class.
 			       url := self addBaseUrlVariable: class.
 			       self addConstructor: class initializing: http.
-			       self
-				       addGetAllMethodService: class
-				       for: aRelatedProvenanceEntity to
-				       delegateTo: http
-				       url: url.
-			       (self
-				        hasId: aRelatedProvenanceEntity to
-				        using: aFylgjaDerivativeModel) ifTrue: [ 
+			       sources do: [ :s | 
 				       self
-					       addSaveModelMethodService: class
-					       for: aRelatedProvenanceEntity to
+					       generateServiceMethodFor: s
 					       delegateTo: http
-					       url: url.
-
-				       self
-					       addDeleteModelMethodService: class
-					       for: aRelatedProvenanceEntity to
-					       delegateTo: http
-					       url: url.
-				       self
-					       updateModelMethodService: class
-					       for: aRelatedProvenanceEntity to
-					       delegateTo: http
-					       url: url ] ].
+					       url: url
+					       into: class
+					       using: aFylgjaDerivativeModel ] ].
 		(self importableDependencies: cls) do: [ :type | 
 			unit writeImport: [ :import | 
 				import importingTypeOrTypeReference: type ] ] ].
 	^ cls
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaFormToAngularService >> generateServiceMethodFor: aFylgjaSQLSource delegateTo: http url: url into: aMOTypescriptClassWriter using: aFylgjaDerivativeModel [
+
+	^ aFylgjaSQLSource
+		  fylgja: aFylgjaDerivativeModel;
+		  applyOnFrontEndService: aMOTypescriptClassWriter delegateTo: http url: url 
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaFormToAngularService >> generateServiceMethodFor: aFylgjaSQLSource into: aMOTypescriptClassWriter using: aFylgjaDerivativeModel [
+
+	^ aFylgjaSQLSource
+		  fylgja: aFylgjaDerivativeModel;
+		  applyOnFrontEndService: aMOTypescriptClassWriter
 ]
 
 { #category : #adding }

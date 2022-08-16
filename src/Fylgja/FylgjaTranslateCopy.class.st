@@ -1,7 +1,7 @@
 Class {
 	#name : #FylgjaTranslateCopy,
 	#superclass : #FylgjaTranslation,
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Translation'
 }
 
 { #category : #'as yet unclassified' }

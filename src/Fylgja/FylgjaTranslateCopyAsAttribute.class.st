@@ -8,7 +8,7 @@ Class {
 		'using',
 		'croppingBlock'
 	],
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Translation'
 }
 
 { #category : #'as yet unclassified' }
@@ -25,7 +25,12 @@ FylgjaTranslateCopyAsAttribute >> applyTo: aProvenanceEntityRelation croppingRel
 	lookup := aFylgjaLookUpContext.
 	using := aFylgjaDerivativeModel.
 	croppingBlock := aBlock.
-	^ aProvenanceEntityRelation to acceptVisitor: self
+	[ ^ aProvenanceEntityRelation to acceptVisitor: self ] ensure: [ 
+		writer := nil.
+		relation := nil.
+		lookup := nil.
+		using := nil.
+		croppingBlock := nil ]
 ]
 
 { #category : #testing }

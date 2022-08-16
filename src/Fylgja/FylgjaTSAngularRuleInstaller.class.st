@@ -24,10 +24,25 @@ FylgjaTSAngularRuleInstaller >> installAngularTx [
 
 	FylgjaRuleInstaller new
 		context: angular root;
+		anyAlceDBEntity;
+		dbEntityToAngularModel;
+		installInto: fylgja.
+
+
+	FylgjaRuleInstaller new
+		context: angular root;
+		anyJavaMethodAnnotatedWith:
+			#( PostMapping DeleteMapping GetMapping RequestMapping )
+		transferredToTypescriptDecoratedWith: #( Injectable );
+		migrateAsURLCall; 
+		installInto: fylgja.
+
+
+	FylgjaRuleInstaller new
+		context: angular root;
 		any: MOAlceForm migratingTo: MOAngularModule;
 		applyAllOperations: [ :i | 
 			{ 
-				i formToAngularModel.
 				i formToAngularService.
 				i formToAngularComponent } ];
 		installInto: fylgja
@@ -138,7 +153,7 @@ FylgjaTSAngularRuleInstaller >> installTsLanguageTx [
 		invocationToMessageSendToSelf;
 		installInto: fylgja.
 
-	" By default when going to java "
+	" By default when going to ts "
 	FylgjaRuleInstaller new
 		context: angular root;
 		anyModelEntityOfTypesWhenGoingClass: { 
@@ -148,7 +163,7 @@ FylgjaTSAngularRuleInstaller >> installTsLanguageTx [
 				MOProcedure };
 		copyAsMethod;
 		installInto: fylgja.
-	" By default when going to java "
+	" By default when going to ts "
 
 	FylgjaRuleInstaller new
 		context: angular root;
@@ -156,5 +171,34 @@ FylgjaTSAngularRuleInstaller >> installTsLanguageTx [
 				MOGlobalVariable.
 				MOGlobalConstant };
 		copyAsAttribute;
+		installInto: fylgja.
+
+
+	FylgjaRuleInstaller new
+		atLanguageNamed: #angular;
+		whenIsReferenceWithCandidates: { 
+				self accessDbMemoType.
+				self accessDbTextType };
+		bindRewriteTo: self tsString;
+		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		atLanguageNamed: #angular;
+		whenIsReferenceWithCandidates: { self accessDbLongType };
+		bindRewriteTo: self tsBigInt;
 		installInto: fylgja
+]
+
+{ #category : #general }
+FylgjaTSAngularRuleInstaller >> tsBigInt [
+
+	^ (angular entities select: [ :a | 
+		   (a isKindOf: MOType) and: [ a name = 'bigint' ] ]) first
+]
+
+{ #category : #general }
+FylgjaTSAngularRuleInstaller >> tsString [
+
+	^ (angular entities select: [ :a | 
+		   (a isKindOf: MOClass) and: [ a name = 'string' ] ]) first
 ]

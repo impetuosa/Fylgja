@@ -46,6 +46,18 @@ FylgjaRule >> isFylgjaStub [
 	^ false
 ]
 
+{ #category : #testing }
+FylgjaRule >> isInvocable [
+
+	^ false
+]
+
+{ #category : #testing }
+FylgjaRule >> isInvocation [
+
+	^ false
+]
+
 { #category : #accessing }
 FylgjaRule >> isProductionRule [
 
@@ -56,6 +68,29 @@ FylgjaRule >> isProductionRule [
 FylgjaRule >> isRule [
 
 	^ true
+]
+
+{ #category : #testing }
+FylgjaRule >> isStatement [
+
+	^ false
+]
+
+{ #category : #testing }
+FylgjaRule >> isStatementExpression [
+
+	^ false
+]
+
+{ #category : #testing }
+FylgjaRule >> isTypeReference [
+^ false
+]
+
+{ #category : #testing }
+FylgjaRule >> isVariable [
+
+	^ false
 ]
 
 { #category : #accessing }

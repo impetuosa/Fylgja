@@ -91,6 +91,12 @@ FylgjaAbstractCandidateStub >> name [
 	^ provenance to name
 ]
 
+{ #category : #accessing }
+FylgjaAbstractCandidateStub >> packageReference [
+
+	^ nil
+]
+
 { #category : #'as yet unclassified' }
 FylgjaAbstractCandidateStub >> provenance [
 	^ provenance 

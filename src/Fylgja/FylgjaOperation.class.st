@@ -7,7 +7,7 @@ Class {
 { #category : #'instance creation' }
 FylgjaOperation class >> possibleWritingMessages [
 
-	self subclassResponsibility
+	^ { #writeExpression:. #writeStatement: }
 ]
 
 { #category : #'as yet unclassified' }

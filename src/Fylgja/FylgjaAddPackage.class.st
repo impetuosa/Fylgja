@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'packageName'
 	],
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Modifications'
 }
 
 { #category : #accessing }

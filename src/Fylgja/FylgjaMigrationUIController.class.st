@@ -91,7 +91,7 @@ FylgjaMigrationUIController >> applyCommand: aCommand informing: aWidget do: aBl
 
 	| result |
 	^ self
-		  doOrLog: [ 
+		  transactionalDoOrLog: [ 
 			  result := aBlock value.
 			  self logSuccess: result operation: aCommand name.
 			  aWidget ruleHasBeenAppliedSuccessfully.
@@ -115,9 +115,7 @@ FylgjaMigrationUIController >> createCheckpointFor: aWidget [
 
 	self
 		doOrLog: [ 
-			fylgja push: (fylgja top derivative
-					 installAllDerivativeModels;
-					 yourself).
+			self privateCreateCheckpoint.
 			self
 				logSuccess:
 				'Successfull checkpoint. Version: ' , fylgja size asString
@@ -162,6 +160,7 @@ FylgjaMigrationUIController >> dropAllChangesWith: aWidget [
 			stackCopy := fylgja shallowCopy.
 			fylgjaModel := stackCopy last originalModel derivative.
 			fylgjaModel installAllDerivativeModels.
+			stackCopy do: [ :a | a finalizeFylgja ].
 			stackCopy removeAll.
 			stackCopy push: fylgjaModel.
 			fylgja := stackCopy.
@@ -192,6 +191,26 @@ FylgjaMigrationUIController >> exportDraft: aFileReference informTo: aWidget [
 			  result ]
 		  forOperation: #ExportAsDraft
 		  ifFailReturn: [ nil ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationUIController >> finalizeFylgja [
+
+	fylgja do: #finalizeFylgja.
+	fylgja do: [ :f | f becomeForward: {  } ].
+	fylgja removeAll.
+	origin := nil.
+	destinations := nil.
+	(interestedInSelection collect: #first thenReject: #isNil) do: [ :w | 
+		w withWidgetDo: #delete ].
+
+	(interestedInLogging collect: #first thenReject: #isNil) do: [ :w | 
+		w withWidgetDo: #delete ].
+	(interestedInSelection , interestedInLogging
+		 collect: #first
+		 thenReject: #isNil) do: [ :e | e becomeForward: {  } ].
+	interestedInSelection removeAll.
+	interestedInLogging removeAll
 ]
 
 { #category : #accessing }
@@ -329,7 +348,7 @@ FylgjaMigrationUIController >> map: anEntity to: other context: context informin
 
 	| result |
 	^ self
-		  doOrLog: [ 
+		  transactionalDoOrLog: [ 
 			  self
 				  assert: anEntity isNotNil
 				  description: ' Cannot resolve provenance entity .'.
@@ -366,11 +385,26 @@ FylgjaMigrationUIController >> origin: aMOModelDerivative [
 ]
 
 { #category : #accessing }
+FylgjaMigrationUIController >> privateCreateCheckpoint [
+
+	fylgja push: (fylgja top derivative
+			 installAllDerivativeModels;
+			 yourself)
+]
+
+{ #category : #accessing }
+FylgjaMigrationUIController >> privateRollback [
+
+	self assert: fylgja size > 1 description: 'No earlier version found'.
+	fylgja pop finalizeFylgja
+]
+
+{ #category : #accessing }
 FylgjaMigrationUIController >> produce: aProvenance applying: aRule into: aDestination informing: aWidget [
 
 	| result |
 	^ self
-		  doOrLog: [ 
+		  transactionalDoOrLog: [ 
 			  self
 				  assert: aProvenance isNotNil
 				  description: ' Cannot resolve provenance entity .'.
@@ -435,10 +469,7 @@ FylgjaMigrationUIController >> rollbackFor: aWidget [
 
 	self
 		doOrLog: [ 
-			self
-				assert: fylgja size > 1
-				description: 'No earlier version found'.
-			fylgja pop.
+			self privateRollback.
 			self
 				logSuccess:
 				'Successifull rollback. Version: ' , fylgja size asString
@@ -448,10 +479,40 @@ FylgjaMigrationUIController >> rollbackFor: aWidget [
 		ifFailReturn: [ nil ]
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaMigrationUIController >> saveRules [
+
+	| fileName stream |
+	self halt: 'Not yet fully supported. Ensure no model object is in any rule'.
+	fileName := 'fylgja.mrs.version-' , self versionNumber asString
+	            , '.ston'.
+	stream := fileName asFileReference
+		          ensureDelete;
+		          writeStream.
+	STON put: self fylgja migrationRuleSpace onStream: stream.
+	stream flush.
+	stream close
+]
+
 { #category : #accessing }
 FylgjaMigrationUIController >> stubsFor: aDeclaration [
 
 	^ FylgjaReachableStubs new stubsFor: aDeclaration
+]
+
+{ #category : #accessing }
+FylgjaMigrationUIController >> transactionalDoOrLog: aFullBlockClosure forOperation: aOperationName ifFailReturn: aBlock [
+
+	^ [ 
+	  self privateCreateCheckpoint.
+	  aFullBlockClosure value ]
+		  on: Error
+		  do: [ :e | 
+			  [ 
+			  self logError: e operation: aOperationName.
+			  self isDebugging
+				  ifTrue: [ e pass ]
+				  ifFalse: [ aBlock value ] ] ensure: [ self privateRollback ] ]
 ]
 
 { #category : #'as yet unclassified' }

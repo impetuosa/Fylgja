@@ -5,7 +5,7 @@ Class {
 		'originURL',
 		'apiURLExtention'
 	],
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Generation'
 }
 
 { #category : #adding }
@@ -24,11 +24,6 @@ FylgjaFormToSpringController >> addGetAllMethodController: class for: aMOAlceFor
 		  applyOn: class
 ]
 
-{ #category : #adding }
-FylgjaFormToSpringController >> addSaveModelMethodController: aMOClassWriter for: aMOAlceForm using: aMOAttribute [ 
-	self halt .
-]
-
 { #category : #accessing }
 FylgjaFormToSpringController >> apiURLExtention [
 	^ apiURLExtention
@@ -43,11 +38,12 @@ FylgjaFormToSpringController >> apiURLExtention: aString [
 { #category : #'as yet unclassified' }
 FylgjaFormToSpringController >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgja [
 
-	| dao cls |
-	self assert:
-		(self hasId: aRelatedProvenanceEntity to using: aFylgja) not.
+	| service cls sources |
+	sources := self recogniceDataSourceAccesses:
+		           aRelatedProvenanceEntity to.
+
 	aDestinationWriter writeDeclarationUnit: [ :unit | 
-		cls := unit writeClass: [ :class | 
+		cls := unit writeJavaClass: [ :class | 
 			       class visibility: #public.
 			       class name:
 				       (self controllerNameFor: aRelatedProvenanceEntity to).
@@ -57,32 +53,17 @@ FylgjaFormToSpringController >> applyTo: aRelatedProvenanceEntity croppingRelati
 				       withOriginAt: self originURL.
 			       self
 				       annotateAsRequestMapping: class
-				       mappingTo: self apiURLExtention.
+				       mappingTo: self apiURLExtention , '/'
+					       , (self controllerNameFor: aRelatedProvenanceEntity to).
 
+			       service := self
+				                  addServiceDelegate: class
+				                  for: aRelatedProvenanceEntity to.
 
-			       dao := self
-				              addServiceDelegate: class
-				              for: aRelatedProvenanceEntity to.
-
-			       (self hasId: aRelatedProvenanceEntity to using: aFylgja) 
-				       ifTrue: [ 
-					       self
-						       addSaveModelMethodController: class
-						       for: aRelatedProvenanceEntity to
-						       using: dao.
-
-					       self
-						       addDeleteModelMethodController: class
-						       for: aRelatedProvenanceEntity to
-						       using: dao.
-					       self
-						       updateModelMethodController: class
-						       for: aRelatedProvenanceEntity to
-						       using: dao ].
-			       self
-				       addGetAllMethodController: class
-				       for: aRelatedProvenanceEntity to
-				       using: dao ].
+			       sources do: [ :s | 
+				       s
+					       service: service;
+					       applyOnController: class ] ].
 
 		(self importableDependencies: cls) do: [ :type | 
 			unit writeImport: [ :import | 

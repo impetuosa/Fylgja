@@ -1,7 +1,7 @@
 Class {
 	#name : #FylgjaFormToAngular,
-	#superclass : #FylgjaFromAccess,
-	#category : #'Fylgja-Rule-Operations'
+	#superclass : #FylgjaAccessToAngular,
+	#category : #'Fylgja-Rule-Generation'
 }
 
 { #category : #'as yet unclassified' }
@@ -41,24 +41,6 @@ FylgjaFormToAngular >> addHttpClientVariable: class [
 		  applyOn: class
 ]
 
-{ #category : #'as yet unclassified' }
-FylgjaFormToAngular >> calculateReferenceToAnObservable: aString [ 
-	self shouldBeImplemented.
-]
-
-{ #category : #'as yet unclassified' }
-FylgjaFormToAngular >> calculateReferenceToAnObservable: aString using: class [
-
-	| observable |
-	observable := self
-		              calculateParametrizableTypeReference: 'Observable'
-		              packageName: 'rxjs'
-		              using: class.
-	observable argumentTypeReferences:
-		{ (self calculateTypeReference: aString using: class) }.
-	^ observable
-]
-
 { #category : #testing }
 FylgjaFormToAngular >> canBeAppliedTo: aProvenanceEntityRelation context: aDestinationContextRelation forProducing: aType with: aWriter [
 
@@ -66,14 +48,30 @@ FylgjaFormToAngular >> canBeAppliedTo: aProvenanceEntityRelation context: aDesti
 		  self canWriteOver: aWriter ]
 ]
 
-{ #category : #'as yet unclassified' }
-FylgjaFormToAngular >> decorateAsInjectableIn: aString into: class [
+{ #category : #testing }
+FylgjaFormToAngular >> isValueHoldingTypeReference: aMOTypeReference [
 
-	^ FylgjaDecorate new
-		  packageName: '@angular/core';
-		  decoratorName: 'Injectable';
-		  addArgument: { (#providedIn -> aString) } asDictionary;
-		  applyOn: class
+	self halt: aMOTypeReference name.
+	^ { #_Combobox . #_Label } includes: aMOTypeReference name
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaFormToAngular >> recogniceDataSourceAccesses: aMOAlceForm [
+
+	| ds |
+	ds := OrderedCollection new.
+
+	aMOAlceForm object allEndingWith: #Source ifPresentDo: [ :rs | 
+		(self looksLikeSql: rs) ifTrue: [ 
+			ds add: (FylgjaSQLSource new sql: rs) ] ].
+	aMOAlceForm object objectEntries do: [ :obj | 
+		obj allEndingWith: #Source ifPresentDo: [ :rs | 
+			(self looksLikeSql: rs) ifTrue: [ 
+				ds add: (FylgjaSQLSource new
+						 sql: rs;
+						 bindingObject: obj;
+						 yourself) ] ] ].
+	^ ds
 ]
 
 { #category : #'as yet unclassified' }
@@ -81,7 +79,7 @@ FylgjaFormToAngular >> resolveModelClassReferenceFor: aRelatedProvenanceEntity u
 
 	^ self
 		  calculateTypeReference:
-		  (self modelNameFor: aRelatedProvenanceEntity to name)
+		  (self modelNameFor: aRelatedProvenanceEntity to)
 		  using: writer
 ]
 
@@ -90,6 +88,6 @@ FylgjaFormToAngular >> resolveServiceClassReferenceFor: aRelatedProvenanceEntity
 
 	^ self
 		  calculateTypeReference:
-		  (self serviceNameFor: aRelatedProvenanceEntity to name)
+		  (self serviceNameFor: aRelatedProvenanceEntity to)
 		  using: writer
 ]

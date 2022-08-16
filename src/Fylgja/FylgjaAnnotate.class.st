@@ -7,7 +7,7 @@ Class {
 		'namedArguments',
 		'arguments'
 	],
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Modifications'
 }
 
 { #category : #'instance creation' }
@@ -42,8 +42,7 @@ FylgjaAnnotate >> calculateArguments: aWriter [
 		   aWriter writeUnregisteredExpression: [ :exp | 
 			   exp
 				   singleArgumentNamed: keyValue key
-				   expression: [ :e | 
-				   { (self literal: keyValue value with: exp) } ] ] ])
+				   expression: [ :e | self literal: keyValue value with: exp ] ] ])
 	  , ((arguments ifNil: [ {  } ]) collect: [ :d | 
 			   self literal: d with: aWriter ])
 ]

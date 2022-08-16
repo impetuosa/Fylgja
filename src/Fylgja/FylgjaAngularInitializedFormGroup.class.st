@@ -6,7 +6,7 @@ Class {
 		'bindings',
 		'initializingMethodSelector'
 	],
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Modifications'
 }
 
 { #category : #'instance creation' }
@@ -56,7 +56,6 @@ FylgjaAngularInitializedFormGroup >> privateApplyOn: class [
 FylgjaAngularInitializedFormGroup >> writeInitializingFormGroup: selector for: bindingsToMap into: class [
 
 	| return |
-	self assert: bindingsToMap isEmpty.
 	^ class writeMethod: [ :method | 
 		  method selector: selector.
 		  method returnTypeReference: (self formGroupReference: class).
@@ -66,7 +65,20 @@ FylgjaAngularInitializedFormGroup >> writeInitializingFormGroup: selector for: b
 					            variable: '_returning'
 					            typeReference: (self formGroupReference: class)
 					            initializer: [ :exp | 
-					            exp new: (self formGroupReference: class) ] ].
+						            exp
+							            new: (self formGroupReference: class)
+							            arguments: [ :ex | 
+							            { (ex dictionaryLiteral: Dictionary new) } ] ] ].
+			  bindingsToMap keys do: [ :controlName | 
+				  block writeStatement: [ :stmt | 
+					  stmt
+						  invokeMethodNamed: #addControl
+						  receiver: [ :exp | 
+						  self variableReferenceTo: return using: exp ]
+						  arguments: [ :axp | 
+							  { 
+								  (axp stringLiteral: controlName).
+								  (axp new: (self formControlReference: class)) } ] ] ].
 			  block writeReturn: [ :ret | 
 				  ret writeExpression: [ :ex | 
 					  self variableReferenceTo: return using: ex ] ] ] ]

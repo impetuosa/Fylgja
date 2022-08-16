@@ -1,7 +1,7 @@
 Class {
 	#name : #FylgjaFormToSpringService,
 	#superclass : #FylgjaFormToSpring,
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Generation'
 }
 
 { #category : #adding }
@@ -47,41 +47,33 @@ FylgjaFormToSpringService >> addSaveModelMethodService: class for: aMOAlceForm u
 { #category : #'as yet unclassified' }
 FylgjaFormToSpringService >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgja [
 
-	| dao cls |
-	self assert:
-		(self hasId: aRelatedProvenanceEntity to using: aFylgja) not.
+	| cls sources |
+	sources := self recogniceDataSourceAccesses:
+		           aRelatedProvenanceEntity to.
+	sources ifEmpty: [ ^ self ].
+
 	aDestinationWriter writeDeclarationUnit: [ :unit | 
-		cls := unit writeClass: [ :class | 
+		cls := unit writeJavaClass: [ :class | 
 			       class visibility: #public.
 			       class name:
 				       (self serviceNameFor: aRelatedProvenanceEntity to).
 			       self annotateAsService: class.
 			       self annotateAsTransactional: class.
-			       dao := self
-				              addDaoDelegate: class
-				              for: aRelatedProvenanceEntity to.
-
-			       self
-				       addSaveModelMethodService: class
-				       for: aRelatedProvenanceEntity to
-				       using: dao.
-			       self
-				       addGetAllMethodService: class
-				       for: aRelatedProvenanceEntity to
-				       using: dao.
-			       self
-				       addDeleteModelMethodService: class
-				       for: aRelatedProvenanceEntity to
-				       using: dao.
-			       self
-				       updateModelMethodService: class
-				       for: aRelatedProvenanceEntity to
-				       using: dao ].
+			       sources do: [ :s | 
+				       self generateServiceMethodFor: s into: class using: aFylgja ] ].
 
 		(self importableDependencies: cls) do: [ :type | 
 			unit writeImport: [ :import | 
 				import importingTypeOrTypeReference: type ] ] ].
 	^ cls
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaFormToSpringService >> generateServiceMethodFor: source into: class using: aFylgjaDerivativeModel [
+
+	^ source
+		  fylgja: aFylgjaDerivativeModel;
+		  applyOnService: class
 ]
 
 { #category : #'as yet unclassified' }

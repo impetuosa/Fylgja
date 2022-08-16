@@ -7,7 +7,7 @@ Class {
 		'lookUp',
 		'using'
 	],
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Translation'
 }
 
 { #category : #visiting }

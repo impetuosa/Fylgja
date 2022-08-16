@@ -1,7 +1,7 @@
 Class {
 	#name : #FylgjaFormToAngularComponent,
 	#superclass : #FylgjaFormToAngular,
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Generation'
 }
 
 { #category : #'as yet unclassified' }
@@ -14,11 +14,6 @@ FylgjaFormToAngularComponent class >> possibleWritingMessages [
 FylgjaFormToAngularComponent >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	| formObject importer pivot entity |
-	self assert:
-		(self
-			 hasId: aRelatedProvenanceEntity to
-			 using: aFylgjaDerivativeModel) not.
-
 	formObject := (aFylgjaDerivativeModel selectDerivativeModelFor:
 		               aRelatedProvenanceEntity to) objects detect: [ :a | 
 		              a type name = aRelatedProvenanceEntity to name ].
@@ -35,6 +30,9 @@ FylgjaFormToAngularComponent >> applyTo: aRelatedProvenanceEntity croppingRelati
 
 
 	^ CGWidgetExporter new
+		  fylgja: aFylgjaDerivativeModel;
+		  croppingWith: aBlock;
+		  lookUp: aFylgjaLookUpContext;
 		  writer: aDestinationWriter;
 		  cssName: (self cssNameFor: aRelatedProvenanceEntity to);
 		  templateName: (self templateNameFor: aRelatedProvenanceEntity to);

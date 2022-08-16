@@ -1,7 +1,7 @@
 Class {
 	#name : #FylgjaAngularModifications,
 	#superclass : #FylgjaModification,
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Modifications'
 }
 
 { #category : #adding }
@@ -36,12 +36,12 @@ FylgjaAngularModifications >> addFormGroup: class name: aName bindings: bindings
 		  applyOn: class
 ]
 
-{ #category : #adding }
-FylgjaAngularModifications >> addNgOnInitMethod: class [
+{ #category : #'as yet unclassified' }
+FylgjaAngularModifications >> addNgOnInitMethod: class bindings: bindings service: aService [ 
 
-	^ FylgjaAddEmptyMethod new
-		  selector: #ngOnInit;
-		  returnTypeReference: (class typeReferenceNamed: #void);
+	^ FylgjaAngularNgInit new
+		  bindings: bindings;
+		  service: aService;
 		  applyOn: class
 ]
 

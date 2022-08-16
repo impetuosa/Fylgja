@@ -7,11 +7,14 @@ Class {
 		'modelClassReference',
 		'serviceClassReference',
 		'bindings',
-		'model',
 		'cssName',
-		'templateName'
+		'templateName',
+		'methods',
+		'fylgja',
+		'lookUp',
+		'croppingWith'
 	],
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Modifications'
 }
 
 { #category : #'instance creation' }
@@ -20,24 +23,52 @@ FylgjaAngularAddComponentSimpleBehavior class >> possibleWritingMessages [
 	^ { #writeDeclarationUnit: }
 ]
 
+{ #category : #'instance creation' }
+FylgjaAngularAddComponentSimpleBehavior >> addBindingsAttributes: class [
+
+	| arrayRef |
+	bindings do: [ :b | 
+		class writeAttribute: [ :attr | 
+			attr visibility: #public.
+			attr name: b source daoAccessSelectorName.
+			arrayRef := self
+				            observableArrayTypeReference:
+				            (b source resolveUsedModelClassUsing: class)
+				            using: class.
+
+
+
+
+			attr typeReference: arrayRef ] ]
+]
+
 { #category : #adding }
-FylgjaAngularAddComponentSimpleBehavior >> addFormDelegateGetters: aMOAttribute [ 
-	self assert: bindings isEmpty. 
-	
+FylgjaAngularAddComponentSimpleBehavior >> addFormDelegateGetters: aMOAttribute using: class [
+
 	"
 	  get StudentName(){  
     return this.studentsaveform.get('student_name');  
   }  "
+
+	bindings keys do: [ :controlName | 
+		class writeAttributeAccessor: [ :accessor | 
+			accessor selector: controlName.
+			accessor kind: #Get.
+			accessor returnTypeReference: (accessor typeReferenceNamed: #any).
+			accessor writeBlock: [ :block | 
+				block writeReturn: [ :ret | 
+					ret writeExpression: [ :exp | 
+						exp
+							invokeMethodNamed: #get
+							receiver: [ :rexp | 
+							self variableReferenceTo: aMOAttribute using: rexp ]
+							arguments: [ :axp | { (axp stringLiteral: controlName) } ] ] ] ] ] ]
 ]
 
 { #category : #adding }
-FylgjaAngularAddComponentSimpleBehavior >> addModelAttribute: class [
+FylgjaAngularAddComponentSimpleBehavior >> addMethod: aMOClassProcedure [
 
-	^ FylgjaAddAttribute new
-		  visibility: #protected;
-		  name: modelClassReference name asLowercase;
-		  typeReference: modelClassReference;
-		  applyOn: class
+	^ self methods add: aMOClassProcedure
 ]
 
 { #category : #adding }
@@ -77,6 +108,28 @@ FylgjaAngularAddComponentSimpleBehavior >> addServiceAttribute: class [
 		  applyOn: class
 ]
 
+{ #category : #'instance creation' }
+FylgjaAngularAddComponentSimpleBehavior >> calculateReferenceToAnObservable: aString referenceCandidate: aCandidate using: class [
+
+	| observable |
+
+	observable := self
+		              calculateParametrizableTypeReference: 'Observable'
+		              packageName: 'rxjs'
+		              using: class.
+	observable argumentTypeReferences:
+		{ ((self calculateTypeReference: aString using: class)
+			 candidate: aCandidate;
+			 yourself) }.
+	^ observable
+]
+
+{ #category : #accessing }
+FylgjaAngularAddComponentSimpleBehavior >> croppingWith: aBlock [
+
+	croppingWith := aBlock
+]
+
 { #category : #'as yet unclassified' }
 FylgjaAngularAddComponentSimpleBehavior >> cssName: aString [
 
@@ -84,10 +137,30 @@ FylgjaAngularAddComponentSimpleBehavior >> cssName: aString [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaAngularAddComponentSimpleBehavior >> fylgja: aFylgjaDerivativeModel [
+
+	fylgja := aFylgjaDerivativeModel
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaAngularAddComponentSimpleBehavior >> informUsageOf: aCSNUIInputText [
 
 	aCSNUIInputText isBoundToData ifTrue: [ 
-		bindings at: aCSNUIInputText name put: aCSNUIInputText dataBinding ]
+		bindings
+			at: aCSNUIInputText realName
+			put: aCSNUIInputText dataBinding ]
+]
+
+{ #category : #accessing }
+FylgjaAngularAddComponentSimpleBehavior >> lookUp: aFylgjaLookUpContext [
+
+	lookUp := aFylgjaLookUpContext
+]
+
+{ #category : #accessing }
+FylgjaAngularAddComponentSimpleBehavior >> methods [
+
+	^ methods ifNil: [ methods := OrderedCollection new ]
 ]
 
 { #category : #accessing }
@@ -103,9 +176,25 @@ FylgjaAngularAddComponentSimpleBehavior >> name: aString [
 ]
 
 { #category : #'instance creation' }
+FylgjaAngularAddComponentSimpleBehavior >> observableArrayTypeReference: aClass using: class [
+
+	| observable |
+	observable := self
+		              calculateParametrizableTypeReference: 'Observable'
+		              packageName: 'rxjs'
+		              using: class.
+
+	observable argumentTypeReferences: { (class arrayTypeReferenceOf:
+			 ((self calculateTypeReference: aClass name using: class)
+				  candidate: aClass;
+				  yourself)) }.
+	^ observable
+]
+
+{ #category : #'instance creation' }
 FylgjaAngularAddComponentSimpleBehavior >> privateApplyOn: component [
 
-	| service form save cls |
+	| service form cls |
 	bindings := Dictionary new.
 	addToClassBlock ifNotNil: [ addToClassBlock value: self ].
 
@@ -121,29 +210,34 @@ FylgjaAngularAddComponentSimpleBehavior >> privateApplyOn: component [
 				         templateName: templateName
 				         cssName: cssName.
 
-
-			         model := self addModelAttribute: class.
 			         self addSubmitted: class.
 			         service := self addServiceAttribute: class.
+			         self addBindingsAttributes: class.
+
+
 			         self
 				         addConstructorWithServiceParameter: class
 				         initializing: service.
 
-
-			         self addNgOnInitMethod: class.
+			         self
+				         addNgOnInitMethod: class
+				         bindings: bindings
+				         service: service.
 
 			         form := self
 				                 addFormGroup: class
 				                 name: #formValueHolder
 				                 bindings: bindings.
-			         self addFormDelegateGetters: form.
-			         save := self
-				                 addSave: model
-				                 delegateToService: service
-				                 into: class.
 
+			         self addFormDelegateGetters: form using: class.
 
-			         self addSaveModel: class invoking: save ].
+			         self methods do: [ :m | 
+				         FylgjaMigrate new
+					         cropping: croppingWith;
+					         fylgja: fylgja;
+					         lookUp: lookUp;
+					         provenanceEntity: m;
+					         applyOn: class ] ].
 
 		  (self importableDependencies: cls) do: [ :type | 
 			  unit writeImport: [ :import | 

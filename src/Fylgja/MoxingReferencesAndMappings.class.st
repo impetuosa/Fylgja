@@ -225,7 +225,11 @@ MoxingReferencesAndMappings >> registerToController [
 { #category : #accessing }
 MoxingReferencesAndMappings >> selectedItems [
 
-	^ selectedItems flatCollect: #yourself
+	selectedItems ifEmpty: [ ^ {  } ].
+
+	^ selectedItems first isCollection
+		  ifTrue: [ selectedItems flatCollect: #yourself ]
+		  ifFalse: [ selectedItems ]
 ]
 
 { #category : #accessing }

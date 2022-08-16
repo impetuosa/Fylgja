@@ -1,51 +1,30 @@
 Class {
 	#name : #FylgjaFormToAngularModel,
 	#superclass : #FylgjaFormToAngular,
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Generation'
 }
 
 { #category : #'as yet unclassified' }
 FylgjaFormToAngularModel >> applyTo: aRelatedProvenanceEntity croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
-	| object cls dataBoundableAttributes model attributes |
-
-	aRelatedProvenanceEntity to methods isEmpty ifFalse: [self halt].
-
-	model := (aFylgjaDerivativeModel selectDerivativeModelFor:
-		          aRelatedProvenanceEntity to) model.
-	object := self
-		          defaultInstanceFor: aRelatedProvenanceEntity to
-		          withIn: model.
-
-	dataBoundableAttributes := self
-		                           allDataBoundableAttributes: object
-		                           model: model.
-
-	attributes := self
-		              collectAllDatabaseBindings: object
-		              marringWith: dataBoundableAttributes.
-
-
-	self assert:
-		(self
-			 hasId: aRelatedProvenanceEntity to
-			 using: aFylgjaDerivativeModel) not.
-
-
+	| cls |
 	aDestinationWriter writeDeclarationUnit: [ :unit | 
 		cls := unit writeTypescriptClass: [ :class | 
 			       class visibility: #public.
 			       class addModifier: #export.
 			       class name: (self modelNameFor: aRelatedProvenanceEntity to).
-			       attributes keysAndValuesDo: [ :instance :attr | 
-				       | new |
-				       new := self
-					              addAttribute: attr
-					              boundAs: instance
-					              croppingRelationsWith: aBlock
-					              destinationWriter: class
-					              lookUp: aFylgjaLookUpContext
-					              using: aFylgjaDerivativeModel ] ].
+
+			       aRelatedProvenanceEntity to attributes
+				       select: [ :a | 
+					       a senders anySatisfy: [ :m | 
+						       m parent isSameEntity: aRelatedProvenanceEntity to ] ]
+				       thenDo: [ :attr | 
+					       FylgjaMigrate new
+						       cropping: aBlock;
+						       fylgja: aFylgjaDerivativeModel;
+						       lookUp: aFylgjaLookUpContext;
+						       provenanceEntity: attr;
+						       applyOn: class ] ].
 
 		(self importableDependencies: cls) do: [ :type | 
 			unit writeImport: [ :import | 

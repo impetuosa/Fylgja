@@ -5,7 +5,7 @@ Class {
 		'writer',
 		'name'
 	],
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Translation'
 }
 
 { #category : #'as yet unclassified' }
@@ -20,13 +20,14 @@ FylgjaTranslateCopyRenameTypeReference >> applyTo: aRelatedProvenanceEntity crop
 	| entity |
 	writer := aDestinationWriter.
 	entity := aRelatedProvenanceEntity to acceptVisitor: self.
+	[ 
 	^ self
 		  applyBindTo: entity
 		  withCandidateFrom: aRelatedProvenanceEntity
 		  croppingRelationsWith: aBlock
 		  writer: aDestinationWriter
 		  lookup: aFylgjaLookUpContext
-		  using: aFylgjaDerivativeModel
+		  using: aFylgjaDerivativeModel ] ensure: [ writer := nil ]
 ]
 
 { #category : #testing }

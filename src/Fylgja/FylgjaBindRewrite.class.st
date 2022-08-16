@@ -4,15 +4,12 @@ Class {
 	#instVars : [
 		'destinationEntity'
 	],
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Binding'
 }
 
 { #category : #'as yet unclassified' }
 FylgjaBindRewrite >> bind: aDestinationEntity as: aCandidateRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgja [
 
-	| currentCandidate |
-
-	currentCandidate := aCandidateRelation read: aDestinationEntity.
 	^ self rewriter
 		  bind: aDestinationEntity
 		  to: destinationEntity

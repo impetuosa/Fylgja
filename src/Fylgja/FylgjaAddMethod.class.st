@@ -6,7 +6,7 @@ Class {
 		'selector',
 		'parameters'
 	],
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Modifications'
 }
 
 { #category : #'instance creation' }

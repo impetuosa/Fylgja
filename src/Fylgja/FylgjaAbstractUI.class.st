@@ -26,3 +26,9 @@ FylgjaAbstractUI >> initializePresenters [
 { #category : #private }
 FylgjaAbstractUI >> registerToController [
 ]
+
+{ #category : #'as yet unclassified' }
+FylgjaAbstractUI >> saveRules [
+
+	self controller saveRules
+]

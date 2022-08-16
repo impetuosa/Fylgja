@@ -1,7 +1,7 @@
 Class {
 	#name : #FylgjaFromAccess,
 	#superclass : #FylgjaGeneration,
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Generation'
 }
 
 { #category : #'as yet unclassified' }
@@ -53,15 +53,32 @@ FylgjaFromAccess >> hasId: aMOAlceForm using: aFylgjaDerivativeModel [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaFromAccess >> looksLikeSql: aString [
+
+	^ [ 
+	  aString isNotEmpty and: [ 
+		  PostgreSQLParser parseSelectQuery: aString toPG.
+		  true ] ]
+		  on: Error
+		  do: [ ^ false ]
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaFromAccess >> modelNameFor: aFormOrReport [
 
 	^ (self sanitizeName: aFormOrReport) , '_Model'
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaFromAccess >> modelNameForString: aString [
+
+	^ (MODeclaration sanitize: aString) , '_Model'
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaFromAccess >> sanitizeName: aFormOrReport [
 
-	^ (aFormOrReport name copyReplaceAll: 'Form_' with: '')
+	^ (aFormOrReport sanitizedName copyReplaceAll: 'Form_' with: '')
 		  copyReplaceAll: 'Report_'
 		  with: ''
 ]
@@ -70,6 +87,12 @@ FylgjaFromAccess >> sanitizeName: aFormOrReport [
 FylgjaFromAccess >> serviceNameFor: aFormOrReport [
 
 	^ (self sanitizeName: aFormOrReport) , '_Service'
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaFromAccess >> serviceNameForString: aString [
+
+	^ (MODeclaration sanitize: aString) , '_Service'
 ]
 
 { #category : #'as yet unclassified' }

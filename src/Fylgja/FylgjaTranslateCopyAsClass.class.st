@@ -7,7 +7,7 @@ Class {
 		'lookUp',
 		'using'
 	],
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Translation'
 }
 
 { #category : #'as yet unclassified' }
@@ -20,9 +20,6 @@ FylgjaTranslateCopyAsClass >> applyTo: aProvenanceEntityRelation croppingRelatio
 	using := aFylgjaDerivativeModel.
 
 	resp := aDestinationWriter acceptWritingVisitor: self.
-
-
-
 
 	provenanceEntityRelation := nil.
 	croppingRelationsWith := nil.
@@ -59,7 +56,7 @@ FylgjaTranslateCopyAsClass >> visitPackageWriter: aMOPackageWriter [
 { #category : #visiting }
 FylgjaTranslateCopyAsClass >> visitUnitWriter: unit [
 
-	^ unit writeClass: [ :class | 
+	^ unit writeJavaClass: [ :class | 
 		  class visibility: #public.
 		  class name: provenanceEntityRelation name.
 		  FylgjaCopy new

@@ -1,7 +1,7 @@
 Class {
 	#name : #FylgjaTranslation,
 	#superclass : #FylgjaProduction,
-	#category : #'Fylgja-Rule-Operations'
+	#category : #'Fylgja-Rule-Translation'
 }
 
 { #category : #writing }
