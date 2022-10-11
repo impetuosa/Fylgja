@@ -70,7 +70,7 @@ MoxingMicrosoftAccessAstComposer >> visitDefineType: aDefineType [
 
 	self addAttributeVisibility: aDefineType visibility.
 
-	aDefineType typeTokens do: [ :t | self addAttributeType: t ].
+	aDefineType tYPETokens  do: [ :t | self addAttributeType: t ].
 	self addAttributeEndToken: aDefineType endToken.
 	^ self visitProgram: aDefineType
 ]

@@ -30,3 +30,11 @@ FylgjaConditionReferenceNamed >> names: anarray [
 
 	names := anarray
 ]
+
+{ #category : #testing }
+FylgjaConditionReferenceNamed >> printOn: aStream [
+
+	aStream
+		nextPutAll: 'Reference named ';
+		nextPutAll: ('|' join: names)
+]

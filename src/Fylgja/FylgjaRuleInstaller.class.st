@@ -166,6 +166,14 @@ FylgjaRuleInstaller >> anyReturnInvocationTo: aString [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaRuleInstaller >> anyStructure [
+
+	^ self condition: (FylgjaConditionModelTypeIs new
+			   type: MOStructure;
+			   yourself)
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaRuleInstaller >> anyTypeReferenceNamed: aString [
 
 	^ self condition: (FylgjaConditionTypeReferenceIs new

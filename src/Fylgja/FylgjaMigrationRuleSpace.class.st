@@ -157,6 +157,7 @@ FylgjaMigrationRuleSpace >> installProducingRule: aFylgjaProductionRule [
 FylgjaMigrationRuleSpace >> lookupAllRulesForProducing: aProvenanceEntityRelation toContext: aDestinationContextRelation with: aWriter [
 
 	| thisLevelRules |
+		self halt. 
 	thisLevelRules := producingRules select: [ :mr | 
 		                  mr
 			                  matches: aProvenanceEntityRelation
@@ -218,6 +219,7 @@ FylgjaMigrationRuleSpace >> lookupRulesForDelegating: aProvenanceEntity toContex
 FylgjaMigrationRuleSpace >> lookupRulesForProducing: aProvenanceEntityRelation toContext: aDestinationContextRelation forWriting: aType with: aWriter [
 
 	| thisLevelRules max |
+
 	thisLevelRules := producingRules select: [ :mr | 
 		                  mr
 			                  matches: aProvenanceEntityRelation
@@ -238,6 +240,7 @@ FylgjaMigrationRuleSpace >> lookupRulesForProducing: aProvenanceEntityRelation t
 FylgjaMigrationRuleSpace >> lookupRulesForProducing: aProvenanceEntityRelation toContext: aDestinationContextRelation with: aWriter [
 
 	| thisLevelRules |
+
 	thisLevelRules := producingRules select: [ :mr | 
 		                  mr
 			                  matches: aProvenanceEntityRelation

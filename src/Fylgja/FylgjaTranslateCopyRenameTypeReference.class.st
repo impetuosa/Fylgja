@@ -44,6 +44,14 @@ FylgjaTranslateCopyRenameTypeReference >> name: aName [
 ]
 
 { #category : #accessing }
+FylgjaTranslateCopyRenameTypeReference >> printOn: aStream [
+
+	aStream
+		nextPutAll: 'Rename type reference as ';
+		nextPutAll: name
+]
+
+{ #category : #accessing }
 FylgjaTranslateCopyRenameTypeReference >> string: aString [ 
 
 	name := aString 

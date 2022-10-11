@@ -31,7 +31,8 @@ FylgjaTranslateCopyAsClass >> applyTo: aProvenanceEntityRelation croppingRelatio
 { #category : #testing }
 FylgjaTranslateCopyAsClass >> canBeAppliedTo: aProvenanceEntityRelation context: aDestinationContextRelation forProducing: aType with: aWriter [
 
-	^ aProvenanceEntityRelation to isModule and: [ 
+	^ (aProvenanceEntityRelation to isModule or: [ 
+		   aProvenanceEntityRelation to isStructure ]) and: [ 
 		  self canWriteOver: aWriter ]
 ]
 

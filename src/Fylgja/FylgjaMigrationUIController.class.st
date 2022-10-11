@@ -48,6 +48,20 @@ FylgjaMigrationUIController class >> egrcController [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaMigrationUIController class >> fromFylgja: fylgja [
+
+	| northwind java |
+
+	northwind := fylgja models second.
+	java := fylgja models first.
+	^ self new
+		  fylgja: fylgja;
+		  origin: northwind model ;
+		  destinations: { java model };
+		  yourself
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaMigrationUIController class >> northwindController [
 
 	| fylgja northwind java angular |
@@ -77,6 +91,21 @@ FylgjaMigrationUIController class >> northwindController [
 		  destinations: { 
 				  java.
 				  angular };
+		  yourself
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationUIController class >> northwindControllerPaper [
+
+	| fylgja northwind java |
+	fylgja := FylgjaMigrationLanguageAndLibrary
+		          northwindExperimentPaperLibraryJava.
+	northwind := fylgja models second.
+	java := fylgja models first.
+	^ self new
+		  fylgja: fylgja;
+		  origin: northwind model ;
+		  destinations: { java model };
 		  yourself
 ]
 
@@ -396,7 +425,8 @@ FylgjaMigrationUIController >> privateCreateCheckpoint [
 FylgjaMigrationUIController >> privateRollback [
 
 	self assert: fylgja size > 1 description: 'No earlier version found'.
-	fylgja pop finalizeFylgja
+	
+	fylgja pop 
 ]
 
 { #category : #accessing }

@@ -76,9 +76,10 @@ FylgjaDerivativeModel >> errors [
 
 { #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> finalizeFylgja [
-	derivativeModels do:#finalizeMoxing.
-	derivativeModels removeAll. 
-	migrationRuleSpace finalizeFylgja 
+
+	derivativeModels do: [ :dm | dm finalizeMoxing ].
+	derivativeModels removeAll.
+	migrationRuleSpace finalizeFylgja
 ]
 
 { #category : #'as yet unclassified' }

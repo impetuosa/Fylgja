@@ -20,6 +20,14 @@ FylgjaConditionTypeReferenceIs >> matches: aProvenanceEntityRelation context: aD
 ]
 
 { #category : #testing }
+FylgjaConditionTypeReferenceIs >> printOn: aStream [
+
+	aStream
+		nextPutAll: 'Type reference named ';
+		nextPutAll: ('|' join: typeNames)
+]
+
+{ #category : #testing }
 FylgjaConditionTypeReferenceIs >> typeName: aClass [
 
 	typeNames := { aClass }

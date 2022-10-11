@@ -22,6 +22,16 @@ FylgjaConditionUnaryOperator >> operator: aString [
 ]
 
 { #category : #testing }
+FylgjaConditionUnaryOperator >> printOn: aStream [
+
+	aStream
+		nextPutAll: 'Is Unary operator ';
+		nextPutAll: order;
+		nextPutAll: ' ';
+		nextPutAll: operator asString
+]
+
+{ #category : #testing }
 FylgjaConditionUnaryOperator >> setAsPostfix [
 	order := #postfix
 ]

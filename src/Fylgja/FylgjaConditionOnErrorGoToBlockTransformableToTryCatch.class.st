@@ -26,3 +26,9 @@ FylgjaConditionOnErrorGoToBlockTransformableToTryCatch >> matches: aProvenanceEn
 		   (aProvenanceEntityRelation to statements indexOf: stmt) - 1) 
 		  isKindOf: MOAlceExit
 ]
+
+{ #category : #testing }
+FylgjaConditionOnErrorGoToBlockTransformableToTryCatch >> printOn: aStream [
+
+	aStream nextPutAll: 'On Error Go to used as Try/Catch'
+]

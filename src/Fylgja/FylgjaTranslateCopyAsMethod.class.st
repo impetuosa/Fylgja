@@ -3,7 +3,11 @@ Class {
 	#superclass : #FylgjaTranslation,
 	#instVars : [
 		'writer',
-		'mustReturn'
+		'mustReturn',
+		'lookUp',
+		'fylgja',
+		'provenance',
+		'cropping'
 	],
 	#category : #'Fylgja-Rule-Translation'
 }
@@ -20,15 +24,14 @@ FylgjaTranslateCopyAsMethod >> applyTo: aProvenanceEntityRelation croppingRelati
 	| method |
 	[ 
 	mustReturn := false.
+	lookUp := aFylgjaLookUpContext.
+	fylgja := aFylgjaDerivativeModel.
+	provenance := aProvenanceEntityRelation.
+	cropping := aBlock.
+
 	method := aDestinationWriter writeMethod: [ :methodWriter | 
 		          writer := methodWriter.
-		          aProvenanceEntityRelation to acceptVisitor: self.
-		          FylgjaCopy new
-			          lookUp: aFylgjaLookUpContext;
-			          fylgja: aFylgjaDerivativeModel;
-			          provenanceRelation: aProvenanceEntityRelation;
-			          cropping: aBlock;
-			          applyOn: methodWriter ].
+		          aProvenanceEntityRelation to acceptVisitor: self ].
 	({ 
 		 MOClassProcedure.
 		 MOProcedure } anySatisfy: [ :c | 
@@ -43,7 +46,12 @@ FylgjaTranslateCopyAsMethod >> applyTo: aProvenanceEntityRelation croppingRelati
 			method block statements last isReturn ifFalse: [ 
 				FylgjaAddReturn new
 					expression: (self variableReferenceTo: variable using: block);
-					applyOn: block ] ] ] ] ensure: [ writer := nil ].
+					applyOn: block ] ] ] ] ensure: [ 
+		lookUp := nil.
+		fylgja := nil.
+		provenance := nil.
+		cropping := nil.
+		writer := nil ].
 	^ method
 ]
 
@@ -57,6 +65,17 @@ FylgjaTranslateCopyAsMethod >> canBeAppliedTo: aProvenanceEntityRelation context
 ]
 
 { #category : #visiting }
+FylgjaTranslateCopyAsMethod >> copyFullBody [
+
+	FylgjaCopy new
+		lookUp: lookUp;
+		fylgja: fylgja;
+		provenanceRelation: provenance;
+		cropping: cropping;
+		applyOn: writer
+]
+
+{ #category : #visiting }
 FylgjaTranslateCopyAsMethod >> printOn: aStream [
  	aStream nextPutAll: 'Transform into Method'
 ]
@@ -66,7 +85,8 @@ FylgjaTranslateCopyAsMethod >> visitClassFunction: aMOClassFunction [
 
 	mustReturn := true.
 	writer setDynamicBinding.
-	writer selector: aMOClassFunction selector
+	writer selector: aMOClassFunction selector.
+	self copyFullBody.
 ]
 
 { #category : #visiting }
@@ -74,29 +94,46 @@ FylgjaTranslateCopyAsMethod >> visitClassProcedure: aMOClassProcedure [
 
 	writer setDynamicBinding.
 	writer selector: aMOClassProcedure selector.
-	writer returnTypeReference: (writer typeReferenceNamed: #void)
+	writer returnTypeReference: (writer typeReferenceNamed: #void).
+	self copyFullBody
 ]
 
 { #category : #visiting }
 FylgjaTranslateCopyAsMethod >> visitFunction: aMOFunction [
+
 	mustReturn := true.
 	writer setStaticBinding.
 	writer selector: aMOFunction selector.
-
+	self copyFullBody
 ]
 
 { #category : #visiting }
 FylgjaTranslateCopyAsMethod >> visitProcedure: aMOProcedure [
-	
+
 	writer setStaticBinding.
 	writer selector: aMOProcedure selector.
-	writer returnTypeReference: (writer typeReferenceNamed: #void)
+	writer returnTypeReference: (writer typeReferenceNamed: #void).
+	self copyFullBody
 ]
 
 { #category : #visiting }
 FylgjaTranslateCopyAsMethod >> visitVariableAccessor: aMOVariableAccessor [
 
+	writer setStaticBinding.
+	writer selector: aMOVariableAccessor kind asLowercase
+		, aMOVariableAccessor selector capitalized.
+
 	aMOVariableAccessor kind = #Get
-		ifTrue: [ self visitFunction: aMOVariableAccessor ]
-		ifFalse: [ self visitProcedure: aMOVariableAccessor ]
+		ifTrue: [ mustReturn := true ]
+		ifFalse: [ 
+		writer returnTypeReference: (writer typeReferenceNamed: #void) ].
+
+	FylgjaCopy new
+		lookUp: lookUp;
+		fylgja: fylgja;
+		provenanceRelation: provenance;
+		cropping: [ :col | 
+			(cropping value: col) select: [ :relation | 
+					(relation name = #kind) not ] ];
+		applyOn: writer
 ]
