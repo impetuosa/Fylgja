@@ -10,7 +10,7 @@ FylgjaIsFFIPragma >> matches: aProvenanceEntity context: aDestinationContext for
 ]
 
 { #category : #testing }
-FylgjaIsFFIPragma >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation [
+FylgjaIsFFIPragma >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation consideringMappingsFrom: aLookup [
 
 	^ false 
 ]

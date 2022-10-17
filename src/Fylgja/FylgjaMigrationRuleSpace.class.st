@@ -4,12 +4,13 @@ Class {
 	#instVars : [
 		'parent',
 		'name',
-		'mappingRules',
 		'subspaces',
 		'producingRules',
-		'delegatingRules',
 		'lookupStrategy',
-		'ruleChooseStrategy'
+		'ruleChooseStrategy',
+		'adaptingRules',
+		'delegatingRules',
+		'mappings'
 	],
 	#category : #'Fylgja-MRS'
 }
@@ -18,7 +19,7 @@ Class {
 FylgjaMigrationRuleSpace >> allPossibleBindingRules [
 
 	| thisLevelRules |
-	thisLevelRules := (mappingRules sort: #priority descending ) collect: [ :r | 
+	thisLevelRules := (adaptingRules sort: #priority descending ) collect: [ :r | 
 		                  self -> r ].
 
 
@@ -44,6 +45,17 @@ FylgjaMigrationRuleSpace >> allPossibleDelegatingRules [
 ]
 
 { #category : #query }
+FylgjaMigrationRuleSpace >> allPossibleMappings [
+
+	| thisLevelRules |
+	thisLevelRules := self mappings values collect: [ :r | self -> r ].
+
+
+	^ thisLevelRules
+	  , (parent ifNil: [ {  } ] ifNotNil: [ parent allPossibleMappings ])
+]
+
+{ #category : #query }
 FylgjaMigrationRuleSpace >> allPossibleProducingRules [
 
 	| thisLevelRules |
@@ -56,6 +68,12 @@ FylgjaMigrationRuleSpace >> allPossibleProducingRules [
 	  (parent
 		   ifNil: [ {  } ]
 		   ifNotNil: [ parent allPossibleProducingRules ])
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationRuleSpace >> chooseBindingRule: aCollection [
+
+	^ self ruleChooseStrategy chooseBindingRule: aCollection
 ]
 
 { #category : #'as yet unclassified' }
@@ -111,7 +129,7 @@ FylgjaMigrationRuleSpace >> ensureNamespace: anEntity model: aMOModel [
 FylgjaMigrationRuleSpace >> finalizeFylgja [
 
 	subspaces do: #finalizeFylgja.
-	mappingRules do: [ :a | a becomeForward: {  } ]
+	adaptingRules do: [ :a | a becomeForward: {  } ]
 ]
 
 { #category : #initialization }
@@ -120,19 +138,25 @@ FylgjaMigrationRuleSpace >> initialize [
 	super initialize.
 	subspaces := Dictionary new.
 	producingRules := OrderedCollection new.
-	mappingRules := OrderedCollection new.
+	adaptingRules := OrderedCollection new.
 	delegatingRules := OrderedCollection new.
 ]
 
 { #category : #operations }
 FylgjaMigrationRuleSpace >> install: aFylgjaBindingRule [
 
-	aFylgjaBindingRule isBindingRule ifTrue: [ 
-		self installMappingRule: aFylgjaBindingRule ].
+	aFylgjaBindingRule isAdaptingRule ifTrue: [ 
+		self installAdaptingRule: aFylgjaBindingRule ].
 	aFylgjaBindingRule isProductionRule ifTrue: [ 
 		self installProducingRule: aFylgjaBindingRule ].
 	aFylgjaBindingRule isDelegatingRule ifTrue: [ 
 		self installDelegatingRule: aFylgjaBindingRule ]
+]
+
+{ #category : #operations }
+FylgjaMigrationRuleSpace >> installAdaptingRule: aFylgjaProductionRule [
+
+	adaptingRules add: aFylgjaProductionRule
 ]
 
 { #category : #operations }
@@ -141,10 +165,12 @@ FylgjaMigrationRuleSpace >> installDelegatingRule: aFylgjaProductionRule [
 	delegatingRules add: aFylgjaProductionRule
 ]
 
-{ #category : #operations }
-FylgjaMigrationRuleSpace >> installMappingRule: aFylgjaProductionRule [
+{ #category : #'as yet unclassified' }
+FylgjaMigrationRuleSpace >> installMapping: aFylgjaNestedMapping [
 
-	mappingRules add: aFylgjaProductionRule
+	(self mappings
+		 at: aFylgjaNestedMapping source
+		 ifAbsentPut: [ Set new ]) add: aFylgjaNestedMapping
 ]
 
 { #category : #operations }
@@ -184,12 +210,24 @@ FylgjaMigrationRuleSpace >> lookupContextFor: aProvenanceEntityRelation toContex
 { #category : #lookup }
 FylgjaMigrationRuleSpace >> lookupRulesForBinding: aDestinationEntity with: aCandidateRelation inTheContextOf: aDestinationContextRelation [
 
+	^ self
+		  lookupRulesForBinding: aDestinationEntity
+		  with: aCandidateRelation
+		  inTheContextOf: aDestinationContextRelation
+		  consideringMappingsFrom: self
+]
+
+{ #category : #lookup }
+FylgjaMigrationRuleSpace >> lookupRulesForBinding: aDestinationEntity with: aCandidateRelation inTheContextOf: aDestinationContextRelation consideringMappingsFrom: theFirstSpace [
+
 	| thisLevelRules |
-	thisLevelRules := mappingRules select: [ :mr | 
+
+	thisLevelRules := adaptingRules select: [ :mr | 
 		                  mr
 			                  matches: aDestinationEntity
 			                  context: aDestinationContextRelation
-			                  toBindAs: aCandidateRelation ].
+			                  toBindAs: aCandidateRelation
+			                  consideringMappingsFrom: theFirstSpace ].
 
 
 	^ (thisLevelRules collect: [ :mr | self -> mr ])
@@ -197,7 +235,8 @@ FylgjaMigrationRuleSpace >> lookupRulesForBinding: aDestinationEntity with: aCan
 			   parent
 				   lookupRulesForBinding: aDestinationEntity
 				   with: aCandidateRelation
-				   inTheContextOf: aDestinationContextRelation ])
+				   inTheContextOf: aDestinationContextRelation
+				   consideringMappingsFrom: theFirstSpace ]) 
 ]
 
 { #category : #lookup }
@@ -266,6 +305,12 @@ FylgjaMigrationRuleSpace >> lookupStrategy [
 FylgjaMigrationRuleSpace >> lookupStrategy: aStrategy [
 
 	lookupStrategy := aStrategy
+]
+
+{ #category : #accessing }
+FylgjaMigrationRuleSpace >> mappings [
+
+	^ mappings ifNil: [ mappings := Dictionary new ]
 ]
 
 { #category : #accessing }
@@ -367,6 +412,15 @@ FylgjaMigrationRuleSpace >> registerSpace: aName [
 	^ entry
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaMigrationRuleSpace >> resolveAllMappingsRelatedTo: aMOLocalVariable [
+
+	| mapps |
+	mapps := self allPossibleMappings flatCollect: #value.
+
+	^ mapps select: [ :m | m mapsSource: aMOLocalVariable ]
+]
+
 { #category : #accessing }
 FylgjaMigrationRuleSpace >> ruleChooseStrategy [
 	^ ruleChooseStrategy ifNil: [ ruleChooseStrategy := FylgjaChooseRuleStrategy default  ]
@@ -387,8 +441,8 @@ FylgjaMigrationRuleSpace >> subspaces [
 { #category : #operations }
 FylgjaMigrationRuleSpace >> uninstall: aFylgjaBindingRule [
 
-	aFylgjaBindingRule isBindingRule ifTrue: [ 
-		^ mappingRules remove: aFylgjaBindingRule ].
+	aFylgjaBindingRule isAdaptingRule ifTrue: [ 
+		^ adaptingRules remove: aFylgjaBindingRule ].
 	aFylgjaBindingRule isProductionRule ifTrue: [ 
 		producingRules remove: aFylgjaBindingRule ].
 	aFylgjaBindingRule isDelegatingRule ifTrue: [ 

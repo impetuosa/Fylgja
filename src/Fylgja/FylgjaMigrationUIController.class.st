@@ -139,12 +139,47 @@ FylgjaMigrationUIController >> autoBind: aCollection [
 		  ifFailReturn: [ nil ]
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaMigrationUIController >> buildMappingFor: aMOProcedure and: aMOMethod informing: aMoxingBundle [
+
+	| mapping |
+	aMOProcedure allContainments select: [ :a | a isDeclaration ].
+	aMOMethod allContainments select: [ :a | a isDeclaration ].
+	mapping := MoxingMapping new
+		           application: aMoxingBundle application;
+		           source: aMOProcedure target: aMOMethod.
+	mapping openModal ifFalse: [ self error: 'Cancelled' ].
+	^ mapping mapping
+]
+
+{ #category : #accessing }
+FylgjaMigrationUIController >> chooseAndMap: anEntity to: other context: context informing: aWidget [
+
+	^ (UIManager default
+		   chooseFrom: #( 'Simple Mapping' 'Map entity and children' )
+		   values: { 
+				   [ self fylgja map: anEntity to: other context: context ].
+				   [ 
+				   self fylgja
+					   map: anEntity
+					   to: other
+					   context: context
+					   mapping:
+					   (self buildMappingFor: anEntity and: other informing: aWidget) ] }
+		   title: 'Fylgja') ifNotNil: [ :block | block value ]
+]
+
 { #category : #accessing }
 FylgjaMigrationUIController >> createCheckpointFor: aWidget [
 
 	self
 		doOrLog: [ 
-			self privateCreateCheckpoint.
+			self flag: #Comment.
+			"should be using: self privateCreateCheckpoint."
+
+			fylgja push: (fylgja top derivative
+					 installAllDerivativeModels;
+					 yourself).
 			self
 				logSuccess:
 				'Successfull checkpoint. Version: ' , fylgja size asString
@@ -373,6 +408,22 @@ FylgjaMigrationUIController >> lookupContextFor: aProvenanceEntity toContext: aD
 ]
 
 { #category : #accessing }
+FylgjaMigrationUIController >> map: anEntity to: other context: context [
+
+	^ (UIManager default
+		   chooseFrom: #( 'Simple Mapping' 'Map entity and children' )
+		   values: { 
+				   [ self fylgja map: anEntity to: other context: context ].
+				   [ 
+				   self fylgja
+					   map: anEntity
+					   to: other
+					   context: context
+					   mapping: (self buildMappingFor: anEntity and: other) ] }
+		   title: 'Fylgja') ifNotNil: [ :block | block value ]
+]
+
+{ #category : #accessing }
 FylgjaMigrationUIController >> map: anEntity to: other context: context informing: aWidget [
 
 	| result |
@@ -384,7 +435,7 @@ FylgjaMigrationUIController >> map: anEntity to: other context: context informin
 			  self
 				  assert: other isNotNil
 				  description: ' Cannot resolve destination .'.
-			  result := self fylgja map: anEntity to: other context: context.
+			  result := self chooseAndMap: anEntity to: other context: context informing:aWidget.
 			  self logSuccess: result operation: #Map.
 			  aWidget ruleHasBeenAppliedSuccessfully.
 			  result ]
@@ -415,18 +466,18 @@ FylgjaMigrationUIController >> origin: aMOModelDerivative [
 
 { #category : #accessing }
 FylgjaMigrationUIController >> privateCreateCheckpoint [
-
+"
 	fylgja push: (fylgja top derivative
 			 installAllDerivativeModels;
-			 yourself)
+			 yourself)"
 ]
 
 { #category : #accessing }
 FylgjaMigrationUIController >> privateRollback [
-
+	"
 	self assert: fylgja size > 1 description: 'No earlier version found'.
 	
-	fylgja pop 
+	fylgja pop "
 ]
 
 { #category : #accessing }
@@ -499,7 +550,11 @@ FylgjaMigrationUIController >> rollbackFor: aWidget [
 
 	self
 		doOrLog: [ 
-			self privateRollback.
+			self flag: #Comment.
+				" Should be using private rollback,"
+				self assert: fylgja size > 1 description: 'No earlier version found'.
+				
+				fylgja pop .
 			self
 				logSuccess:
 				'Successifull rollback. Version: ' , fylgja size asString

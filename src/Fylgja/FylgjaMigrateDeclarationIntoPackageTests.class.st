@@ -230,6 +230,7 @@ FylgjaMigrateDeclarationIntoPackageTests >> testModuleCustomerOrdersOnlyCopy [
 		anyEntity;
 		copy;
 		installInto: fylgja.
+		
 	FylgjaRuleInstaller new
 		topLevel;
 		anyBindableEntity;

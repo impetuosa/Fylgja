@@ -12,7 +12,7 @@ FylgjaConditionAll >> matches: aProvenanceEntityRelation context: aDestinationCo
 ]
 
 { #category : #testing }
-FylgjaConditionAll >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation [
+FylgjaConditionAll >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation consideringMappingsFrom: aLookup [
 
 	^ true
 ]

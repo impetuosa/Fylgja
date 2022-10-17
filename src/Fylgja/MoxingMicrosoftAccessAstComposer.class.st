@@ -215,7 +215,7 @@ MoxingMicrosoftAccessAstComposer >> visitForNext: aForNext [
 MoxingMicrosoftAccessAstComposer >> visitForStepNext: aForStepNext [
 
 	self addAttributeKeyword: aForStepNext fORToken.
-	self addAttributeKeyword: aForStepNext toToken.
+	self addAttributeKeyword: aForStepNext tOToken.
 	self addAttributeNext: aForStepNext nEXTToken .
 	self addAttributeKeyword: aForStepNext stepToken .
 	self addAttributeOperator: aForStepNext equalToken .

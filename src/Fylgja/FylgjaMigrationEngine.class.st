@@ -77,6 +77,7 @@ FylgjaMigrationEngine >> forceMapStubs: aModifiedFylgjaMigrationEngine [
 FylgjaMigrationEngine >> forceReMappingRuleOverStubs: aCollection contextModel: contextModel using: aModifiedFylgjaMigrationEngine [
 
 	| newElement |
+
 	aCollection
 		reject: [ :stub | 
 			stub provenance to isNil or: [ 
@@ -119,6 +120,19 @@ FylgjaMigrationEngine >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> installStub: aDestinationEntity as: aCandidateRelation croppingRelationsWith: aBlock usingWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgja [
+
+	| candidate |
+	(aCandidateRelation read: aDestinationEntity) ifNil: [ 
+		candidate := aDestinationWriter writeFylgjaCandidateStub: [ :a | 
+			             a parent: aDestinationEntity.
+			             a provenance: aCandidateRelation.
+			             a candidate: aCandidateRelation to ].
+		aCandidateRelation write: candidate to: aDestinationEntity ].
+	^ aDestinationEntity
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> lookupContextFor: aProvenanceEntity toContext: aDestinationContext model: aMOModel using: aMOModelDerivative [
 
 	^ aMOModelDerivative migrationRuleSpace
@@ -139,6 +153,27 @@ FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity [
 	^ derivative
 ]
 
+{ #category : #accessing }
+FylgjaMigrationEngine >> map: aMOPrimitiveType to: aMOJavaClass context: aMOModel [
+
+	^ self
+		  map: aMOPrimitiveType
+		  to: aMOJavaClass
+		  using: self
+		  atContext: aMOModel
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity context: context mapping: aCollection [
+
+	^ self
+		  map: aProvenanceEntity
+		  to: aDestinationEntity
+		  using: self
+		  atContext: context
+		  mapping: aCollection
+]
+
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aModifiedFylgjaMigrationEngine [
 
@@ -155,11 +190,25 @@ FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aM
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aModifiedFylgjaMigrationEngine atContext: context [
 
-	FylgjaRuleInstaller new
+	^ self
+		  map: aProvenanceEntity
+		  to: aDestinationEntity
+		  using: aModifiedFylgjaMigrationEngine
+		  atContext: context
+		  mapping: #(  )
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aModifiedFylgjaMigrationEngine atContext: context mapping: aMappingCollection [
+
+	FylgjaMappingInstaller new
 		context: context;
-		whenIsReferenceWithCandidate: aProvenanceEntity;
-		bindRewriteTo: aDestinationEntity;
+		map: aProvenanceEntity
+		with: aDestinationEntity
+		using: aMappingCollection;
 		installInto: aModifiedFylgjaMigrationEngine.
+
+
 	^ aModifiedFylgjaMigrationEngine
 ]
 
@@ -190,13 +239,30 @@ FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aM
 FylgjaMigrationEngine >> mapEntity: aDestinationEntity as: aCandidateRelation croppingRelationsWith: aBlock usingWriter: aWriter lookUp: aLookupContext using: aModifiedFylgjaMigrationEngine [
 
 	| rules partialResult rule |
+
+	(aCandidateRelation read: aDestinationEntity) ifNotNil: [ :a | 
+		a isFylgjaStub ifFalse: [ ^ aDestinationEntity ] ].
+	aCandidateRelation to ifNil: [ ^ aDestinationEntity ].
+
 	rules := aLookupContext
 		         lookupRulesForBinding: aDestinationEntity
 		         with: aCandidateRelation
-		         using: aWriter. 
+		         using: aWriter.
 
-	rules ifEmpty: [ NotFound signal: 'No mapping rule found ' ].
+
+	rules ifEmpty: [ 
+		^ self
+			  installStub: aDestinationEntity
+			  as: aCandidateRelation
+			  croppingRelationsWith: aBlock
+			  usingWriter: aWriter
+			  lookUp: aLookupContext
+			  using: aModifiedFylgjaMigrationEngine ].
+
+
+	rules size > 1 ifTrue: [ self halt ].
 	rule := rules first.
+
 	partialResult := rule
 		                 bind: aDestinationEntity
 		                 as: aCandidateRelation
@@ -277,7 +343,7 @@ FylgjaMigrationEngine >> produce: aProvenanceEntityRelation applying: aRule crop
 	| relation partialResult |
 	relation := aModifiedFylgjaMigrationEngine readRelation:
 		            aProvenanceEntityRelation.
-
+	
 	partialResult := aRule
 		                 applyTo: relation
 		                 croppingRelationsWith: aBlock
@@ -489,7 +555,7 @@ FylgjaMigrationEngine >> selectDerivativeModelFor: aDestinationContext [
 FylgjaMigrationEngine >> trace: aProvenanceEntity to: aRule produced: partialResult using: aModifiedFylgjaMigrationEngine [
 
 	tracing trace: aProvenanceEntity to: aRule produced: partialResult.
-	
+
 	partialResult isDeclaration ifTrue: [ 
 		self
 			map: aProvenanceEntity to

@@ -7,7 +7,8 @@ Class {
 		'lookUp',
 		'fylgja',
 		'provenance',
-		'cropping'
+		'cropping',
+		'translatingIntoTestCase'
 	],
 	#category : #'Fylgja-Rule-Translation'
 }
@@ -21,32 +22,40 @@ FylgjaTranslateCopyAsMethod class >> possibleWritingMessages [
 { #category : #'as yet unclassified' }
 FylgjaTranslateCopyAsMethod >> applyTo: aProvenanceEntityRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
-	| method |
+	| method shouldAddFunctionVariable |
 	[ 
 	mustReturn := false.
 	lookUp := aFylgjaLookUpContext.
 	fylgja := aFylgjaDerivativeModel.
 	provenance := aProvenanceEntityRelation.
 	cropping := aBlock.
-
+	shouldAddFunctionVariable := true.
+	translatingIntoTestCase := aDestinationWriter superclassReference name = #TestCase.
 	method := aDestinationWriter writeMethod: [ :methodWriter | 
 		          writer := methodWriter.
-		          aProvenanceEntityRelation to acceptVisitor: self ].
+		          aProvenanceEntityRelation to acceptVisitor: self.
+		          methodWriter returnTypeReference ifNil: [ 
+			          (self containsSetToReturnStatament:
+				           aProvenanceEntityRelation to block) ifFalse: [ 
+				          shouldAddFunctionVariable := false.
+				          writer returnTypeReference:
+					          (writer typeReferenceNamed: #void) ] ] ].
 	({ 
 		 MOClassProcedure.
 		 MOProcedure } anySatisfy: [ :c | 
 		 aProvenanceEntityRelation to species = c ]) ifTrue: [ ^ self ].
 	method block isEmptyOrNil ifFalse: [ 
-		aDestinationWriter updateBlock: method block with: [ :block | 
-			| variable |
-			variable := FylgjaAddLocalVariable new
-				            name: method selector;
-				            typeReference: method returnTypeReference;
-				            applyOn: block.
-			method block statements last isReturn ifFalse: [ 
-				FylgjaAddReturn new
-					expression: (self variableReferenceTo: variable using: block);
-					applyOn: block ] ] ] ] ensure: [ 
+		shouldAddFunctionVariable ifTrue: [ 
+			aDestinationWriter updateBlock: method block with: [ :block | 
+				| variable |
+				variable := FylgjaAddLocalVariable new
+					            name: method selector;
+					            typeReference: method returnTypeReference;
+					            applyOn: block.
+				method block statements last isReturn ifFalse: [ 
+					FylgjaAddReturn new
+						expression: (self variableReferenceTo: variable using: block);
+						applyOn: block ] ] ] ] ] ensure: [ 
 		lookUp := nil.
 		fylgja := nil.
 		provenance := nil.
@@ -62,6 +71,16 @@ FylgjaTranslateCopyAsMethod >> canBeAppliedTo: aProvenanceEntityRelation context
 		  (aProvenanceEntityRelation to isFunction or: [ 
 			   aProvenanceEntityRelation to isProcedure ]) and: [ 
 			  self canWriteOver: aWriter ] ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaTranslateCopyAsMethod >> containsSetToReturnStatament: aBlock [
+
+	^ FylgjaSearch new
+		  anySatisfy: [ :node | 
+			  (node isKindOf: MOAssignment) ifTrue: [ self halt ].
+			  false ]
+		  within: aBlock
 ]
 
 { #category : #visiting }
@@ -102,18 +121,22 @@ FylgjaTranslateCopyAsMethod >> visitClassProcedure: aMOClassProcedure [
 FylgjaTranslateCopyAsMethod >> visitFunction: aMOFunction [
 
 	mustReturn := true.
-	writer setStaticBinding.
 	writer selector: aMOFunction selector.
-	self copyFullBody
+	self copyFullBody.
+	translatingIntoTestCase
+		ifTrue: [ writer setDynamicBinding ]
+		ifFalse: [ writer setStaticBinding ].
 ]
 
 { #category : #visiting }
 FylgjaTranslateCopyAsMethod >> visitProcedure: aMOProcedure [
 
-	writer setStaticBinding.
 	writer selector: aMOProcedure selector.
 	writer returnTypeReference: (writer typeReferenceNamed: #void).
-	self copyFullBody
+	self copyFullBody.
+	translatingIntoTestCase
+		ifTrue: [ writer setDynamicBinding ]
+		ifFalse: [ writer setStaticBinding ]
 ]
 
 { #category : #visiting }

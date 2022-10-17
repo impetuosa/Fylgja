@@ -41,7 +41,7 @@ FylgjaCondition >> matches: aProvenanceEntityRelation context: aDestinationConte
 ]
 
 { #category : #testing }
-FylgjaCondition >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation [
+FylgjaCondition >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation consideringMappingsFrom: aLookup [
 
 	^ self subclassResponsibility
 ]

@@ -130,7 +130,7 @@ FylgjaMigratorSingleDestinationUI >> initializePresenters [
 	bottomControlNotebook := self newNotebook.
 
 
-	mrsViewer := self instantiate: FylgjaMRSViewer.
+	mrsViewer := self instantiate: FylgjaRuleViewer.
 	unboundReferences := self instantiate: MoxingReferencesAndMappings.
 	bottomControlNotebook addPageTitle:'Log' provider: [ errorLog ].
 	bottomControlNotebook

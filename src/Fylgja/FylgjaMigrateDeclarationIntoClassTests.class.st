@@ -615,13 +615,13 @@ FylgjaMigrateDeclarationIntoClassTests >> testProduceMethodIntoClassByCopyOnlyPr
 		returnSameBinding;
 		installInto: fylgja.
 
-
 	" By default in the system we copy"
 	FylgjaRuleInstaller new
 		topLevel;
 		anyEntity;
 		copy;
 		installInto: fylgja.
+		
 	FylgjaRuleInstaller new
 		topLevel;
 		anyEntity;

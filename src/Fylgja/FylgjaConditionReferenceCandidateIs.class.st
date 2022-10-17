@@ -25,7 +25,7 @@ FylgjaConditionReferenceCandidateIs >> matches: aProvenanceEntityRelation contex
 ]
 
 { #category : #testing }
-FylgjaConditionReferenceCandidateIs >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation [
+FylgjaConditionReferenceCandidateIs >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation consideringMappingsFrom: aLookup [
 
 	^ candidate isSameEntity: aCandidateRelation to
 ]

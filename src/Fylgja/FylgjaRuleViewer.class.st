@@ -1,16 +1,16 @@
 Class {
-	#name : #FylgjaMRSViewer,
+	#name : #FylgjaRuleViewer,
 	#superclass : #FylgjaAbstractUI,
 	#instVars : [
 		'producing',
-		'delegating',
-		'selectedItem'
+		'selectedItem',
+		'adapting'
 	],
 	#category : #'Fylgja-UI-Widgets'
 }
 
 { #category : #layout }
-FylgjaMRSViewer class >> buildCommandsGroupWith: presenterInstance forRoot: rootCommandGroup [
+FylgjaRuleViewer class >> buildCommandsGroupWith: presenterInstance forRoot: rootCommandGroup [
 	super
 		buildCommandsGroupWith: presenterInstance
 		forRoot: rootCommandGroup.
@@ -28,16 +28,16 @@ FylgjaMRSViewer class >> buildCommandsGroupWith: presenterInstance forRoot: root
 ]
 
 { #category : #layout }
-FylgjaMRSViewer class >> defaultLayout [
+FylgjaRuleViewer class >> defaultLayout [
 
 	^ SpPanedLayout newLeftToRight 
 		  add: #producing;
-		  add: #delegating;
+		  add: #adapting;
 		  yourself
 ]
 
 { #category : #layout }
-FylgjaMRSViewer class >> registerBasicCommands: presenterInstance forGroup: rootCommandGroup [
+FylgjaRuleViewer class >> registerBasicCommands: presenterInstance forGroup: rootCommandGroup [
 
 	rootCommandGroup register:
 		(FylgjaUIInspect forSpecContext: presenterInstance).
@@ -45,24 +45,24 @@ FylgjaMRSViewer class >> registerBasicCommands: presenterInstance forGroup: root
 ]
 
 { #category : #initialization }
-FylgjaMRSViewer >> initializePresenters [
+FylgjaRuleViewer >> initializePresenters [
 
 	super initializePresenters.
 	
 	producing := self newMrsTable. 
-	delegating := self newMrsTable.
+	adapting := self newMrsTable.
 ]
 
 { #category : #accessing }
-FylgjaMRSViewer >> model: aFylgjaLookUpContext [
+FylgjaRuleViewer >> model: aFylgjaLookUpContext [
 
 	
-	delegating items: aFylgjaLookUpContext allPossibleDelegatingRules.
+	adapting items: aFylgjaLookUpContext allPossibleBindingRules.
 	producing items: aFylgjaLookUpContext allPossibleProducingRules
 ]
 
 { #category : #initialization }
-FylgjaMRSViewer >> newMrsTable [
+FylgjaRuleViewer >> newMrsTable [
 
 	| table |
 	table := self newTable.
@@ -94,25 +94,25 @@ FylgjaMRSViewer >> newMrsTable [
 ]
 
 { #category : #initialization }
-FylgjaMRSViewer >> registerToController [
+FylgjaRuleViewer >> registerToController [
 
 	self controller registerForEntitySelected: self
 ]
 
 { #category : #initialization }
-FylgjaMRSViewer >> selectedItem [
+FylgjaRuleViewer >> selectedItem [
 
 	^ selectedItem
 ]
 
 { #category : #accessing }
-FylgjaMRSViewer >> selectedItems [
+FylgjaRuleViewer >> selectedItems [
 
 	^ { selectedItem }
 ]
 
 { #category : #accessing }
-FylgjaMRSViewer >> updateSelectionTo: aSelection [
+FylgjaRuleViewer >> updateSelectionTo: aSelection [
 
 	self model: (self controller mrsFor: aSelection)
 ]

@@ -10,7 +10,7 @@ FylgjaBinding >> bind: aDestinationEntity as: aCandidateRelation croppingRelatio
 ]
 
 { #category : #testing }
-FylgjaBinding >> isBinding [
+FylgjaBinding >> isAdapting [
 
 	^ true
 ]

@@ -240,6 +240,17 @@ FylgjaDerivativeModel >> map: aProvenanceEntity to: aDestinationEntity context: 
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> map: aProvenanceEntity to: aDestinationEntity context: aContext mapping: aCollection [
+
+	^ fylgja
+		  map: aProvenanceEntity
+		  to: aDestinationEntity
+		  using: self
+		  atContext: aContext
+		  mapping: aCollection
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaDerivativeModel >> map: aMOPrimitiveType to: aMOClass using: aFylgjaDerivativeModel atContext: aMORootDeclaration [
 
 	^ fylgja
@@ -247,6 +258,17 @@ FylgjaDerivativeModel >> map: aMOPrimitiveType to: aMOClass using: aFylgjaDeriva
 		  to: aMOClass
 		  using: aFylgjaDerivativeModel
 		  atContext: aMORootDeclaration
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> map: aMOPrimitiveType to: aMOClass using: aFylgjaDerivativeModel atContext: aMORootDeclaration mapping: aCollection [
+
+	^ fylgja
+		  map: aMOPrimitiveType
+		  to: aMOClass
+		  using: aFylgjaDerivativeModel
+		  atContext: aMORootDeclaration
+		  mapping: aCollection
 ]
 
 { #category : #'as yet unclassified' }
@@ -362,6 +384,7 @@ FylgjaDerivativeModel >> processBindings [
 FylgjaDerivativeModel >> processDeferredMappings [
 
 	| ready |
+
 	ready := OrderedCollection new.
 
 	self deferredMapping associationsDo: [ :assoc | 
@@ -373,7 +396,7 @@ FylgjaDerivativeModel >> processDeferredMappings [
 		fylgja mapOrFail: re key to: re value using: self.
 		(self deferredMapping at: re key) remove: re value ]
 			on: FylgjaMapError
-			do: [ :e | " self halt" ] ]
+			do: [ :e | self halt ] ]
 ]
 
 { #category : #'as yet unclassified' }

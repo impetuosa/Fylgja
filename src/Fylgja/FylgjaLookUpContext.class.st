@@ -21,6 +21,12 @@ FylgjaLookUpContext >> allPossibleDelegatingRules [
 ]
 
 { #category : #query }
+FylgjaLookUpContext >> allPossibleMappings [
+
+	^ mrs allPossibleMappings
+]
+
+{ #category : #query }
 FylgjaLookUpContext >> allPossibleProducingRules [
 	^ mrs allPossibleProducingRules
 ]
@@ -29,6 +35,12 @@ FylgjaLookUpContext >> allPossibleProducingRules [
 FylgjaLookUpContext >> ensureNotDuplicated: rules [
 
 	^ mrs chooseRule: rules
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaLookUpContext >> ensureNotDuplicatedBinding: aCollection [
+
+	^ mrs chooseBindingRule: aCollection
 ]
 
 { #category : #query }
@@ -43,7 +55,7 @@ FylgjaLookUpContext >> lookupAllRulesForProducing: aMODeclarationStructuralRelat
 { #category : #'single response query' }
 FylgjaLookUpContext >> lookupRulesForBinding: aDestinationEntity with: aCandidateRelation using: aWriter [
 
-	^ self ensureNotDuplicated: (mrs
+	^ self ensureNotDuplicatedBinding: (mrs
 			   lookupRulesForBinding: aDestinationEntity
 			   with: aCandidateRelation
 			   inTheContextOf: destinationContextRelation)

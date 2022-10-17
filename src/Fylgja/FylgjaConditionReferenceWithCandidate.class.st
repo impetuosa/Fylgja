@@ -10,8 +10,10 @@ FylgjaConditionReferenceWithCandidate class >> priority [
 ]
 
 { #category : #accessing }
-FylgjaConditionReferenceWithCandidate >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation [
-  | candidates |
-  candidates := aDestinationEntity allCandidateRelations.
-  ^candidates isNotEmpty and: [ candidates noneSatisfy: [:a |  a to isNil ] ]
+FylgjaConditionReferenceWithCandidate >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation consideringMappingsFrom: aLookup [
+
+	| candidates |
+	candidates := aDestinationEntity allCandidateRelations.
+	^ candidates isNotEmpty and: [ 
+		  candidates noneSatisfy: [ :a | a to isNil ] ]
 ]

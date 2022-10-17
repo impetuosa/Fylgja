@@ -30,16 +30,18 @@ FylgjaConditionAnd >> matches: aProvenanceEntityRelation context: aDestinationCo
 ]
 
 { #category : #testing }
-FylgjaConditionAnd >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation [
+FylgjaConditionAnd >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation consideringMappingsFrom: aLookup [
 
 	^ (left
 		   matches: aDestinationEntity
 		   context: aDestinationContextRelation
-		   toBindAs: aCandidateRelation) and: [ 
+		   toBindAs: aCandidateRelation
+		   consideringMappingsFrom: aLookup) and: [ 
 		  right
 			  matches: aDestinationEntity
 			  context: aDestinationContextRelation
-			  toBindAs: aCandidateRelation ]
+			  toBindAs: aCandidateRelation
+			  consideringMappingsFrom: aLookup ]
 ]
 
 { #category : #accessing }

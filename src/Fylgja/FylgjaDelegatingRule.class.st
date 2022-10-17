@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaDelegatingRule,
-	#superclass : #FylgjaRule,
+	#superclass : #FylgjaDynamicRule,
 	#category : #'Fylgja-Rules'
 }
 

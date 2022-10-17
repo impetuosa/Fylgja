@@ -91,23 +91,17 @@ MoxingReferencesAndMappings >> initializePresenters [
 		            action: [ self autoBind ].
 	references := self newReferencesTable .
 		             
-	mappings := self newMrsTable.
+	mappings := self newMrsMappingTable.
 	refTitle := self newLabel
-		            label: ' References ';
+		            label: ' Unbound References ';
 		            yourself.
 	mapTitle := self newLabel
-		            label: ' Mapping Rules ';
+		            label: ' Mappings ';
 		            yourself
 ]
 
-{ #category : #'as yet unclassified' }
-MoxingReferencesAndMappings >> migrateSelectedItem [
-	
-	
-]
-
 { #category : #initialization }
-MoxingReferencesAndMappings >> newMrsTable [
+MoxingReferencesAndMappings >> newMrsMappingTable [
 
 	| table |
 	table := self newTable.
@@ -120,19 +114,13 @@ MoxingReferencesAndMappings >> newMrsTable [
 				 width: 20;
 				 yourself);
 		addColumn: (SpStringTableColumn new
-				 title: 'Priority';
-				 evaluated: [ :each | each value priority asString ];
-				 beNotExpandable;
-				 width: 20;
-				 yourself);
-		addColumn: (SpStringTableColumn new
 				 title: 'Origin';
 				 evaluated: [ :each | each key name ];
 				 beNotExpandable;
 				 width: 50;
 				 yourself);
 		addColumn: (SpStringTableColumn new
-				 title: 'Rule ';
+				 title: 'Mapping ';
 				 evaluated: [ :each | each value printString ]);
 		beMultipleSelection;
 		whenSelectionChangedDo: [ :a | 
@@ -202,7 +190,7 @@ MoxingReferencesAndMappings >> references: aCollection and: aFylgjaLookUpContext
 				  ifNil: [ a parent asString ]
 				  ifNotNil: [ a candidate asString ] ]) associations sort:
 			 [ :a | a key printString ] ascending).
-	mapCol := aFylgjaLookUpContext allPossibleBindingRules.
+	mapCol := aFylgjaLookUpContext allPossibleMappings .
 	mappings items: mapCol.
 	refTitle label:
 		(' References ({1}' format: { aCollection size asString }).

@@ -126,7 +126,7 @@ FylgjaOperation >> importableDependencies: aMOClass [
 ]
 
 { #category : #testing }
-FylgjaOperation >> isBinding [ 
+FylgjaOperation >> isAdapting [ 
 	^ false. 
 ]
 

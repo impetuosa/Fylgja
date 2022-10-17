@@ -30,16 +30,18 @@ FylgjaConditionOr >> matches: aProvenanceEntityRelation context: aDestinationCon
 ]
 
 { #category : #testing }
-FylgjaConditionOr >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation [
+FylgjaConditionOr >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation consideringMappingsFrom: aLookup [
 
 	^ (left
 		   matches: aDestinationEntity
 		   context: aDestinationContextRelation
-		   toBindAs: aCandidateRelation) or: [ 
+		   toBindAs: aCandidateRelation
+		   consideringMappingsFrom: aLookup) or: [ 
 		  right
 			  matches: aDestinationEntity
 			  context: aDestinationContextRelation
-			  toBindAs: aCandidateRelation ]
+			  toBindAs: aCandidateRelation
+			  consideringMappingsFrom: aLookup ]
 ]
 
 { #category : #accessing }
