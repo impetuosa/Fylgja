@@ -139,6 +139,18 @@ FylgjaDerivativeModel >> installAllDerivativeModels [
 	^ fylgja models collect: [ :m | self derivativeModelFor: m ]
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaDerivativeModel >> installStub: aDestinationEntity as: aCandidateRelation croppingRelationsWith: aBlock usingWriter: aDestinationWriter lookUp: aFylgjaLookUpContext [
+
+	^ fylgja
+		  installStub: aDestinationEntity
+		  as: aCandidateRelation
+		  croppingRelationsWith: aBlock
+		  usingWriter: aDestinationWriter
+		  lookUp: aFylgjaLookUpContext
+		  using: self
+]
+
 { #category : #testing }
 FylgjaDerivativeModel >> isDerivativeEntity: anEntity [
 	 | model |

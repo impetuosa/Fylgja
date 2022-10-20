@@ -30,7 +30,10 @@ FylgjaTranslateCopyAsMethod >> applyTo: aProvenanceEntityRelation croppingRelati
 	provenance := aProvenanceEntityRelation.
 	cropping := aBlock.
 	shouldAddFunctionVariable := true.
-	translatingIntoTestCase := aDestinationWriter superclassReference name = #TestCase.
+	translatingIntoTestCase := false. 
+	aDestinationWriter superclassReference ifNotNil: [ 
+		translatingIntoTestCase := aDestinationWriter superclassReference
+			                           name = #TestCase ].
 	method := aDestinationWriter writeMethod: [ :methodWriter | 
 		          writer := methodWriter.
 		          aProvenanceEntityRelation to acceptVisitor: self.
@@ -119,10 +122,12 @@ FylgjaTranslateCopyAsMethod >> visitClassProcedure: aMOClassProcedure [
 
 { #category : #visiting }
 FylgjaTranslateCopyAsMethod >> visitFunction: aMOFunction [
-
+	| before| 
 	mustReturn := true.
+	before := writer. 
 	writer selector: aMOFunction selector.
 	self copyFullBody.
+	writer := before. 
 	translatingIntoTestCase
 		ifTrue: [ writer setDynamicBinding ]
 		ifFalse: [ writer setStaticBinding ].

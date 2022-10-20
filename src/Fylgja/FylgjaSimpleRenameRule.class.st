@@ -47,15 +47,18 @@ FylgjaSimpleRenameRule >> matches: aDestinationEntity context: aDestinationConte
 	self assert: mappings size = 1.
 	mappings := mappings first.
 	"By the time been i do not know what means to have more than one mapping. So here we are with an assertion to comeback whenever is needed "
-
+	
 	" 	
 		Sure there should be no arguments. If there are arguments it is an other price.
-	 "
-
+	"
+	
 	(aDestinationEntity respondsTo: #arguments) ifTrue: [ 
-		mappings source parameters size = mappings target parameters size 
-			ifFalse: [ ^ false ].
-		self halt ].
+		" No arguments, either no parameter or are all optional. Target has no parameters"
+		(aDestinationEntity arguments size = 0 and: [ 
+			 (mappings source parameters reject: [ :p | p isOptional ]) size
+			 = 0 and: [ mappings target parameters size = 0 ] ]) ifFalse: [ 
+			^ false ].
+		^ true ].
 
 	^ true
 ]

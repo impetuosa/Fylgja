@@ -72,9 +72,11 @@ FylgjaNestedMapping >> printOn: aStream [
 	super printOn: aStream.
 	pieces := OrderedCollection new.
 	mappings keysAndValuesDo: [ :tp :sp | 
-		pieces add: ('{1}.{2} -> {3}.{4}' format: { 
+		pieces add: ('{1}.{2}.{3} -> {3}.{4}.{5}' format: { 
+					 source parent name.
 					 source name.
 					 sp name.
+					 target parent name.
 					 target name.
 					 tp name }) ].
 	aStream

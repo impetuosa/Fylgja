@@ -11,17 +11,28 @@ Class {
 FylgjaSimpleRenameWithStaticReceiverRule >> bind: aMOInvocation as: aMODeclarationStructuralRelation croppingRelationsWith: aFullBlockClosure destinationWriter: aMOModelWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
 	^ aMOModelWriter writeUnregisteredExpression: [ :expression | 
-		  (expression
-			   invokeMethodNamed: mappings target selector
-			   receiver: [ :exp | 
-				   (exp typeReferenceNamedForRebinding:
-						    mappings target parent name)
-					   candidate: mappings target parent;
-					   yourself ]
-			   arguments: [ :exp | 
-			   self mapArguments: aMOInvocation arguments using: mappings ])
-			  candidate: mappings target;
-			  yourself ]
+		  mappings target isMethod
+			  ifTrue: [ 
+				  (expression
+					   invokeMethodNamed: mappings target selector
+					   receiver: [ :exp | 
+						   (exp typeReferenceNamedForRebinding:
+								    mappings target parent name)
+							   candidate: mappings target parent;
+							   yourself ]
+					   arguments: [ :exp | 
+					   self mapArguments: aMOInvocation using: mappings ])
+					  candidate: mappings target;
+					  yourself ]
+			  ifFalse: [ 
+				  self assert: mappings mapsArguments not.
+				  expression
+					  accessAttribute: mappings target name
+					  receiver: [ :exp | 
+						  (exp typeReferenceNamedForRebinding:
+								   mappings target parent name)
+							  candidate: mappings target parent;
+							  yourself ] ] ]
 ]
 
 { #category : #testing }
@@ -33,7 +44,6 @@ FylgjaSimpleRenameWithStaticReceiverRule >> matches: aDestinationEntity context:
 		we rely on the fact that the operation is allways applied after the condition.
 		And that there is not any kind of batch processing.  (like checking all the possible applications of these rule before applying )
 	"
-
 	mappings := aLookup resolveAllMappingsRelatedTo:
 		            aCandidateRelation to.
 

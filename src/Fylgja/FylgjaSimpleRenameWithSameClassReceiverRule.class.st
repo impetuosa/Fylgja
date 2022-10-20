@@ -20,7 +20,7 @@ FylgjaSimpleRenameWithSameClassReceiverRule >> bind: aMOInvocation as: aMODeclar
 					   ifTrue: [ exp referenceToSuper ]
 					   ifFalse: [ exp referenceToSelf ] ]
 			   arguments: [ :exp | 
-				   self mapArguments: aMOInvocation arguments using: mappings ])
+				   self mapArguments: aMOInvocation using: mappings ])
 			  candidate: mappings target;
 			  yourself ]
 ]
@@ -32,15 +32,20 @@ FylgjaSimpleRenameWithSameClassReceiverRule >> calculateReceiverFor: aMOMethod f
 	current := aMOClass.
 	otherFindings := 0.
 	methodParameterTypes := aMOMethod parameters collect: [ :param | 
-		                        param typeReference name ].
+		                        param typeReference
+			                        ifNil: [ '' ]
+			                        ifNotNil: [ :t | t name ] ].
 	[ 
 	currentMethod := current methods
 		                 detect: [ :method | 
 			                 method selector = aMOMethod selector and: [ 
 				                 method parameters size
 				                 = aMOMethod parameters size and: [ 
-					                 (method parameters collect: [ :p | 
-						                  p typeReference name ]) = methodParameterTypes ] ] ]
+					                 (method parameters collect: [ :param | 
+						                  param typeReference
+							                  ifNil: [ '' ]
+							                  ifNotNil: [ :t | t name ] ])
+					                 = methodParameterTypes ] ] ]
 		                 ifNone: [ nil ] ] doWhileTrue: [ 
 		(currentMethod
 			 ifNotNil: [ 
@@ -79,6 +84,7 @@ FylgjaSimpleRenameWithSameClassReceiverRule >> callingTo: aMOMethod canBeAchieve
 FylgjaSimpleRenameWithSameClassReceiverRule >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation consideringMappingsFrom: aLookup [
 
 	| callingMethod callingClass |
+
 	" This is quite dangerous. mappings is an instance variable. 
  		We do so to ensure that the mapping used to accept the condition is the same used by the operation. 
 		

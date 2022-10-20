@@ -4,14 +4,14 @@ Class {
 	#category : #'Fylgja-Experiments'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
 FylgjaMigrationLanguageAndLibrary class >> experimentPaperLibraryJava [
 
 	| fylgja northwind java |
 	fylgja := FylgjaMigrationEngine new.
 
-	northwind := MOJinDAMImporter paperSourceModel.
-	java := MOJavaMavenProjectLoader paperJava.
+	northwind := self paperSourceModel.
+	java := self paperJava.
 
 	fylgja
 		addModel: northwind;
@@ -28,7 +28,7 @@ FylgjaMigrationLanguageAndLibrary class >> experimentPaperLibraryJava [
 	^ fylgja
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
 FylgjaMigrationLanguageAndLibrary class >> fylgja: fylgja map: aSource to: aTarget context: aContext mappings: aCollection [
 
 	| mappings |
@@ -52,7 +52,7 @@ FylgjaMigrationLanguageAndLibrary class >> fylgja: fylgja map: aSource to: aTarg
 		  mapping: mappings
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
 FylgjaMigrationLanguageAndLibrary class >> fylgja: fylgja mapAll: aSourceCollection to: aTarget context: aContext mappings: aCollection [
 
 	aSourceCollection do: [ :source | 
@@ -71,16 +71,27 @@ FylgjaMigrationLanguageAndLibrary class >> installAssert: northwind java: java u
 
 	self
 		fylgja: fylgja
-		map: ((northwind typeNamed: #Testing)
-				 invocableNamed: #Assert
-				 parameters: { #Boolean. #String })
+		map: ((northwind typeNamed: #Testing) invocableNamed: #Assert)
 		to: ((java typeNamed: #Assert)
-				 methodNamed: #assertTrue
-				 parameters: { #String. #boolean })
+				 methodNamed: #assertEquals
+				 parameters: { #String. #Object. #Object })
 		context: java
 		mappings: { 
 				(1 -> 2).
-				(2 -> 1) }
+				(2 -> 3).
+				(3 -> 1) }
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationLanguageAndLibrary class >> installConstantMappings: northwind java: java using: fylgja [
+
+	self
+		fylgja: fylgja
+		map: ((northwind typeNamed: #DateTime) memberNamed: #Now)
+		to:
+		((java typeNamed: #LocalDate) methodNamed: #now parameters: {  })
+		context: java
+		mappings: {  }
 ]
 
 { #category : #'as yet unclassified' }
@@ -112,7 +123,7 @@ FylgjaMigrationLanguageAndLibrary class >> installConversion: northwind java: ja
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaMigrationLanguageAndLibrary class >> installDBFunctionMappings: northwind java: java using: fylgja [
+FylgjaMigrationLanguageAndLibrary class >> installDAOADOFunctionMappings: northwind java: java using: fylgja [
 
 	"ADODB"
 
@@ -135,9 +146,66 @@ FylgjaMigrationLanguageAndLibrary class >> installDBFunctionMappings: northwind 
 		((java typeNamed: #ResultSet) methodNamed: #first parameters: {  })
 		context: java
 		mappings: {  }.
+	self
+		fylgja: fylgja
+		map: ((northwind typeNamed: #Recordset library: #ADODB)
+				 methodNamed: #MoveLast
+				 parameters: {  })
+		to:
+		((java typeNamed: #ResultSet) methodNamed: #last parameters: {  })
+		context: java
+		mappings: {  }.
 
+
+	self
+		fylgja: fylgja
+		map:
+			((northwind typeNamed: #Recordset library: #ADODB) methodNamed:
+				 #AddNew)
+		to: ((java typeNamed: #ResultSet) methodNamed: #moveToInsertRow)
+		context: java
+		mappings: {  }.
+
+
+	self
+		fylgja: fylgja
+		map:
+			((northwind typeNamed: #Recordset library: #ADODB) methodNamed:
+				 #Update)
+		to:
+		((java typeNamed: #ResultSet)
+			 methodNamed: #insertRow
+			 parameters: {  })
+		context: java
+		mappings: {  }.
+
+	self
+		fylgja: fylgja
+		map:
+			((northwind typeNamed: #Recordset library: #ADODB) methodNamed:
+				 #Delete)
+		to:
+		((java typeNamed: #ResultSet)
+			 methodNamed: #deleteRow
+			 parameters: {  })
+		context: java
+		mappings: {  }.
+	self
+		fylgja: fylgja
+		map:
+		((northwind typeNamed: #Recordset library: #ADODB) methodNamed:
+			 #Close)
+		to:
+		((java typeNamed: #ResultSet) methodNamed: #close parameters: {  })
+		context: java
+		mappings: {  }
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationLanguageAndLibrary class >> installDAOFunctionMappings: northwind java: java using: fylgja [
 
 	"DAO"
+
 	self
 		fylgja: fylgja
 		map: ((northwind typeNamed: #Recordset library: #DAO)
@@ -157,6 +225,17 @@ FylgjaMigrationLanguageAndLibrary class >> installDBFunctionMappings: northwind 
 				 parameters: {  })
 		to:
 		((java typeNamed: #ResultSet) methodNamed: #first parameters: {  })
+		context: java
+		mappings: {  }.
+
+
+	self
+		fylgja: fylgja
+		map: ((northwind typeNamed: #Recordset library: #DAO)
+				 methodNamed: #MoveLast
+				 parameters: {  })
+		to:
+		((java typeNamed: #ResultSet) methodNamed: #last parameters: {  })
 		context: java
 		mappings: {  }.
 
@@ -194,7 +273,27 @@ FylgjaMigrationLanguageAndLibrary class >> installDBFunctionMappings: northwind 
 			 methodNamed: #deleteRow
 			 parameters: {  })
 		context: java
+		mappings: {  }.
+
+	self
+		fylgja: fylgja
+		map: ((northwind typeNamed: #Recordset library: #DAO)
+				 methodNamed: #Close
+				 parameters: {  })
+		to:
+		((java typeNamed: #ResultSet) methodNamed: #close parameters: {  })
+		context: java
 		mappings: {  }
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationLanguageAndLibrary class >> installDBFunctionMappings: northwind java: java using: fylgja [
+
+	"DAO"
+	self installDAOFunctionMappings: northwind java: java using: fylgja.
+	"ADODB"
+	self installDAOADOFunctionMappings: northwind java: java using: fylgja
+
 ]
 
 { #category : #'as yet unclassified' }
@@ -299,6 +398,15 @@ FylgjaMigrationLanguageAndLibrary class >> installJavaLanguageTx: java into: fyl
 		install: FylgjaSimpleRenameWithSameClassReceiverRule new
 		into: fylgja.
 
+	FylgjaRuleInstaller new
+		context: java root;
+		install: FylgjaDateLiteralToLocaleDateParse new into: fylgja.
+
+	FylgjaRuleInstaller new
+		context: java root;
+		install: FylgjaAutowrapLibraryElement new into: fylgja.
+
+
 	"	FylgjaRuleInstaller new
 		context: java root;
 		anyPrimitiveTypeReference;
@@ -329,7 +437,7 @@ FylgjaMigrationLanguageAndLibrary class >> installJavaLanguageTx: java into: fyl
 		installInto: fylgja.
 
 
-"	FylgjaRuleInstaller new
+	"	FylgjaRuleInstaller new
 		context: java root;
 		install: FylgjaEqualsToEqualsMessageOrNot new into: fylgja.
 "
@@ -403,8 +511,10 @@ FylgjaMigrationLanguageAndLibrary class >> installJavaLanguageTx: java into: fyl
 
 { #category : #'as yet unclassified' }
 FylgjaMigrationLanguageAndLibrary class >> installMappings: northwind java: java using: fylgja [
+
 	self installTypeMappings: northwind java: java using: fylgja.
 	self installFunctionMappings: northwind java: java using: fylgja.
+	self installConstantMappings: northwind java: java using: fylgja
 ]
 
 { #category : #'as yet unclassified' }
@@ -420,6 +530,50 @@ FylgjaMigrationLanguageAndLibrary class >> installObject: northwind java: java u
 				 parameters: { #Object })
 		context: java
 		mappings: { (1 -> 1) }
+]
+
+{ #category : #types }
+FylgjaMigrationLanguageAndLibrary class >> installRuntimeTypeMappings: northwind java: java using: fylgja [
+
+	| maps |
+	maps := { 
+		        (#BOOL -> #Boolean).
+		        (#BSTRString -> #String).
+		        (#Boolean -> #Boolean).
+		        (#Byte -> #Byte).
+		        (#COMDispatchInterface -> #Object).
+		        (#Currency -> #Double).
+		        (#Date -> #LocalDate).
+		        (#Decimal -> #Double).
+		        (#Double -> #Double).
+		        (#Err -> #Exception).
+		        (#Integer -> #Integer).
+		        (#Long -> #Long).
+		        (#LongLong -> #Long).
+		        (#Object -> #Object).
+		        (#Single -> #Float).
+		        (#String -> #String).
+		        (#USERDEFINED -> #Object).
+		        (#VOID -> #Void).
+		        (#Void -> #Void).
+		        (#Variant -> #Object).
+		        (#Win32Variant -> #Object).
+		        (#Win32WideString -> #String).
+		        (#float -> #Float).
+		        (#int -> #Integer).
+		        (#int16 -> #Short).
+		        (#uint16 -> #Short).
+		        (#int32 -> #Integer).
+		        (#uint32 -> #Integer).
+		        (#ubyte -> #Byte).
+		        (#uint -> #Integer).
+		        (#ulong -> #Long).
+		        (#ulonglong -> #Long) }.
+	maps do: [ :m | 
+		fylgja
+			map: (northwind typeNamed: m key )
+			to: (java typeNamed: m value)
+			context: java ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -478,9 +632,10 @@ FylgjaMigrationLanguageAndLibrary class >> installString: northwind java: java u
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #types }
 FylgjaMigrationLanguageAndLibrary class >> installTypeMappings: northwind java: java using: fylgja [
-
+	self installRuntimeTypeMappings: northwind java: java using: fylgja.
+	self installVBATypeMappings: northwind java: java using: fylgja.
 	fylgja
 		map: (northwind typeNamed: #Connection library: #DAO)
 		to: (java typeNamed: #Connection)
@@ -503,74 +658,24 @@ FylgjaMigrationLanguageAndLibrary class >> installTypeMappings: northwind java: 
 
 
 
-
-	fylgja
-		map: (northwind typeNamed: #Boolean)
-		to: (java typeNamed: #Boolean)
-		context: java.
-
-
-	fylgja
-		map: (northwind typeNamed: #String)
-		to: (java typeNamed: #String)
-		context: java.
-
-	fylgja
-		map: (northwind typeNamed: #Integer)
-		to: (java typeNamed: #Integer)
-		context: java.
-
-	fylgja
-		map: (northwind typeNamed: #Currency)
-		to: (java typeNamed: #BigDecimal)
-		context: java.
-
-	fylgja
-		map: (northwind typeNamed: #Long)
-		to: (java typeNamed: #Long)
-		context: java.
-
-	fylgja
-		map: (northwind typeNamed: #Single)
-		to: (java typeNamed: #Float)
-		context: java.
-	fylgja
-		map: (northwind typeNamed: #Double)
-		to: (java typeNamed: #Double)
-		context: java.
-
-	fylgja
-		map: (northwind typeNamed: #Byte)
-		to: (java typeNamed: #Byte)
-		context: java.
-
-	fylgja
-		map: (northwind typeNamed: #Object)
-		to: (java typeNamed: #Object)
-		context: java.
-	fylgja
-		map: (northwind typeNamed: #Variant)
-		to: (java typeNamed: #Object)
-		context: java.
-
-	fylgja
-		map: (northwind typeNamed: #Collection)
-		to: (java typeNamed: #List)
-		context: java.
-
-	fylgja
-		map: (northwind typeNamed: #Date)
-		to: (java typeNamed: #LocalDate)
-		context: java.
-
-
-	fylgja
-		map: (northwind typeNamed: #ErrObject)
-		to: (java typeNamed: #Exception)
-		context: java
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #types }
+FylgjaMigrationLanguageAndLibrary class >> installVBATypeMappings: northwind java: java using: fylgja [
+
+	| maps |
+	maps := { 
+		        (#_Collection -> #List).
+		        (#Collection -> #List).
+		        (#ErrObject -> #Exception) }.
+	maps do: [ :m | 
+		fylgja
+			map: (northwind typeOrAliasNamed: m key library: #VBA)
+			to: (java typeNamed: m value)
+			context: java ]
+]
+
+{ #category : #helper }
 FylgjaMigrationLanguageAndLibrary class >> northwindExperimentPaperLibraryJava [
 
 	| fylgja northwind java |
@@ -593,4 +698,16 @@ FylgjaMigrationLanguageAndLibrary class >> northwindExperimentPaperLibraryJava [
 		
 		
 	^ fylgja
+]
+
+{ #category : #helper }
+FylgjaMigrationLanguageAndLibrary class >> paperJava [
+
+	^ MOJavaMavenProjectLoader paperJava
+]
+
+{ #category : #helper }
+FylgjaMigrationLanguageAndLibrary class >> paperSourceModel [
+
+	^ MOJinDAMImporter paperSourceModel
 ]

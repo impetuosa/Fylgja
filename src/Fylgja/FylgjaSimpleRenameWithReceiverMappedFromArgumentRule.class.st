@@ -14,9 +14,9 @@ FylgjaSimpleRenameWithReceiverMappedFromArgumentRule >> bind: aMOInvocation as: 
 		  (expression
 			   invokeMethodNamed: mappings target selector
 			   receiver: [ :exp | 
-				   self mapReceiver: aMOInvocation arguments using: mappings ]
+				   self mapReceiver: aMOInvocation using: mappings ]
 			   arguments: [ :exp | 
-				   self mapArguments: aMOInvocation arguments using: mappings ])
+				   self mapArguments: aMOInvocation using: mappings ])
 			  candidate: mappings target;
 			  yourself ]
 ]

@@ -66,8 +66,12 @@ FylgjaMapping >> mapsSource: aMOLocalVariable [
 FylgjaMapping >> printOn: aStream [
 
 	aStream
+		nextPutAll: source parent name;
+		nextPutAll: '.';
 		nextPutAll: source name;
 		nextPutAll: ' => ';
+		nextPutAll: target parent name;
+		nextPutAll: '.';
 		nextPutAll: target name
 ]
 

@@ -480,11 +480,29 @@ FylgjaRuleInstaller >> replaceOperatorWith: aString [
 ]
 
 { #category : #copying }
+FylgjaRuleInstaller >> replacePostfixUnaryOperatorWith: aString [
+
+	^ self operation: (FylgjaCopyReplaceUnaryOperator new
+			   operator: aString;
+			   setAsPostfix;
+			   yourself)
+]
+
+{ #category : #copying }
 FylgjaRuleInstaller >> replacePrefixUnaryOperatorWith: aString [
 
 	^ self operation: (FylgjaCopyReplaceUnaryOperator new
 			   operator: aString;
 			   setAsPrefix;
+			   yourself)
+]
+
+{ #category : #copying }
+FylgjaRuleInstaller >> replaceSufixUnaryOperatorWith: aString [
+
+	^ self operation: (FylgjaCopyReplaceUnaryOperator new
+			   operator: aString;
+			   setAsSufix;
 			   yourself)
 ]
 

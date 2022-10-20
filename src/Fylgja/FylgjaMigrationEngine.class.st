@@ -201,15 +201,12 @@ FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aM
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aModifiedFylgjaMigrationEngine atContext: context mapping: aMappingCollection [
 
-	FylgjaMappingInstaller new
-		context: context;
-		map: aProvenanceEntity
-		with: aDestinationEntity
-		using: aMappingCollection;
-		installInto: aModifiedFylgjaMigrationEngine.
-
-
-	^ aModifiedFylgjaMigrationEngine
+	^ FylgjaMappingInstaller new
+		  context: context;
+		  map: aProvenanceEntity
+		  with: aDestinationEntity
+		  using: aMappingCollection;
+		  installInto: aModifiedFylgjaMigrationEngine
 ]
 
 { #category : #'as yet unclassified' }
@@ -222,13 +219,13 @@ FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aM
 		 aDestinationEntity anchor isNil ])
 		ifTrue: [ aBlock value ]
 		ifFalse: [ 
-			self
-				map: aProvenanceEntity
-				to: aDestinationEntity
-				using: aModifiedFylgjaMigrationEngine
-				atContext: (self
-						 resolveMappingContextFor: aDestinationEntity
-						 using: aModifiedFylgjaMigrationEngine) ].
+			(self
+				 map: aProvenanceEntity
+				 to: aDestinationEntity
+				 using: aModifiedFylgjaMigrationEngine
+				 atContext: (self
+						  resolveMappingContextFor: aDestinationEntity
+						  using: aModifiedFylgjaMigrationEngine)) setAsEngine ].
 
 
 
@@ -239,7 +236,6 @@ FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aM
 FylgjaMigrationEngine >> mapEntity: aDestinationEntity as: aCandidateRelation croppingRelationsWith: aBlock usingWriter: aWriter lookUp: aLookupContext using: aModifiedFylgjaMigrationEngine [
 
 	| rules partialResult rule |
-
 	(aCandidateRelation read: aDestinationEntity) ifNotNil: [ :a | 
 		a isFylgjaStub ifFalse: [ ^ aDestinationEntity ] ].
 	aCandidateRelation to ifNil: [ ^ aDestinationEntity ].
@@ -270,6 +266,8 @@ FylgjaMigrationEngine >> mapEntity: aDestinationEntity as: aCandidateRelation cr
 		                 destinationWriter: aWriter
 		                 lookUp: aLookupContext
 		                 using: aModifiedFylgjaMigrationEngine.
+
+	
 
 	^ partialResult
 ]

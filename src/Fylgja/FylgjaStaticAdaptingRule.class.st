@@ -16,15 +16,17 @@ FylgjaStaticAdaptingRule >> isAdaptingRule [
 ]
 
 { #category : #testing }
-FylgjaStaticAdaptingRule >> mapArguments: aSetOfArguments using: aMapping [
+FylgjaStaticAdaptingRule >> mapArguments: aReference using: aMapping [
 
-	^ aMapping map: aSetOfArguments
+	^ aMapping mapsArguments
+		  ifFalse: [ {  } ]
+		  ifTrue: [ aMapping map: aReference arguments ]
 ]
 
 { #category : #'as yet unclassified' }
-FylgjaStaticAdaptingRule >> mapReceiver: aCollection using: aFylgjaNestedMapping [
+FylgjaStaticAdaptingRule >> mapReceiver: aReference using: aFylgjaNestedMapping [
 
-	^ aFylgjaNestedMapping mapReceiver: aCollection
+	^ aFylgjaNestedMapping mapReceiver: aReference arguments
 ]
 
 { #category : #testing }

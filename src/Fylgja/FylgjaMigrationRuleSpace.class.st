@@ -169,7 +169,8 @@ FylgjaMigrationRuleSpace >> installDelegatingRule: aFylgjaProductionRule [
 FylgjaMigrationRuleSpace >> installMapping: aFylgjaNestedMapping [
 
 	(self mappings
-		 at: aFylgjaNestedMapping source
+		 at: aFylgjaNestedMapping source anchor
+		 ifPresent: [ :a | a halt ]
 		 ifAbsentPut: [ Set new ]) add: aFylgjaNestedMapping
 ]
 

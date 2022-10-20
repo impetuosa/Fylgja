@@ -32,10 +32,13 @@ FylgjaMappingInstaller >> buildMapping [
 ]
 
 { #category : #installation }
-FylgjaMappingInstaller >> installInto: aFylgjaDerivativeModel [ 
-	| space |
-	space := 	self installingSpace: aFylgjaDerivativeModel.
-	space installMapping: self buildMapping. 
+FylgjaMappingInstaller >> installInto: aFylgjaDerivativeModel [
+
+	| space bm |
+	space := self installingSpace: aFylgjaDerivativeModel.
+	bm := self buildMapping.
+	space installMapping: bm.
+	^ bm
 ]
 
 { #category : #'as yet unclassified' }

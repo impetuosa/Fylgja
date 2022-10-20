@@ -31,6 +31,12 @@ FylgjaSearch >> visitCollection: aCollection [
 ]
 
 { #category : #visiting }
+FylgjaSearch >> visitForNext: aMOForNext [
+
+	^ self visitNode: aMOForNext
+]
+
+{ #category : #visiting }
 FylgjaSearch >> visitLocalVariable: aMOLocalVariable [
 
 	^ self visitNode: aMOLocalVariable
@@ -48,4 +54,10 @@ FylgjaSearch >> visitNode: aMOBlock [
 FylgjaSearch >> visitStatementExpression: aMOObject [
 
 	^ self visitNode: aMOObject
+]
+
+{ #category : #visiting }
+FylgjaSearch >> visitWith: aMOAlceWith [
+
+	^ self visitNode: aMOAlceWith
 ]

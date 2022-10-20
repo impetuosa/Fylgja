@@ -51,12 +51,13 @@ FylgjaMigrationUIController class >> egrcController [
 FylgjaMigrationUIController class >> fromFylgja: fylgja [
 
 	| northwind java |
-
-	northwind := fylgja models second.
-	java := fylgja models first.
+	northwind := fylgja models detect: [ :m | 
+		             m language isMicrosoftAccess ].
+	java := fylgja models detect: [ :m | 
+		        m language isMicrosoftAccess not ].
 	^ self new
 		  fylgja: fylgja;
-		  origin: northwind model ;
+		  origin: northwind model;
 		  destinations: { java model };
 		  yourself
 ]
