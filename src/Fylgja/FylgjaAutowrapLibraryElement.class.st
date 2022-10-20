@@ -10,8 +10,7 @@ Class {
 { #category : #testing }
 FylgjaAutowrapLibraryElement >> bind: aDestinationEntity as: aCandidateRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgja [
 
-	| parentUnit thisMappings |
-
+	| parentUnit compatibilityType package |
 	parentUnit := aCandidateRelation to.
 	" 
 		This rule may steal the possiblity of this reference to have a stub. 
@@ -28,11 +27,14 @@ FylgjaAutowrapLibraryElement >> bind: aDestinationEntity as: aCandidateRelation 
 	[ parentUnit isType or: [ parentUnit isModule ] ] whileFalse: [ 
 		parentUnit := parentUnit parent ].
 
-	thisMappings := mappings resolveAllMappingsRelatedTo: parentUnit.
-	self assert: thisMappings size <= 1.
+	package := aDestinationWriter model packages detect: [ :p | 
+		           p name includesSubstring: #paper caseSensitive: false ].
 
-	thisMappings
-		ifEmpty: [ 
+	compatibilityType := package allTypes
+		                     detect: [ :t | t name = parentUnit name ]
+		                     ifNone: [ nil ].
+	compatibilityType
+		ifNil: [ 
 			aFylgja
 				produce: parentUnit
 				croppingRelationsWith: [ :col | 
@@ -40,14 +42,14 @@ FylgjaAutowrapLibraryElement >> bind: aDestinationEntity as: aCandidateRelation 
 						rejectAnyContainment: col
 						from: parentUnit
 						thatIsNot: aCandidateRelation to ]
-				into: (aDestinationWriter model packages detect: [ :p | 
-						 p name includesSubstring: #paper caseSensitive: false ]) ]
-		ifNotEmpty: [ 
-			thisMappings := thisMappings first.
-			aFylgja
-				produce: aCandidateRelation to
-				croppingRelationsWith: [ :a | a ]
-				into: thisMappings target ].
+				into: package ]
+		ifNotNil: [ 
+			(compatibilityType allContainments anySatisfy: [ :a | 
+				 a name = aCandidateRelation to name ]) ifFalse: [ 
+				aFylgja
+					produce: aCandidateRelation to
+					croppingRelationsWith: [ :a | a ]
+					into: compatibilityType ] ].
 
 
 	^ aDestinationEntity
