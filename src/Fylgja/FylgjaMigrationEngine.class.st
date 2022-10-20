@@ -29,17 +29,18 @@ FylgjaMigrationEngine >> bind: aCollection contextModel: aMOModelDerivative usin
 	(aCollection select: [ :a | a parent isNotNil ]) do: [ :e | 
 		destinationContext := aFylgjaDerivativeModel 
 			                      readEntitysContextualizingRelation: e parent.
-		lookup := aFylgjaDerivativeModel
-			          lookupContextFor: e
-			          toContext: destinationContext
-			          model: aMOModelDerivative.
-		self
-			mapEntity: e
-			as: (MODeclarationStructuralRelation nullCandidateRelationTo: nil)
-			croppingRelationsWith: [ :a | a ]
-			usingWriter: aMOModelDerivative writer
-			lookUp: lookup
-			using: aFylgjaDerivativeModel ]
+		destinationContext to parent ifNotNil: [ 
+			lookup := aFylgjaDerivativeModel
+				          lookupContextFor: e
+				          toContext: destinationContext
+				          model: aMOModelDerivative.
+			self
+				mapEntity: e
+				as: (MODeclarationStructuralRelation nullCandidateRelationTo: nil)
+				croppingRelationsWith: [ :a | a ]
+				usingWriter: aMOModelDerivative writer
+				lookUp: lookup
+				using: aFylgjaDerivativeModel ] ]
 ]
 
 { #category : #'as yet unclassified' }

@@ -25,7 +25,7 @@ FylgjaSimpleRenameWithStaticReceiverRule >> bind: aMOInvocation as: aMODeclarati
 					  candidate: mappings target;
 					  yourself ]
 			  ifFalse: [ 
-				  self assert: mappings mapsArguments not.
+"				  self assert: mappings mapsArguments not."
 				  expression
 					  accessAttribute: mappings target name
 					  receiver: [ :exp | 
