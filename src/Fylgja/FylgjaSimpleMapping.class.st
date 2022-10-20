@@ -7,6 +7,14 @@ Class {
 	#category : #'Fylgja-Rules'
 }
 
+{ #category : #testing }
+FylgjaSimpleMapping >> isEquivalentTo: aFylgjaSimpleMapping [
+
+	^ self species = aFylgjaSimpleMapping species and: [ 
+		  source anchor = aFylgjaSimpleMapping source anchor and: [ 
+			  target anchor = aFylgjaSimpleMapping target anchor ] ]
+]
+
 { #category : #initialization }
 FylgjaSimpleMapping >> isSetByEngine [
 

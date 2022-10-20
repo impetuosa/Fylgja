@@ -552,12 +552,24 @@ FylgjaMigrationEngine >> selectDerivativeModelFor: aDestinationContext [
 { #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> trace: aProvenanceEntity to: aRule produced: partialResult using: aModifiedFylgjaMigrationEngine [
 
+	((aProvenanceEntity respondsTo: #name) and: [ 
+		 aProvenanceEntity name = #Conversion ]) ifTrue: [ self halt ].
 	tracing trace: aProvenanceEntity to: aRule produced: partialResult.
 
 	partialResult isDeclaration ifTrue: [ 
 		self
 			map: aProvenanceEntity to
 			to: partialResult
+			using: aModifiedFylgjaMigrationEngine ].
+
+	partialResult isDeclarationUnit ifTrue: [ 
+		| type |
+		type := partialResult types
+			        detect: [ :t | t name = aProvenanceEntity to name ]
+			        ifNone: [ ^ self ].
+		self
+			map: aProvenanceEntity to
+			to: type
 			using: aModifiedFylgjaMigrationEngine ]
 ]
 

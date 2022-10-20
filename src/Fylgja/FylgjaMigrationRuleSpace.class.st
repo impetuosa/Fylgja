@@ -170,7 +170,10 @@ FylgjaMigrationRuleSpace >> installMapping: aFylgjaNestedMapping [
 
 	(self mappings
 		 at: aFylgjaNestedMapping source anchor
-		 ifPresent: [ :a | a halt ]
+		 ifPresent: [ :a | 
+			 (a contains: [ :m | m isEquivalentTo: aFylgjaNestedMapping ])
+				 ifTrue: [ ^ self ]
+				 ifFalse: [ a ] ]
 		 ifAbsentPut: [ Set new ]) add: aFylgjaNestedMapping
 ]
 

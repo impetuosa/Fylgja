@@ -11,6 +11,7 @@ Class {
 FylgjaAutowrapLibraryElement >> bind: aDestinationEntity as: aCandidateRelation croppingRelationsWith: aBlock destinationWriter: aDestinationWriter lookUp: aFylgjaLookUpContext using: aFylgja [
 
 	| parentUnit thisMappings |
+
 	parentUnit := aCandidateRelation to.
 	" 
 		This rule may steal the possiblity of this reference to have a stub. 
@@ -45,7 +46,7 @@ FylgjaAutowrapLibraryElement >> bind: aDestinationEntity as: aCandidateRelation 
 			thisMappings := thisMappings first.
 			aFylgja
 				produce: aCandidateRelation to
-				croppingRelationsWith: [ :a |  ]
+				croppingRelationsWith: [ :a | a ]
 				into: thisMappings target ].
 
 
