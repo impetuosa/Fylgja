@@ -57,7 +57,7 @@ FylgjaTranslateCopyAsClass >> visitPackageWriter: aMOPackageWriter [
 { #category : #visiting }
 FylgjaTranslateCopyAsClass >> visitUnitWriter: unit [
 
-	^ unit writeJavaClass: [ :class | 
+	^ self writeClass: unit with: [ :class | 
 		  class visibility: #public.
 		  class name: provenanceEntityRelation name.
 		  FylgjaCopy new
@@ -69,4 +69,10 @@ FylgjaTranslateCopyAsClass >> visitUnitWriter: unit [
 						  relation isMOObject not or: [ 
 								  relation to isVariable or: [ relation to isInvocable ] ] ] ];
 			  applyOn: class ]
+]
+
+{ #category : #visiting }
+FylgjaTranslateCopyAsClass >> writeClass: unit with: block [
+
+	^ unit writeJavaClass: block
 ]

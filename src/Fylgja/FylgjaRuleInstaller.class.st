@@ -268,6 +268,18 @@ FylgjaRuleInstaller >> copyAsSelfFFiInvocation [
 ]
 
 { #category : #copying }
+FylgjaRuleInstaller >> copyAsStMethod [
+
+	self operation: FylgjaTranslateCopyAsStMethod new
+]
+
+{ #category : #copying }
+FylgjaRuleInstaller >> copyAsStPublicClass [
+
+	^ self operation: FylgjaTranslateCopyAsStClass new
+]
+
+{ #category : #copying }
 FylgjaRuleInstaller >> copyAsTypesReferenceNamed: aString [
 
 	^ self operation: (FylgjaTranslateCopyRenameTypeReference new

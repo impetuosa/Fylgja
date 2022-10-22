@@ -7,7 +7,7 @@ Class {
 	#category : #'Fylgja-Experiments'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
 FylgjaMigrationLanguageAndLibraryPharo class >> experimentPaperLibraryPharo [
 
 	| fylgja northwind pharo |
@@ -31,7 +31,7 @@ FylgjaMigrationLanguageAndLibraryPharo class >> experimentPaperLibraryPharo [
 	^ fylgja
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
 FylgjaMigrationLanguageAndLibraryPharo class >> fylgja: fylgja map: aSource to: aTarget context: aContext mappings: aCollection [
 
 	| mappings |
@@ -55,7 +55,7 @@ FylgjaMigrationLanguageAndLibraryPharo class >> fylgja: fylgja map: aSource to: 
 		  mapping: mappings
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
 FylgjaMigrationLanguageAndLibraryPharo class >> fylgja: fylgja mapAll: aSourceCollection to: aTarget context: aContext mappings: aCollection [
 
 	aSourceCollection do: [ :source | 
@@ -65,6 +65,32 @@ FylgjaMigrationLanguageAndLibraryPharo class >> fylgja: fylgja mapAll: aSourceCo
 			to: aTarget
 			context: aContext
 			mappings: aCollection ]
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationLanguageAndLibraryPharo class >> installAdaptingRules: context into: fylgja [
+
+	FylgjaRuleInstaller new
+		context: context;
+		install: FylgjaSimpleRenameRule new into: fylgja.
+
+	FylgjaRuleInstaller new
+		context: context;
+		install: FylgjaSimpleRenameWithStaticReceiverRule new into: fylgja.
+
+	FylgjaRuleInstaller new
+		context: context;
+		install: FylgjaSimpleRenameWithReceiverMappedFromArgumentRule new
+		into: fylgja.
+
+	FylgjaRuleInstaller new
+		context: context;
+		install: FylgjaSimpleRenameWithSameClassReceiverRule new
+		into: fylgja.
+
+	FylgjaRuleInstaller new
+		context: context;
+		install: FylgjaAutowrapLibraryElement new into: fylgja
 ]
 
 { #category : #'as yet unclassified' }
@@ -276,53 +302,7 @@ FylgjaMigrationLanguageAndLibraryPharo class >> installPharoLanguageTx: pharo in
 		copy;
 		installInto: fylgja.
 
-	FylgjaRuleInstaller new
-		context: pharo root;
-		install: FylgjaSimpleRenameRule new into: fylgja.
-
-	FylgjaRuleInstaller new
-		context: pharo root;
-		install: FylgjaSimpleRenameWithStaticReceiverRule new into: fylgja.
-
-	FylgjaRuleInstaller new
-		context: pharo root;
-		install: FylgjaSimpleRenameWithReceiverMappedFromArgumentRule new
-		into: fylgja.
-
-
-	FylgjaRuleInstaller new
-		context: pharo root;
-		install: FylgjaSimpleRenameWithSameClassReceiverRule new
-		into: fylgja.
-
-
-	FylgjaRuleInstaller new
-		context: pharo root;
-		install: FylgjaAutowrapLibraryElement new into: fylgja.
-
-
-
-
-	FylgjaRuleInstaller new
-		context: pharo root;
-		prefixUnaryOperator: #Not;
-		replacePostfixUnaryOperatorWith: #not;
-		installInto: fylgja.
-
-
-	FylgjaRuleInstaller new
-		context: pharo root;
-		binaryOperator: #And;
-		replaceOperatorWith: #&;
-		installInto: fylgja.
-
-
-	FylgjaRuleInstaller new
-		context: pharo root;
-		binaryOperator: #Or;
-		replaceOperatorWith: #|;
-		installInto: fylgja.
-
+	self installAdaptingRules: pharo root into: fylgja.
 
 	FylgjaRuleInstaller new
 		context: pharo root;
@@ -332,35 +312,17 @@ FylgjaMigrationLanguageAndLibraryPharo class >> installPharoLanguageTx: pharo in
 
 	FylgjaRuleInstaller new
 		context: pharo root;
-		binaryOperator: #=;
-		replaceOperatorWith: #=;
-		installInto: fylgja.
-
-	FylgjaRuleInstaller new
-		context: pharo root;
 		binaryOperator: #&;
 		replaceOperatorWith: #,;
 		installInto: fylgja.
-
-	FylgjaRuleInstaller new
-		context: pharo root;
-		binaryOperator: #<>;
-		replaceOperatorWith: #~=;
-		installInto: fylgja.
-
-
+	
 	FylgjaRuleInstaller new
 		context: pharo root;
 		anyAlceModule;
-		copyAsPublicClass;
+		copyAsStPublicClass;
 		installInto: fylgja.
-
-	FylgjaRuleInstaller new
-		context: pharo root;
-		anyStructure;
-		copyAsPublicClass;
-		installInto: fylgja.
-
+	
+	
 	" By default when going to java "
 	FylgjaRuleInstaller new
 		context: pharo root;
@@ -371,7 +333,7 @@ FylgjaMigrationLanguageAndLibraryPharo class >> installPharoLanguageTx: pharo in
 				MOClassProcedure.
 				MOFunction.
 				MOProcedure };
-		copyAsMethod;
+		copyAsStMethod;
 		installInto: fylgja.
 	" By default when going to java "
 
@@ -381,7 +343,54 @@ FylgjaMigrationLanguageAndLibraryPharo class >> installPharoLanguageTx: pharo in
 				MOGlobalVariable.
 				MOGlobalConstant };
 		copyAsAttribute;
-		installInto: fylgja
+		installInto: fylgja.
+		
+	
+
+
+]
+
+{ #category : #types }
+FylgjaMigrationLanguageAndLibraryPharo class >> installRuntimeTypeMappings: northwind pharo: pharo using: fylgja [
+	| maps |
+
+
+	maps := { 
+		        (#BOOL -> #Boolean).
+		        (#BSTRString -> #String).
+		        (#Boolean -> #Boolean).
+		        (#Byte -> #SmallInteger).
+		        (#COMDispatchInterface -> #Object).
+		        (#Currency -> #Float).
+		        (#Date -> #DateAndTime).
+		        (#Decimal -> #Float).
+		        (#Double -> #Float).
+		        (#Err -> #Exception).
+		        (#Integer -> #Integer).
+		        (#Long -> #Integer).
+		        (#LongLong -> #Integer).
+		        (#Object -> #Object).
+		        (#Single -> #Float).
+		        (#String -> #String).
+		        (#USERDEFINED -> #Object).
+		        (#Variant -> #Object).
+		        (#Win32Variant -> #Object).
+		        (#Win32WideString -> #String).
+		        (#float -> #Float).
+		        (#int -> #Integer).
+		        (#int16 -> #SmallInteger).
+		        (#uint16 -> #SmallInteger).
+		        (#int32 -> #Integer).
+		        (#uint32 -> #Integer).
+		        (#ubyte -> #SmallInteger).
+		        (#uint -> #Integer).
+		        (#ulong -> #Integer).
+		        (#ulonglong -> #Integer) }.
+	maps do: [ :m | 
+		fylgja
+			map: (northwind typeNamed: m key )
+			to: (pharo typeNamed: m value)
+			context: pharo ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -435,99 +444,31 @@ FylgjaMigrationLanguageAndLibraryPharo class >> installString: northwind pharo: 
 		mappings: { (1 -> #receiver) }
 ]
 
-{ #category : #'as yet unclassified' }
-FylgjaMigrationLanguageAndLibraryPharo class >> installTypeMappings: northwind pharo: pharo  using: fylgja [
+{ #category : #types }
+FylgjaMigrationLanguageAndLibraryPharo class >> installTypeMappings: northwind pharo: pharo using: fylgja [
 
-	fylgja
-		map: (northwind typeNamed: #Connection library: #DAO)
-		to: (pharo typeNamed: #GADriver)
-		context: pharo.
+	self installRuntimeTypeMappings: northwind pharo: pharo using: fylgja.
+	self installVBATypeMappings: northwind pharo: pharo using: fylgja.
 	
-	fylgja
-		map: (northwind aliasNamed: #Connection) "Adodb"
-		to: (pharo typeNamed: #GADriver)
-		context: pharo.
-
-	fylgja
-		map: (northwind typeNamed: #Recordset  library: #DAO)
-		to: (pharo typeNamed: #GAResultSet)
-		context: pharo.
-
-		fylgja
-		map: (northwind aliasNamed: #Recordset) "Adodb"
-		to: (pharo typeNamed: #GAResultSet)
-		context: pharo.
-
-
-
-
-	fylgja
-		map: (northwind typeNamed: #Boolean)
-		to: (pharo typeNamed: #Boolean)
-		context: pharo.
-
-
-	fylgja
-		map: (northwind typeNamed: #String)
-		to: (pharo typeNamed: #String)
-		context: pharo.
-
-	fylgja
-		map: (northwind typeNamed: #Integer)
-		to: (pharo typeNamed: #Integer)
-		context: pharo.
-
-	fylgja
-		map: (northwind typeNamed: #Currency)
-		to: (pharo typeNamed: #Float)
-		context: pharo.
-
-	fylgja
-		map: (northwind typeNamed: #Long)
-		to: (pharo typeNamed: #Integer)
-		context: pharo.
-
-	fylgja
-		map: (northwind typeNamed: #Single)
-		to: (pharo typeNamed: #Float)
-		context: pharo.
-	fylgja
-		map: (northwind typeNamed: #Double)
-		to: (pharo typeNamed: #Float)
-		context: pharo.
-
-	fylgja
-		map: (northwind typeNamed: #Byte)
-		to: (pharo typeNamed: #SmallInteger)
-		context: pharo.
-
-	fylgja
-		map: (northwind typeNamed: #Object)
-		to: (pharo typeNamed: #Object)
-		context: pharo.
-	fylgja
-		map: (northwind typeNamed: #Variant)
-		to: (pharo typeNamed: #Object)
-		context: pharo.
-
-	fylgja
-		map: (northwind typeNamed: #Collection)
-		to: (pharo typeNamed: #OrderedCollection)
-		context: pharo.
-
-	fylgja
-		map: (northwind typeNamed: #Date)
-		to: (pharo typeNamed: #DateAndTime)
-		context: pharo.
-
-
-	fylgja
-		map: (northwind typeNamed: #ErrObject)
-		to: (pharo typeNamed: #Error)
-		context: pharo
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #types }
+FylgjaMigrationLanguageAndLibraryPharo class >> installVBATypeMappings: northwind pharo: pharo using: fylgja [
+
+	
+	| maps |
+	maps := { 
+		        (#_Collection -> #OrderedCollection).
+		        (#Collection -> #OrderedCollection).
+		        (#ErrObject -> #Error) }.
+	maps do: [ :m | 
+		fylgja
+			map: (northwind typeOrAliasNamed: m key library: #VBA)
+			to: (pharo typeNamed: m value)
+			context: pharo ]
+]
+
+{ #category : #helper }
 FylgjaMigrationLanguageAndLibraryPharo class >> loadPaperPharo [
 
 	| phary |
@@ -544,13 +485,13 @@ FylgjaMigrationLanguageAndLibraryPharo class >> loadPaperPharo [
 	^ paperPharo
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
 FylgjaMigrationLanguageAndLibraryPharo class >> paperPharo [
 
 	^ paperPharo ifNil: [ paperPharo := self loadPaperPharo ] 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
 FylgjaMigrationLanguageAndLibraryPharo class >> paperSourceModel [
 
 	^ MOJinDAMImporter paperSourceModel

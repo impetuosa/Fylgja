@@ -41,6 +41,34 @@ FylgjaNestedMapping >> mapReceiver: aCollection [
 ]
 
 { #category : #accessing }
+FylgjaNestedMapping >> mappingString [
+
+	| pieces |
+	pieces := OrderedCollection new.
+	mappings keysAndValuesDo: [ :tp :sp | 
+		pieces add: ('{2} -> {4}' format: { 
+					 self sourceName.
+					 sp name.
+					 self targetName.
+					 tp name }) ].
+	^ super mappingString , '(' , (',' join: pieces) , ')'
+]
+
+{ #category : #accessing }
+FylgjaNestedMapping >> mappingString2 [
+
+	| pieces |
+	pieces := OrderedCollection new.
+	mappings keysAndValuesDo: [ :tp :sp | 
+		pieces add: ('{2} -> {4}' format: { 
+					 self sourceName.
+					 sp name.
+					 self targetName.
+					 tp name }) ].
+	^ super mappingString , '(' , (',' join: pieces) , ')'
+]
+
+{ #category : #accessing }
 FylgjaNestedMapping >> mappings [
 
 	^ mappings
@@ -72,12 +100,10 @@ FylgjaNestedMapping >> printOn: aStream [
 	super printOn: aStream.
 	pieces := OrderedCollection new.
 	mappings keysAndValuesDo: [ :tp :sp | 
-		pieces add: ('{1}.{2}.{3} -> {3}.{4}.{5}' format: { 
-					 source parent name.
-					 source name.
+		pieces add: ('{2} -> {4}' format: { 
+					 self sourceName.
 					 sp name.
-					 target parent name.
-					 target name.
+					 self targetName.
 					 tp name }) ].
 	aStream
 		nextPutAll: '(';

@@ -23,6 +23,7 @@ FylgjaAutowrapLibraryElement >> bind: aDestinationEntity as: aCandidateRelation 
 			croppingRelationsWith: aBlock
 			usingWriter: aDestinationWriter
 			lookUp: aFylgjaLookUpContext ].
+		
 
 	[ parentUnit isType or: [ parentUnit isModule ] ] whileFalse: [ 
 		parentUnit := parentUnit parent ].
@@ -34,6 +35,7 @@ FylgjaAutowrapLibraryElement >> bind: aDestinationEntity as: aCandidateRelation 
 		                     detect: [ :t | t name = parentUnit name ]
 		                     ifNone: [ nil ].
 	compatibilityType
+	
 		ifNil: [ 
 			aFylgja
 				produce: parentUnit
@@ -70,9 +72,12 @@ FylgjaAutowrapLibraryElement >> isTypeOrInsideType: aCandidate [
 { #category : #testing }
 FylgjaAutowrapLibraryElement >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation consideringMappingsFrom: aLookup [
 
+	" Wrapping, by the time being is only for invocalbes and members no types "
+
+	(aCandidateRelation to isKindOf: MOAlias) ifTrue: [ ^ false ].
 	mappings := aLookup resolveAllMappingsRelatedTo:
 		            aCandidateRelation to.
-	
+
 	mappings ifNotEmpty: [ ^ false ].
 	mappings := aLookup.
 	^ aCandidateRelation to isDefinedInLibrary and: [ 
@@ -89,6 +94,10 @@ FylgjaAutowrapLibraryElement >> rejectAnyContainment: aCollection from: aMOModul
 	thisModule := thisModule reject: [ :a | 
 		              a isContainment and: [ 
 			              (a to isSameEntity: aMOGlobalVariable) not ] ].
-	^ thisModule
-	  , (aCollection reject: [ :a | a from isSameEntity: aMOModule ])
+	" If from  and the child to keep are the same, we are doing compatibiltiy for the type. We don't care about the things within this type by default: we only care about the type as referentiable "
+
+	^ thisModule , ((aMOModule isSameEntity: aMOGlobalVariable)
+		   ifTrue: [ {  } ]
+		   ifFalse: [ 
+		   aCollection reject: [ :a | a from isSameEntity: aMOModule ] ])
 ]

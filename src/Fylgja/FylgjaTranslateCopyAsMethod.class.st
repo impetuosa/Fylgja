@@ -34,7 +34,7 @@ FylgjaTranslateCopyAsMethod >> applyTo: aProvenanceEntityRelation croppingRelati
 	aDestinationWriter superclassReference ifNotNil: [ 
 		translatingIntoTestCase := aDestinationWriter superclassReference
 			                           name = #TestCase ].
-	method := aDestinationWriter writeMethod: [ :methodWriter | 
+	method := self writeMethod: aDestinationWriter with: [ :methodWriter | 
 		          writer := methodWriter.
 		          aProvenanceEntityRelation to acceptVisitor: self.
 		          methodWriter returnTypeReference ifNil: [ 
@@ -164,4 +164,10 @@ FylgjaTranslateCopyAsMethod >> visitVariableAccessor: aMOVariableAccessor [
 			(cropping value: col) select: [ :relation | 
 					(relation name = #kind) not ] ];
 		applyOn: writer
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaTranslateCopyAsMethod >> writeMethod: aDestinationWriter with: aBlock [
+
+	^ aDestinationWriter writeMethod: aBlock
 ]

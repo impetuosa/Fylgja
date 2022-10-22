@@ -229,6 +229,7 @@ MoxingReferencesAndMappings >> startDraggingReference [
 { #category : #accessing }
 MoxingReferencesAndMappings >> updateSelectionTo: aSelection [
 	lastSelection := aSelection. 
+
 	self
 		references: (self controller stubsFor: aSelection)
 		and: (self controller mrsFor: aSelection)

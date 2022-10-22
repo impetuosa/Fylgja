@@ -65,6 +65,32 @@ FylgjaMigrationLanguageAndLibrary class >> fylgja: fylgja mapAll: aSourceCollect
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaMigrationLanguageAndLibrary class >> installAdaptingRules: context into: fylgja [
+
+	FylgjaRuleInstaller new
+		context: context;
+		install: FylgjaSimpleRenameRule new into: fylgja.
+
+	FylgjaRuleInstaller new
+		context: context;
+		install: FylgjaSimpleRenameWithStaticReceiverRule new into: fylgja.
+
+	FylgjaRuleInstaller new
+		context: context;
+		install: FylgjaSimpleRenameWithReceiverMappedFromArgumentRule new
+		into: fylgja.
+
+	FylgjaRuleInstaller new
+		context: context;
+		install: FylgjaSimpleRenameWithSameClassReceiverRule new
+		into: fylgja.
+
+	FylgjaRuleInstaller new
+		context: context;
+		install: FylgjaAutowrapLibraryElement new into: fylgja
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaMigrationLanguageAndLibrary class >> installAssert: northwind java: java using: fylgja [
 
 	"* Assert => this.assertTrue "
@@ -377,70 +403,12 @@ FylgjaMigrationLanguageAndLibrary class >> installJavaLanguageTx: java into: fyl
 		anyEntity;
 		copy;
 		installInto: fylgja.
-
-
-	FylgjaRuleInstaller new
-		context: java root;
-		install: FylgjaSimpleRenameRule new into: fylgja.
-
-	FylgjaRuleInstaller new
-		context: java root;
-		install: FylgjaSimpleRenameWithStaticReceiverRule new into: fylgja.
-
-	FylgjaRuleInstaller new
-		context: java root;
-		install: FylgjaSimpleRenameWithReceiverMappedFromArgumentRule new
-		into: fylgja.
-
-
-	FylgjaRuleInstaller new
-		context: java root;
-		install: FylgjaSimpleRenameWithSameClassReceiverRule new
-		into: fylgja.
-
+	self installAdaptingRules: java root into: fylgja .
+	
+	
 	FylgjaRuleInstaller new
 		context: java root;
 		install: FylgjaDateLiteralToLocaleDateParse new into: fylgja.
-
-	FylgjaRuleInstaller new
-		context: java root;
-		install: FylgjaAutowrapLibraryElement new into: fylgja.
-
-
-	"	FylgjaRuleInstaller new
-		context: java root;
-		anyPrimitiveTypeReference;
-		rewriteAsTypeReference;
-		installInto: fylgja.
-"
-
-	FylgjaRuleInstaller new
-		context: java root;
-		prefixUnaryOperator: #Not;
-		replacePrefixUnaryOperatorWith: #!;
-		installInto: fylgja.
-
-
-
-
-	FylgjaRuleInstaller new
-		context: java root;
-		binaryOperator: #And;
-		replaceOperatorWith: #&&;
-		installInto: fylgja.
-
-
-	FylgjaRuleInstaller new
-		context: java root;
-		binaryOperator: #Or;
-		replaceOperatorWith: #'||';
-		installInto: fylgja.
-
-
-	"	FylgjaRuleInstaller new
-		context: java root;
-		install: FylgjaEqualsToEqualsMessageOrNot new into: fylgja.
-"
 
 	FylgjaRuleInstaller new
 		context: java root;
@@ -453,17 +421,11 @@ FylgjaMigrationLanguageAndLibrary class >> installJavaLanguageTx: java into: fyl
 		binaryOperator: #=;
 		replaceOperatorWith: #==;
 		installInto: fylgja.
-
+	
 	FylgjaRuleInstaller new
 		context: java root;
 		binaryOperator: #&;
 		replaceOperatorWith: #+;
-		installInto: fylgja.
-
-	FylgjaRuleInstaller new
-		context: java root;
-		binaryOperator: #<>;
-		replaceOperatorWith: #!=;
 		installInto: fylgja.
 
 
@@ -471,18 +433,6 @@ FylgjaMigrationLanguageAndLibrary class >> installJavaLanguageTx: java into: fyl
 		context: java root;
 		anyAlceModule;
 		copyAsPublicClass;
-		installInto: fylgja.
-
-	FylgjaRuleInstaller new
-		context: java root;
-		anyStructure;
-		copyAsPublicClass;
-		installInto: fylgja.
-
-	FylgjaRuleInstaller new
-		context: java root;
-		anyOnErrorGoToBlockTransformableToTryCatch;
-		onErrorGoToToTryCatch;
 		installInto: fylgja.
 
 
@@ -536,42 +486,43 @@ FylgjaMigrationLanguageAndLibrary class >> installObject: northwind java: java u
 FylgjaMigrationLanguageAndLibrary class >> installRuntimeTypeMappings: northwind java: java using: fylgja [
 
 	| maps |
+
 	maps := { 
-		        (#BOOL -> #Boolean).
+		        (#BOOL -> #boolean).
 		        (#BSTRString -> #String).
-		        (#Boolean -> #Boolean).
-		        (#Byte -> #Byte).
+		        (#Boolean -> #boolean).
+		        (#Byte -> #byte).
 		        (#COMDispatchInterface -> #Object).
-		        (#Currency -> #Double).
+		        (#Currency -> #double).
 		        (#Date -> #LocalDate).
-		        (#Decimal -> #Double).
-		        (#Double -> #Double).
+		        (#Decimal -> #double).
+		        (#Double -> #double).
 		        (#Err -> #Exception).
-		        (#Integer -> #Integer).
-		        (#Long -> #Long).
-		        (#LongLong -> #Long).
+		        (#Integer -> #int).
+		        (#Long -> #long).
+		        (#LongLong -> #long).
 		        (#Object -> #Object).
-		        (#Single -> #Float).
+		        (#Single -> #float).
 		        (#String -> #String).
 		        (#USERDEFINED -> #Object).
-		        (#VOID -> #Void).
-		        (#Void -> #Void).
+		        (#VOID -> #void).
+		        (#Void -> #void).
 		        (#Variant -> #Object).
 		        (#Win32Variant -> #Object).
 		        (#Win32WideString -> #String).
-		        (#float -> #Float).
-		        (#int -> #Integer).
-		        (#int16 -> #Short).
-		        (#uint16 -> #Short).
-		        (#int32 -> #Integer).
-		        (#uint32 -> #Integer).
-		        (#ubyte -> #Byte).
-		        (#uint -> #Integer).
-		        (#ulong -> #Long).
-		        (#ulonglong -> #Long) }.
+		        (#float -> #float).
+		        (#int -> #int).
+		        (#int16 -> #short).
+		        (#uint16 -> #short).
+		        (#int32 -> #int).
+		        (#uint32 -> #int).
+		        (#ubyte -> #byte).
+		        (#uint -> #int).
+		        (#ulong -> #long).
+		        (#ulonglong -> #long) }.
 	maps do: [ :m | 
 		fylgja
-			map: (northwind typeNamed: m key )
+			map: (northwind typeNamed: m key)
 			to: (java typeNamed: m value)
 			context: java ]
 ]

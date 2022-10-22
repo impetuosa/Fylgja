@@ -50,6 +50,11 @@ FylgjaMapping >> isVariable [
 	^ false
 ]
 
+{ #category : #accessing }
+FylgjaMapping >> mappingString [
+	 ^ self targetName 
+]
+
 { #category : #'as yet unclassified' }
 FylgjaMapping >> mapsArguments [
 
@@ -66,13 +71,9 @@ FylgjaMapping >> mapsSource: aMOLocalVariable [
 FylgjaMapping >> printOn: aStream [
 
 	aStream
-		nextPutAll: source parent name;
-		nextPutAll: '.';
-		nextPutAll: source name;
+		nextPutAll: self sourceName;
 		nextPutAll: ' => ';
-		nextPutAll: target parent name;
-		nextPutAll: '.';
-		nextPutAll: target name
+		nextPutAll: self targetName
 ]
 
 { #category : #accessing }
@@ -88,6 +89,23 @@ FylgjaMapping >> source: anObject [
 ]
 
 { #category : #accessing }
+FylgjaMapping >> sourceName [
+
+	^ String streamContents: [ :str | 
+			str nextPutAll: (
+		  source isType ifTrue: ['T'] ifFalse: [(source isKindOf: MOInvocable) ifTrue:'I' ifFalse: 'V' ]) ; nextPutAll:';' . 
+		  str
+			  nextPutAll:
+				  ((source parent name
+					    includesSubstring: 'paper'
+					    caseSensitive: false)
+					   ifTrue: [ #VBALang ]
+					   ifFalse: [ source parent name ]);
+			  nextPutAll: '.';
+			  nextPutAll: source name ]
+]
+
+{ #category : #accessing }
 FylgjaMapping >> target [
 
 	^ target
@@ -97,4 +115,16 @@ FylgjaMapping >> target [
 FylgjaMapping >> target: anObject [
 
 	target := anObject
+]
+
+{ #category : #accessing }
+FylgjaMapping >> targetName [
+
+	^ String streamContents: [ :str | 
+					str nextPutAll: (
+		  target isType ifTrue: ['T'] ifFalse: [(source isKindOf: MOInvocable) ifTrue:'I' ifFalse: 'V' ]) ; nextPutAll:';' . 
+		  str
+			  nextPutAll: target parent name;
+			  nextPutAll: '.';
+			  nextPutAll: target name ]
 ]
