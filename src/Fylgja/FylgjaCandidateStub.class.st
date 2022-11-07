@@ -17,7 +17,7 @@ FylgjaCandidateStub >> printOn: aStream [
 		nextPutAll: 'Stub: ';
 		nextPutAll: self parent printString;
 		nextPutAll: ' Should Point To: ';
-		print: candidate
+		print: referee
 ]
 
 { #category : #'as yet unclassified' }
