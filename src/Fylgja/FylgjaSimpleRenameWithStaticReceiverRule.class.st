@@ -63,7 +63,7 @@ FylgjaSimpleRenameWithStaticReceiverRule >> matches: aDestinationEntity context:
 	 "
 
 	mappings ifEmpty: [ ^ false ].
-	self assert: mappings size = 1.
+"	self assert: mappings size = 1."
 	mappings := mappings first.
 	"By the time been i do not know what means to have more than one mapping. So here we are with an assertion to comeback whenever is needed "
 

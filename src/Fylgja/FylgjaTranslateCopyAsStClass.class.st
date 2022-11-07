@@ -7,5 +7,5 @@ Class {
 { #category : #writing }
 FylgjaTranslateCopyAsStClass >> writeClass: unit with: block [
 
-	unit writeStClass: block
+	^ unit writeStClass: block
 ]

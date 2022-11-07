@@ -349,6 +349,12 @@ FylgjaDerivativeModel >> migrationRuleSpace [
 ]
 
 { #category : #accessing }
+FylgjaDerivativeModel >> model [
+
+	^ fylgja
+]
+
+{ #category : #accessing }
 FylgjaDerivativeModel >> models [
 
 	^ self derivativeModels

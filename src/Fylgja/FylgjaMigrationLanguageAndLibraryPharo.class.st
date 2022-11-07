@@ -315,14 +315,14 @@ FylgjaMigrationLanguageAndLibraryPharo class >> installPharoLanguageTx: pharo in
 		binaryOperator: #&;
 		replaceOperatorWith: #,;
 		installInto: fylgja.
-	
+
 	FylgjaRuleInstaller new
 		context: pharo root;
 		anyAlceModule;
 		copyAsStPublicClass;
 		installInto: fylgja.
-	
-	
+
+
 	" By default when going to java "
 	FylgjaRuleInstaller new
 		context: pharo root;
@@ -343,11 +343,7 @@ FylgjaMigrationLanguageAndLibraryPharo class >> installPharoLanguageTx: pharo in
 				MOGlobalVariable.
 				MOGlobalConstant };
 		copyAsAttribute;
-		installInto: fylgja.
-		
-	
-
-
+		installInto: fylgja
 ]
 
 { #category : #types }

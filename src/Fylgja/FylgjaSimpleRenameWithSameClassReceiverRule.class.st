@@ -91,6 +91,7 @@ FylgjaSimpleRenameWithSameClassReceiverRule >> matches: aDestinationEntity conte
 		we rely on the fact that the operation is allways applied after the condition.
 		And that there is not any kind of batch processing.  (like checking all the possible applications of these rule before applying )
 	"
+
 	aDestinationEntity parent isNil ifTrue: [ ^ false ].
 
 	callingMethod := aDestinationEntity callingInvocable.

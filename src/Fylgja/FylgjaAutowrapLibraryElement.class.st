@@ -73,8 +73,8 @@ FylgjaAutowrapLibraryElement >> isTypeOrInsideType: aCandidate [
 FylgjaAutowrapLibraryElement >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation consideringMappingsFrom: aLookup [
 
 	" Wrapping, by the time being is only for invocalbes and members no types "
-
 	(aCandidateRelation to isKindOf: MOAlias) ifTrue: [ ^ false ].
+
 	mappings := aLookup resolveAllMappingsRelatedTo:
 		            aCandidateRelation to.
 
