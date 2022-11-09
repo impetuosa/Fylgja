@@ -31,7 +31,7 @@ FylgjaDateLiteralToLocaleDateParse >> applyTo: aRelatedProvenanceEntity cropping
 { #category : #testing }
 FylgjaDateLiteralToLocaleDateParse >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType with: aWriter [
 
-	^ aProvenanceEntityRelation to isKindOf: MOAlceDateLiteral
+	^ aProvenanceEntityRelation to isKindOf: MODateLiteral
 ]
 
 { #category : #testing }

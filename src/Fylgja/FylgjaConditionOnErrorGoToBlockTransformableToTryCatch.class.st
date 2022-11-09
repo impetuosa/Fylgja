@@ -18,7 +18,7 @@ FylgjaConditionOnErrorGoToBlockTransformableToTryCatch >> matches: aProvenanceEn
 	stmt := aProvenanceEntityRelation to statements
 		        detect: [ :a | 
 			        (a isKindOf: MOStatementExpression) and: [ 
-				        (a expression isKindOf: MOAlceLabelReference) and: [ 
+				        (a expression isKindOf: MOLabelReference) and: [ 
 					        a expression name = onErrorGoTo destination name ] ] ]
 		        ifNone: [ ^ false ].
 
