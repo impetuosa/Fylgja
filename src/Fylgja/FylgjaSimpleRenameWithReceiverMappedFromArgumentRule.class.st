@@ -17,7 +17,7 @@ FylgjaSimpleRenameWithReceiverMappedFromArgumentRule >> bind: aMOInvocation as: 
 				   self mapReceiver: aMOInvocation using: mappings ]
 			   arguments: [ :exp | 
 				   self mapArguments: aMOInvocation using: mappings ])
-			  candidate: mappings target;
+			  referee: mappings target;
 			  yourself ]
 ]
 

@@ -11,11 +11,6 @@ FylgjaCandidateStubWriter >> acceptWritingVisitor: aVisitor [
 
 ]
 
-{ #category : #accessing }
-FylgjaCandidateStubWriter >> candidate: aMOPrimitiveType [ 
-	writeBuilder candidate: aMOPrimitiveType 
-]
-
 { #category : #writing }
 FylgjaCandidateStubWriter >> initializeWriteBuilder [
 
@@ -37,4 +32,9 @@ FylgjaCandidateStubWriter >> privateWriteToSurface: anEntity [
 FylgjaCandidateStubWriter >> provenance: aMOObjectObjectRelation [
 
 	writeBuilder provenance: aMOObjectObjectRelation
+]
+
+{ #category : #accessing }
+FylgjaCandidateStubWriter >> referee: aMOPrimitiveType [ 
+	writeBuilder referee: aMOPrimitiveType 
 ]

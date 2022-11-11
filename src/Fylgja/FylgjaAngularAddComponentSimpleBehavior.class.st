@@ -119,7 +119,7 @@ FylgjaAngularAddComponentSimpleBehavior >> calculateReferenceToAnObservable: aSt
 		              using: class.
 	observable argumentTypeReferences:
 		{ ((self calculateTypeReference: aString using: class)
-			 candidate: aCandidate;
+			 referee: aCandidate;
 			 yourself) }.
 	^ observable
 ]
@@ -186,7 +186,7 @@ FylgjaAngularAddComponentSimpleBehavior >> observableArrayTypeReference: aClass 
 
 	observable argumentTypeReferences: { (class arrayTypeReferenceOf:
 			 ((self calculateTypeReference: aClass name using: class)
-				  candidate: aClass;
+				  referee: aClass;
 				  yourself)) }.
 	^ observable
 ]

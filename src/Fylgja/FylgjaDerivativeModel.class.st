@@ -568,5 +568,5 @@ FylgjaDerivativeModel >> stubReferencesTo: aProvenanceEntity from: aDestinationM
 
 	^ aDestinationModel entities select: [ :a | 
 		  (a isKindOf: FylgjaCandidateStub) and: [ 
-			  a candidate = aProvenanceEntity ] ]
+			  a referee = aProvenanceEntity ] ]
 ]

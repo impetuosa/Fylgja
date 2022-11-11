@@ -46,7 +46,7 @@ FylgjaAddClass >> visitJavaClassWriter: aMOJavaClassWriter [
 		class name: className.
 		class superclassReference: ((class typeReferenceNamed: scn)
 				 packageReference: (class packageReferenceNamed: scp);
-				 candidate: sc;
+				 referee: sc;
 				 yourself) ]
 ]
 
@@ -72,6 +72,6 @@ FylgjaAddClass >> visitUnitWriter: aMODeclarationUnitWriter [
 		class name: className.
 		class superclassReference: ((class typeReferenceNamed: scn)
 				 packageReference: (class packageReferenceNamed: scp);
-				 candidate: sc;
+				 referee: sc;
 				 yourself) ]
 ]

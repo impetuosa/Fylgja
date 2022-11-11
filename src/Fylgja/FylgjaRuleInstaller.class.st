@@ -542,7 +542,7 @@ FylgjaRuleInstaller >> rewriteAsTypeReference [
 FylgjaRuleInstaller >> whenIsReferenceWithCandidate: aProvenanceCandidate [
 
 	^ self condition: (FylgjaConditionReferenceCandidateIs new
-			   candidate: aProvenanceCandidate;
+			   referee: aProvenanceCandidate;
 			   yourself)
 ]
 

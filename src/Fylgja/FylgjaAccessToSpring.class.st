@@ -35,7 +35,7 @@ FylgjaAccessToSpring >> addAutowiredAttribute: aName type: aType into: class [
 		                 packageName: aType packageName
 		                 using: class.
 
-	typeReference candidate: aType.
+	typeReference referee: aType.
 
 	^ FylgjaAddAnnotatedAttribute new
 		  addAnnotationProduction: self annotatingAsAutoWired;
@@ -299,7 +299,7 @@ FylgjaAccessToSpring >> daoNameFor: aFormOrReport [
 { #category : #'as yet unclassified' }
 FylgjaAccessToSpring >> daoNameForString: aString [
 
-	^ (MODeclaration sanitize: aString) , '_DAO'
+	^ (MOObject sanitize: aString) , '_DAO'
 ]
 
 { #category : #'instance creation' }

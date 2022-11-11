@@ -7,21 +7,11 @@ Class {
 	#category : #'Fylgja-Rule-Conditions'
 }
 
-{ #category : #accessing }
-FylgjaConditionReferenceCandidateIs >> candidate [
-	^ candidate
-]
-
-{ #category : #'\\' }
-FylgjaConditionReferenceCandidateIs >> candidate: aMOClassFunction [ 
-	candidate := aMOClassFunction
-]
-
 { #category : #testing }
 FylgjaConditionReferenceCandidateIs >> matches: aProvenanceEntityRelation context: aDestinationContextRelation forWriting: aType with: aWriter [
 
 	^ aProvenanceEntityRelation isReference and: [ 
-		  aProvenanceEntityRelation to candidate = candidate ]
+		  aProvenanceEntityRelation to referee = candidate ]
 ]
 
 { #category : #testing }
@@ -33,4 +23,14 @@ FylgjaConditionReferenceCandidateIs >> matches: aDestinationEntity context: aDes
 { #category : #testing }
 FylgjaConditionReferenceCandidateIs >> printOn: aStream [
  	aStream nextPutAll:'IsReference With Candidate '; nextPutAll: candidate name 
+]
+
+{ #category : #accessing }
+FylgjaConditionReferenceCandidateIs >> referee [
+	^ candidate
+]
+
+{ #category : #'\\' }
+FylgjaConditionReferenceCandidateIs >> referee: aMOClassFunction [ 
+	candidate := aMOClassFunction
 ]

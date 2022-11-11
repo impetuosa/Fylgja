@@ -40,6 +40,6 @@ FylgjaModification >> typeReferenceBasedOn: aBlock using: aWriter [
 				       parametrizedTypeReferenceNamed: declaration name
 				       arguments: {  } ]
 		       ifFalse: [ aWriter typeReferenceNamed: declaration name ].
-	ref candidate: declaration.
+	ref referee: declaration.
 	^ ref
 ]

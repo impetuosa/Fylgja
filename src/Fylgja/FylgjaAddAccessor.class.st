@@ -26,7 +26,7 @@ FylgjaAddAccessor >> attributeReference: aWriter [
 		       uexp
 			       accessAttribute: attribute name
 			       receiver: [ : exp | exp referenceToSelf ] ].
-	ref candidate: attribute.
+	ref referee: attribute.
 	^ ref
 ]
 
@@ -34,6 +34,6 @@ FylgjaAddAccessor >> attributeReference: aWriter [
 FylgjaAddAccessor >> referenceToVarLike: parameter using: block [
 
 	^ (block variableReferenceNamed: parameter name)
-		  candidate: parameter;
+		  referee: parameter;
 		  yourself
 ]

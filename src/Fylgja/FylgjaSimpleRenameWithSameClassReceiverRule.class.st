@@ -21,7 +21,7 @@ FylgjaSimpleRenameWithSameClassReceiverRule >> bind: aMOInvocation as: aMODeclar
 					   ifFalse: [ exp referenceToSelf ] ]
 			   arguments: [ :exp | 
 				   self mapArguments: aMOInvocation using: mappings ])
-			  candidate: mappings target;
+			  referee: mappings target;
 			  yourself ]
 ]
 
@@ -56,7 +56,7 @@ FylgjaSimpleRenameWithSameClassReceiverRule >> calculateReceiverFor: aMOMethod f
 						 true ] ]
 			 ifNil: [ true ])
 			ifTrue: [ 
-				current := current superclassReference candidate.
+				current := current superclassReference referee.
 				true ]
 			ifFalse: [ false ] ].
 
@@ -74,7 +74,7 @@ FylgjaSimpleRenameWithSameClassReceiverRule >> callingTo: aMOMethod canBeAchieve
 	^ (aMOJavaClass methods contains: [ :m | m isSameEntity: aMOMethod ]) 
 		  or: [ 
 			  aMOJavaClass superclassReference ifNil: [ false ] ifNotNil: [ 
-				  aMOJavaClass superclassReference candidate
+				  aMOJavaClass superclassReference referee
 					  ifNil: [ false ]
 					  ifNotNil: [ :superclass | 
 						  self callingTo: aMOMethod canBeAchievedFrom: superclass ] ] ]

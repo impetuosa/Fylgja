@@ -71,7 +71,7 @@ FylgjaAddMethodInvocation >> visitExpressionWriter: aWriter [
 		   invokeMethodNamed: selector
 		   receiver: [ :e | receiver ]
 		   arguments: [ :e | self arguments ])
-		  candidate: method;
+		  referee: method;
 		  yourself
 ]
 

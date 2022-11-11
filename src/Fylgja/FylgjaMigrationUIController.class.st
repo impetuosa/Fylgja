@@ -648,12 +648,12 @@ FylgjaMigrationUIController >> usersOrSenders: aMOMethod [
 
 	aMOMethod isInvocable ifTrue: [ 
 		^ derivative allInvocations
-			  select: [ :a | versions includes: a candidate ]
+			  select: [ :a | versions includes: a referee ]
 			  thenCollect: [ :a | a callingInvocable ] ].
 	aMOMethod isType ifTrue: [ 
 		| candidates referrals |
 		candidates := derivative allReferences
-			              select: [ :r | versions includes: r candidate ]
+			              select: [ :r | versions includes: r referee ]
 			              thenCollect: [ :r | 
 				              | i |
 				              i := r usingDeclaration ].

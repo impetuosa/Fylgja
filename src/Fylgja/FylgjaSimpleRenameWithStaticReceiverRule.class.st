@@ -18,11 +18,11 @@ FylgjaSimpleRenameWithStaticReceiverRule >> bind: aMOInvocation as: aMODeclarati
 					   receiver: [ :exp | 
 						   (exp typeReferenceNamedForRebinding:
 								    mappings target parent name)
-							   candidate: mappings target parent;
+							   referee: mappings target parent;
 							   yourself ]
 					   arguments: [ :exp | 
 					   self mapArguments: aMOInvocation using: mappings ])
-					  candidate: mappings target;
+					  referee: mappings target;
 					  yourself ]
 			  ifFalse: [ 
 "				  self assert: mappings mapsArguments not."
@@ -31,7 +31,7 @@ FylgjaSimpleRenameWithStaticReceiverRule >> bind: aMOInvocation as: aMODeclarati
 					  receiver: [ :exp | 
 						  (exp typeReferenceNamedForRebinding:
 								   mappings target parent name)
-							  candidate: mappings target parent;
+							  referee: mappings target parent;
 							  yourself ] ] ]
 ]
 

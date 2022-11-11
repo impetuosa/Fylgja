@@ -85,9 +85,9 @@ FylgjaMigrateDeclarationIntoClassMappingTests >> testProduceMethodIntoClassByCop
 	self assert: result result isKindOf: MOMethod.
 
 	self assert: result result returnTypeReference name equals: #Boolean.
-	self assert: result result returnTypeReference candidate isNotNil.
+	self assert: result result returnTypeReference referee isNotNil.
 	self
-		assert: result result returnTypeReference candidate
+		assert: result result returnTypeReference referee
 		isKindOf: MOClass
 ]
 
@@ -145,8 +145,8 @@ FylgjaMigrateDeclarationIntoClassMappingTests >> testProduceMethodIntoClassByCop
 	self assert: result result isKindOf: MOMethod.
 
 	self assert: result result returnTypeReference name equals: #Boolean.
-	self assert: result result returnTypeReference candidate isNotNil.
+	self assert: result result returnTypeReference referee isNotNil.
 	self
-		assert: result result returnTypeReference candidate
+		assert: result result returnTypeReference referee
 		isKindOf: MOPrimitiveType
 ]

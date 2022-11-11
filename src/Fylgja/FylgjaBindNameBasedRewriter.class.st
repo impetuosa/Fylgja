@@ -34,10 +34,10 @@ FylgjaBindNameBasedRewriter >> adaptInvocationToInvocationToPointToStaticMethod 
 			   invokeMethodNamed: toBindElement selector
 			   receiver: [ :exp | 
 				   (exp typeReferenceNamedForRebinding: toBindElement parent name)
-					   candidate: toBindElement parent;
+					   referee: toBindElement parent;
 					   yourself ]
 			   arguments: [ :exp | destinationEntity arguments ])
-			  candidate: toBindElement;
+			  referee: toBindElement;
 			  yourself ]
 ]
 
@@ -58,7 +58,7 @@ FylgjaBindNameBasedRewriter >> adaptInvocationToMethodInvocation [
 FylgjaBindNameBasedRewriter >> adaptPrimitiveTypeReferenceToPrimitiveTypeReferenceToPointToClass [
 
 	^ (destinationWriter typeReferenceNamed: toBindElement name)
-		  candidate: toBindElement;
+		  referee: toBindElement;
 		  yourself
 ]
 
@@ -110,9 +110,9 @@ FylgjaBindNameBasedRewriter >> adaptVariableReferenceToVariableReferenceToPointT
 			   accessAttribute: toBindElement name
 			   receiver: [ :exp | 
 				   (exp typeReferenceNamedForRebinding: toBindElement parent name)
-					   candidate: toBindElement parent;
+					   referee: toBindElement parent;
 					   yourself ])
-			  candidate: toBindElement;
+			  referee: toBindElement;
 			  yourself ]
 ]
 

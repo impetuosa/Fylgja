@@ -86,7 +86,7 @@ FylgjaAnnotate >> privateApplyOn: aWriter [
 	aWriter writeAnnotation: [ :annotation | 
 		annotation annotationTypeReference:
 			((annotation typeReferenceNamed: candidate name)
-				 candidate: candidate;
+				 referee: candidate;
 				 yourself).
 
 		self hasArguments ifTrue: [ 

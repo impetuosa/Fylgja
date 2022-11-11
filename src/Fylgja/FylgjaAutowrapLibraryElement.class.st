@@ -16,7 +16,7 @@ FylgjaAutowrapLibraryElement >> bind: aDestinationEntity as: aCandidateRelation 
 		This rule may steal the possiblity of this reference to have a stub. 
 		And this rule will not fix directly that problem, but indirectly by migrating the missing part. 
 	"
-	aDestinationEntity candidate ifNil: [ 
+	aDestinationEntity referee ifNil: [ 
 		aFylgja
 			installStub: aDestinationEntity
 			as: aCandidateRelation

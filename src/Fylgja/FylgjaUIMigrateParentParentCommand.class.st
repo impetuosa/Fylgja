@@ -8,7 +8,7 @@ Class {
 FylgjaUIMigrateParentParentCommand >> canBeExecuted [
 
 	^ (self context selectedItems allSatisfy: [ :first | 
-		   first isFylgjaStub and: [ first candidate isNotNil ] ]) and: [ 
+		   first isFylgjaStub and: [ first referee isNotNil ] ]) and: [ 
 		  self singleParentIsDeclaration ]
 ]
 
@@ -22,5 +22,5 @@ FylgjaUIMigrateParentParentCommand >> extensionName [
 FylgjaUIMigrateParentParentCommand >> passengers [
 
 	^ (self context selectedItems collect: [ :c | 
-		  c candidate parent parent  ]) removeDuplicates 
+		  c referee parent parent  ]) removeDuplicates 
 ]

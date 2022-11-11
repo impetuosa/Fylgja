@@ -17,7 +17,7 @@ FylgjaOperation >> booleanTypeReference: aMOClassWriter [
 	boolean := (aMOClassWriter model allEntitiesSelect: [ :a | 
 		           a isPrimitiveType and: [ a name = #boolean ] ]) first .
 	^ (aMOClassWriter typeReferenceNamed: #boolean)
-		  candidate: boolean;
+		  referee: boolean;
 		  yourself
 ]
 
@@ -39,7 +39,7 @@ FylgjaOperation >> calculateParametrizableTypeReference: aString packageName: aP
 	typeRef := aWriter
 		           parametrizedTypeReferenceNamed:aString
 		           arguments: {  }.
-	typeRef candidate: candidate.
+	typeRef referee: candidate.
 	typeRef packageReference: (aWriter packageReferenceNamed: aPackName).
 	^ typeRef
 ]
@@ -66,7 +66,7 @@ FylgjaOperation >> calculateTypeReference: aString packageName: aPackName using:
 				           parametrizedTypeReferenceNamed: aString
 				           arguments: {  } ]
 		           ifFalse: [ aWriter typeReferenceNamed: aString ].
-	typeRef candidate: candidate.
+	typeRef referee: candidate.
 	typeRef packageReference: (aWriter packageReferenceNamed: aPackName).
 	^ typeRef
 ]
@@ -92,7 +92,7 @@ FylgjaOperation >> calculateTypeReference: aString using: aWriter [
 			           parametrizedTypeReferenceNamed: aString
 			           arguments: {  } ]
 		           ifFalse: [ aWriter typeReferenceNamed: aString ].
-	typeRef candidate: candidate.
+	typeRef referee: candidate.
 	typeRef packageReference: packRef.
 	^ typeRef
 ]
@@ -140,7 +140,7 @@ FylgjaOperation >> possibleWritingMessages [
 FylgjaOperation >> typeReferenceTo: aDeclaration using: aWriter [
 
 	^ (aWriter typeReferenceNamed: aDeclaration name)
-		  candidate: aDeclaration;
+		  referee: aDeclaration;
 		  yourself
 ]
 
@@ -148,6 +148,6 @@ FylgjaOperation >> typeReferenceTo: aDeclaration using: aWriter [
 FylgjaOperation >> variableReferenceTo: aDeclaration using: aWriter [
 
 	^ (aWriter variableReferenceNamed: aDeclaration name)
-		  candidate: aDeclaration;
+		  referee: aDeclaration;
 		  yourself
 ]

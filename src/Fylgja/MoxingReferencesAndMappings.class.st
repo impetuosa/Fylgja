@@ -186,9 +186,9 @@ MoxingReferencesAndMappings >> references: aCollection and: aFylgjaLookUpContext
 
 	| mapCol |
 	references items: ((aCollection groupedBy: [ :a | 
-			  a candidate
+			  a referee
 				  ifNil: [ a parent asString ]
-				  ifNotNil: [ a candidate asString ] ]) associations sort:
+				  ifNotNil: [ a referee asString ] ]) associations sort:
 			 [ :a | a key printString ] ascending).
 	mapCol := aFylgjaLookUpContext allPossibleMappings .
 	mappings items: mapCol.

@@ -47,6 +47,6 @@ FylgjaAddDelegateMethodWithArguments >> privateApplyOn: aMOClassWriter [
 						   invokeMethodNamed: delegatingSelector
 						   receiver: [ :e | attributeReference ]
 						   arguments: [ :e | arguments value: e ])
-						  candidate: delegatingMethod;
+						  referee: delegatingMethod;
 						  yourself ] ] ] ]
 ]

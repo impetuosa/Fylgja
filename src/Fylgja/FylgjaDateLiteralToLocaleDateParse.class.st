@@ -23,7 +23,7 @@ FylgjaDateLiteralToLocaleDateParse >> applyTo: aRelatedProvenanceEntity cropping
 		  invokeMethodNamed: #parse
 		  receiver: [ :r | 
 			  (r typeReferenceNamed: #LocalDate)
-				  candidate: (r model typeNamed: #LocalDate);
+				  referee: (r model typeNamed: #LocalDate);
 				  yourself ]
 		  arguments: [ :r | { (r stringLiteral: dateString) } ]
 ]

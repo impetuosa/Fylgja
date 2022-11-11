@@ -18,18 +18,6 @@ FylgjaCandidateStubBuilder >> buildsType [
 ]
 
 { #category : #accessing }
-FylgjaCandidateStubBuilder >> candidate [
-
-	^ candidate
-]
-
-{ #category : #accessing }
-FylgjaCandidateStubBuilder >> candidate: aCandidate [ 
-
-	 candidate := aCandidate 
-]
-
-{ #category : #accessing }
 FylgjaCandidateStubBuilder >> loadBuilderWithEntity: anEntity [
 
 	self error: ' Whut? '
@@ -52,7 +40,7 @@ FylgjaCandidateStubBuilder >> privateBuild [
 	instance := self instantiate: self buildsType.
 	instance provenance: self provenance.
 	instance parent: self parent. 
-	self candidate ifNotNil: [ instance candidate: self candidate ].
+	self referee ifNotNil: [ instance referee: self referee ].
 
 	^ instance
 ]
@@ -66,4 +54,16 @@ FylgjaCandidateStubBuilder >> provenance [
 FylgjaCandidateStubBuilder >> provenance: aMOObjectObjectRelation [
 
 	provenance := aMOObjectObjectRelation
+]
+
+{ #category : #accessing }
+FylgjaCandidateStubBuilder >> referee [
+
+	^ candidate
+]
+
+{ #category : #accessing }
+FylgjaCandidateStubBuilder >> referee: aCandidate [ 
+
+	 candidate := aCandidate 
 ]

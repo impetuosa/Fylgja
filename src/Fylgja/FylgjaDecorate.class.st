@@ -43,7 +43,7 @@ FylgjaDecorate >> privateApplyOn: aWriter [
 			  ((annotation typeReferenceNamed: annotationName)
 				   packageReference:
 					   (annotation packageReferenceNamed: packageName);
-				   candidate: candidate;
+				   referee: candidate;
 				   yourself).
 		  self hasArguments ifTrue: [ 
 			  annotation arguments: (self calculateArguments: annotation) ] ]

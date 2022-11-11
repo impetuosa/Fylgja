@@ -80,7 +80,7 @@ FylgjaSQLSource >> applyOnDao: aMOClassWriter [
 	aMOClassWriter methods
 		detect: [ :m | m selector = self daoAccessSelectorName ]
 		ifNone: [ 
-			createNativeQuery := entityManager typeReference candidate 
+			createNativeQuery := entityManager typeReference referee 
 				                     ifNotNil: [ :c | 
 					                     c methods
 						                     detect: [ :a | 
@@ -106,7 +106,7 @@ FylgjaSQLSource >> applyOnDao: aMOClassWriter [
 								   ('SELECT * FROM {1}' format: { fromTables anyOne })).
 						  (writer accessAttribute: #class receiver: [ :r | 
 								   (writer typeReferenceNamed: model name)
-									   candidate: model;
+									   referee: model;
 									   yourself ]) } ];
 				  applyOn: aMOClassWriter ]
 ]
@@ -183,7 +183,7 @@ FylgjaSQLSource >> calculateReferenceToAnObservable: aString referenceCandidate:
 		              using: class.
 	observable argumentTypeReferences:
 		{ ((self calculateTypeReference: aString using: class)
-			 candidate: aCandidate;
+			 referee: aCandidate;
 			 yourself) }.
 	^ observable
 ]
@@ -208,11 +208,11 @@ FylgjaSQLSource >> daoAccessSelectorName [
 
 	fromString := '' join:
 		              ((self fromTables sorted: #yourself ascending) 
-			               collect: [ :e | MODeclaration sanitize: e ]).
+			               collect: [ :e | MOObject sanitize: e ]).
 	self orderBy ifEmpty: [ orderByString := '' ] ifNotEmpty: [ 
 		orderByString := 'OrderedBy' , ('' join:
 			                  ((self orderBy sorted: #yourself ascending) 
-				                   collect: [ :e | MODeclaration sanitize: e ])) ].
+				                   collect: [ :e | MOObject sanitize: e ])) ].
 
 	^ 'getAll{1}{2}' format: { 
 			  fromString.
@@ -249,7 +249,7 @@ FylgjaSQLSource >> observableArrayTypeReference: aClass using: class [
 
 	observable argumentTypeReferences: { (class arrayTypeReferenceOf:
 			 ((self calculateTypeReference: aClass name using: class)
-				  candidate: aClass;
+				  referee: aClass;
 				  yourself)) }.
 	^ observable
 ]
@@ -302,7 +302,7 @@ FylgjaSQLSource >> singleEntityName [
 
 	fromString := '' join:
 		              ((self fromTables sorted: #yourself ascending) 
-			               collect: [ :e | MODeclaration sanitize: e ]).
+			               collect: [ :e | MOObject sanitize: e ]).
 	
 	^ fromString uncapitalized 
 ]

@@ -20,7 +20,7 @@ FylgjaFromAccess >> collectAllDatabaseBindings: aMOObject marringWith: dbAttrs [
 
 	^ (aMOObject state values
 		   select: [ :val | 
-			   (val isKindOf: MOObject) and: [ 
+			   (val isKindOf: MOObjectInstance) and: [ 
 				   (val state includesKey: #ControlSource) and: [ 
 					   (val state at: #ControlSource) isNotEmpty and: [ 
 						   (val state at: #ControlSource) first ~= $= ] ] ] ]
@@ -72,7 +72,7 @@ FylgjaFromAccess >> modelNameFor: aFormOrReport [
 { #category : #'as yet unclassified' }
 FylgjaFromAccess >> modelNameForString: aString [
 
-	^ (MODeclaration sanitize: aString) , '_Model'
+	^ (MOObject sanitize: aString) , '_Model'
 ]
 
 { #category : #'as yet unclassified' }
@@ -92,7 +92,7 @@ FylgjaFromAccess >> serviceNameFor: aFormOrReport [
 { #category : #'as yet unclassified' }
 FylgjaFromAccess >> serviceNameForString: aString [
 
-	^ (MODeclaration sanitize: aString) , '_Service'
+	^ (MOObject sanitize: aString) , '_Service'
 ]
 
 { #category : #'as yet unclassified' }

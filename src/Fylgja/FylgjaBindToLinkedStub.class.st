@@ -13,7 +13,7 @@ FylgjaBindToLinkedStub >> bind: aDestinationEntity as: aCandidateRelation croppi
 	candidate := aDestinationWriter writeFylgjaCandidateStub: [ :a | 
 		             a parent: aDestinationEntity.
 		             a provenance: aCandidateRelation.
-		             a candidate: aCandidateRelation to ].
+		             a referee: aCandidateRelation to ].
 	aCandidateRelation write: candidate to: aDestinationEntity.
 	^ aDestinationEntity
 ]

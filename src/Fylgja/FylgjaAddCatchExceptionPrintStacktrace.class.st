@@ -24,7 +24,7 @@ FylgjaAddCatchExceptionPrintStacktrace >> exceptionReferenceUsing: aWriter [
 		             ifNotEmpty: [ candidate first ].
 	^ (aWriter typeReferenceNamed: #Exception)
 		  packageReference: (aWriter packageReferenceNamed: #'java.lang');
-		  candidate: candidate;
+		  referee: candidate;
 		  yourself
 ]
 

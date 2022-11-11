@@ -30,12 +30,12 @@ FylgjaUIInferTypeByDefaultValue >> visitVariable: aMOConstantAttribute [
 	| newType |
 	newType := aMOConstantAttribute initializer type.
 	newType ifNil: [ ^ self ].
-	aMOConstantAttribute typeReference candidate = newType ifTrue: [ 
+	aMOConstantAttribute typeReference referee = newType ifTrue: [ 
 		^ self ].
 
 	self apply: [ :var :varWriter | 
 		varWriter typeReference:
 			((varWriter typeReferenceNamed: newType name)
-				 candidate: newType;
+				 referee: newType;
 				 yourself) ]
 ]

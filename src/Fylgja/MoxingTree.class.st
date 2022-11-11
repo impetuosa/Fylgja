@@ -120,7 +120,7 @@ MoxingTree >> initializePresenters [
 		beMultipleSelection;
 		wantsDrop: [ :transfer | 
 			transfer target isNotNil and: [ 
-					transfer passenger allSatisfy: [ :a | a isKindOf: MODeclaration ] ] ];
+					transfer passenger allSatisfy: [ :a | a isKindOf: MOObject ] ] ];
 		acceptDrop: [ :transfer | self manageTransfer: transfer ].
 	tree
 		addColumn: (SpCompositeTableColumn new

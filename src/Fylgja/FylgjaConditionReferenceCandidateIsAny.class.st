@@ -17,7 +17,7 @@ FylgjaConditionReferenceCandidateIsAny >> matches: aProvenanceEntityRelation con
 
 	^ candidates anySatisfy: [ :c | 
 		  aProvenanceEntityRelation isReference and: [ 
-			  aProvenanceEntityRelation to candidate = c ] ]
+			  aProvenanceEntityRelation to referee = c ] ]
 ]
 
 { #category : #accessing }

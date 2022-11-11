@@ -53,7 +53,7 @@ FylgjaUIManualTypeRebind >> visitMethod: aMOMethod [
 	self apply: [ :method :methodWriter | 
 		methodWriter returnTypeReference:
 			((methodWriter typeReferenceNamed: newType name)
-				 candidate: newType;
+				 referee: newType;
 				 yourself) ]
 ]
 
@@ -69,12 +69,12 @@ FylgjaUIManualTypeRebind >> visitVariable: aMOConstantAttribute [
 	| newType  |
 	newType := self chooseType: aMOConstantAttribute.
 	newType ifNil: [ ^ self ].
-	aMOConstantAttribute typeReference candidate = newType ifTrue: [ 
+	aMOConstantAttribute typeReference referee = newType ifTrue: [ 
 		^ self ].
 
 	self apply: [ :var :varWriter | 
 		varWriter typeReference:
 			((varWriter typeReferenceNamed: newType name)
-				 candidate: newType;
+				 referee: newType;
 				 yourself) ]
 ]

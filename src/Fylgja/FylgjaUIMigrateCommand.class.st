@@ -13,7 +13,7 @@ FylgjaUIMigrateCommand class >> defaultName [
 { #category : #testing }
 FylgjaUIMigrateCommand >> canBeExecuted [
 	^ (self context selectedItems allSatisfy: [ :first | 
-		   first isFylgjaStub and: [ first candidate isDeclaration ] ]) 
+		   first isFylgjaStub and: [ first referee isDeclaration ] ]) 
 		  and: [ self singleParent ]
 ]
 
@@ -57,13 +57,13 @@ FylgjaUIMigrateCommand >> name [
 { #category : #executing }
 FylgjaUIMigrateCommand >> passengers [
 
-	^ (self context selectedItems collect: #candidate) removeDuplicates
+	^ (self context selectedItems collect: #referee) removeDuplicates
 ]
 
 { #category : #testing }
 FylgjaUIMigrateCommand >> singleParent [
 
-	^ (self context selectedItems collect: [ :s | s candidate parent ]) removeDuplicates size
+	^ (self context selectedItems collect: [ :s | s referee parent ]) removeDuplicates size
 	  = 1
 ]
 
@@ -72,6 +72,6 @@ FylgjaUIMigrateCommand >> singleParentIsDeclaration [
 
 	| prents |
 	prents := (self context selectedItems collect: [ :s | 
-		           s candidate parent ]) removeDuplicates.
+		           s referee parent ]) removeDuplicates.
 	^ prents size = 1 and: [ prents first isDeclarationOrDeclarationUnit ]
 ]
