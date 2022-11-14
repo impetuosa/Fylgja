@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaCandidateStubWriter,
-	#superclass : #MOModelProceduralWriter,
+	#superclass : #AnObsoleteMOModelProceduralWriter,
 	#category : #'Fylgja-ReadersWriters'
 }
 
