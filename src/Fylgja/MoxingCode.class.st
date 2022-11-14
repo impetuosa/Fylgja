@@ -63,7 +63,7 @@ MoxingCode >> visualizeSourcecode: aCodeObject [
 	text := self newText.
 
 	page := (self newNotebookPageFor: aCodeObject)
-		        title: aCodeObject name;
+		        title: aCodeObject anchor printString;
 		        presenterProvider: text;
 		        icon: (self iconFor: aCodeObject);
 		        beCloseable.

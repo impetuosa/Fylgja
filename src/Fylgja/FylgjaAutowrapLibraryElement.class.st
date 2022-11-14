@@ -23,7 +23,7 @@ FylgjaAutowrapLibraryElement >> bind: aDestinationEntity as: aCandidateRelation 
 			croppingRelationsWith: aBlock
 			usingWriter: aDestinationWriter
 			lookUp: aFylgjaLookUpContext ].
-		
+
 
 	[ parentUnit isType or: [ parentUnit isModule ] ] whileFalse: [ 
 		parentUnit := parentUnit parent ].
@@ -34,8 +34,12 @@ FylgjaAutowrapLibraryElement >> bind: aDestinationEntity as: aCandidateRelation 
 	compatibilityType := package allTypes
 		                     detect: [ :t | t name = parentUnit name ]
 		                     ifNone: [ nil ].
+
+	(aCandidateRelation to = parentUnit and: [ 
+		 compatibilityType isNotNil ]) ifTrue: [ 
+		aDestinationEntity referee: compatibilityType.
+		^ aDestinationEntity ].
 	compatibilityType
-	
 		ifNil: [ 
 			aFylgja
 				produce: parentUnit
