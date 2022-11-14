@@ -1,6 +1,6 @@
 Class {
 	#name : #FylgjaCandidateStubBuilder,
-	#superclass : #AnObsoleteMOModelBuilderDelegate,
+	#superclass : #MOModelBuilderDelegate,
 	#instVars : [
 		'candidate',
 		'parent',

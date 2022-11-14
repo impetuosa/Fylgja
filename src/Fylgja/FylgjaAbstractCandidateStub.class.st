@@ -1,8 +1,8 @@
 Class {
 	#name : #FylgjaAbstractCandidateStub,
-	#superclass : #AnObsoleteMOReference,
+	#superclass : #MOReference,
 	#instVars : [
-		'#provenance => AnObsoleteMOPropertySlot'
+		'#provenance => MOPropertySlot'
 	],
 	#category : #'Fylgja-ReadersWriters'
 }
