@@ -476,7 +476,7 @@ FylgjaMigrationLanguageAndLibraryPharo class >> loadPaperPharo [
 		({ 'Kernel-Objects'. 'Kernel-Numbers'. 'Kernel-Chronology'.
 		 'Kernel-BasicObjects'. 'Kernel-Exceptions'. #'Collections-Abstract'.
 		 'Collections-Sequenceable'. 'Collections-Unordered'.
-		 'Collections-Strings'. 'SUnit-Core'. 'Garage'. #PaperPharo } 
+		 'Collections-Strings'. 'SUnit-Core'. #PaperPharo } 
 			 collect: #asPackageOrTag).
 	^ paperPharo
 ]
