@@ -91,16 +91,28 @@ FylgjaMapping >> source: anObject [
 { #category : #accessing }
 FylgjaMapping >> sourceName [
 
+	| parentName |
+	parentName := (source parent respondsTo: #name)
+		              ifFalse: [ source parent printString ]
+		              ifTrue: [ 
+			              (source parent name
+				               includesSubstring: 'paper'
+				               caseSensitive: false)
+				              ifTrue: [ #VBALang ]
+				              ifFalse: [ source parent name ] ].
+
+
 	^ String streamContents: [ :str | 
-			str nextPutAll: (
-		  source isType ifTrue: ['T'] ifFalse: [(source isKindOf: MOInvocable) ifTrue:'I' ifFalse: 'V' ]) ; nextPutAll:';' . 
 		  str
-			  nextPutAll:
-				  ((source parent name
-					    includesSubstring: 'paper'
-					    caseSensitive: false)
-					   ifTrue: [ #VBALang ]
-					   ifFalse: [ source parent name ]);
+			  nextPutAll: (source isType
+					   ifTrue: [ 'T' ]
+					   ifFalse: [ 
+						   (source isKindOf: MOInvocable)
+							   ifTrue: 'I'
+							   ifFalse: 'V' ]);
+			  nextPutAll: ';'.
+		  str
+			  nextPutAll: parentName;
 			  nextPutAll: '.';
 			  nextPutAll: source name ]
 ]
