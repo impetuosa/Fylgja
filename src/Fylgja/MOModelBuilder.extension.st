@@ -1,7 +1,7 @@
-Extension { #name : #MOModelWriter }
+Extension { #name : #MOModelBuilder }
 
 { #category : #'*Fylgja' }
-MOModelWriter >> fylgjaStubCandidateBuilder [
+MOModelBuilder >> fylgjaStubCandidateBuilder [
 
 	^ FylgjaCandidateStubBuilder new
 		  parentBuilder: self;
