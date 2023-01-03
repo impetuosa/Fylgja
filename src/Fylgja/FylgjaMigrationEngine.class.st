@@ -56,6 +56,12 @@ FylgjaMigrationEngine >> bindCandidateless: aFylgjaDerivativeModel [
 ]
 
 { #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> closerContainer: aMOJavaClass [
+
+	^ FylgjaCloserContainerResolver new resolve: aMOJavaClass
+]
+
+{ #category : #'as yet unclassified' }
 FylgjaMigrationEngine >> derivative [
 
 	^ FylgjaDerivativeModel new
@@ -231,6 +237,26 @@ FylgjaMigrationEngine >> map: aProvenanceEntity to: aDestinationEntity using: aM
 
 
 	^ aModifiedFylgjaMigrationEngine
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaMigrationEngine >> map: aMOAlceQuery toAll: aCollection using: aFylgjaDerivativeModel [
+
+	| flat |
+	" When mapping to many we use each target's parent as context "
+	flat := aCollection flatCollect: [ :a | 
+		        a isArray
+			        ifTrue: [ a ]
+			        ifFalse: [ { a } ] ].
+	(flat anySatisfy: [ :a | a parent isNil or: [ a anchor isNil ] ]) 
+		ifTrue: [ ^ self ].
+
+	flat do: [ :t | 
+		self
+			map: aMOAlceQuery
+			to: t
+			using: aFylgjaDerivativeModel
+			atContext: (self closerContainer: t) ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -557,11 +583,18 @@ FylgjaMigrationEngine >> trace: aProvenanceEntity to: aRule produced: partialRes
 		 aProvenanceEntity name = #Conversion ]) ifTrue: [ self halt ].
 	tracing trace: aProvenanceEntity to: aRule produced: partialResult.
 
+	partialResult isCollection ifTrue: [ 
+		self
+			map: aProvenanceEntity to
+			toAll: partialResult
+			using: aModifiedFylgjaMigrationEngine.
+		^ self ].
 	partialResult isDeclaration ifTrue: [ 
 		self
 			map: aProvenanceEntity to
 			to: partialResult
-			using: aModifiedFylgjaMigrationEngine ].
+			using: aModifiedFylgjaMigrationEngine.
+		^ self ].
 
 	partialResult isDeclarationUnit ifTrue: [ 
 		| type |

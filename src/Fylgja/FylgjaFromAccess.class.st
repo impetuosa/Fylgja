@@ -40,12 +40,11 @@ FylgjaFromAccess >> databaseSourceName: object [
 FylgjaFromAccess >> hasId: aMOAlceForm using: aFylgjaDerivativeModel [
 
 	| model object tableName table |
-
 	model := aFylgjaDerivativeModel selectDerivativeModelFor: aMOAlceForm.
 	object := self defaultInstanceFor: aMOAlceForm withIn: model.
 
 	tableName := self databaseSourceName: object.
-
+	tableName ifEmpty: [ ^ false ].
 	table := (self tablesRespondingTo: tableName within: model) first.
 
 

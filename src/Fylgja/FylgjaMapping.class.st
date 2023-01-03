@@ -136,7 +136,7 @@ FylgjaMapping >> targetName [
 					str nextPutAll: (
 		  target isType ifTrue: ['T'] ifFalse: [(source isKindOf: MOInvocable) ifTrue:'I' ifFalse: 'V' ]) ; nextPutAll:';' . 
 		  str
-			  nextPutAll: target parent name;
+			  nextPutAll: target parentName;
 			  nextPutAll: '.';
 			  nextPutAll: target name ]
 ]

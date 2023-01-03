@@ -15,7 +15,7 @@ Class {
 
 { #category : #initialization }
 FylgjaDerivativeModel >> addDeferredMapping: aMOStClass to: aMOStClass2 [
- 
+
 	(self deferredMapping
 		 at: aMOStClass
 		 ifAbsentPut: [ OrderedCollection new ]) add: aMOStClass2.
