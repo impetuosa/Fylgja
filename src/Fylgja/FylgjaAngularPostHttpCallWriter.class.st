@@ -1,11 +1,11 @@
 Class {
-	#name : #FylgjaAngularGetHttpCallWriter,
+	#name : #FylgjaAngularPostHttpCallWriter,
 	#superclass : #FylgjaAngularHttpCallWriter,
 	#category : #'Fylgja-Rule-Modifications'
 }
 
 { #category : #accessing }
-FylgjaAngularGetHttpCallWriter >> methodName [
+FylgjaAngularPostHttpCallWriter >> methodName [
 
-	^ #get
+	^ #post
 ]

@@ -159,13 +159,7 @@ FylgjaMigrateFormWithCasinoTest >> installRulesForAngularTS [
 
 	"Types"
 
-	FylgjaRuleInstaller new
-		atLanguageNamed: #angular;
-		whenIsReferenceWithCandidates: { 
-				self accessDbMemoType.
-				self accessDbTextType };
-		bindRewriteTo: self tsString;
-		installInto: fylgja.
+
 
 	FylgjaRuleInstaller new
 		atLanguageNamed: #angular;
@@ -181,13 +175,6 @@ FylgjaMigrateFormWithCasinoTest >> installRulesForJavaSpring [
 
 	"Types"
 
-	FylgjaRuleInstaller new
-		atLanguageNamed: #java;
-		whenIsReferenceWithCandidates: { 
-				self accessDbMemoType.
-				self accessDbTextType };
-		bindRewriteTo: self javaString;
-		installInto: fylgja.
 
 	FylgjaRuleInstaller new
 		atLanguageNamed: #java;

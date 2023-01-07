@@ -7,18 +7,19 @@ Class {
 { #category : #'as yet unclassified' }
 FylgjaFromJavaToAngular >> communicationMethodWriterFor: aMOAnnotationInstance [
 
-	| methodName |
+	| methodName literal |
 	methodName := aMOAnnotationInstance typeReference name
 		              copyReplaceAll: 'Mapping'
 		              with: ''.
 	methodName := ('instantiate{1}MethodWriter:' format: { methodName })
 		              asSymbol.
 
-
-	^ self
-		  perform: methodName
-		  withArguments:
-		  { aMOAnnotationInstance arguments first argumentExpression literal }
+	literal := (aMOAnnotationInstance arguments first isNamedArgument
+		            ifTrue: [ 
+		            aMOAnnotationInstance arguments first argumentExpression ]
+		            ifFalse: [ aMOAnnotationInstance arguments first ])
+		           literal.
+	^ self perform: methodName withArguments: { literal }
 ]
 
 { #category : #'as yet unclassified' }

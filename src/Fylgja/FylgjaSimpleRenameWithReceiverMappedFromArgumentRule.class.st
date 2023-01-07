@@ -69,3 +69,8 @@ FylgjaSimpleRenameWithReceiverMappedFromArgumentRule >> matches: aDestinationEnt
 
 	^ true
 ]
+
+{ #category : #testing }
+FylgjaSimpleRenameWithReceiverMappedFromArgumentRule >> printOn: aStream [
+ 	aStream nextPutAll: 'Rename reference to the declare artefact. Use argument as receiver.'
+]

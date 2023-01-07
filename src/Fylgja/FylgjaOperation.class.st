@@ -122,7 +122,8 @@ FylgjaOperation >> importableDependencies: aMOClass [
 	^ aMOClass dependencies select: [ :a | 
 		  a packageReference isNotNil and: [ 
 			  a packageReference name ~= 'java.lang' and: [ 
-				  a packageReference name ~= 'typescript' ] ] ]
+				  a packageReference name ~= 'typescript' and: [ 
+					  a packageReference name ~= 'RuntimePrimitiveTypes' ] ] ] ]
 ]
 
 { #category : #testing }

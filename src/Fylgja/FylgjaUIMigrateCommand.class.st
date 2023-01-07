@@ -48,9 +48,13 @@ FylgjaUIMigrateCommand >> name [
 
 	^ 'Migrate' , ' ' , (self canBeExecuted
 		   ifTrue: [ 
-			   (',' join: (self passengers collect: #name)) , ' ('
-			   , (',' join: (self passengers collect: [ :a | a species name ]) removeDuplicates)
-			   , ')' ]
+			   (',' join: (self passengers collect: [ :a | 
+					     (a respondsTo: #name)
+						     ifTrue: [ a name ]
+						     ifFalse: [ a className , '-entity' ] ])) , ' ('
+			   , (',' join:
+					    (self passengers collect: [ :a | a species name ])
+						    removeDuplicates) , ')' ]
 		   ifFalse: [ self extensionName ])
 ]
 

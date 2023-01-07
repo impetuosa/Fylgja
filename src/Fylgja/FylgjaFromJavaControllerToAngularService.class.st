@@ -27,7 +27,7 @@ FylgjaFromJavaControllerToAngularService >> applyTo: aRelatedProvenanceEntity cr
 		  method selector: aRelatedProvenanceEntity to selector.
 		  parameters do: [ :p | 
 			  FylgjaMigrate new
-				  cropping: aBlock;
+				  cropping: [: col | (col select: aBlock) reject: [ : c | c to isKindOf: MOAnnotationInstance  ] ];
 				  fylgja: aFylgjaDerivativeModel;
 				  lookUp: aFylgjaLookUpContext;
 				  provenanceEntity: p;
@@ -68,7 +68,11 @@ FylgjaFromJavaControllerToAngularService >> getParameters: aMONullDeclarationRel
 	| endpoint parameters |
 	parameters := aMONullDeclarationRelation to parameters.
 
-	endpoint := aMOAnnotationInstance arguments first argumentExpression
+	endpoint := (aMOAnnotationInstance arguments first isNamedArgument
+		             ifTrue: [ 
+		             aMOAnnotationInstance arguments first
+			             argumentExpression ]
+		             ifFalse: [ aMOAnnotationInstance arguments first ])
 		            literal.
 	^ ('/' split: endpoint)
 		  select: [ :e | e beginsWith: '{' ]
@@ -81,6 +85,14 @@ FylgjaFromJavaControllerToAngularService >> getParameters: aMONullDeclarationRel
 FylgjaFromJavaControllerToAngularService >> instantiateGetMethodWriter: aString [
 
 	^ FylgjaAngularGetHttpCallWriter new
+		  endpoint: aString;
+		  yourself
+]
+
+{ #category : #'as yet unclassified' }
+FylgjaFromJavaControllerToAngularService >> instantiatePostMethodWriter: aString [
+
+	^ FylgjaAngularPostHttpCallWriter new
 		  endpoint: aString;
 		  yourself
 ]

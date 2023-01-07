@@ -62,3 +62,8 @@ FylgjaSimpleRenameRule >> matches: aDestinationEntity context: aDestinationConte
 
 	^ true
 ]
+
+{ #category : #testing }
+FylgjaSimpleRenameRule >> printOn: aStream [
+ 	aStream nextPutAll: 'Rename reference to the declare artefact.'
+]

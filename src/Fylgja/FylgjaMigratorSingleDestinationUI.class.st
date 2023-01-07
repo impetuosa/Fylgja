@@ -175,7 +175,7 @@ FylgjaMigratorSingleDestinationUI >> mapUsing: aTransfer for: aWidget [
 	contexts := aTransfer target parents.
 	context := UIManager default
 		           chooseFrom: (contexts collect: [ :c | 
-				            c name , String tab , '(' , c anchor printString , ')' ])
+				            c printString , String tab , '(' , c anchor printString , ')' ])
 		           values: contexts
 		           title: 'Context of validity'.
 	context ifNil: [ ^ self ].

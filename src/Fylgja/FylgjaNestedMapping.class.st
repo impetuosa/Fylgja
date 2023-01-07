@@ -27,6 +27,15 @@ FylgjaNestedMapping >> hasReceiver [
 	^ mappings at: #receiver ifPresent: [ true ] ifAbsent: [ false ]
 ]
 
+{ #category : #testing }
+FylgjaNestedMapping >> isEquivalentTo: aFylgjaNestedMapping [
+
+	^ self species = aFylgjaNestedMapping species and: [ 
+		  source anchor = aFylgjaNestedMapping source anchor and: [ 
+			  target anchor = aFylgjaNestedMapping target anchor and: [ 
+				  mappings = aFylgjaNestedMapping mappings ] ] ]
+]
+
 { #category : #'operators-mapping' }
 FylgjaNestedMapping >> map: aCollection [
 

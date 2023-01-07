@@ -169,6 +169,12 @@ FylgjaRuleInstaller >> anyReturnInvocationTo: aString [
 ]
 
 { #category : #testing }
+FylgjaRuleInstaller >> anySpringBootControllerClass [
+
+	^ self condition: FylgjaConditionAnySpringBootControllerClass new
+]
+
+{ #category : #testing }
 FylgjaRuleInstaller >> anyStructure [
 
 	^ self condition: (FylgjaConditionModelTypeIs new
@@ -265,6 +271,12 @@ FylgjaRuleInstaller >> copyAsPublicTypescriptClass [
 { #category : #copying }
 FylgjaRuleInstaller >> copyAsSelfFFiInvocation [
 	^ self operation: FylgjaTranslateCopyAsSelfFFICall new
+]
+
+{ #category : #copying }
+FylgjaRuleInstaller >> copyAsSpringBootControllerMethod [
+
+	self operation: FylgjaTranslateCopyAsAnnotatedMethod new
 ]
 
 { #category : #copying }

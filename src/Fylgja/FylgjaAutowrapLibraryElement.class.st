@@ -89,6 +89,11 @@ FylgjaAutowrapLibraryElement >> matches: aDestinationEntity context: aDestinatio
 			  self isTypeOrInsideType: aCandidateRelation to ] ]
 ]
 
+{ #category : #testing }
+FylgjaAutowrapLibraryElement >> printOn: aStream [
+ 	^ aStream nextPutAll: 'Generate wrappers for unmapped libraries.'
+]
+
 { #category : #'as yet unclassified' }
 FylgjaAutowrapLibraryElement >> rejectAnyContainment: aCollection from: aMOModule thatIsNot: aMOGlobalVariable [
 

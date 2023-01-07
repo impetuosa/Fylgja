@@ -148,3 +148,8 @@ FylgjaSimpleRenameWithSameClassReceiverRule >> matches: aDestinationEntity conte
 
 	self halt
 ]
+
+{ #category : #'as yet unclassified' }
+FylgjaSimpleRenameWithSameClassReceiverRule >> printOn: aStream [
+ 	aStream nextPutAll: 'Rename reference to the declare artefact. Use this/super as receiver.'
+]

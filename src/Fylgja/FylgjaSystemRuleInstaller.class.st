@@ -16,17 +16,4 @@ FylgjaSystemRuleInstaller >> installRules [
 		installInto: fylgja.
 
 
-	FylgjaRuleInstaller new
-		topLevel;
-		anyReferenceWithCandidate;
-		returnSameBinding;
-		installInto: fylgja.
-
-
-
-	FylgjaRuleInstaller new
-		topLevel;
-		anyEntity;
-		mappingLinkedStubInstall;
-		installInto: fylgja
 ]

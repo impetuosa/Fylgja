@@ -64,6 +64,41 @@ FylgjaNorthwindRuleInstaller >> java: aModel [
 ]
 
 { #category : #general }
+FylgjaNorthwindRuleInstaller >> map: aSource to: aTarget context: aContext mappings: aCollection [
+
+	| mappings |
+	mappings := Dictionary new.
+
+	aCollection do: [ :map | 
+		| sourceId targetId |
+		sourceId := map key.
+		targetId := map value.
+		targetId isNumber
+			ifFalse: [ 
+			mappings at: targetId put: (aSource parameters at: sourceId) ]
+			ifTrue: [ 
+				mappings
+					at: (aTarget parameters at: targetId)
+					put: (aSource parameters at: sourceId) ] ].
+	^ fylgja
+		  map: aSource
+		  to: aTarget
+		  context: aContext
+		  mapping: mappings
+]
+
+{ #category : #general }
+FylgjaNorthwindRuleInstaller >> mapAll: aSourceCollection to: aTarget context: aContext mappings: aCollection [
+
+	aSourceCollection do: [ :source | 
+		self
+			map: source
+			to: aTarget
+			context: aContext
+			mappings: aCollection ]
+]
+
+{ #category : #general }
 FylgjaNorthwindRuleInstaller >> northwind: aModel [ 
 	northwind := aModel
 ]

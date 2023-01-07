@@ -9,7 +9,6 @@ FylgjaFormToSpringModel >> applyTo: aRelatedProvenanceEntity croppingRelationsWi
 
 	| object tableName cls dataBoundableAttributes model attributes |
 "	self assert: aRelatedProvenanceEntity to methods isEmpty."
-	self halt.
 	model := (aFylgjaDerivativeModel selectDerivativeModelFor:
 		          aRelatedProvenanceEntity to) model.
 	object := self

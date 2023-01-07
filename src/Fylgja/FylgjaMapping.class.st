@@ -91,16 +91,18 @@ FylgjaMapping >> source: anObject [
 { #category : #accessing }
 FylgjaMapping >> sourceName [
 
-	| parentName |
+	| parentName sourceName |
 	parentName := (source parent respondsTo: #name)
 		              ifFalse: [ source parent printString ]
 		              ifTrue: [ 
-			              (source parent name
+			              (source parentName
 				               includesSubstring: 'paper'
 				               caseSensitive: false)
 				              ifTrue: [ #VBALang ]
 				              ifFalse: [ source parent name ] ].
-
+	sourceName := (source respondsTo: #name)
+		              ifTrue: [ source name ]
+		              ifFalse: [ source className ].
 
 	^ String streamContents: [ :str | 
 		  str
@@ -114,7 +116,7 @@ FylgjaMapping >> sourceName [
 		  str
 			  nextPutAll: parentName;
 			  nextPutAll: '.';
-			  nextPutAll: source name ]
+			  nextPutAll: sourceName ]
 ]
 
 { #category : #accessing }
@@ -132,11 +134,21 @@ FylgjaMapping >> target: anObject [
 { #category : #accessing }
 FylgjaMapping >> targetName [
 
+	| tn |
+	tn := (target respondsTo: #name)
+		      ifTrue: [ target name ]
+		      ifFalse: [ tn className ].
 	^ String streamContents: [ :str | 
-					str nextPutAll: (
-		  target isType ifTrue: ['T'] ifFalse: [(source isKindOf: MOInvocable) ifTrue:'I' ifFalse: 'V' ]) ; nextPutAll:';' . 
+		  str
+			  nextPutAll: (target isType
+					   ifTrue: [ 'T' ]
+					   ifFalse: [ 
+						   (source isKindOf: MOInvocable)
+							   ifTrue: 'I'
+							   ifFalse: 'V' ]);
+			  nextPutAll: ';'.
 		  str
 			  nextPutAll: target parentName;
 			  nextPutAll: '.';
-			  nextPutAll: target name ]
+			  nextPutAll: tn ]
 ]

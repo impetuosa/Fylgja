@@ -66,6 +66,7 @@ FylgjaMigrationUIController class >> fromFylgja: fylgja [
 FylgjaMigrationUIController class >> northwindController [
 
 	| fylgja northwind java angular |
+	
 	fylgja := FylgjaMigrationEngine new.
 	northwind := MOJinDAMImporter northwind.
 	angular := MOAngularLoader northwind.
@@ -76,6 +77,7 @@ FylgjaMigrationUIController class >> northwindController [
 		addModel: northwind;
 		addModel: angular;
 		addModel: java.
+		
 	self ruleInstallers do: [ :a | 
 		a
 			fylgja: fylgja;

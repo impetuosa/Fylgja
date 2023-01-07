@@ -53,7 +53,58 @@ FylgjaTSAngularRuleInstaller >> installRules [
 
 	super installRules.
 	self installTsLanguageTx.
-	self installAngularTx
+	self installAngularTx.
+	self installRuntimeTypeMappings.
+	self installVBATypeMappings
+]
+
+{ #category : #general }
+FylgjaTSAngularRuleInstaller >> installRuntimeTypeMappings [
+
+	| maps |
+	maps := { 
+		        (#BOOL -> #boolean).
+		        (#BSTRString -> #string).
+		        (#Boolean -> #boolean).
+		        (#Byte -> #number).
+		        (#COMDispatchInterface -> #object).
+		        (#Currency -> #number).
+		        (#Date -> #date).
+		        (#Decimal -> #number).
+		        (#Double -> #number).
+		        (#Err -> #any).
+		        (#Integer -> #number).
+		        (#Long -> #number).
+		        (#LongLong -> #number).
+		        (#Object -> #object).
+		        (#Single -> #number).
+		        (#String -> #string).
+		        (#USERDEFINED -> #any).
+		        (#VOID -> #void).
+		        (#Void -> #void).
+		        (#Variant -> #any).
+		        (#Win32Variant -> #any).
+		        (#Win32WideString -> #string).
+		        (#float -> #number).
+		        (#int -> #number).
+		        (#int16 -> #number).
+		        (#uint16 -> #number).
+		        (#int32 -> #number).
+		        (#uint32 -> #number).
+		        (#ubyte -> #number).
+		        (#uint -> #number).
+		        (#ulong -> #number).
+		        (#ulonglong -> #number).
+		        (#dbMemo -> #string).
+		        (#dbText -> #string) }.
+	maps do: [ :m | 
+		[ 
+		fylgja
+			map: (northwind typeNamed: m key)
+			to: (angular typeNamed: m value)
+			context: angular ]
+			on: Error
+			do: [ :e | self halt ] ]
 ]
 
 { #category : #general }
@@ -134,11 +185,6 @@ FylgjaTSAngularRuleInstaller >> installTsLanguageTx [
 		onErrorGoToToTryCatch;
 		installInto: fylgja.
 
-	FylgjaRuleInstaller new
-		context: angular root;
-		anyTypeReferenceNamed: #Variant;
-		copyAsTypesReferenceNamed: #Object;
-		installInto: fylgja.
 
 	FylgjaRuleInstaller new
 		context: angular root;
@@ -146,12 +192,6 @@ FylgjaTSAngularRuleInstaller >> installTsLanguageTx [
 		copyAsTypesReferenceNamed: #Object;
 		installInto: fylgja.
 
-
-	FylgjaRuleInstaller new
-		atLanguageNamed: #angular;
-		anyInvocation;
-		invocationToMessageSendToSelf;
-		installInto: fylgja.
 
 	" By default when going to ts "
 	FylgjaRuleInstaller new
@@ -174,19 +214,25 @@ FylgjaTSAngularRuleInstaller >> installTsLanguageTx [
 		installInto: fylgja.
 
 
-	FylgjaRuleInstaller new
-		atLanguageNamed: #angular;
-		whenIsReferenceWithCandidates: { 
-				self accessDbMemoType.
-				self accessDbTextType };
-		bindRewriteTo: self tsString;
-		installInto: fylgja.
 
-	FylgjaRuleInstaller new
-		atLanguageNamed: #angular;
-		whenIsReferenceWithCandidates: { self accessDbLongType };
-		bindRewriteTo: self tsBigInt;
-		installInto: fylgja
+]
+
+{ #category : #general }
+FylgjaTSAngularRuleInstaller >> installVBATypeMappings [
+
+	| maps |
+	maps := { 
+		        (#_Collection -> #any).
+		        (#Collection -> #any).
+		        (#ErrObject -> #any) }.
+	maps do: [ :m | 
+		[ 
+		fylgja
+			map: (northwind typeOrAliasNamed: m key library: #VBA)
+			to: (angular typeNamed: m value)
+			context: angular ]
+			on: Error
+			do: [  ] ]
 ]
 
 { #category : #general }

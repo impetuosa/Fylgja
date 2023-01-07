@@ -30,23 +30,26 @@ FylgjaTranslateCopyAsMethod >> applyTo: aProvenanceEntityRelation croppingRelati
 	provenance := aProvenanceEntityRelation.
 	cropping := aBlock.
 	shouldAddFunctionVariable := true.
-	translatingIntoTestCase := false. 
+	translatingIntoTestCase := false.
+
 	aDestinationWriter superclassReference ifNotNil: [ 
 		translatingIntoTestCase := aDestinationWriter superclassReference
 			                           name = #TestCase ].
-	method := self writeMethod: aDestinationWriter with: [ :methodWriter | 
-		          writer := methodWriter.
-		          aProvenanceEntityRelation to acceptVisitor: self.
-		          methodWriter returnTypeReference ifNil: [ 
-			          (self containsSetToReturnStatament:
-				           aProvenanceEntityRelation to block) ifFalse: [ 
-				          shouldAddFunctionVariable := false.
-				          writer returnTypeReference:
-					          (writer typeReferenceNamed: #void) ] ] ].
+	method := self
+		          writeMethod: aDestinationWriter
+		          with: [ :methodWriter | 
+			          writer := methodWriter.
+			          aProvenanceEntityRelation to acceptVisitor: self.
+			          methodWriter returnTypeReference ifNil: [ 
+				          (self containsSetToReturnStatament:
+					           aProvenanceEntityRelation to block) ifFalse: [ 
+					          shouldAddFunctionVariable := false.
+					          writer returnTypeReference:
+						          (writer typeReferenceNamed: #void) ] ] ].
 	({ 
 		 MOClassProcedure.
 		 MOProcedure } anySatisfy: [ :c | 
-		 aProvenanceEntityRelation to species = c ]) ifTrue: [ ^ self ].
+		 aProvenanceEntityRelation to species = c ]) ifTrue: [ ^ method ].
 	method block isEmptyOrNil ifFalse: [ 
 		shouldAddFunctionVariable ifTrue: [ 
 			aDestinationWriter updateBlock: method block with: [ :block | 

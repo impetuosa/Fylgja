@@ -82,3 +82,8 @@ FylgjaSimpleRenameWithStaticReceiverRule >> matches: aDestinationEntity context:
 
 	^ true
 ]
+
+{ #category : #testing }
+FylgjaSimpleRenameWithStaticReceiverRule >> printOn: aStream [
+ 	aStream nextPutAll: 'Rename reference to the declare artefact. Use static class as receiver.'
+]
