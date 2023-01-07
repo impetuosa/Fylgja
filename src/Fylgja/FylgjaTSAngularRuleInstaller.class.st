@@ -20,6 +20,32 @@ FylgjaTSAngularRuleInstaller >> angularPackage [
 ]
 
 { #category : #general }
+FylgjaTSAngularRuleInstaller >> installAdaptingRules: context [
+
+	FylgjaRuleInstaller new
+		context: context;
+		install: FylgjaSimpleRenameRule new into: fylgja.
+
+	FylgjaRuleInstaller new
+		context: context;
+		install: FylgjaSimpleRenameWithStaticReceiverRule new into: fylgja.
+
+	FylgjaRuleInstaller new
+		context: context;
+		install: FylgjaSimpleRenameWithReceiverMappedFromArgumentRule new
+		into: fylgja.
+
+	FylgjaRuleInstaller new
+		context: context;
+		install: FylgjaSimpleRenameWithSameClassReceiverRule new
+		into: fylgja.
+
+	"FylgjaRuleInstaller new
+		context: context;
+		install: FylgjaAutowrapLibraryElement new into: fylgja"
+]
+
+{ #category : #general }
 FylgjaTSAngularRuleInstaller >> installAngularTx [
 
 	FylgjaRuleInstaller new
@@ -52,6 +78,7 @@ FylgjaTSAngularRuleInstaller >> installAngularTx [
 FylgjaTSAngularRuleInstaller >> installRules [
 
 	super installRules.
+	self installAdaptingRules: angular root.
 	self installTsLanguageTx.
 	self installAngularTx.
 	self installRuntimeTypeMappings.
@@ -96,7 +123,9 @@ FylgjaTSAngularRuleInstaller >> installRuntimeTypeMappings [
 		        (#ulong -> #number).
 		        (#ulonglong -> #number).
 		        (#dbMemo -> #string).
-		        (#dbText -> #string) }.
+		        (#dbText -> #string).
+		        (#dbLong -> #number).
+		        (#dbAttachment -> #any) }.
 	maps do: [ :m | 
 		[ 
 		fylgja

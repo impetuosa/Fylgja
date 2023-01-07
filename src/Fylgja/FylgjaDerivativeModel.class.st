@@ -92,6 +92,7 @@ FylgjaDerivativeModel >> forceMap [
 FylgjaDerivativeModel >> forceMapReferences: aCollection [
 
 	| refModel |
+
 	refModel := ((aCollection flatCollect: #value) select: [ :a | 
 		             a isFylgjaStub ]) groupedBy: [ :a | 
 		            self selectDerivativeModelFor: a ].

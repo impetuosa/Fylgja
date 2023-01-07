@@ -84,7 +84,6 @@ FylgjaMigrationEngine >> forceMapStubs: aModifiedFylgjaMigrationEngine [
 FylgjaMigrationEngine >> forceReMappingRuleOverStubs: aCollection contextModel: contextModel using: aModifiedFylgjaMigrationEngine [
 
 	| newElement |
-
 	aCollection
 		reject: [ :stub | 
 			stub provenance to isNil or: [ 

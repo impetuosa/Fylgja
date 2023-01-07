@@ -134,6 +134,7 @@ FylgjaMigrationUIController >> applyCommand: aCommand informing: aWidget do: aBl
 
 { #category : #accessing }
 FylgjaMigrationUIController >> autoBind: aCollection [ 
+
 	^ self
 		  doOrLog: [ 
 			  self fylgja forceMapReferences: aCollection.

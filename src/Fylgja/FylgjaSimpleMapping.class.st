@@ -12,7 +12,9 @@ FylgjaSimpleMapping >> isEquivalentTo: aFylgjaSimpleMapping [
 
 	^ self species = aFylgjaSimpleMapping species and: [ 
 		  source anchor = aFylgjaSimpleMapping source anchor and: [ 
-			  target anchor = aFylgjaSimpleMapping target anchor ] ]
+			  source name = aFylgjaSimpleMapping source name and: [ 
+				  target anchor = aFylgjaSimpleMapping target anchor and: [ 
+					  target name = aFylgjaSimpleMapping target name ] ] ] ]
 ]
 
 { #category : #initialization }

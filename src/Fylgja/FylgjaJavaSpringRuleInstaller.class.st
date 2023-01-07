@@ -363,8 +363,10 @@ FylgjaJavaSpringRuleInstaller >> installRuntimeTypeMappings [
 		        (#uint -> #int).
 		        (#ulong -> #long).
 		        (#ulonglong -> #long).
-		        (#dbMemo -> #string).
-		        (#dbText -> #string) }.
+		        (#dbMemo -> #String).
+		        (#dbText -> #String).
+		        (#dbLong -> #long).
+		        (#dbAttachment -> #Blob) }.
 	maps do: [ :m | 
 		[ 
 		fylgja
@@ -372,7 +374,7 @@ FylgjaJavaSpringRuleInstaller >> installRuntimeTypeMappings [
 			to: (java typeNamed: m value)
 			context: java ]
 			on: Error
-			do: [  ] ]
+			do: [ self halt ] ]
 ]
 
 { #category : #general }

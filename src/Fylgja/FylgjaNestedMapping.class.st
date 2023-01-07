@@ -32,8 +32,10 @@ FylgjaNestedMapping >> isEquivalentTo: aFylgjaNestedMapping [
 
 	^ self species = aFylgjaNestedMapping species and: [ 
 		  source anchor = aFylgjaNestedMapping source anchor and: [ 
-			  target anchor = aFylgjaNestedMapping target anchor and: [ 
-				  mappings = aFylgjaNestedMapping mappings ] ] ]
+			  source name = aFylgjaNestedMapping source name and: [ 
+				  target anchor = aFylgjaNestedMapping target anchor and: [ 
+					  target name = aFylgjaNestedMapping target name and: [ 
+						  mappings = aFylgjaNestedMapping mappings ] ] ] ] ]
 ]
 
 { #category : #'operators-mapping' }
