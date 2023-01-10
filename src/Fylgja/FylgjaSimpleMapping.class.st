@@ -12,8 +12,8 @@ FylgjaSimpleMapping >> isEquivalentTo: aFylgjaSimpleMapping [
 
 	^ self species = aFylgjaSimpleMapping species and: [ 
 		  source anchor = aFylgjaSimpleMapping source anchor and: [ 
-			  source name = aFylgjaSimpleMapping source name and: [ 
-				  target anchor = aFylgjaSimpleMapping target anchor and: [ 
+			  target anchor = aFylgjaSimpleMapping target anchor and: [ 
+				  source name = aFylgjaSimpleMapping source name and: [ 
 					  target name = aFylgjaSimpleMapping target name ] ] ] ]
 ]
 

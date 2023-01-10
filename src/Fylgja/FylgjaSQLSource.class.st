@@ -336,6 +336,11 @@ FylgjaSQLSource >> visitPSQLASTFromClauseItemType1: aPSQLASTFromClauseItemType1 
 ]
 
 { #category : #visiting }
+FylgjaSQLSource >> visitPSQLASTFromClauseItemType6: aPSQLASTFromClauseItemType6 [ 
+	self shouldBeImplemented.
+]
+
+{ #category : #visiting }
 FylgjaSQLSource >> visitPSQLASTIdentifier: aPSQLASTIdentifier [
 
 	^ aPSQLASTIdentifier identifier copyReplaceAll: '"' with: ''

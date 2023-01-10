@@ -84,14 +84,12 @@ FylgjaSimpleRenameWithSameClassReceiverRule >> callingTo: aMOMethod canBeAchieve
 FylgjaSimpleRenameWithSameClassReceiverRule >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation consideringMappingsFrom: aLookup [
 
 	| callingMethod callingClass |
-
 	" This is quite dangerous. mappings is an instance variable. 
  		We do so to ensure that the mapping used to accept the condition is the same used by the operation. 
 		
 		we rely on the fact that the operation is allways applied after the condition.
 		And that there is not any kind of batch processing.  (like checking all the possible applications of these rule before applying )
 	"
-
 	aDestinationEntity parent isNil ifTrue: [ ^ false ].
 
 	callingMethod := aDestinationEntity callingInvocable.
@@ -111,9 +109,10 @@ FylgjaSimpleRenameWithSameClassReceiverRule >> matches: aDestinationEntity conte
 		            m hasReceiver not and: [ 
 			            (aDestinationEntity refersToObjectsLike: m target) not 
 				            and: [ 
-				            self
-					            callingTo: m target
-					            canBeAchievedFrom: callingClass ] ] ].
+					            m target isStaticBinding not and: [ 
+						            self
+							            callingTo: m target
+							            canBeAchievedFrom: callingClass ] ] ] ].
 
 	" 	
 		There is one mapping leads to a destination that can be referred by our DestinationEntity. 

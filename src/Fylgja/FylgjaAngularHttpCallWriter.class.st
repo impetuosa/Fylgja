@@ -30,7 +30,7 @@ FylgjaAngularHttpCallWriter >> http: aMOAttribute [
 { #category : #'instance creation' }
 FylgjaAngularHttpCallWriter >> methodName [
 
-	^ self subclassResponsibility
+	^ #get
 ]
 
 { #category : #accessing }

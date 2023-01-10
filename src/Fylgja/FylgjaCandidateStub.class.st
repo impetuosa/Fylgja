@@ -10,6 +10,12 @@ FylgjaCandidateStub >> acceptVisitor: aMOJavaCodeGenerator [
 	self provenance to acceptVisitor: aMOJavaCodeGenerator
 ]
 
+{ #category : #'as yet unclassified' }
+FylgjaCandidateStub >> constructors [
+
+	^ {  }
+]
+
 { #category : #accessing }
 FylgjaCandidateStub >> printOn: aStream [
 

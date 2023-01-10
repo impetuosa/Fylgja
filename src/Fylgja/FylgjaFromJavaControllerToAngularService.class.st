@@ -27,7 +27,9 @@ FylgjaFromJavaControllerToAngularService >> applyTo: aRelatedProvenanceEntity cr
 		  method selector: aRelatedProvenanceEntity to selector.
 		  parameters do: [ :p | 
 			  FylgjaMigrate new
-				  cropping: [: col | (col select: aBlock) reject: [ : c | c to isKindOf: MOAnnotationInstance  ] ];
+				  cropping: [ :col | 
+					  (aBlock value: col) reject: [ :c | 
+							  c to isKindOf: MOAnnotationInstance ] ];
 				  fylgja: aFylgjaDerivativeModel;
 				  lookUp: aFylgjaLookUpContext;
 				  provenanceEntity: p;

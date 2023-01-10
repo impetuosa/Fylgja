@@ -107,3 +107,9 @@ FylgjaAbstractCandidateStub >> provenance: aMOObjectObjectRelation [
 
 	provenance := aMOObjectObjectRelation
 ]
+
+{ #category : #accessing }
+FylgjaAbstractCandidateStub >> typeReference [
+
+	^ nil
+]

@@ -133,7 +133,7 @@ FylgjaTSAngularRuleInstaller >> installRuntimeTypeMappings [
 			to: (angular typeNamed: m value)
 			context: angular ]
 			on: Error
-			do: [ :e | self halt ] ]
+			do: [ :e | ] ]
 ]
 
 { #category : #general }
@@ -144,6 +144,10 @@ FylgjaTSAngularRuleInstaller >> installTsLanguageTx [
 		prefixUnaryOperator: #Not;
 		replacePrefixUnaryOperatorWith: #!;
 		installInto: fylgja.
+
+	FylgjaRuleInstaller new
+		context: angular root;
+		install: FylgjaInvocationToIsNullToNullComparison new into: fylgja.
 
 	FylgjaRuleInstaller new
 		context: angular root;
@@ -162,6 +166,7 @@ FylgjaTSAngularRuleInstaller >> installTsLanguageTx [
 		binaryOperator: #Or;
 		replaceOperatorWith: #'||';
 		installInto: fylgja.
+
 
 
 	FylgjaRuleInstaller new
@@ -240,10 +245,7 @@ FylgjaTSAngularRuleInstaller >> installTsLanguageTx [
 				MOGlobalVariable.
 				MOGlobalConstant };
 		copyAsAttribute;
-		installInto: fylgja.
-
-
-
+		installInto: fylgja
 ]
 
 { #category : #general }
