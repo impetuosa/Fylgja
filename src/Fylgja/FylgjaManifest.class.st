@@ -100,6 +100,55 @@ Class {
 	#category : #'Fylgja-Manifest'
 }
 
+{ #category : #'2- configure' }
+FylgjaManifest class >> exampleConfigureFyljaRules [
+
+	" 
+	A Fylgja engine like the one we learned to create in exampleCreateFylgjaEngine is not extremely useful, as it does not have any rule installed.  
+	"
+
+	<example>
+	| fylgja |
+	" 
+	In this example we check how to install rules. 
+	
+	
+	1- We create an engine, as described in exampleCreateFylgjaEngine.
+	
+	"
+	fylgja := self exampleCreateFylgjaEngine.
+
+	"
+	2- Rules can be installed with the help of a rule installer as a DSL. 
+	The next snippet of code installs a rule which tells: when ever translating a binary operator & to java, it should be translated as binary operator +.
+	
+	"
+
+	FylgjaRuleInstaller new
+		context: java root;
+		binaryOperator: #&;
+		replaceOperatorWith: #+;
+		installInto: fylgja.
+
+	"
+	3- Rules can be installed with the help of a rule installer, and giving a rule instance to be installed.
+	The  FylgjaSimpleRenameRule is a rule which renames any element according to the target. 
+	Please address to the article: ``Context Aware Partial Translation engine based on immediate and delayed Rule application`` to find a catalog of explained rules.  
+	
+	"
+	
+	FylgjaRuleInstaller new
+		context: java root;
+		install: FylgjaSimpleRenameRule new into: fylgja.
+	
+	"
+		The user can add rules at will at any moment of the usage of the engine. 
+	
+	"
+
+	^ fylgja
+]
+
 { #category : #loading }
 FylgjaManifest class >> exampleCreateFylgjaEngine [
 	<example> 
