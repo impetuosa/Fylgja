@@ -94,3 +94,86 @@ Class {
 	#superclass : #PackageManifest,
 	#category : #'Fylgja-Manifest'
 }
+
+{ #category : #loading }
+FylgjaManifest class >> accessNorthwind [
+	^ MoxingManifest accessNorthwind.
+
+]
+
+{ #category : #loading }
+FylgjaManifest class >> angularNorthwind [
+	^ MoxingManifest javaNorthwind.
+
+]
+
+{ #category : #loading }
+FylgjaManifest class >> exampleCreateFylgjaEngine [
+	<example> 
+]
+
+{ #category : #loading }
+FylgjaManifest class >> exampleUIFylgja [
+
+	| controller app fylgja northwind angular java |
+	controller := FylgjaMigrationUIController northwindController.
+	app := FylgjaApplication new controller: controller.
+	app openMigrator.
+		fylgja := FylgjaMigrationEngine new.
+	northwind := MOJinDAMImporter northwind.
+	angular := MOAngularLoader northwind.
+	java := MOJavaMavenProjectLoader northwind.
+
+
+	fylgja
+		addModel: northwind;
+		addModel: angular;
+		addModel: java.
+		
+	self ruleInstallers do: [ :a | 
+		a
+			fylgja: fylgja;
+			northwind: northwind;
+			java: java;
+			angular: angular;
+			installRules ].
+	fylgja := fylgja derivative
+		          installAllDerivativeModels;
+		          yourself.
+	^ self new
+		  fylgja: fylgja;
+		  origin: northwind;
+		  destinations: { 
+				  java.
+				  angular };
+		  yourself
+]
+
+{ #category : #loading }
+FylgjaManifest class >> javaNorthwind [
+	^ MoxingManifest javaNorthwind.
+
+]
+
+{ #category : #loading }
+FylgjaManifest class >> loadAddBaseline [
+
+	<load>
+	| spec |
+	spec
+		baseline: 'Fylgja'
+		with: [ spec repository: 'github://impetuosa/Fylgja:v1.x.x/src' ]
+]
+
+{ #category : #loading }
+FylgjaManifest class >> loadMetacello [
+
+	<load>
+	  Metacello new
+    	githubUser: 'Impetuosa' project: 'Fylgja' commitish: 'v1.x.x' path: 'src';
+    	baseline: 'Fylgja';
+    	onWarningLog;
+    	load
+	
+
+]
