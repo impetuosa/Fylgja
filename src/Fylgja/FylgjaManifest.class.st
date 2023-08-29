@@ -230,6 +230,61 @@ FylgjaManifest class >> exampleCreateFylgjaEngine [
 	^ fylgja
 ]
 
+{ #category : #'3- UI' }
+FylgjaManifest class >> exampleOpenFylgjaUINorthwind [
+
+	" 
+	
+	Fylgja engine has been thought mainly as an interactive engine. 
+	Even when it can be used programatically, it is designed to be used through the UI. 
+	
+	"
+
+	<example>
+	| fylgja controller |
+	" 
+	In this example open the Fylgja UI IDE for Northwind project. 
+	
+	
+	1- We create an engine, as described in exampleCreateFylgjaEngine and configure it as exampleConfigureNorthwindFylgjaRules.
+	
+	"
+	fylgja := self exampleConfigureNorthwindFylgjaRules.
+
+	"
+	
+	2- We are going to avoid working on the models directly from the very begining to be able to restart without having to reload the models. 
+	For doing so, we will give to our UI controller a derivative of our engine. 
+	For learning more about derivative models, please browse FylgjaDerivativeModel and MOModelDerivative classes. 
+	
+	"
+	fylgja := fylgja derivative
+		          installAllDerivativeModels;
+		          yourself.
+
+	"
+	3- the migrating session is managed by a UI controller: FylgjaMigrationUIController. 
+	This controller will communicate the different widgets and decide what to do when user helps is required. 
+	You probably want to save the controller reference. 
+	"
+	controller := FylgjaMigrationUIController new
+		              fylgja: fylgja;
+		              origin: northwind;
+		              destinations: { 
+				              java.
+				              angular };
+		              yourself.
+
+	"
+	4- The controller can open arbitrary number of UI which are controlled by the same controller and acting over the same models.
+	For opening a UI, just send the message #openMigrator.
+	
+	"
+	controller openMigrator.
+
+	^ controller
+]
+
 { #category : #loading }
 FylgjaManifest class >> exampleUIFylgja [
 
