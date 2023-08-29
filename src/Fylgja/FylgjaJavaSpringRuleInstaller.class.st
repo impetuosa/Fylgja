@@ -374,7 +374,7 @@ FylgjaJavaSpringRuleInstaller >> installRuntimeTypeMappings [
 			to: (java typeNamed: m value)
 			context: java ]
 			on: Error
-			do: [ self halt ] ]
+			do: [  ] ]
 ]
 
 { #category : #general }

@@ -241,7 +241,7 @@ FylgjaManifest class >> exampleOpenFylgjaUINorthwind [
 	"
 
 	<example>
-	| fylgja controller |
+	| fylgja controller app |
 	" 
 	In this example open the Fylgja UI IDE for Northwind project. 
 	
@@ -276,13 +276,21 @@ FylgjaManifest class >> exampleOpenFylgjaUINorthwind [
 		              yourself.
 
 	"
-	4- The controller can open arbitrary number of UI which are controlled by the same controller and acting over the same models.
-	For opening a UI, just send the message #openMigrator.
+	4- We need an Spec application which is going to customize the framework. 
+		This reference is not as important as the controller one. 
+		
+	"
+	app := (FylgjaApplication new controller: controller ).
 	
 	"
-	controller openMigrator.
-
-	^ controller
+	5- Finally the application is able to create a UI ready to use. 
+	The method migratorUi will return a UI ready to with 3 different models. 
+	When using more than 3 you will need to extend the Fylgja UI framework. 
+	The widget returned by migratorUi can be opened by sending the message open. 
+	"
+	app migratorUi open. 
+	
+	^ controller class 
 ]
 
 { #category : #loading }
