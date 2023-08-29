@@ -4,6 +4,14 @@ Fylgja is an engine for model transformation.
 The engine is specialized on software migration.
 This engine has been presented in [https://hal.inria.fr/hal-03898154v1](https://hal.inria.fr/hal-03898154v1) and [https://hal.inria.fr/hal-04181591v1](https://hal.inria.fr/hal-04181591v1).
 
+The fylgja engine is built on top of the Moxing model ([https://github.com/impetuosa/Moxing/](https://github.com/impetuosa/Moxing/)) which implements several importers, allowing to using the same model to represent projects written in Microsoft Access, Java, Angular+Typescript etc. 
+
+The following figure overlooks the architecture, and points the different URLs to visit in order to get more insight. 
+
+![https://github.com/impetuosa/Fylgja/blob/master/resources/fylgja-arch.jpg?raw=true](https://github.com/impetuosa/Fylgja/blob/master/resources/fylgja-arch.jpg?raw=true)
+
+
+
 ## Language Migration
 Migrating an application from a source language to a target language implies we must produce a new application with the same semantics as the original application but in a different language/technology, i.e., using the target envi- ronment: native types and primitives, SDK, and libraries: all of which make this environment a desirable target. Such migrations are challenging because different languages propose different concepts, some unique to the language e.g., Java generics, MS Access error management or Pharo thisContext. However, programming languages also present overlaps in common concepts such as functions, methods, and classes. To migrate language means at least replacing
 the source language concepts with those of the target language able to achieve similar behaviour.
@@ -64,7 +72,7 @@ Figure 1 is a graphical representation of an ASG instance which represents the s
 
 
 - Mapping
-Mappings are evidence of semantic equivalence. By semantic equivalence we mean that a source entity is equiv- alent to a target entity. A mapping can be the outcome of the user manually configuring the engine, as explained in Section 5.3. It can also be the engine’s outcome establishing a relationship between two entities as explained in Section 4.5. We distinguish two kinds of mappings: Simple and nested.
+Mappings are evidence of semantic equivalence. By semantic equivalence we mean that a source entity is equivalent to a target entity. A mapping can be the outcome of the user manually configuring the engine, as explained in Section 5.3. It can also be the engine’s outcome establishing a relationship between two entities as explained in Section 4.5. We distinguish two kinds of mappings: Simple and nested.
 1 Simple mapping relates a source declaration with a target declaration. 	It works as a simple association, implying that the source declaration is equivalent to the target declaration in the target ASG. This mapping is enough to map two entities without parameters or two target entity that was produced based on the source entity (assuming that if there are parameters, they did not change order).  eg (Void => void); (String => String); etc. 
 2 Nested mapping associates a source declaration with a target declaration and the parameters between source and target declarations. This mapping also specifies if a parameter on the source declaration becomes a receiver in the target. eg let's consider the mapping between function F(x,y,z) and method M(a,b,c). Three  mappings examples could be: 
 (F => M (a => z; b => y; c => x)): all the target parameters are mapped to all source parameters. The order changes.
