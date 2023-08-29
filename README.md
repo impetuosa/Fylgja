@@ -125,11 +125,6 @@ exampleCreateFylgjaEngine
 	^ fylgja
 ```
 
-
-```smalltalk
-
-
-
 ```smalltalk
 exampleConfigureFylgjaRules
 	| fylgja |
