@@ -149,6 +149,46 @@ FylgjaManifest class >> exampleConfigureFyljaRules [
 	^ fylgja
 ]
 
+{ #category : #'2- configure' }
+FylgjaManifest class >> exampleConfigureNorthwindFylgjaRules [
+
+	" 
+	A Fylgja engine like the one we learned to create in exampleCreateFylgjaEngine is not extremely useful, as it does not have any rule installed.  
+	"
+
+	<example>
+	| fylgja |
+	" 
+	In this example we check how to install rules for the case of migrating MS Access projects to AngularTs and Java. 
+	
+	
+	1- We create an engine, as described in exampleCreateFylgjaEngine.
+	
+	"
+	fylgja := self exampleCreateFylgjaEngine.
+
+	"
+	2- To install the different rules required for this project, we provided some installing objects. 
+	#ruleInstallers returns instances of different classes able to intall different rules. 
+	This instances require to be configured in a way that they can diffentiate what is access, java and angular. 
+	Please browse the FylgjaNorthwindRuleInstaller class for more details.
+	"
+
+	FylgjaMigrationUIController ruleInstallers do: [ :installer | 
+		installer
+			fylgja: fylgja;
+			northwind: northwind;
+			java: java;
+			angular: angular;
+			installRules ].
+	"
+		The user can add rules at will at any moment of the usage of the engine. 
+	
+	"
+
+	^ fylgja
+]
+
 { #category : #loading }
 FylgjaManifest class >> exampleCreateFylgjaEngine [
 	<example> 
