@@ -189,9 +189,45 @@ FylgjaManifest class >> exampleConfigureNorthwindFylgjaRules [
 	^ fylgja
 ]
 
-{ #category : #loading }
+{ #category : #'1- create' }
 FylgjaManifest class >> exampleCreateFylgjaEngine [
-	<example> 
+	" 
+	This example creates an engine which allows the user to migrate the MS Access Northwind project to Java and Angular. 
+	"
+	
+	<example>
+	| fylgja |
+	" 
+	A Fylgja migration engine works over Moxing models. So, before we start to work with any engine, we need at least two models which are going to be used to exchange content.
+	
+	1- Create Moxing models.
+	Please, to learn how to create your own Moxing model, address the Moxing documentation.  
+	"
+	
+	
+	northwind := MoxingManifest accessNorthwind.
+	angular := MoxingManifest angularNorthwind.
+	java := MoxingManifest javaNorthwind.
+	
+	"
+	
+	2- Create a FylgjaMigrationEngine instance. 
+	
+	"
+	fylgja := FylgjaMigrationEngine new.
+	
+		"
+	
+	3- Add the moxing models one by one. Please note that the order is not important, and that there is not limit of models. 
+	Fylgja engine will orchestrate and enable the different exchnages between the given models. 
+	
+	"
+	fylgja
+		addModel: northwind;
+		addModel: angular;
+		addModel: java.
+
+	^ fylgja
 ]
 
 { #category : #loading }
