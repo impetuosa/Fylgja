@@ -2,7 +2,7 @@
 Fylgja is an engine for model transformation. 
 
 The engine is specialized on software migration.
-This engine has been presented in [https://hal.inria.fr/hal-03898154v1](https://hal.inria.fr/hal-03898154v1) and [https://hal.inria.fr/hal-04181591v1](https://hal.inria.fr/hal-04181591v1).
+This engine has been presented in [Context Aware Partial Translation engine based on immediate and delayed Rule application](https://hal.inria.fr/hal-03898154v1) and [Interactive, Iterative, Tooled, Rule-Based Migration of Microsoft Access to Web Technologies](https://hal.inria.fr/hal-04181591v1).
 
 The fylgja engine is built on top of the Moxing model ([https://github.com/impetuosa/Moxing/](https://github.com/impetuosa/Moxing/)) which implements several importers, allowing to using the same model to represent projects written in Microsoft Access, Java, Angular+Typescript etc. 
 
@@ -92,6 +92,11 @@ Rules to be applied during Adaptive phase (Section 4.7): after the execution of 
 Class {
 	#name : #FylgjaManifest,
 	#superclass : #PackageManifest,
+	#classInstVars : [
+		'northwind',
+		'angular',
+		'java'
+	],
 	#category : #'Fylgja-Manifest'
 }
 
