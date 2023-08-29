@@ -101,7 +101,7 @@ Class {
 }
 
 { #category : #'2- configure' }
-FylgjaManifest class >> exampleConfigureFyljaRules [
+FylgjaManifest class >> exampleConfigureFylgjaRules [
 
 	" 
 	A Fylgja engine like the one we learned to create in exampleCreateFylgjaEngine is not extremely useful, as it does not have any rule installed.  
