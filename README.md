@@ -195,7 +195,7 @@ exampleConfigureNorthwindFylgjaRules
 	^ fylgja
 ```
 
-
+```smalltalk
 exampleOpenFylgjaUINorthwind
 	| fylgja controller |
 	" 
