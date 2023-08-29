@@ -286,12 +286,6 @@ FylgjaManifest class >> exampleOpenFylgjaUINorthwind [
 ]
 
 { #category : #loading }
-FylgjaManifest class >> javaNorthwind [
-	^ MoxingManifest javaNorthwind.
-
-]
-
-{ #category : #loading }
 FylgjaManifest class >> loadAddBaseline [
 
 	<load>
