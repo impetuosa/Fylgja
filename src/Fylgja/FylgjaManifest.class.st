@@ -101,12 +101,6 @@ Class {
 }
 
 { #category : #loading }
-FylgjaManifest class >> angularNorthwind [
-	^ MoxingManifest javaNorthwind.
-
-]
-
-{ #category : #loading }
 FylgjaManifest class >> exampleCreateFylgjaEngine [
 	<example> 
 ]
