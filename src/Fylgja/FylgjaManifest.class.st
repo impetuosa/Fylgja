@@ -286,43 +286,6 @@ FylgjaManifest class >> exampleOpenFylgjaUINorthwind [
 ]
 
 { #category : #loading }
-FylgjaManifest class >> exampleUIFylgja [
-
-	| controller app fylgja northwind angular java |
-	controller := FylgjaMigrationUIController northwindController.
-	app := FylgjaApplication new controller: controller.
-	app openMigrator.
-		fylgja := FylgjaMigrationEngine new.
-	northwind := MOJinDAMImporter northwind.
-	angular := MOAngularLoader northwind.
-	java := MOJavaMavenProjectLoader northwind.
-
-
-	fylgja
-		addModel: northwind;
-		addModel: angular;
-		addModel: java.
-		
-	self ruleInstallers do: [ :a | 
-		a
-			fylgja: fylgja;
-			northwind: northwind;
-			java: java;
-			angular: angular;
-			installRules ].
-	fylgja := fylgja derivative
-		          installAllDerivativeModels;
-		          yourself.
-	^ self new
-		  fylgja: fylgja;
-		  origin: northwind;
-		  destinations: { 
-				  java.
-				  angular };
-		  yourself
-]
-
-{ #category : #loading }
 FylgjaManifest class >> javaNorthwind [
 	^ MoxingManifest javaNorthwind.
 
