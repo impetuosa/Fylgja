@@ -6,10 +6,10 @@ The tool is split in two areas: migrating tool and feedback.
 ![resources/screenshot-tool.png](resources/screenshot-tool.png)
 The figure depicts the central area of the migrating tool. 
 
-1- Toolbar: tools for the project.
-2- The left panel shows the structure and code of the MS Access project.
-3- The right-top panel shows the structure and code of the Java-SpringBoot project.
-4- The right-top panel shows the structure and code of the TypeScript-Angular project.
+- Toolbar: tools for the project.
+- The left panel shows the structure and code of the MS Access project.
+- The right-top panel shows the structure and code of the Java-SpringBoot project.
+- The right-top panel shows the structure and code of the TypeScript-Angular project.
 
 ## Feedback area: 
 
