@@ -11,7 +11,7 @@ BaselineOfFylgja >> baseline: spec [
 	spec
 		baseline: 'Moxing'
 		with: [ spec repository: 'github://impetuosa/Moxing' ].
-	spec
+	"spec
 		baseline: 'CasinoGlue'
-		with: [ spec repository: 'github://impetuosa/CasinoGlue' ]
+		with: [ spec repository: 'github://impetuosa/CasinoGlue' ]"
 ]
