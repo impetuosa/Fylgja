@@ -8,7 +8,7 @@ The following figure overlooks the architecture, and points the different URLs t
 ![https://github.com/impetuosa/Fylgja/blob/master/resources/fylgja-arch.jpg?raw=true](https://github.com/impetuosa/Fylgja/blob/master/resources/fylgja-arch.jpg?raw=true)
 
 ## Language Migration
-Migrating an application from a source language to a target language implies we must produce a new application with the same semantics as the original application but in a different language/technology, i.e., using the target envi- ronment: native types and primitives, SDK, and libraries: all of which make this environment a desirable target. Such migrations are challenging because different languages propose different concepts, some unique to the language e.g., Java generics, MS Access error management or Pharo thisContext. However, programming languages also present overlaps in common concepts such as functions, methods, and classes. To migrate language means at least replacing
+Migrating an application from a source language to a target language implies we must produce a new application with the same semantics as the original application but in a different language/technology, i.e., using the target environment: native types and primitives, SDK, and libraries: all of which make this environment a desirable target. Such migrations are challenging because different languages propose different concepts, some unique to the language e.g., Java generics, MS Access error management or Pharo thisContext. However, programming languages also present overlaps in common concepts such as functions, methods, and classes. To migrate language means at least replacing
 the source language concepts with those of the target language able to achieve similar behaviour.
 ## A language migration example
 Let us consider the code in Listing 1. A Visual Basic Application module used for testing named Testing, with a function testing the function Len using HelloString global variable as a parameter. This global is defined in another module named ProjectGlobals.
@@ -57,18 +57,25 @@ Our proposal is based on the modelling of source and target applications as two 
 Figure 1 is a graphical representation of an ASG instance which represents the source code listed in Listing 1. The function declaration node has an arrow pointing to a type-reference object, with a dotted line arrow pointing to the type Void.
 
 - Mapping
-Mappings are evidence of semantic equivalence. By semantic equivalence we mean that a source entity is equivalent to a target entity. A mapping can be the outcome of the user manually configuring the engine, as explained in Section 5.3. It can also be the engine’s outcome establishing a relationship between two entities as explained in Section 4.5. We distinguish two kinds of mappings: Simple and nested.
-1 Simple mapping relates a source declaration with a target declaration. 	It works as a simple association, implying that the source declaration is equivalent to the target declaration in the target ASG. This mapping is enough to map two entities without parameters or two target entity that was produced based on the source entity (assuming that if there are parameters, they did not change order).  eg (Void => void); (String => String); etc. 
-2 Nested mapping associates a source declaration with a target declaration and the parameters between source and target declarations. This mapping also specifies if a parameter on the source declaration becomes a receiver in the target. eg let's consider the mapping between function F(x,y,z) and method M(a,b,c). Three  mappings examples could be: 
-(F => M (a => z; b => y; c => x)): all the target parameters are mapped to all source parameters. The order changes.
-(F=>M(a=>x;b=>y;c=>x)): parameters a and c are mapped to x; parameter b is mapped to a. Parameter z is dismissed.
-(F=>M(a=>x;b=>y;c=>x;z=>R)): parameters a and c are mapped to x; parameter b is mapped to a. Parameter z is proposed as a receiver.
+Mappings are evidence of semantic equivalence. By semantic equivalence we mean that a source entity is equivalent to a target entity. A mapping can be the outcome of the user manually configuring the engine. It can also be the engine’s outcome establishing a relationship between two entities. 
+We distinguish two kinds of mappings: Simple and nested.
+Please address to [Mappings.md](Mappings.md) for more details. 
 - Rules
-Rules consist of a Condition and an Operation. Condition consists of a predicate that allows the user to define specific requirements for the operation to be applied. Operation consists of any systematic modification over the target. A rule returns a single entity. Each time the engine creates a target declaration out of applying a rule over a source declaration, it produces a simple mapping between these artefacts as explained in Section 5.3.
+Rules consist of a Condition and an Operation. Condition consists of a predicate that allows the user to define specific requirements for the operation to be applied. Operation consists of any systematic modification over the target. A rule returns a single entity. Each time the engine creates a target declaration out of applying a rule over a source declaration, it produces a simple mapping between these artefacts.
 **Translative rules**
 These rules are immediately applied when the user requires to translate a source entity within a target context. These rules produce, as a result, a single target entity.
 **Adaptive rules**
-Rules to be applied during Adaptive phase (Section 4.7): after the execution of translative rules and the installation of linked stubs. An adaptive rule automates the translation of any reference object based on how the referred object has been translated or mapped. There is an implicit dependency between the nature of a declared artefact and the kind of reference able to interpellate it. To activate a function which receives one parameter, we use a function invocation with one argument. Adaptive rules are based on this dependency.
+Rules to be applied during Adaptive phase: after the execution of translative rules and the installation of linked stubs. An adaptive rule automates the translation of any reference object based on how the referred object has been translated or mapped. There is an implicit dependency between the nature of a declared artefact and the kind of reference able to interpellate it. To activate a function which receives one parameter, we use a function invocation with one argument. Adaptive rules are based on this dependency.
+Please address to [Rules.md](Rules.md) for more details.
+## GUI 
+Fylgja is transformation engine which helps developers throught the usage of an GUI. 
+In the following examples we are going to show how to instantiate the engine, and how to open this GUI. 
+For learning the details about the GUI you can address to [GUI.md](GUI.md) or to the article [Interactive, Iterative, Tooled, Rule-Based Migration of Microsoft Access to Web Technologies](https://hal.inria.fr/hal-04181591v1).
+
+
+
+
+
 ## Load
 ```smalltalk
 loadMetacello
@@ -88,110 +95,6 @@ loadAddBaseline
 ```
 
 ## Project Examples
-```smalltalk
-exampleCreateFylgjaEngine
-	| fylgja |
-	" 
-	A Fylgja migration engine works over Moxing models. So, before we start to work with any engine, we need at least two models which are going to be used to exchange content.
-	
-	1- Create Moxing models.
-	Please, to learn how to create your own Moxing model, address the Moxing documentation.  
-	"
-	
-	
-	northwind := MoxingManifest accessNorthwind.
-	angular := MoxingManifest angularNorthwind.
-	java := MoxingManifest javaNorthwind.
-	
-	"
-	
-	2- Create a FylgjaMigrationEngine instance. 
-	
-	"
-	fylgja := FylgjaMigrationEngine new.
-	
-		"
-	
-	3- Add the moxing models one by one. Please note that the order is not important, and that there is not limit of models. 
-	Fylgja engine will orchestrate and enable the different exchnages between the given models. 
-	
-	"
-	fylgja
-		addModel: northwind;
-		addModel: angular;
-		addModel: java.
-	^ fylgja
-```
-
-```smalltalk
-exampleConfigureFylgjaRules
-	| fylgja |
-	" 
-	In this example we check how to install rules. 
-	
-	
-	1- We create an engine, as described in exampleCreateFylgjaEngine.
-	
-	"
-	fylgja := self exampleCreateFylgjaEngine.
-	"
-	2- Rules can be installed with the help of a rule installer as a DSL. 
-	The next snippet of code installs a rule which tells: when ever translating a binary operator & to java, it should be translated as binary operator +.
-	
-	"
-	FylgjaRuleInstaller new
-		context: java root;
-		binaryOperator: #&;
-		replaceOperatorWith: #+;
-		installInto: fylgja.
-	"
-	3- Rules can be installed with the help of a rule installer, and giving a rule instance to be installed.
-	The  FylgjaSimpleRenameRule is a rule which renames any element according to the target. 
-	Please address to the article: ``Context Aware Partial Translation engine based on immediate and delayed Rule application`` to find a catalog of explained rules.  
-	
-	"
-	
-	FylgjaRuleInstaller new
-		context: java root;
-		install: FylgjaSimpleRenameRule new into: fylgja.
-	
-	"
-		The user can add rules at will at any moment of the usage of the engine. 
-	
-	"
-	^ fylgja
-```
-
-```smalltalk
-exampleConfigureNorthwindFylgjaRules
-	| fylgja |
-	" 
-	In this example we check how to install rules for the case of migrating MS Access projects to AngularTs and Java. 
-	
-	
-	1- We create an engine, as described in exampleCreateFylgjaEngine.
-	
-	"
-	fylgja := self exampleCreateFylgjaEngine.
-	"
-	2- To install the different rules required for this project, we provided some installing objects. 
-	#ruleInstallers returns instances of different classes able to intall different rules. 
-	This instances require to be configured in a way that they can diffentiate what is access, java and angular. 
-	Please browse the FylgjaNorthwindRuleInstaller class for more details.
-	"
-	FylgjaMigrationUIController ruleInstallers do: [ :installer | 
-		installer
-			fylgja: fylgja;
-			northwind: northwind;
-			java: java;
-			angular: angular;
-			installRules ].
-	"
-		The user can add rules at will at any moment of the usage of the engine. 
-	
-	"
-	^ fylgja
-```
 ```smalltalk
 exampleOpenFylgjaUINorthwind
 	| fylgja controller app |
@@ -242,5 +145,108 @@ exampleOpenFylgjaUINorthwind
 	
 	^ controller class 
 ```
+```smalltalk
+exampleConfigureFylgjaRules
+	| fylgja |
+	" 
+	In this example we check how to install rules. 
+	
+	
+	1- We create an engine, as described in exampleCreateFylgjaEngine.
+	
+	"
+	fylgja := self exampleCreateFylgjaEngine.
+	"
+	2- Rules can be installed with the help of a rule installer as a DSL. 
+	The next snippet of code installs a rule which tells: when ever translating a binary operator & to java, it should be translated as binary operator +.
+	
+	"
+	FylgjaRuleInstaller new
+		context: java root;
+		binaryOperator: #&;
+		replaceOperatorWith: #+;
+		installInto: fylgja.
+	"
+	3- Rules can be installed with the help of a rule installer, and giving a rule instance to be installed.
+	The  FylgjaSimpleRenameRule is a rule which renames any element according to the target. 
+	Please address to the article: ``Context Aware Partial Translation engine based on immediate and delayed Rule application`` to find a catalog of explained rules.  
+	
+	"
+	
+	FylgjaRuleInstaller new
+		context: java root;
+		install: FylgjaSimpleRenameRule new into: fylgja.
+	
+	"
+		The user can add rules at will at any moment of the usage of the engine. 
+	
+	"
+	^ fylgja
+```
+```smalltalk
+exampleCreateFylgjaEngine
+	| fylgja |
+	" 
+	A Fylgja migration engine works over Moxing models. So, before we start to work with any engine, we need at least two models which are going to be used to exchange content.
+	
+	1- Create Moxing models.
+	Please, to learn how to create your own Moxing model, address the Moxing documentation.  
+	"
+	
+	
+	northwind := MoxingManifest accessNorthwind.
+	angular := MoxingManifest angularNorthwind.
+	java := MoxingManifest javaNorthwind.
+	
+	"
+	
+	2- Create a FylgjaMigrationEngine instance. 
+	
+	"
+	fylgja := FylgjaMigrationEngine new.
+	
+		"
+	
+	3- Add the moxing models one by one. Please note that the order is not important, and that there is not limit of models. 
+	Fylgja engine will orchestrate and enable the different exchnages between the given models. 
+	
+	"
+	fylgja
+		addModel: northwind;
+		addModel: angular;
+		addModel: java.
+	^ fylgja
+```
+```smalltalk
+exampleConfigureNorthwindFylgjaRules
+	| fylgja |
+	" 
+	In this example we check how to install rules for the case of migrating MS Access projects to AngularTs and Java. 
+	
+	
+	1- We create an engine, as described in exampleCreateFylgjaEngine.
+	
+	"
+	fylgja := self exampleCreateFylgjaEngine.
+	"
+	2- To install the different rules required for this project, we provided some installing objects. 
+	#ruleInstallers returns instances of different classes able to intall different rules. 
+	This instances require to be configured in a way that they can diffentiate what is access, java and angular. 
+	Please browse the FylgjaNorthwindRuleInstaller class for more details.
+	"
+	FylgjaMigrationUIController ruleInstallers do: [ :installer | 
+		installer
+			fylgja: fylgja;
+			northwind: northwind;
+			java: java;
+			angular: angular;
+			installRules ].
+	"
+		The user can add rules at will at any moment of the usage of the engine. 
+	
+	"
+	^ fylgja
+```
+
 
 
