@@ -300,7 +300,7 @@ MoxingTextComposer >> addStyle: aStyleArray forToken: aToken [
 
 { #category : #'as yet unclassified' }
 MoxingTextComposer >> compose: anAst model: aModel style: aStyle into: aText browsingWith: aBrowsingObject [ 
-
+	<doc: 'I compose a given text content based on a AST. Applying highlight and theme according to each language. '>
 	ast := anAst.
 	text := aText. 
 	style := aStyle.
@@ -312,7 +312,7 @@ MoxingTextComposer >> compose: anAst model: aModel style: aStyle into: aText bro
 
 { #category : #'as yet unclassified' }
 MoxingTextComposer >> compose: aString parser: aParser model: aModel style: aStyle browsingWith: aBrowsingObject [
-
+	<doc: 'I create a Text and compose it according to the language. I require a parser to work. '>
 	| anAst |
 	[ anAst := aParser parse: aString ]
 		on: Error

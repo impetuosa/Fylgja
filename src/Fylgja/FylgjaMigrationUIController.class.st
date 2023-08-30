@@ -120,7 +120,7 @@ FylgjaMigrationUIController class >> ruleInstallers [
 
 { #category : #accessing }
 FylgjaMigrationUIController >> applyCommand: aCommand informing: aWidget do: aBlock [
-
+	<doc: 'Apply a transactionally a command. I notify the given widget when succeed. I log when error'>
 	| result |
 	^ self
 		  transactionalDoOrLog: [ 
@@ -176,6 +176,8 @@ FylgjaMigrationUIController >> chooseAndMap: anEntity to: other context: context
 { #category : #accessing }
 FylgjaMigrationUIController >> createCheckpointFor: aWidget [
 
+	<doc:
+	'Create checkpoint. For doing that I create a new derivative model and push it in the stack of models'>
 	self
 		doOrLog: [ 
 			self flag: #Comment.
@@ -210,6 +212,8 @@ FylgjaMigrationUIController >> destinations: aCollection [
 { #category : #accessing }
 FylgjaMigrationUIController >> doOrLog: aFullBlockClosure forOperation: aOperationName ifFailReturn: aBlock [
 
+	<doc:
+	'Execute a given block. If if fail, i log and execute the fail block.'>
 	^ [ aFullBlockClosure value ]
 		  on: Error
 		  do: [ :e | 
@@ -221,7 +225,8 @@ FylgjaMigrationUIController >> doOrLog: aFullBlockClosure forOperation: aOperati
 
 { #category : #'as yet unclassified' }
 FylgjaMigrationUIController >> dropAllChangesWith: aWidget [
-
+		<doc:
+	'Undo all the changes done since the begining'>
 	| fylgjaModel stackCopy |
 	self
 		doOrLog: [ 
@@ -243,7 +248,8 @@ FylgjaMigrationUIController >> dropAllChangesWith: aWidget [
 
 { #category : #'as yet unclassified' }
 FylgjaMigrationUIController >> exportDraft: aFileReference informTo: aWidget [
-
+		<doc:
+	'Export a draft of the project'>
 	| result |
 	^ self
 		  doOrLog: [ 
@@ -591,7 +597,8 @@ FylgjaMigrationUIController >> stubsFor: aDeclaration [
 
 { #category : #accessing }
 FylgjaMigrationUIController >> transactionalDoOrLog: aFullBlockClosure forOperation: aOperationName ifFailReturn: aBlock [
-
+		<doc:
+	'I create a checkpoint. Execute a given block. If if fail, i log and execute the fail block and after I rollback changes.'>
 	^ [ 
 	  self privateCreateCheckpoint.
 	  aFullBlockClosure value ]

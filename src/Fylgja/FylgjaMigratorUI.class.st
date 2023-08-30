@@ -1,3 +1,6 @@
+"
+This UI version manages three different models. 
+"
 Class {
 	#name : #FylgjaMigratorUI,
 	#superclass : #FylgjaMigratorSingleDestinationUI,

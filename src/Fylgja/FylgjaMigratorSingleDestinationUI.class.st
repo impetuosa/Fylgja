@@ -1,3 +1,6 @@
+"
+This image uses two different models
+"
 Class {
 	#name : #FylgjaMigratorSingleDestinationUI,
 	#superclass : #FylgjaAbstractUI,

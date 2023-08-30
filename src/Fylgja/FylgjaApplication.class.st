@@ -35,13 +35,15 @@ FylgjaApplication >> controller: aFylgjaMigrationUIController [
 
 { #category : #'as yet unclassified' }
 FylgjaApplication >> migratorSingleDestinationUi [
-
+			<doc:
+	'Create a single destination UI. (for two models)'>
 	^ FylgjaMigratorSingleDestinationUI newApplication: self
 ]
 
 { #category : #'as yet unclassified' }
 FylgjaApplication >> migratorUi [
-
+	<doc:
+	'Create a two destination UI. (for three models)'>
 	^ FylgjaMigratorUI newApplication: self
 ]
 
