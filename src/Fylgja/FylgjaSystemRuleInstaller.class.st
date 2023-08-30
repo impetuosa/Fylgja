@@ -1,7 +1,7 @@
 Class {
 	#name : #FylgjaSystemRuleInstaller,
 	#superclass : #FylgjaNorthwindRuleInstaller,
-	#category : #'Fylgja-UI'
+	#category : #'Fylgja-Rule-Installer-Northwind'
 }
 
 { #category : #general }

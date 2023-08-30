@@ -1,8 +1,23 @@
+"
+##Operations
+
+Operations are reification of transformations to be applied. 
+Often operation objects are used as an operative part of a dynamic rule, however, they can be arbitrarily used by other operations.
+An example of this is FylgjaCopy, which copies the definition of a source element into a given target contextual element. 
+
+From this hierarchy 
+"
 Class {
 	#name : #FylgjaOperation,
 	#superclass : #Object,
 	#category : #'Fylgja-Rule-Operations'
 }
+
+{ #category : #'instance creation' }
+FylgjaOperation class >> holdsPackageDocumentation [
+
+	^ self = FylgjaOperation
+]
 
 { #category : #'instance creation' }
 FylgjaOperation class >> possibleWritingMessages [

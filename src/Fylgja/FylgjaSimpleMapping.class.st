@@ -1,3 +1,6 @@
+"
+SimpleMapping class.
+"
 Class {
 	#name : #FylgjaSimpleMapping,
 	#superclass : #FylgjaMapping,

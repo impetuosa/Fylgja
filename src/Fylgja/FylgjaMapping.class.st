@@ -30,7 +30,7 @@ Class {
 { #category : #'as yet unclassified' }
 FylgjaMapping class >> holdsPackageDocumentation [
 
-	^ true
+	^ self = FylgjaMapping
 ]
 
 { #category : #testing }

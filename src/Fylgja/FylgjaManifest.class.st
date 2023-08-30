@@ -78,11 +78,31 @@ Please address to [Mappings.md](Mappings.md) for more details.
 
 - Rules
 Rules consist of a Condition and an Operation. Condition consists of a predicate that allows the user to define specific requirements for the operation to be applied. Operation consists of any systematic modification over the target. A rule returns a single entity. Each time the engine creates a target declaration out of applying a rule over a source declaration, it produces a simple mapping between these artefacts.
+
 **Translative rules**
 These rules are immediately applied when the user requires to translate a source entity within a target context. These rules produce, as a result, a single target entity.
 
 **Adaptive rules**
 Rules to be applied during Adaptive phase: after the execution of translative rules and the installation of linked stubs. An adaptive rule automates the translation of any reference object based on how the referred object has been translated or mapped. There is an implicit dependency between the nature of a declared artefact and the kind of reference able to interpellate it. To activate a function which receives one parameter, we use a function invocation with one argument. Adaptive rules are based on this dependency.
+
+Please address to [Rules.md](Rules.md) for more details.
+
+## GUI 
+Fylgja is transformation engine which helps developers throught the usage of an GUI. 
+
+In the following examples we are going to show how to instantiate the engine, and how to open this GUI. 
+
+For learning the details about the GUI you can address to [GUI.md](GUI.md) or to the article [Interactive, Iterative, Tooled, Rule-Based Migration of Microsoft Access to Web Technologies](https://hal.inria.fr/hal-04181591v1).
+
+
+
+
+
+
+
+
+
+
 
 
 "
@@ -311,4 +331,28 @@ FylgjaManifest class >> loadMetacello [
     	load
 	
 
+]
+
+{ #category : #accessing }
+FylgjaManifest class >> mappingsMd [
+
+	^ self documentSending: #mappingsPackages titled: #Mappings
+]
+
+{ #category : #accessing }
+FylgjaManifest class >> mappingsPackages [
+
+	^ { (self package classTagNamed: #Mappings) }
+]
+
+{ #category : #accessing }
+FylgjaManifest class >> rulePackages [
+
+	^ self package classTags select: [ :t | t name beginsWith: 'Rule' ]
+]
+
+{ #category : #accessing }
+FylgjaManifest class >> rulesMd [
+
+	^ self documentSending: #rulePackages titled: #Rules
 ]

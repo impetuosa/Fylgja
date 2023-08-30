@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'java'
 	],
-	#category : #'Fylgja-UI'
+	#category : #'Fylgja-Rule-Installer-Northwind'
 }
 
 { #category : #initialization }

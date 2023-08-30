@@ -5,7 +5,7 @@ Class {
 		'fylgja',
 		'northwind'
 	],
-	#category : #'Fylgja-UI'
+	#category : #'Fylgja-Rule-Installer-Northwind'
 }
 
 { #category : #'as yet unclassified' }

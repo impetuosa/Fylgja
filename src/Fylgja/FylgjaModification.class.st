@@ -1,8 +1,20 @@
+"
+#Modification operations
+
+These operations are of the transofrmation kind. All of them inherit from the FylgjaModification class.
+The transformations proposed in this hierarchy are of the kind of producing specific bricks of code such as: AddAttribute, AddGetter / AddSetter etc. 
+"
 Class {
 	#name : #FylgjaModification,
 	#superclass : #FylgjaOperation,
 	#category : #'Fylgja-Rule-Transformations'
 }
+
+{ #category : #'as yet unclassified' }
+FylgjaModification class >> holdsPackageDocumentation [
+
+	^ self = FylgjaModification
+]
 
 { #category : #'instance creation' }
 FylgjaModification >> applyOn: aWriter [

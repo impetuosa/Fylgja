@@ -1,3 +1,6 @@
+"
+NestedMapping class.
+"
 Class {
 	#name : #FylgjaNestedMapping,
 	#superclass : #FylgjaMapping,
