@@ -1,7 +1,7 @@
 Class {
 	#name : #FylgjaModification,
 	#superclass : #FylgjaOperation,
-	#category : #'Fylgja-Rule-Modifications'
+	#category : #'Fylgja-Rule-Transformations'
 }
 
 { #category : #'instance creation' }

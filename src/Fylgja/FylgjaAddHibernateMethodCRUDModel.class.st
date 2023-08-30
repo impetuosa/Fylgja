@@ -1,7 +1,7 @@
 Class {
 	#name : #FylgjaAddHibernateMethodCRUDModel,
 	#superclass : #FylgjaAddHibernateMethod,
-	#category : #'Fylgja-Rule-Modifications'
+	#category : #'Fylgja-Rule-Transformations'
 }
 
 { #category : #'instance creation' }

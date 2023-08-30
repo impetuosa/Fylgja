@@ -1,7 +1,7 @@
 Class {
 	#name : #FylgjaAngularGetHttpCallWriter,
 	#superclass : #FylgjaAngularHttpCallWriter,
-	#category : #'Fylgja-Rule-Modifications'
+	#category : #'Fylgja-Rule-Transformations'
 }
 
 { #category : #accessing }

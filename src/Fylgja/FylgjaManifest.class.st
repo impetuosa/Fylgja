@@ -13,7 +13,7 @@ The following figure overlooks the architecture, and points the different URLs t
 
 
 ## Language Migration
-Migrating an application from a source language to a target language implies we must produce a new application with the same semantics as the original application but in a different language/technology, i.e., using the target envi- ronment: native types and primitives, SDK, and libraries: all of which make this environment a desirable target. Such migrations are challenging because different languages propose different concepts, some unique to the language e.g., Java generics, MS Access error management or Pharo thisContext. However, programming languages also present overlaps in common concepts such as functions, methods, and classes. To migrate language means at least replacing
+Migrating an application from a source language to a target language implies we must produce a new application with the same semantics as the original application but in a different language/technology, i.e., using the target environment: native types and primitives, SDK, and libraries: all of which make this environment a desirable target. Such migrations are challenging because different languages propose different concepts, some unique to the language e.g., Java generics, MS Access error management or Pharo thisContext. However, programming languages also present overlaps in common concepts such as functions, methods, and classes. To migrate language means at least replacing
 the source language concepts with those of the target language able to achieve similar behaviour.
 
 ## A language migration example
@@ -72,20 +72,17 @@ Figure 1 is a graphical representation of an ASG instance which represents the s
 
 
 - Mapping
-Mappings are evidence of semantic equivalence. By semantic equivalence we mean that a source entity is equivalent to a target entity. A mapping can be the outcome of the user manually configuring the engine, as explained in Section 5.3. It can also be the engine’s outcome establishing a relationship between two entities as explained in Section 4.5. We distinguish two kinds of mappings: Simple and nested.
-1 Simple mapping relates a source declaration with a target declaration. 	It works as a simple association, implying that the source declaration is equivalent to the target declaration in the target ASG. This mapping is enough to map two entities without parameters or two target entity that was produced based on the source entity (assuming that if there are parameters, they did not change order).  eg (Void => void); (String => String); etc. 
-2 Nested mapping associates a source declaration with a target declaration and the parameters between source and target declarations. This mapping also specifies if a parameter on the source declaration becomes a receiver in the target. eg let's consider the mapping between function F(x,y,z) and method M(a,b,c). Three  mappings examples could be: 
-(F => M (a => z; b => y; c => x)): all the target parameters are mapped to all source parameters. The order changes.
-(F=>M(a=>x;b=>y;c=>x)): parameters a and c are mapped to x; parameter b is mapped to a. Parameter z is dismissed.
-(F=>M(a=>x;b=>y;c=>x;z=>R)): parameters a and c are mapped to x; parameter b is mapped to a. Parameter z is proposed as a receiver.
+Mappings are evidence of semantic equivalence. By semantic equivalence we mean that a source entity is equivalent to a target entity. A mapping can be the outcome of the user manually configuring the engine. It can also be the engine’s outcome establishing a relationship between two entities. 
+We distinguish two kinds of mappings: Simple and nested.
+Please address to [Mappings.md](Mappings.md) for more details. 
 
 - Rules
-Rules consist of a Condition and an Operation. Condition consists of a predicate that allows the user to define specific requirements for the operation to be applied. Operation consists of any systematic modification over the target. A rule returns a single entity. Each time the engine creates a target declaration out of applying a rule over a source declaration, it produces a simple mapping between these artefacts as explained in Section 5.3.
+Rules consist of a Condition and an Operation. Condition consists of a predicate that allows the user to define specific requirements for the operation to be applied. Operation consists of any systematic modification over the target. A rule returns a single entity. Each time the engine creates a target declaration out of applying a rule over a source declaration, it produces a simple mapping between these artefacts.
 **Translative rules**
 These rules are immediately applied when the user requires to translate a source entity within a target context. These rules produce, as a result, a single target entity.
 
 **Adaptive rules**
-Rules to be applied during Adaptive phase (Section 4.7): after the execution of translative rules and the installation of linked stubs. An adaptive rule automates the translation of any reference object based on how the referred object has been translated or mapped. There is an implicit dependency between the nature of a declared artefact and the kind of reference able to interpellate it. To activate a function which receives one parameter, we use a function invocation with one argument. Adaptive rules are based on this dependency.
+Rules to be applied during Adaptive phase: after the execution of translative rules and the installation of linked stubs. An adaptive rule automates the translation of any reference object based on how the referred object has been translated or mapped. There is an implicit dependency between the nature of a declared artefact and the kind of reference able to interpellate it. To activate a function which receives one parameter, we use a function invocation with one argument. Adaptive rules are based on this dependency.
 
 
 "

@@ -7,7 +7,7 @@ Class {
 		'delegatingSelector',
 		'arguments'
 	],
-	#category : #'Fylgja-Rule-Modifications'
+	#category : #'Fylgja-Rule-Transformations'
 }
 
 { #category : #accessing }

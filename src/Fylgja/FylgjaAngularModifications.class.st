@@ -1,7 +1,7 @@
 Class {
 	#name : #FylgjaAngularModifications,
 	#superclass : #FylgjaModification,
-	#category : #'Fylgja-Rule-Modifications'
+	#category : #'Fylgja-Rule-Transformations'
 }
 
 { #category : #adding }

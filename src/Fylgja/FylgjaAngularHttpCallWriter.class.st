@@ -7,7 +7,7 @@ Class {
 		'baseUrl',
 		'parameters'
 	],
-	#category : #'Fylgja-Rule-Modifications'
+	#category : #'Fylgja-Rule-Transformations'
 }
 
 { #category : #'as yet unclassified' }

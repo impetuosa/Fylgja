@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'mappings'
 	],
-	#category : #'Fylgja-Rules'
+	#category : #'Fylgja-Mappings'
 }
 
 { #category : #'as yet unclassified' }
@@ -17,6 +17,8 @@ FylgjaNestedMapping >> canBeMapped: aMOParameter from: aCollection [
 { #category : #'as yet unclassified' }
 FylgjaNestedMapping >> choose: aMOParameter from: aCollection [
 
+	<doc:
+	'Given a parameter and a collection, It returns the object of a collection that should be mapped to the given parameter. '>
 	^ aCollection at:
 		  (self source parameters indexOf: (mappings at: aMOParameter))
 ]
@@ -30,6 +32,8 @@ FylgjaNestedMapping >> hasReceiver [
 { #category : #testing }
 FylgjaNestedMapping >> isEquivalentTo: aFylgjaNestedMapping [
 
+	<doc:
+	'It tests if this nested mapping is equivalent to an other mapping. It avoid the redefinition of = to avoid the redefinition of hash.'>
 	^ self species = aFylgjaNestedMapping species and: [ 
 		  source anchor = aFylgjaNestedMapping source anchor and: [ 
 			  source name = aFylgjaNestedMapping source name and: [ 
@@ -41,6 +45,8 @@ FylgjaNestedMapping >> isEquivalentTo: aFylgjaNestedMapping [
 { #category : #'operators-mapping' }
 FylgjaNestedMapping >> map: aCollection [
 
+	<doc:
+	'Given a collection of arguments, returns a mapped collection them according to the parameter mapping '>
 	^ target parameters collect: [ :param | 
 		  self choose: param from: aCollection ]
 ]
@@ -88,6 +94,8 @@ FylgjaNestedMapping >> mappings [
 { #category : #accessing }
 FylgjaNestedMapping >> mappings: anObject [
 
+	<doc:
+	'Sets the nested mappings. The parameter is expected to be a collection of simple mappings. '>
 	mappings := anObject
 ]
 

@@ -7,7 +7,7 @@ Class {
 		'arguments',
 		'method'
 	],
-	#category : #'Fylgja-Rule-Modifications'
+	#category : #'Fylgja-Rule-Transformations'
 }
 
 { #category : #'instance creation' }

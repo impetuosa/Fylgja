@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'annotationProductions'
 	],
-	#category : #'Fylgja-Rule-Modifications'
+	#category : #'Fylgja-Rule-Transformations'
 }
 
 { #category : #initialization }

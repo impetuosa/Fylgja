@@ -1,7 +1,7 @@
 Class {
 	#name : #FylgjaAddHibernateMethodGetAllModel,
 	#superclass : #FylgjaAddHibernateMethod,
-	#category : #'Fylgja-Rule-Modifications'
+	#category : #'Fylgja-Rule-Transformations'
 }
 
 { #category : #adding }

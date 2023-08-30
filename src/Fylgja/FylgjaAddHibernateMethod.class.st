@@ -5,7 +5,7 @@ Class {
 		'modelTypeReference',
 		'sessionFactory'
 	],
-	#category : #'Fylgja-Rule-Modifications'
+	#category : #'Fylgja-Rule-Transformations'
 }
 
 { #category : #'instance creation' }

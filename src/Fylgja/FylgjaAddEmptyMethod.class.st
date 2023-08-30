@@ -1,7 +1,7 @@
 Class {
 	#name : #FylgjaAddEmptyMethod,
 	#superclass : #FylgjaAddMethod,
-	#category : #'Fylgja-Rule-Modifications'
+	#category : #'Fylgja-Rule-Transformations'
 }
 
 { #category : #'instance creation' }

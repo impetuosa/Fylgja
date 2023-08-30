@@ -6,7 +6,7 @@ Class {
 		'bindings',
 		'initializingMethodSelector'
 	],
-	#category : #'Fylgja-Rule-Modifications'
+	#category : #'Fylgja-Rule-Transformations'
 }
 
 { #category : #'instance creation' }

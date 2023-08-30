@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'expression'
 	],
-	#category : #'Fylgja-Rule-Modifications'
+	#category : #'Fylgja-Rule-Transformations'
 }
 
 { #category : #'instance creation' }

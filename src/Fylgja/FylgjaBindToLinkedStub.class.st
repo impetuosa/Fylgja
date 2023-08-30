@@ -1,7 +1,7 @@
 Class {
 	#name : #FylgjaBindToLinkedStub,
 	#superclass : #FylgjaBinding,
-	#category : #'Fylgja-Rule-Binding'
+	#category : #'Fylgja-Rule-BindingOperations'
 }
 
 { #category : #'as yet unclassified' }

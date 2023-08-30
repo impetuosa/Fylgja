@@ -1,7 +1,7 @@
 Class {
 	#name : #FylgjaAddCatchExceptionPrintStacktrace,
 	#superclass : #FylgjaModification,
-	#category : #'Fylgja-Rule-Modifications'
+	#category : #'Fylgja-Rule-Transformations'
 }
 
 { #category : #'instance creation' }

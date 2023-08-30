@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'destinationEntity'
 	],
-	#category : #'Fylgja-Rule-Binding'
+	#category : #'Fylgja-Rule-BindingOperations'
 }
 
 { #category : #'as yet unclassified' }

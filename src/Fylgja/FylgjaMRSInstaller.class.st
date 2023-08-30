@@ -6,7 +6,7 @@ Class {
 		'installAtTopLevel',
 		'installAtLanguageLevel'
 	],
-	#category : #'Fylgja-Rules'
+	#category : #'Fylgja-MRS'
 }
 
 { #category : #accessing }

@@ -1,7 +1,7 @@
 Class {
 	#name : #FylgjaBinding,
 	#superclass : #FylgjaOperation,
-	#category : #'Fylgja-Rule-Binding'
+	#category : #'Fylgja-Rule-BindingOperations'
 }
 
 { #category : #testing }
