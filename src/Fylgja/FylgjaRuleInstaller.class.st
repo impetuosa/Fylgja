@@ -68,6 +68,9 @@ FylgjaRuleInstaller >> anyClassNamed: aNames [
 { #category : #testing }
 FylgjaRuleInstaller >> anyEntity [
 
+	<doc: 'Condition:
+1. Allways true'>
+
 	^ self condition: FylgjaConditionAll new
 ]
 
@@ -128,7 +131,9 @@ FylgjaRuleInstaller >> anyMethodNamed: aCollection [
 
 { #category : #testing }
 FylgjaRuleInstaller >> anyModelEntityOfTypesWhenGoingClass: aCollection [
-
+<doc: 'Condition:
+1. The source entity is any in the given collection AND
+2. The target context is a class'>
 	^ self condition: (FylgjaConditionModelTypeIsAndContextIs new
 			   types: aCollection;
 			   contextType: MOClass;
@@ -202,7 +207,9 @@ FylgjaRuleInstaller >> applyAllOperations: aFullBlockClosure [
 
 { #category : #testing }
 FylgjaRuleInstaller >> binaryOperator: aString [
-
+<doc: 'Condition:
+1. The source entity is a binary operation
+2. The operator matches the parameter.'>
 	^ self condition: (FylgjaConditionBinaryExpression new
 			   operator: aString;
 			   yourself)
@@ -241,6 +248,12 @@ FylgjaRuleInstaller >> condition: aCondition [
 { #category : #accessing }
 FylgjaRuleInstaller >> copy [
 
+	<doc: '
+Operation:
+1. Make an instance of the same class as the source entity within the target context.
+2. Migrate each of the children of the source entity using the freshly created instance as the target context.'>
+
+
 	self operation: FylgjaTranslateCopy new
 ]
 
@@ -253,6 +266,9 @@ FylgjaRuleInstaller >> copyAsAttribute [
 { #category : #copying }
 FylgjaRuleInstaller >> copyAsMethod [
 
+	<doc: 'Operation:
+1. Define in the target entity a static method with the same selector as the source entity and using void as returning type reference.
+2. Migrate all the children of the source entity using the method as the target context.'>
 	self operation: FylgjaTranslateCopyAsMethod new
 ]
 
@@ -498,6 +514,9 @@ FylgjaRuleInstaller >> referenceNamed: aString [
 { #category : #copying }
 FylgjaRuleInstaller >> replaceOperatorWith: aString [
 
+	<doc:
+'1. Define a binary operation in the target entity, using the parameter as an operator.
+2. Migrate all the children of the source entity using the binary operation as the target context.'>
 	^ self operation: (FylgjaCopyReplaceBinaryOperator new
 			   operator: aString;
 			   yourself)

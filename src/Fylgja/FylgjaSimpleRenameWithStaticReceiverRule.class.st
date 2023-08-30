@@ -10,6 +10,11 @@ Class {
 { #category : #testing }
 FylgjaSimpleRenameWithStaticReceiverRule >> bind: aMOInvocation as: aMODeclarationStructuralRelation croppingRelationsWith: aFullBlockClosure destinationWriter: aMOModelWriter lookUp: aFylgjaLookUpContext using: aFylgjaDerivativeModel [
 
+	<doc: 'Operation:
+1. Define a method invocation expression (a reference) using the method’s parent as a receiver.
+2. Set the arguments used by the function invocation in the new method invocation.
+3. Set the new target reference to the mapped target declaration.
+'>
 	^ aMOModelWriter writeUnregisteredExpression: [ :expression | 
 		  mappings target isMethod
 			  ifTrue: [ 
@@ -24,8 +29,7 @@ FylgjaSimpleRenameWithStaticReceiverRule >> bind: aMOInvocation as: aMODeclarati
 					   self mapArguments: aMOInvocation using: mappings ])
 					  referee: mappings target;
 					  yourself ]
-			  ifFalse: [ 
-"				  self assert: mappings mapsArguments not."
+			  ifFalse: [ "				  self assert: mappings mapsArguments not."
 				  expression
 					  accessAttribute: mappings target name
 					  receiver: [ :exp | 
@@ -37,7 +41,9 @@ FylgjaSimpleRenameWithStaticReceiverRule >> bind: aMOInvocation as: aMODeclarati
 
 { #category : #testing }
 FylgjaSimpleRenameWithStaticReceiverRule >> matches: aDestinationEntity context: aDestinationContextRelation toBindAs: aCandidateRelation consideringMappingsFrom: aLookup [
-
+<doc:	'Condition:
+1. The target reference is a function invocation AND 
+2. The given map target declaration is a method AND 3. The given map target declaration is static.'>
 	" This is quite dangerous. mappings is an instance variable. 
  		We do so to ensure that the mapping used to accept the condition is the same used by the operation. 
 		
