@@ -15,23 +15,25 @@ The figure depicts the central area of the migrating tool.
 
 In the bottom part of the tool we find three tabs.
 
-1- Log 
+- Log 
 This tab shows logs of the actions applied, informing errors and successes.
 ![resources/log.png](resources/log.png)
 
-2- Rules 
+- Rules 
 Shows the rules valid in a selected context (a class by example)
 ![resources/rules.png](resources/rules.png)
 
-3- Mappings
+- Mappings
 Shows the mappings and stubs tracked so far and valid in a given context.
 ![resources/mappings-stubs.png](resources/mappings-stubs.png)
 
 ## Using the tool.
 The user can drag and drop a Declaration from one model to another. Once the drop is done, a popup asks the user to tell which directive she wants to apply: map or produce. In implementing the approach, we decided to allow the user to have different levels of control over the lookup of rules when applying the produce directive. 
-(i) automatic lookup: the lookup uses the first found result. 
-(ii) multiple choice: the lookup prompts the user to choose the rule to be applied. 
-(iii) debugging: the lookup prompts the user to choose each rule.
+
+- (i) automatic lookup: the lookup uses the first found result. 
+- (ii) multiple choice: the lookup prompts the user to choose the rule to be applied. 
+- (iii) debugging: the lookup prompts the user to choose each rule.
+
 In both (ii) and (iii) cases, the user chooses from all the rules available in the scope with positive conditions.
 
 In the following images we find the GUI prompting the user to choose the rule to be applied in two different cases:
