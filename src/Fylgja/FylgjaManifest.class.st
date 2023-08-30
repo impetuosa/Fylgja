@@ -89,7 +89,6 @@ Please address to [Rules.md](Rules.md) for more details.
 
 ## GUI 
 Fylgja is transformation engine which helps developers throught the usage of an GUI. 
-
 In the following examples we are going to show how to instantiate the engine, and how to open this GUI. 
 
 For learning the details about the GUI you can address to [GUI.md](GUI.md) or to the article [Interactive, Iterative, Tooled, Rule-Based Migration of Microsoft Access to Web Technologies](https://hal.inria.fr/hal-04181591v1).
