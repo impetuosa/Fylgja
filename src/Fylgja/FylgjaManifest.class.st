@@ -355,3 +355,15 @@ FylgjaManifest class >> rulesMd [
 
 	^ self documentSending: #rulePackages titled: #Rules
 ]
+
+{ #category : #accessing }
+FylgjaManifest class >> uiMd [
+
+	^ self documentSending: #uiPackages titled: #GUI
+]
+
+{ #category : #accessing }
+FylgjaManifest class >> uiPackages [
+
+	^ self package classTags select: [ :t | t name beginsWith: 'UI' ]
+]
