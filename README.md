@@ -78,6 +78,13 @@ For learning the details about the GUI you can address to [GUI.md](GUI.md) or to
 
 ## Load
 ```smalltalk
+loadAddBaseline
+	| spec |
+	spec
+		baseline: 'Fylgja'
+		with: [ spec repository: 'github://impetuosa/Fylgja:v1.x.x/src' ]
+```
+```smalltalk
 loadMetacello
 	  Metacello new
     	githubUser: 'Impetuosa' project: 'Fylgja' commitish: 'v1.x.x' path: 'src';
@@ -86,15 +93,110 @@ loadMetacello
     	load
 	
 ```
-```smalltalk
-loadAddBaseline
-	| spec |
-	spec
-		baseline: 'Fylgja'
-		with: [ spec repository: 'github://impetuosa/Fylgja:v1.x.x/src' ]
-```
 
 ## Project Examples
+```smalltalk
+exampleCreateFylgjaEngine
+	| fylgja |
+	" 
+	A Fylgja migration engine works over Moxing models. So, before we start to work with any engine, we need at least two models which are going to be used to exchange content.
+	
+	1- Create Moxing models.
+	Please, to learn how to create your own Moxing model, address the Moxing documentation.  
+	"
+	
+	
+	northwind := MoxingManifest accessNorthwind.
+	angular := MoxingManifest angularNorthwind.
+	java := MoxingManifest javaNorthwind.
+	
+	"
+	
+	2- Create a FylgjaMigrationEngine instance. 
+	
+	"
+	fylgja := FylgjaMigrationEngine new.
+	
+		"
+	
+	3- Add the moxing models one by one. Please note that the order is not important, and that there is not limit of models. 
+	Fylgja engine will orchestrate and enable the different exchnages between the given models. 
+	
+	"
+	fylgja
+		addModel: northwind;
+		addModel: angular;
+		addModel: java.
+	^ fylgja
+```
+```smalltalk
+exampleConfigureFylgjaRules
+	| fylgja |
+	" 
+	In this example we check how to install rules. 
+	
+	
+	1- We create an engine, as described in exampleCreateFylgjaEngine.
+	
+	"
+	fylgja := self exampleCreateFylgjaEngine.
+	"
+	2- Rules can be installed with the help of a rule installer as a DSL. 
+	The next snippet of code installs a rule which tells: when ever translating a binary operator & to java, it should be translated as binary operator +.
+	
+	"
+	FylgjaRuleInstaller new
+		context: java root;
+		binaryOperator: #&;
+		replaceOperatorWith: #+;
+		installInto: fylgja.
+	"
+	3- Rules can be installed with the help of a rule installer, and giving a rule instance to be installed.
+	The  FylgjaSimpleRenameRule is a rule which renames any element according to the target. 
+	Please address to the article: ``Context Aware Partial Translation engine based on immediate and delayed Rule application`` to find a catalog of explained rules.  
+	
+	"
+	
+	FylgjaRuleInstaller new
+		context: java root;
+		install: FylgjaSimpleRenameRule new into: fylgja.
+	
+	"
+		The user can add rules at will at any moment of the usage of the engine. 
+	
+	"
+	^ fylgja
+```
+```smalltalk
+exampleConfigureNorthwindFylgjaRules
+	| fylgja |
+	" 
+	In this example we check how to install rules for the case of migrating MS Access projects to AngularTs and Java. 
+	
+	
+	1- We create an engine, as described in exampleCreateFylgjaEngine.
+	
+	"
+	fylgja := self exampleCreateFylgjaEngine.
+	"
+	2- To install the different rules required for this project, we provided some installing objects. 
+	#ruleInstallers returns instances of different classes able to intall different rules. 
+	This instances require to be configured in a way that they can diffentiate what is access, java and angular. 
+	Please browse the FylgjaNorthwindRuleInstaller class for more details.
+	"
+	FylgjaMigrationUIController ruleInstallers do: [ :installer | 
+		installer
+			fylgja: fylgja;
+			northwind: northwind;
+			java: java;
+			angular: angular;
+			installRules ].
+	"
+		The user can add rules at will at any moment of the usage of the engine. 
+	
+	"
+	^ fylgja
+```
 ```smalltalk
 exampleOpenFylgjaUINorthwind
 	| fylgja controller app |
@@ -144,108 +246,6 @@ exampleOpenFylgjaUINorthwind
 	app migratorUi open. 
 	
 	^ controller class 
-```
-```smalltalk
-exampleConfigureFylgjaRules
-	| fylgja |
-	" 
-	In this example we check how to install rules. 
-	
-	
-	1- We create an engine, as described in exampleCreateFylgjaEngine.
-	
-	"
-	fylgja := self exampleCreateFylgjaEngine.
-	"
-	2- Rules can be installed with the help of a rule installer as a DSL. 
-	The next snippet of code installs a rule which tells: when ever translating a binary operator & to java, it should be translated as binary operator +.
-	
-	"
-	FylgjaRuleInstaller new
-		context: java root;
-		binaryOperator: #&;
-		replaceOperatorWith: #+;
-		installInto: fylgja.
-	"
-	3- Rules can be installed with the help of a rule installer, and giving a rule instance to be installed.
-	The  FylgjaSimpleRenameRule is a rule which renames any element according to the target. 
-	Please address to the article: ``Context Aware Partial Translation engine based on immediate and delayed Rule application`` to find a catalog of explained rules.  
-	
-	"
-	
-	FylgjaRuleInstaller new
-		context: java root;
-		install: FylgjaSimpleRenameRule new into: fylgja.
-	
-	"
-		The user can add rules at will at any moment of the usage of the engine. 
-	
-	"
-	^ fylgja
-```
-```smalltalk
-exampleCreateFylgjaEngine
-	| fylgja |
-	" 
-	A Fylgja migration engine works over Moxing models. So, before we start to work with any engine, we need at least two models which are going to be used to exchange content.
-	
-	1- Create Moxing models.
-	Please, to learn how to create your own Moxing model, address the Moxing documentation.  
-	"
-	
-	
-	northwind := MoxingManifest accessNorthwind.
-	angular := MoxingManifest angularNorthwind.
-	java := MoxingManifest javaNorthwind.
-	
-	"
-	
-	2- Create a FylgjaMigrationEngine instance. 
-	
-	"
-	fylgja := FylgjaMigrationEngine new.
-	
-		"
-	
-	3- Add the moxing models one by one. Please note that the order is not important, and that there is not limit of models. 
-	Fylgja engine will orchestrate and enable the different exchnages between the given models. 
-	
-	"
-	fylgja
-		addModel: northwind;
-		addModel: angular;
-		addModel: java.
-	^ fylgja
-```
-```smalltalk
-exampleConfigureNorthwindFylgjaRules
-	| fylgja |
-	" 
-	In this example we check how to install rules for the case of migrating MS Access projects to AngularTs and Java. 
-	
-	
-	1- We create an engine, as described in exampleCreateFylgjaEngine.
-	
-	"
-	fylgja := self exampleCreateFylgjaEngine.
-	"
-	2- To install the different rules required for this project, we provided some installing objects. 
-	#ruleInstallers returns instances of different classes able to intall different rules. 
-	This instances require to be configured in a way that they can diffentiate what is access, java and angular. 
-	Please browse the FylgjaNorthwindRuleInstaller class for more details.
-	"
-	FylgjaMigrationUIController ruleInstallers do: [ :installer | 
-		installer
-			fylgja: fylgja;
-			northwind: northwind;
-			java: java;
-			angular: angular;
-			installRules ].
-	"
-		The user can add rules at will at any moment of the usage of the engine. 
-	
-	"
-	^ fylgja
 ```
 
 
